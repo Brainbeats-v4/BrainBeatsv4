@@ -13,7 +13,7 @@ const Navbar = () => {
     }
     
     function doLogout() {
-        
+        // remove jwt, reset other buttons, refresh page 
     }
 
   return (
