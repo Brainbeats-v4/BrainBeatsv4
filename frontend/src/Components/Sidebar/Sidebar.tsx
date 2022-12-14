@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Children } from "react";
 import { NavLink, RouteProps } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 
-// Import CSS
+// Import CSS for Sidebar
 import './Sidebar.css';
 
 // Import for Icons
