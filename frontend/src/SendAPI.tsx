@@ -9,10 +9,11 @@ const sendAPI = async (method:any, path:any, data:any = null) => {
         params: '',
         data: ''
     }
-    if(method === 'get') config.params = data;
+    if(method === 'get') config.params =  data;
     else config.data = data;
     const res = await axios(config);
     return res;
 }
+
 
 export default sendAPI;
