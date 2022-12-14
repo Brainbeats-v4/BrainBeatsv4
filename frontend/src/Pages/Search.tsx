@@ -9,7 +9,7 @@ const Search = () => {
       {/* <Navbar />
       <Sidebar /> */}
       <h2>Search</h2>
-      {/* <SearchPage /> */}
+      <SearchPage />
     </>
   )
 }

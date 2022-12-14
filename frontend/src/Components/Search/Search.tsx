@@ -6,7 +6,10 @@ import React, { useState, useEffect, useCallback, ReactPropTypes } from "react";
 //   FaPlus,
 //   FaEllipsisH,
 // } from "react-icons/fa";
-import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconProps,
+} from "@fortawesome/react-fontawesome";
 
 import { Card, Modal, Dropdown, Button } from "react-bootstrap";
 
@@ -22,6 +25,9 @@ import sendAPI from "../../SendAPI";
 // import Logo from '../Navbar/Logo.jpg'
 
 
+// !!! Current errors temporarily solved with "any" type, though everything should 
+// be explicitly typed later.
+
 const SearchPage = () => {
   const user = useRecoilValue(userModeState);
   const jwt = useRecoilValue(userJWT);
@@ -34,19 +40,19 @@ const SearchPage = () => {
   const [playListTitle, setPlayListTitle] = useState("");
   const [picture, setPicture] = useState();
   const [message, setMessage] = useState("");
-  const [title, setTitle] = useState('');
-  const [thumbnail, setThumbnail] = useState('');
+  const [title, setTitle] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
   const [currentSelectPost, setCurretSelectPost] = useState("");
-  const [addedToPlay, setAddedToPlay] = useState('');
+  const [addedToPlay, setAddedToPlay] = useState("");
 
-  const [liked, setLiked] = useState([]);
+  const [liked, setLiked] = useState([]) as any;
 
   useEffect(() => {
-    if(!title){
+    if (!title) {
       sendAPI("get", "/posts/getAllPosts").then((res) => {
         setPost(res.data);
-    })
-    };
+      });
+    }
     if (user) {
       const dataParam = {
         userID: user.id,
@@ -55,10 +61,9 @@ const SearchPage = () => {
         setUserPlaylist(res.data);
       });
 
-      sendAPI('get', '/likes/getAllUserLikes', dataParam)
-        .then((res) => {
-         setLiked(res.data);
-         })
+      sendAPI("get", "/likes/getAllUserLikes", dataParam).then((res) => {
+        setLiked(res.data);
+      });
     }
   }, [liked]);
 
@@ -79,14 +84,13 @@ const SearchPage = () => {
     setMessage("");
   }
 
-  function searchFuntion(){
-    const bodyData ={
-      title: title
-    }
-    sendAPI("get", "/posts/getPostsByTitle", bodyData)
-    .then((res) => {
+  function searchFuntion() {
+    const bodyData = {
+      title: title,
+    };
+    sendAPI("get", "/posts/getPostsByTitle", bodyData).then((res) => {
       setPost(res.data);
-    })
+    });
   }
 
   function createPlaylist() {
@@ -94,7 +98,7 @@ const SearchPage = () => {
       name: playListTitle,
       userID: user.id,
       token: jwt,
-      thumbnail: thumbnail
+      thumbnail: thumbnail,
     };
     sendAPI("post", "/playlists/createPlaylist", dataBody).then((res) => {
       setMessage("Playlist Created");
@@ -113,59 +117,66 @@ const SearchPage = () => {
     });
   }
 
-  const handleSearch =(event: any)=> {
-    if(event.key === 'Enter'){
-      searchFuntion()
+  const handleSearch = (event: any) => {
+    if (event.key === "Enter") {
+      searchFuntion();
     }
-  }
+  };
 
-  // const updateProfilePic = (file) => {
-  //   var file = document.querySelector('input[type=file]')['files'][0];
-  //   var reader = new FileReader();
-  //   var baseString;
-  //   reader.onloadend = function () {
-  //       baseString = reader.result;
-  //       setThumbnail(baseString); 
-  //   };
-  //   reader.readAsDataURL(file);
-  //   // setProfilePicture(baseString);
-  // }
-  // const onLike = useCallback((post: any) => {
-  //   let bodyDasta = {
-  //       userID: user.id,
-  //       postID: post,
-  //       token: jwt,
-  //   }
-  //   sendAPI('post', '/likes/createUserLike', bodyData)
-  //   .then((res) => {
-  //       setLiked((l) => [... l,res.data])
-  //   })
-  //   .catch((err) => {
-  //       console.log(err.data)
-  //   })
-// },[])
+  const updateProfilePic = (file: File) => {
+    const fileInput = document.querySelector('input[type=file]') as HTMLInputElement;
+    var file: File;
 
-// const onRemove = useCallback((post: any) => {
-//     let bodyData = {
-//         userID: user.id,
-//         postID: post,
-//         token: jwt,
-//     }
-//     sendAPI('delete', '/likes/removeUserLike', bodyData)
-//     .then((res) => {
-//         setLiked((l) => l.filter((p) => p.postID !== post))})
-//     .catch((err) => {
-//         console.log(err.data)
-//     })
-
-// },[])
+    if (fileInput.files && fileInput.files[0]) 
+      file = fileInput.files[0];
+    
+    var reader = new FileReader();
+    var baseString;
+    reader.onloadend = () => {
+      baseString = String(reader.result);
+      setThumbnail(baseString);
+    };
+    reader.readAsDataURL(file);
+    // setProfilePicture(baseString);
+  };
+  
+  const onLike = useCallback((post: any) => {
+    let bodyData = {
+        userID: user.id,
+        postID: post,
+        token: jwt,
+    }
+    sendAPI('post', '/likes/createUserLike', bodyData)
+    .then((res) => {
+        setLiked((l: any[]) => [... l,res.data])
+    })
+    .catch((err) => {
+        console.log(err.data)
+    })
+  },[])
 
 
+
+  const onRemove = useCallback((post: any) => {
+      let bodyData = {
+          userID: user.id,
+          postID: post,
+          token: jwt,
+      }
+      sendAPI('delete', '/likes/removeUserLike', bodyData)
+      .then((res) => {
+          setLiked((l: any[]) => l.filter((p) => p.postID !== post))})
+      .catch((err) => {
+          console.log(err.data)
+      })
+
+  },[])
 
   return (
-    <><div>
+    <>
+      <div>
         <h1>Search</h1>
-    </div>
+      </div>
       <Modal show={addPlay} onHide={hideModals}>
         <Modal.Header closeButton>
           <Modal.Title>Add to playlist</Modal.Title>
@@ -220,7 +231,7 @@ const SearchPage = () => {
           {/* <label for="file-upload" className="custom-file-upload">
     				Upload Image (optional)
 				</label> */}
-				{/* <input id="file-upload" onChange={(event) => updateProfilePic(event.target.files[0])} type="file"/> */}
+          {/* <input id="file-upload" onChange={(event) => updateProfilePic(event.target.files[0])} type="file"/> */}
         </Modal.Body>
         <Modal.Footer>
           <p>{message}</p>
@@ -238,7 +249,7 @@ const SearchPage = () => {
             className="me-2"
             aria-label="Search"
             onKeyPress={handleSearch}
-            onChange={(e)=> setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <Button className="buttonStyle" onClick={searchFuntion}>
             Search
@@ -252,7 +263,7 @@ const SearchPage = () => {
               <div key={index}>
                 <div>
                   <div className="row">
-                    <div style={{width: '200px'}}>
+                    <div style={{ width: "200px" }}>
                       <Card className="cardStyleSearch">
                         <Card.Img
                           variant="top"
@@ -265,8 +276,8 @@ const SearchPage = () => {
                           <button
                             className="cardPlayButton"
                             onClick={(e) => {
-                                e.preventDefault();
-                                // playMidiFile(item.midi, item.instruments, item.noteTypes, item.bpm);
+                              e.preventDefault();
+                              // playMidiFile(item.midi, item.instruments, item.noteTypes, item.bpm);
                             }}
                           >
                             {/* <FaPlayCircle size={90} /> */}
@@ -282,7 +293,9 @@ const SearchPage = () => {
                           justifyContent: "space-between",
                         }}
                       >
-                        <p className="username">Username {/*item.user.username*/}</p>
+                        <p className="username">
+                          Username {/*item.user.username*/}
+                        </p>
                         <p className="createdDate">
                           {/* {item.createdAt.substr(0, 10)} */}
                         </p>
@@ -291,9 +304,8 @@ const SearchPage = () => {
                         <p className="postText">tlte {/*{item.title}*/} </p>
                       </div>
                       <div style={{ display: "flex" }}>
-
                         <button className="statusButton">
-                        {/* {liked.filter((like) => like.postID === item.id).length ? <FaHeart onClick={()=>onRemove(item.id)}/> : <FaRegHeart onClick={() => onLike(item.id)}/>}
+                          {/* {liked.filter((like) => like.postID === item.id).length ? <FaHeart onClick={()=>onRemove(item.id)}/> : <FaRegHeart onClick={() => onLike(item.id)}/>}
                           &nbsp; <p className="statusText">{item.likeCount}</p> */}
                         </button>
                         <Dropdown className="reactDrop">
@@ -302,7 +314,10 @@ const SearchPage = () => {
                             id="dropdown-basic"
                           >
                             {/* <FaEllipsisH /> &nbsp; More */}
-                            <FontAwesomeIcon icon={["fas", "ellipsis-h"]} /> &nbsp; More
+                            <FontAwesomeIcon
+                              icon={["fas", "ellipsis-h"]}
+                            />{" "}
+                            &nbsp; More
                           </Dropdown.Toggle>
 
                           <Dropdown.Menu>
