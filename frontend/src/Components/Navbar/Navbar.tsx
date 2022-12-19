@@ -1,11 +1,12 @@
 import './Navbar.css';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { userModeState } from "../../JWT";
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userJWT, userModeState } from "../../JWT";
 
 const Navbar = () => {
     const user = useRecoilValue(userModeState);
-    
+    const [JWT, setJWT] = useRecoilState(userJWT);
+    const [userMode, setUserMode] = useRecoilState(userModeState);
     const navigate = useNavigate();
 
     const doNavigate = (route:string) => {
@@ -13,7 +14,8 @@ const Navbar = () => {
     }
     
     function doLogout() {
-        
+        setJWT('');
+        setUserMode(null);
     }
 
   return (
