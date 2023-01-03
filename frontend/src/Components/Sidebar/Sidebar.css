@@ -23,6 +23,7 @@ main{
 
 #main-page{
   overflow: auto;
+  height: 100vh;;
 }
 
 /* CSS for Sidebar */
