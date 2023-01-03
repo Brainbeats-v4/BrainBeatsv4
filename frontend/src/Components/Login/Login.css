@@ -1,3 +1,86 @@
+/*CSS for Login Page*/
+
+.bbLogo {
+    height: 100px;
+    width: 100px;
+    background-image: url("../../images/bbmascot1.png");
+    background-size: 100px 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .login-text {
-    color: #fff;
+    color: rgb(0, 0, 0);
+}
+
+.lineBreak{
+    line-break: auto;
+}
+
+#main-login-container {
+    max-width: 100%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+#login-container {
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #CFCFCF;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+#login-btn-container{
+    width: 100%;
+    padding: 0%;
+}
+
+#login-btn{
+    width: 100%;
+    margin-top: 5%;
+    background-color: #43ABBB;
+    border-color: #43ABBB;
+    border-radius: 0px;
+}
+#login-btn:hover{
+    background-color: #107888;
+    border-color: #107888;
+    text-decoration: underline;
+
+}
+
+#create-account-container {
+    width: 100%;
+    height: 7%;
+    display: flex;
+    justify-content: center;
+    background-color: #CFCFCF;
+    border-radius: 10px;
+    margin-top: 5%;
+    padding: 7px;
+}
+
+#forgot-pass-link{
+    display: flex;
+    justify-content: end;
+    margin: 1%;
+}
+#forgot-pass-link:hover{
+    text-decoration: underline;
+}
+
+#sign-up-link {
+    margin-left: 5px;
+    color: #0085FF;
+    font-weight: 600;
+}
+#sign-up-link:hover {
+    text-decoration: underline;
 }

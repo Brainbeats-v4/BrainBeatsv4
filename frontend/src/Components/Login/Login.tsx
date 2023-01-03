@@ -30,21 +30,28 @@ const Login = () => {
     }
 
     return (
-        <div className='container' id='main-container'>
-            <h1 className="login-text text-center fw-semibold">Welcome back to BrainBeats!</h1>
-            <div className="mb-3">
-                <label className="form-label form-text login-text">Email</label>
-                <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Email" onChange={event => setEmail(event.target.value)}/>
+        <div className='container' id='main-login-container'>
+            <div className='container' id='login-container'>
+                <div className="bbLogo"></div>
+                <h1 className="login-text text-center fw-semibold">Log in to BrainBeats</h1>
+                <div className="mt-3">
+                    <label className="form-label form-text login-text">Username</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Username" onChange={event => setEmail(event.target.value)}/>
+                </div>
+                <div className="mt-3">
+                    <label className="form-label form-text login-text">Password</label>
+                    <input type="password" className="form-control" id="formGroupExampleInput2" placeholder="Password" onChange={event => setPassword(event.target.value)}/>
+                </div>
+                <a id='forgot-pass-link'>Forgot Password?</a>
+                <div className='container' id='login-btn-container'>
+                    <button type="submit" className="btn btn-primary" id='login-btn' onClick={doLogin}>Log in</button>
+                </div>
             </div>
-            <br />            <br />
-            <div className="mb-3">
-                <label className="form-label form-text login-text">Password</label>
-                <input type="password" className="form-control" id="formGroupExampleInput2" placeholder="Password" onChange={event => setPassword(event.target.value)}/>
+            <div className='container' id='create-account-container'>
+                <a>Don't have an account?</a><a id='sign-up-link'>Sign Up</a>
             </div>
-            <div className='container text-center'>
-                <button type="submit" className="btn btn-primary" onClick={doLogin}>Sign in</button>
-            </div>
-        </div>);
+        </div>
+    );
 }
 
 export default Login;
