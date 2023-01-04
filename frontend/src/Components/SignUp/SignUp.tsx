@@ -51,33 +51,40 @@ const SignUp = () => {
     }
 
     return (
-        <div className='container' id='main-container'>
-            <h1 className="text-center fw-semibold signup-text">Welcome to BrainBeats!</h1>
-            <div className="mb-3">
-                <label className="form-label signup-text">First Name</label>
-                <input type="text" className="form-control" id="formGroupExampleInput" placeholder="First Name" onChange={event => setFirstName(event.target.value)}/>
+        <div className='container' id='main-signup-container'>
+            <div className="container" id="signup-container">
+                <h1 className="text-center fw-semibold signup-text">Welcome to BrainBeats!</h1>
+                <div className="mt-3">
+                    <label className="form-label signup-text">Email</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Email" onChange={event => setFirstName(event.target.value)}/>
+                </div>
+                <div className="mt-2">
+                    <label className="form-label signup-text">Username</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Username" onChange={event => setLastName(event.target.value)}/>
+                </div>
+                <div className="mt-2">
+                    <label className="form-label signup-text">Password</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Password" onChange={event => setEmail(event.target.value)}/>
+                </div>
+                <div className="mt-2">
+                    <label className="form-label signup-text">Username</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Username" onChange={event => setUsername(event.target.value)}/>
+                </div>
+                <div className="mt-2">
+                    <label className="form-label signup-text">Date of Birth (mm/dd/yyyy)</label>
+                    <input type="password" className="form-control" id="formGroupExampleInput2" placeholder="mm/dd/yyyy" onChange={event => setPassword(event.target.value)}/>
+                </div>
+                <div className='container' id='signup-btn-container'>
+                    <button type="submit" className="btn btn-primary" id='signup-btn' onClick={() => doSignUp()}>Sign up</button>
+                </div>
+                <div id="error-msg-container">
+                    <span className="text-center error-msg">{errorMsg}</span>
+                    <span className="text-center success-msg">{successMsg}</span>
+                </div>
             </div>
-            <div className="mb-3">
-                <label className="form-label signup-text">Last Name</label>
-                <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Last Name" onChange={event => setLastName(event.target.value)}/>
+            <div className='container' id='have-account-container'>
+                <a>Have an account?</a><a id='login-link'>Log in!</a>
             </div>
-            <div className="mb-3">
-                <label className="form-label signup-text">Email</label>
-                <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Email" onChange={event => setEmail(event.target.value)}/>
-            </div>
-            <div className="mb-3">
-                <label className="form-label signup-text">Username</label>
-                <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Username" onChange={event => setUsername(event.target.value)}/>
-            </div>
-            <div className="mb-3">
-                <label className="form-label signup-text">Password</label>
-                <input type="password" className="form-control" id="formGroupExampleInput2" placeholder="Password" onChange={event => setPassword(event.target.value)}/>
-            </div>
-            <div className='container text-center'>
-                <button type="submit" className="btn btn-primary" onClick={() => doSignUp()}>Sign up</button>
-            </div>
-            <span className="text-center error-msg">{errorMsg}</span>
-            <span className="text-center success-msg">{successMsg}</span>
         </div>);
 }
 
