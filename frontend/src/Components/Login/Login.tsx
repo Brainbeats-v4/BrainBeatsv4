@@ -12,25 +12,25 @@ const Login = () => {
     const [userMode, setUserMode] = useRecoilState(userModeState);
     const navigate = useNavigate();
 
-    //TODO
-    async function doEmail() {
-        const sgMail = require('@sendgrid/mail')
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    // TEMP SendGrid Test
+    // async function doEmail() {
+    //     const sgMail = require('@sendgrid/mail')
+    //     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-        const msg = {
-            to: 'bmrgich@gmail.com', // Change to your recipient
-            from: 'brainbeatsucf@gmail.com', // Change to your verified sender
-            subject: 'Sending with SendGrid is Fun',
-            text: 'and easy to do anywhere, even with Node.js',
-            html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-        }
+    //     const msg = {
+    //         to: 'bmrgich@gmail.com', // Change to your recipient
+    //         from: 'brainbeatsucf@gmail.com', // Change to your verified sender
+    //         subject: 'Sending with SendGrid is Fun',
+    //         text: 'and easy to do anywhere, even with Node.js',
+    //         html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    //     }
         
-        sgMail.send(msg).then(() => {
-            console.log('Email sent')
-        }).catch((error: String) => {
-            console.error(error)
-        })
-    }
+    //     sgMail.send(msg).then(() => {
+    //         console.log('Email sent')
+    //     }).catch((error: String) => {
+    //         console.error(error)
+    //     })
+    // }
 
     
     async function doLogin() {
@@ -65,7 +65,7 @@ const Login = () => {
                 <a id='forgot-pass-link'>Forgot Password?</a>
                 <div className='container' id='login-btn-container'>
                     <button type="submit" className="btn btn-primary" id='login-btn' onClick={doLogin}>Log in</button>
-                    <button type="submit" className="btn btn-primary" id='email-btn' onClick={doEmail}>Log in</button>
+                    {/* <button type="submit" className="btn btn-primary" id='email-btn' onClick={doEmail}>Log in</button> */}
                 </div>
             </div>
             <div className='container' id='create-account-container'>
