@@ -83,7 +83,7 @@ const SignUp = () => {
                 </div>
             </div>
             <div className='container' id='have-account-container'>
-                <a>Have an account?</a><a id='login-link'>Log in!</a>
+                <a>Have an account?</a><a id='login-link' href='/login'>Log in!</a>
             </div>
         </div>);
 }

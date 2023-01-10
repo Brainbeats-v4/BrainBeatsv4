@@ -10,6 +10,7 @@ import CreateTrack from './Pages/CreateTrack';
 import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import Profile from './Pages/Profile';
+import Forgot from './Pages/Forgot';
 import AdvSettings from './Pages/AdvSettings';
 
 // Importing sidebar and navbar
@@ -35,6 +36,7 @@ function App() {
           <Route path='/create-track' element={<CreateTrack />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<SignUp />} />
+          <Route path='/forgot' element={<Forgot />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/adv-settings' element={<AdvSettings />} />
 

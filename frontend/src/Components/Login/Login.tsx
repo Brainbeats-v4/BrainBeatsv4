@@ -12,7 +12,6 @@ const Login = () => {
     const [userMode, setUserMode] = useRecoilState(userModeState);
     const navigate = useNavigate();
 
-    
     async function doLogin() {
         const userInformation = {
             "email": email,
@@ -42,13 +41,13 @@ const Login = () => {
                     <label className="form-label form-text login-text">Password</label>
                     <input type="password" className="form-control" id="formGroupExampleInput2" placeholder="Password" onChange={event => setPassword(event.target.value)}/>
                 </div>
-                <a id='forgot-pass-link'>Forgot Password?</a>
+                <a id='forgot-pass-link' href='/forgot'>Forgot Password?</a>
                 <div className='container' id='login-btn-container'>
                     <button type="submit" className="btn btn-primary" id='login-btn' onClick={doLogin}>Log in</button>
                 </div>
             </div>
             <div className='container' id='create-account-container'>
-                <a>Don't have an account?</a><a id='sign-up-link'>Sign Up</a>
+                <a >Don't have an account?</a><a id='sign-up-link' href='/register'>Sign Up</a>
             </div>
         </div>
     );
