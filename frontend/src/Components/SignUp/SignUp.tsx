@@ -13,6 +13,7 @@ const SignUp = () => {
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
     const [awaitMsg, setAwaitMsg] = useState('');
+    const navigate = useNavigate();
 
     // if (errorMsg==="") {
     //     const navigate = useNavigate();
@@ -54,6 +55,7 @@ const SignUp = () => {
                     // TODO disable other buttons
                     setErrorMsg('');
                     console.log(res);
+                    navigate('/login');
 
                 }).catch(err => {
                     setErrorMsg('Unable to create account');
