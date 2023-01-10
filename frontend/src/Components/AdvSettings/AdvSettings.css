@@ -1,0 +1,72 @@
+/* CSS for Advanced Settings */
+
+.adv-settings-container {
+    max-width: 60vw;
+    max-height: 50vh;
+    padding: 10px 10px 20px 10px;
+    margin: 0%;
+    height: fit-content;
+    position: relative;
+    background-color:rgb(198, 198, 198);
+    display: block;
+    border-color:rgb(95, 95, 95);
+    border-radius: 10px;
+    /* width: fit-content !important; */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.instruments-div{
+    height: 100%;
+    padding: 10px 20px 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.instrument-box, .instrument-box-other{
+    display: flex;
+    flex-direction: column;
+    max-width: 50%;
+    width: fit-content;
+    height: 100%;
+    padding: 15px;
+    margin: 5px;
+
+}
+
+.instrument-box{
+    background-color: #259FB1;
+    color: white;
+}
+
+.instrument-box-other{
+    border-color: red;
+    padding: 0px 5px 5px 5px;
+}
+
+.dropdowns{
+    border-color: #E4E4E4;
+}
+
+.dropdowns2{
+    border-color: #929292;
+}
+
+#back-btn-adv {
+    margin: 3%;
+    float: inline-end;
+    border-radius: 0px;
+    padding: 7px 20px 7px 20px;
+    width: 200px;
+    background-color: #D9D9D9;
+    border-color: #5B5B5B;
+    float: right;
+    color: black
+}
+
+.heading{
+    color: white;
+    margin-bottom: 2%;
+}

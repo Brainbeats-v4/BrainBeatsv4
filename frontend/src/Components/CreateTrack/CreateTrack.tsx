@@ -1,5 +1,7 @@
 import { Form, Router } from 'react-router-dom';
 import {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import './CreateTrack.css';
 
 const CreateTrack = () => {
@@ -10,11 +12,19 @@ const CreateTrack = () => {
         setGenerationType(btn);
     }
 
+    // For routing to advanced settings page.
+    const navigate = useNavigate();
+
+    // Api call for featured tracks
+    const doNavigate = (route:string) => {
+        navigate(route);
+    }
     
 
     return (
         <div className='container' id='main-container'>
-            <form className='justify-content-center' id='settings-container'>
+            <h1 className='heading'>Music Settings</h1>
+            <form className='justify-content-center' id='settings-container1'>
                 <h2 id='settings-text'>Basic Settings</h2>
                 <p id='settings-text'>Please select one of the following music generation options:</p>
                 {/* <span className="text-center" id='state'>{generationType}</span> */}
@@ -53,13 +63,13 @@ const CreateTrack = () => {
             <h2 id='OR'>OR</h2>
             <br />
 
-            <form className='justify-content-center' id='settings-container'>
+            <form className='justify-content-center' id='settings-container2'>
                 <h2 id='settings-text'>Advanced Settings</h2>
                 <p id='settings-text'>Press the button below to go to advanced music generation settings:</p>
 
                 <div className='form-group row justify-content-center'>
                     <div className="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" className="btn btn-primary" id='adv-btn'>Adanced Settings</button>
+                        <button type="button" className="btn btn-primary" id='adv-btn' onClick={() => doNavigate('/adv-settings')}>Advanced Settings</button>
                     </div>
                 </div>
 
