@@ -13,8 +13,7 @@ const SignUp = () => {
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
     const [awaitMsg, setAwaitMsg] = useState('');
-    const navigate = useNavigate();
-
+d
     const navigate = useNavigate();
 
     function validateFields() {
