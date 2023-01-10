@@ -46,7 +46,3 @@ const Forgot = () => {
 }
 
 export default Forgot;
-
-// router.post('/forgotPassword', async (req, res) => {
-//     try {
-//         const { email } = req.body;

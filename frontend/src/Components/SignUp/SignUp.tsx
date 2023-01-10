@@ -14,12 +14,7 @@ const SignUp = () => {
     const [successMsg, setSuccessMsg] = useState('');
     const [awaitMsg, setAwaitMsg] = useState('');
 
-    // if (errorMsg==="") {
-    //     const navigate = useNavigate();
-    //         setTimeout(() => {
-    //         navigate("/login");
-    //     }, 5000);
-    // }
+    const navigate = useNavigate();
 
     function validateFields() {
         if(!username || !password || !firstName || !lastName || !email) {
@@ -36,6 +31,10 @@ const SignUp = () => {
         setErrorMsg('Invalid email input, please re-enter and try again.');
         return false;
     }
+
+    // function sendValidationEmail() {
+
+    // }
     
     function doSignUp() {
         const userInformation = {
@@ -54,7 +53,7 @@ const SignUp = () => {
                     // TODO disable other buttons
                     setErrorMsg('');
                     console.log(res);
-
+                    navigate("/login");
                 }).catch(err => {
                     setErrorMsg('Unable to create account');
                     console.log(err);
