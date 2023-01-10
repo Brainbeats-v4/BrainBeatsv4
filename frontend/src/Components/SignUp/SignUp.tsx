@@ -1,4 +1,6 @@
+import { wait } from "@testing-library/user-event/dist/utils";
 import React, {useEffect, useState} from "react";
+import { useNavigate } from "react-router-dom";
 import sendAPI from "../../SendAPI";
 import './SignUp.css';
 
@@ -10,6 +12,14 @@ const SignUp = () => {
     const [email, setEmail] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
+    const [awaitMsg, setAwaitMsg] = useState('');
+
+    // if (errorMsg==="") {
+    //     const navigate = useNavigate();
+    //         setTimeout(() => {
+    //         navigate("/login");
+    //     }, 5000);
+    // }
 
     function validateFields() {
         if(!username || !password || !firstName || !lastName || !email) {
@@ -29,20 +39,22 @@ const SignUp = () => {
     
     function doSignUp() {
         const userInformation = {
-            "firstName": firstName,
-            "lastName": lastName,
             "email": email,
             "username": username,
-            "password": password
+            "password": password,
+            "firstName": firstName,
+            "lastName": lastName
         };
 
         if(validateFields()) {
             // continue register
             sendAPI('post', '/users/createUser', userInformation)
                 .then(res => {
-                    setSuccessMsg('Account created successfully');
+                    setSuccessMsg('Account created successfully, you will shortly be redirected.');
+                    // TODO disable other buttons
                     setErrorMsg('');
                     console.log(res);
+
                 }).catch(err => {
                     setErrorMsg('Unable to create account');
                     console.log(err);
@@ -56,23 +68,23 @@ const SignUp = () => {
                 <h1 className="text-center fw-semibold signup-text">Welcome to BrainBeats!</h1>
                 <div className="mt-3">
                     <label className="form-label signup-text">Email</label>
-                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Email" onChange={event => setFirstName(event.target.value)}/>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="email@example.com" onChange={event => setEmail(event.target.value)}/>
                 </div>
                 <div className="mt-2">
                     <label className="form-label signup-text">Username</label>
-                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Username" onChange={event => setLastName(event.target.value)}/>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="brainbeats407" onChange={event => setUsername(event.target.value)}/>
                 </div>
                 <div className="mt-2">
                     <label className="form-label signup-text">Password</label>
-                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Password" onChange={event => setEmail(event.target.value)}/>
+                    <input type="password" className="form-control" id="formGroupExampleInput" placeholder="something secret" onChange={event => setPassword(event.target.value)}/>
                 </div>
                 <div className="mt-2">
-                    <label className="form-label signup-text">Username</label>
-                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Username" onChange={event => setUsername(event.target.value)}/>
+                    <label className="form-label signup-text">First Name</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Rick" onChange={event => setFirstName(event.target.value)}/>
                 </div>
                 <div className="mt-2">
-                    <label className="form-label signup-text">Date of Birth (mm/dd/yyyy)</label>
-                    <input type="password" className="form-control" id="formGroupExampleInput2" placeholder="mm/dd/yyyy" onChange={event => setPassword(event.target.value)}/>
+                    <label className="form-label signup-text">Last Name</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput2" placeholder="Leinecker" onChange={event => setLastName(event.target.value)}/>
                 </div>
                 <div className='container' id='signup-btn-container'>
                     <button type="submit" className="btn btn-primary" id='signup-btn' onClick={() => doSignUp()}>Sign up</button>
