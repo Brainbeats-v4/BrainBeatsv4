@@ -49,8 +49,8 @@ const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtp.gmail.com",
     auth: {
-        user: 'brainbeatsdev@gmail.com',
-        pass: process.env.EMAIL_PASSWORD,
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.APP_PASSWORD,
     },
     secure: true,
 });
@@ -71,7 +71,8 @@ router.post('/sendVerificationEmail', async (req, res) => {
                 to: email,                           // List of receivers
                 subject: subject,
                 text: 'Verify your login to BrainBeats by clicking the following link, or copy and paste it into your browser: ',
-                html: '<a href=\"https://www.brainbeats.dev/verify/${userExists._id}\">Verify Email</a>',
+                // html: '<a href=\"https://www.brainbeats.dev/verify/${userExists._id}\">Verify Email</a>',
+                html: '<a href=\"http://localhost:3000/verify/${userExists._id}\">Verify Email</a>',
             };
 
             transporter.sendMail(mailData, function (err, info) {

@@ -7,6 +7,7 @@ const { user, post } = new PrismaClient();
 // const { JSON } = require("express");
 const { getJWT, verifyJWT } = require("../../utils/jwt");
 const { getUserExists } = require("../../utils/database");
+var nodemailer = require("nodemailer");
 // const multer  = require('multer')
 // const upload = multer()
 const fs = require('fs');
@@ -262,9 +263,14 @@ router.post('/forgotPassword', async (req, res) => {
                 service: 'gmail',
                 auth: {
                     user: `${process.env.EMAIL_ADDRESS}`,
-                    pass: `${process.env.EMAIL_PASSWORD}`
+                    // pass: "pdpiipdhdfzzvzfp"
+                    pass: `${process.env.APP_PASSWORD}`.toString()
                 }
             });
+
+            // DEV Use, later will be checked from .env
+            let devDomain = `http://localhost:3000/`;
+            let prodDomain = `http://brainbeats.dev/`;
 
             // Create mailOptions to build the email
             const mailOptions = {
@@ -274,7 +280,8 @@ router.post('/forgotPassword', async (req, res) => {
                 text:
                     'Hi ' + `${updateUser.username}` + ', \n\n You are receiving this email beacuse you (or someone else) have requested to reset your password for your BrainBeats account. \n\n'
                     + 'Please click the following link, or paste this into your browser to complete the process within one hour of receiving it: \n\n'
-                    + `http://brainbeats.dev/resetPassword?token=${token} \n\n`
+                    + devDomain // TODO Change back to prodDomain
+                    + `resetPassword?token=${token} \n\n`
                     + 'If you did not request this, please ignore this email and your password will remain unchanged. \n\n',
             };
 
