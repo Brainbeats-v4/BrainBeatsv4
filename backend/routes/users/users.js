@@ -301,12 +301,12 @@ router.post('/forgotPassword', async (req, res) => {
     }
 });
 
-// Confirms reset of a password from an email by verifying token integrity
+// Confirms reset of a password from an email by verifying token integrity, then updates that users password
 router.put('/reset', async (req, res) => {
     try {
         const {
             resetPasswordToken,
-            password: newPassword
+            newPassword
          } = req.body;
 
         const user = await prisma.User.findUnique({
@@ -317,20 +317,24 @@ router.put('/reset', async (req, res) => {
                 // },
             },
         });
+        let expired = user.resetPasswordExpires > Date.now();
 
-        if (!user || user.resetPasswordExpires > Date.now()) {
+        if (!user) {
             return res.status(400).json({
                 msg: "Password reset link is invalid, or expired."
             });
         }
 
         const id = user.id;
+        console.log("user id: " + id);
+        console.log("user pass: " + newPassword);
 
+        // Crashing here...
         try {
             await prisma.User.update({
                 where: { id },
                 data: {
-                    password
+                    password: newPassword
                 }
             });
             res.status(200).send({msg: "Password was successfully changed"});
@@ -339,8 +343,6 @@ router.put('/reset', async (req, res) => {
             res.status(500).send({ msg: err });
         }
         
-            
-        res.status(200);
         res.json(user);
     } catch (err) {
         console.log(err);
