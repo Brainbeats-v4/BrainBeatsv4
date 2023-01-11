@@ -11,6 +11,7 @@ import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import Profile from './Pages/Profile';
 import Forgot from './Pages/Forgot';
+import ResetPassword from './Components/ResetPassword/ResetPassword';
 
 // Importing sidebar and navbar
 import Sidebar from './Components/Sidebar/Sidebar';
@@ -36,6 +37,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<SignUp />} />
           <Route path='/forgot' element={<Forgot />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
           <Route path='/profile' element={<Profile />} />
 
           {/* <Route path='/Login' element={user ? <Navigate to='/' /> : <Login />}/>

@@ -2,6 +2,7 @@ import {useState} from "react";
 // import '../Login/Login.css';
 import './Forgot.css';
 import sendAPI from '../../SendAPI';
+import validateEmail from "../../util/validateEmail";
 import { useRecoilState } from 'recoil';
 import { useNavigate } from "react-router-dom";
 // import { userJWT, userModeState } from "../../JWT";
@@ -9,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 const Forgot = () => {
 
     const [email, setEmail] = useState('');
+    const [errorMsg, setErrorMsg] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
     const navigate = useNavigate();
 
     async function doForgot() {
@@ -16,12 +19,25 @@ const Forgot = () => {
             "email": email
         }
 
+        if (!validateEmail(email)){
+            setErrorMsg("Invalid email.");
+            setSuccessMsg("");
+            return;
+        }
+
+        setSuccessMsg("Recovery link sent! \n Please allow at least 5 minutes to recieve the email before trying again.");
+        setErrorMsg("");
+
         sendAPI('post', '/users/forgotPassword', userInformation)
             .then(res => {
                 // setJWT(res.data.token);
                 // setUserMode(res.data.user);
-                navigate('/login');
+                
+                navigate("/login");
             }).catch(err => {
+                setErrorMsg("Failed to send password recovery email.");
+                setSuccessMsg("");
+                // navigate("/login");
                 console.log(err);
             })
     }
@@ -36,8 +52,10 @@ const Forgot = () => {
                     <input type="text" className="form-control" id="formGroupExampleInput" placeholder="example@example.com" onChange={event => setEmail(event.target.value)}/>
                 </div>
                 <div className='container' id='login-btn-container'>
-                    <button type="submit" className="btn btn-primary" id='login-btn' onClick={doForgot}>Send password recovery email</button>
+                    <button type="submit" className="btn btn-primary" id='login-btn' onClick={doForgot}>Send password recovery link</button>
                 </div>
+                <span className="text-center error-msg">{errorMsg}</span>
+                <span className="text-center success-msg">{successMsg}</span>
             </div>
             <div className='container' id='create-account-container'>
                 <a id='sign-up-link' href='/login'>Return to login page</a>

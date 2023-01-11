@@ -12,9 +12,10 @@ const Login = () => {
     const [userMode, setUserMode] = useRecoilState(userModeState);
     const navigate = useNavigate();
 
+
     async function doLogin() {
         const userInformation = {
-            "email": email,
+            "email": email, 
             "password": password
         }
 
@@ -34,8 +35,8 @@ const Login = () => {
                 <div className="bbLogo"></div>
                 <h1 className="login-text text-center fw-semibold">Log in to BrainBeats</h1>
                 <div className="mt-3">
-                    <label className="form-label form-text login-text">Username</label>
-                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Username" onChange={event => setEmail(event.target.value)}/>
+                    <label className="form-label form-text login-text">Email</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="something@example.com" onChange={event => setEmail(event.target.value)}/>
                 </div>
                 <div className="mt-3">
                     <label className="form-label form-text login-text">Password</label>

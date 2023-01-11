@@ -1,7 +1,7 @@
-import { wait } from "@testing-library/user-event/dist/utils";
 import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import sendAPI from "../../SendAPI";
+import validateEmail from "../../util/validateEmail";
 import './SignUp.css';
 
 const SignUp = () => {
@@ -21,15 +21,11 @@ const SignUp = () => {
             setErrorMsg('Please fill out all the input fields and try again.');
             return false;
         }
-        if(!validateEmail) return false;
+        if(!validateEmail(email)) {
+            setErrorMsg('Invalid email input, please re-enter and try again.');
+            return false;
+        }
         return true;
-    }
-    
-    function validateEmail() {
-        var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-])*$/;
-        if (email.match(emailRegex)) return true;
-        setErrorMsg('Invalid email input, please re-enter and try again.');
-        return false;
     }
 
     // function sendValidationEmail() {

@@ -17,9 +17,7 @@ const crypto = require('crypto');
 router.post('/createUser', async (req, res) => {
     try {
         const { firstName, lastName, email, username, password } = req.body;
-
         const userEmailExists = await getUserExists(email, "email");
-
         const userNameExists = await getUserExists(username, "username");
 
         if (userEmailExists || userNameExists) {
@@ -241,6 +239,8 @@ router.post('/forgotPassword', async (req, res) => {
 
         const userExists = await getUserExists(email, "email");
 
+        console.log("this user exists?" + userExists);
+
         if (!userExists) {
             return res.status(400).json({
                 msg: "Email does not exist"
@@ -281,7 +281,7 @@ router.post('/forgotPassword', async (req, res) => {
                     'Hi ' + `${updateUser.username}` + ', \n\n You are receiving this email beacuse you (or someone else) have requested to reset your password for your BrainBeats account. \n\n'
                     + 'Please click the following link, or paste this into your browser to complete the process within one hour of receiving it: \n\n'
                     + devDomain // TODO Change back to prodDomain
-                    + `resetPassword?token=${token} \n\n`
+                    + `reset-password?token=${token} \n\n`
                     + 'If you did not request this, please ignore this email and your password will remain unchanged. \n\n',
             };
 
@@ -321,7 +321,32 @@ router.get('/reset', async (req, res) => {
             });
         }
             
+        res.status(200);
         res.json(user);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({ msg: err });
+    }
+});
+
+router.put('/updatePassword', async (req, res) => {
+    try {
+        // Check if the user already exists in db
+        const userExists = await getUserExists(id, "id");
+
+        if (!userExists) {
+            return res.status(400).json({
+                msg: "User ID not found"
+            });
+        } else {
+            await prisma.User.update({
+                where: { id },
+                data: {
+                    password: password
+                }
+            });
+            res.status(200).send({msg: "Password was successfully changed"});
+        }
     } catch (err) {
         console.log(err);
         res.status(500).send({ msg: err });

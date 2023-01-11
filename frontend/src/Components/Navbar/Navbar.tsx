@@ -16,6 +16,7 @@ const Navbar = () => {
     function doLogout() {
         setJWT('');
         setUserMode(null);
+        navigate('/login');
     }
 
   return (
