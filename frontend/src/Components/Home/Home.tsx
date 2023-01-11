@@ -11,8 +11,7 @@ const Home = () => {
     return (
         <div className='container' id='home-container'>
             <Carousel />
-            <br /><br />
-            <h3 className="text-decoration-underline" id="featured-tracks-heading">Featured Tracks</h3>
+            <h2 className="text-decoration-underline" id="featured-tracks-heading">Featured Tracks</h2>
             <div className='container' id='track-card-container'>
                 <TrackCard />
             </div>
