@@ -3,8 +3,13 @@
     display: flex;
     flex-direction: column;
     width: 100vw !important;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
+#carousel-container {
+    width: 100%;
+}
 /* CSS for Tracks Section on Home */
 #featured-tracks-heading { 
     color: #ffffff;
@@ -16,6 +21,6 @@
     display: flex;
     flex-direction: column;
     background-color: none;
-    width: 100vw;
+    /* width: 100vw; */
 }
 
