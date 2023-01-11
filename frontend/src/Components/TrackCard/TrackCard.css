@@ -1,6 +1,7 @@
 /* CSS for Music Track Cards */
 .card {
     background-color: #565656;
+    filter: drop-shadow(0px 4px 4px #181818);
     width: 18vw;
     height: fit-content;
     border-radius: 10px;  
@@ -11,6 +12,10 @@
 }
 
 .card:hover{
+    background-color: #7c7c7c;
+    border-color: rgb(60, 60, 60);
+}
+.card:active{
     background-color: #7c7c7c;
     border-color: rgb(60, 60, 60);
 }
