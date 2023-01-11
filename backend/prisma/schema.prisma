@@ -20,7 +20,7 @@ model User {
   bio       String?   @db.LongText
   profilePicture String? @db.LongText // Store file path in database instead of the actual image
   createdAt DateTime  @default(now())
-  resetPasswordToken String? @db.LongText
+  resetPasswordToken String? @unique @db.VarChar(255) // @db.LongText
   resetPasswordExpires DateTime? @db.DateTime
   Posts Post[]
   Playlists Playlist[]

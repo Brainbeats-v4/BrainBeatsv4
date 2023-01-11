@@ -21,41 +21,36 @@ const ResetPassword = () => {
         return true;
     }
 
-    async function verifyResetToken() {
+    async function changePassword() {
+
         const userData = {
-            resetPasswordToken: "asdfasdfasdfs"// grab token from url
+            resetPasswordToken: parseToken(),
+            newPassword
         }
 
-        await sendAPI("get", "/reset", userData).then((res) => {
-            setErrorMsg("");
-            setSuccessMsg("");
+        await sendAPI("put", "/users/reset", userData).then((res) => {
+            // setErrorMsg("");
+            // setSuccessMsg("");
             console.log(res);
-            return true;
-
+            navigate("/login");
 
         }).catch((err) => {
-            setErrorMsg(err);
-            setSuccessMsg("");
+            // setErrorMsg(err);
+            // setSuccessMsg("");
             console.log(err);
-            return false;
         })
     }
 
-    async function changePassword(user: any, password: String) {
-
-        //
-        // await sendAPI("put", "/", ).then((res) => {})
-
+    function parseToken() {
+        let url = window.location.href;
+        return url.split("=")[1];
     }
 
     function doReset() {
-
-        if (!verifyResetToken()) return;
         if (!passwordsMatch) return;
-        
-
-
-        
+        console.log(parseToken());
+        setErrorMsg(parseToken());
+        changePassword();
     }
 
 

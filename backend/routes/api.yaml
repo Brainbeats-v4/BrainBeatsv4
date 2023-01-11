@@ -112,6 +112,32 @@ paths:
           404:
             description: URL Not Found
 
+      # Find user by reset password token
+    /api/users/getUserByResetPasswordToken/:
+      get:
+        tags:
+          - Users
+        summary: Search a user by with their reset password token
+        operationId: getUserByResetPasswordToken
+        description: Search a user in the database
+        consumes: 
+        - application/json
+        produces:
+        - application/json
+        parameters:
+        - in: query
+          name: resetPasswordToken
+          schema:
+            type: string
+          description: Enter a reset password token
+          schema:
+            type: string
+        responses:
+          200:
+            description: OK
+          404:
+            description: URL Not Found
+
   # Update user information
     /api/users/updateUser:
       put:

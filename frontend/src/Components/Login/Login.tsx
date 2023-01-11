@@ -11,6 +11,8 @@ const Login = () => {
     const [JWT, setJWT] = useRecoilState(userJWT);
     const [userMode, setUserMode] = useRecoilState(userModeState);
     const navigate = useNavigate();
+    const [errorMsg, setErrorMsg] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
 
 
     async function doLogin() {
@@ -24,8 +26,10 @@ const Login = () => {
                 setJWT(res.data.token);
                 setUserMode(res.data.user);
                 navigate('/profile');
+                setErrorMsg("");
             }).catch(err => {
                 console.log(err);
+                setErrorMsg("Incorrect email and password combination.")
             })
     }
 
@@ -45,6 +49,10 @@ const Login = () => {
                 <a id='forgot-pass-link' href='/forgot'>Forgot Password?</a>
                 <div className='container' id='login-btn-container'>
                     <button type="submit" className="btn btn-primary" id='login-btn' onClick={doLogin}>Log in</button>
+                </div>
+                <div id="error-msg-container">
+                    <span className="text-center error-msg">{errorMsg}</span>
+                    <span className="text-center success-msg">{successMsg}</span>
                 </div>
             </div>
             <div className='container' id='create-account-container'>

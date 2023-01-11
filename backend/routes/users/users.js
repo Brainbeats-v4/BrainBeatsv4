@@ -302,24 +302,43 @@ router.post('/forgotPassword', async (req, res) => {
 });
 
 // Confirms reset of a password from an email by verifying token integrity
-router.get('/reset', async (req, res) => {
+router.put('/reset', async (req, res) => {
     try {
-        const resetPasswordToken = req.query.resetPasswordToken;
+        const {
+            resetPasswordToken,
+            password: newPassword
+         } = req.body;
 
         const user = await prisma.User.findUnique({
             where: { 
-                resetPasswordToken: resetPasswordToken,
-                resetPasswordExpires: {
-                    $gt: Date.now(),
-                },
+                resetPasswordToken: resetPasswordToken
+                // resetPasswordExpires: {
+                //     $gt: Date.now(),
+                // },
             },
         });
 
-        if (!user) {
+        if (!user || user.resetPasswordExpires > Date.now()) {
             return res.status(400).json({
-                msg: "Password reset link is invalid or has expired."
+                msg: "Password reset link is invalid, or expired."
             });
         }
+
+        const id = user.id;
+
+        try {
+            await prisma.User.update({
+                where: { id },
+                data: {
+                    password
+                }
+            });
+            res.status(200).send({msg: "Password was successfully changed"});
+        } catch (err) {
+            console.log(err);
+            res.status(500).send({ msg: err });
+        }
+        
             
         res.status(200);
         res.json(user);
@@ -328,29 +347,4 @@ router.get('/reset', async (req, res) => {
         res.status(500).send({ msg: err });
     }
 });
-
-router.put('/updatePassword', async (req, res) => {
-    try {
-        // Check if the user already exists in db
-        const userExists = await getUserExists(id, "id");
-
-        if (!userExists) {
-            return res.status(400).json({
-                msg: "User ID not found"
-            });
-        } else {
-            await prisma.User.update({
-                where: { id },
-                data: {
-                    password: password
-                }
-            });
-            res.status(200).send({msg: "Password was successfully changed"});
-        }
-    } catch (err) {
-        console.log(err);
-        res.status(500).send({ msg: err });
-    }
-});
-
 module.exports = router;
