@@ -16,9 +16,7 @@ router.get('/verifyJWT', async (req, res) => {
         console.log(err);
         res.status(500).send(err);
     }
-});
-
-// Wrap in callable function?  
+}); 
 
 const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
@@ -33,7 +31,7 @@ const transporter = nodemailer.createTransport({
 // Send Email to user to verify login
 router.post('/sendVerificationEmail', async (req, res) => {
     try {
-        const { email, subject, text } = req.body;
+        const { email, subject, text} = req.body;
         const userExists = await prisma.user.findUnique({
             where: { email },
             select: { email: true }
@@ -45,7 +43,7 @@ router.post('/sendVerificationEmail', async (req, res) => {
                 from: 'brainbeatsucf@gmail.com',  // Sender address
                 to: email,                           // List of receivers
                 subject: subject,
-                text: 'Verify your login to BrainBeats by clicking the following link, or copy and paste it into your browser: ',
+                text: "Verify your login to BrainBeats by clicking the following link, or copy and paste it into your browser: ",
                 // html: '<a href=\"https://www.brainbeats.dev/verify/${userExists._id}\">Verify Email</a>',
                 html: '<a href=\"http://localhost:3000/verify/${userExists._id}\">Verify Email</a>',
             };

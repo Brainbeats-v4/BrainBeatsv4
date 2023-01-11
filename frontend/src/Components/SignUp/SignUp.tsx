@@ -1,3 +1,4 @@
+import { userInfo } from "os";
 import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import sendAPI from "../../SendAPI";
@@ -28,11 +29,20 @@ const SignUp = () => {
         return true;
     }
 
-    // function sendValidationEmail() {
-
-    // }
+    async function sendValidationEmail(userInformation: any) {
+        const userData = {
+            "email": userInformation.email,
+            "subject": "BrainBeats account verification for " + userInformation.firstName + " " + userInformation.lastName + "."
+        }
+        await sendAPI("post", "/authentication/sendVerificationEmail", userData).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
+        return false;
+    }
     
-    function doSignUp() {
+    async function doSignUp() {
         const userInformation = {
             "email": email,
             "username": username,
@@ -43,12 +53,13 @@ const SignUp = () => {
 
         if(validateFields()) {
             // continue register
-            sendAPI('post', '/users/createUser', userInformation)
+            await sendAPI('post', '/users/createUser', userInformation)
                 .then(res => {
                     setSuccessMsg('Account created successfully, you will shortly be redirected.');
-                    // TODO disable other buttons
                     setErrorMsg('');
                     console.log(res);
+
+                    sendValidationEmail(userInformation);
                     navigate("/login");
 
                 }).catch(err => {
