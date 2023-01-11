@@ -35,7 +35,7 @@ function PopulateTrackCards() {
     let testArr = [];
     for(let i = 0; i < MAX_ROWS; i++){
         
-        let populateStr:string = '<div className="row">';
+        let populateStr:string = '<div className="row" id="track-row">';
         let defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
         
         for(let j = 0; j < MAX_COLS; j++) {
@@ -46,12 +46,12 @@ function PopulateTrackCards() {
             let title = JSON.stringify(currentTrack.title);
             let user = JSON.stringify(currentTrack.user);
 
-            populateStr += '<div className="col">'
+            populateStr += '<div className="col" id="track-col">'
                             + '<div className="card" href="' + trackLink +'">'
                                 + '<img src=' + image + ' className="card-img-top" id="card-img-ID" alt="..."/> '
                                 + '<div className="card-body">'
-                                    + '<h5 className="card-title">' + title + '</h5>'
-                                    + '<p className="card-text">' + user + '</p>'
+                                    + '<h5 className="card-title">' + title.replace(/\"/g, "") + '</h5>'
+                                    + '<p className="card-text">' + 'By ' + user.replace(/\"/g, "") + '</p>'
                                 + '</div>'
                             + '</div>'
                         +  '</div>' 

@@ -1,10 +1,13 @@
 /* CSS for Music Track Cards */
 .card {
     background-color: #565656;
-    width: 20vw;
+    width: 18vw;
     height: fit-content;
     border-radius: 10px;  
-    padding-top: 5px;
+    margin-bottom: 20px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
 }
 
 .card:hover{
@@ -19,7 +22,23 @@
 }
 
 .card-img-top {
-    width: 16vw;
+    width: 15vw;
     align-self: center; 
-    border-radius: 10px;  
+    border-radius: 10px;
+    padding: 5px;  
+}
+
+.card-title{
+    text-align: left;
+    font-weight: 600;
+}
+
+.card-text{
+    text-align: left;
+    font-weight: 350;
+}
+
+#track-col{
+    display: flex;
+    justify-content: center;
 }
