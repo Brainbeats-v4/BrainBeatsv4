@@ -11,7 +11,6 @@ import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import Profile from './Pages/Profile';
 import Forgot from './Pages/Forgot';
-import AdvSettings from './Pages/AdvSettings';
 
 // Importing sidebar and navbar
 import Sidebar from './Components/Sidebar/Sidebar';
@@ -38,7 +37,6 @@ function App() {
           <Route path='/register' element={<SignUp />} />
           <Route path='/forgot' element={<Forgot />} />
           <Route path='/profile' element={<Profile />} />
-          <Route path='/adv-settings' element={<AdvSettings />} />
 
           {/* <Route path='/Login' element={user ? <Navigate to='/' /> : <Login />}/>
           <Route path='/Signup' element={user ? <Home /> :<Signup />} /> */}
