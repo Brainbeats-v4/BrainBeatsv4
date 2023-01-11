@@ -19,6 +19,8 @@ const Navbar = () => {
         navigate('/login');
     }
 
+    // TODO: Profile button to have duplicate button with pfp as icon in sidebar 
+
   return (
     <div className="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
         {/* If there isn't a user signed in, prompt them to do so */}
@@ -31,6 +33,7 @@ const Navbar = () => {
         {user && <ul className="navbar-nav ml-auto">
             <form className="form-inline" id="formID">
                 <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doLogout()} type="button" id="signUpBtn">Sign Out</button>
+                <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doNavigate("/Profile")} type="button" id="signUpBtn">Profile</button>
             </form>    
         </ul>
         }

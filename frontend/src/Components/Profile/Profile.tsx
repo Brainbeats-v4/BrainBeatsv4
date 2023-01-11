@@ -49,7 +49,7 @@ const Profile = () => {
             </div>
             <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} type="file"/>
             <hr></hr>
-            <div>
+            {/* <div>
                 <ul>
                     {
                         userTracks.map(function(userTrack, index) {
@@ -60,7 +60,7 @@ const Profile = () => {
                         })
                     }
                 </ul>
-            </div>
+            </div> */}
         </div>
 
     )
