@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const { user, post } = new PrismaClient();
 // const { JSON } = require("express");
 const { getJWT, verifyJWT } = require("../../utils/jwt");
-const { getUserExists } = require("../../utils/database");
+const { getUserExists, getIsTokenExpired } = require("../../utils/database");
 var nodemailer = require("nodemailer");
 // const multer  = require('multer')
 // const upload = multer()
@@ -309,41 +309,38 @@ router.put('/reset', async (req, res) => {
             newPassword
          } = req.body;
 
-        const user = await prisma.User.findUnique({
-            where: { 
-                resetPasswordToken: resetPasswordToken
-                // resetPasswordExpires: {
-                //     $gt: Date.now(),
-                // },
-            },
+        // console.log(getIsTokenExpired(resetPasswordToken));
+
+        // Check if the token is expired
+        // if (getIsTokenExpired(resetPasswordToken)){
+        //     return res.status(400).json({
+        //         msg: "Password reset link is expired."
+        //     });
+        // }
+
+        //Encrypt user password
+        encryptedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Select the user by reset token and update their password
+        const user = await prisma.User.update({
+            where: { resetPasswordToken },
+            // resetPasswordExpires: {
+            //     $gt: Date.now(),
+            // },
+            data: {
+                password: encryptedPassword
+            }
         });
-        let expired = user.resetPasswordExpires > Date.now();
 
-        if (!user) {
-            return res.status(400).json({
-                msg: "Password reset link is invalid, or expired."
-            });
-        }
+        // // If no user was found, error 400
+        // if (!user) {
+        //     return res.status(400).json({
+        //         msg: "Password reset link is invalid."
+        //     });
+        // }
 
-        const id = user.id;
-        console.log("user id: " + id);
-        console.log("user pass: " + newPassword);
-
-        // Crashing here...
-        try {
-            await prisma.User.update({
-                where: { id },
-                data: {
-                    password: newPassword
-                }
-            });
-            res.status(200).send({msg: "Password was successfully changed"});
-        } catch (err) {
-            console.log(err);
-            res.status(500).send({ msg: err });
-        }
-        
         res.json(user);
+        res.status(200).send({msg: "Password was successfully changed"});
     } catch (err) {
         console.log(err);
         res.status(500).send({ msg: err });

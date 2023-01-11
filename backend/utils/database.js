@@ -36,6 +36,20 @@ async function getUserExists(searchVal, searchType) {
     return result;
 }
 
+async function getIsTokenExpired(searchVal) {
+    let result = false;
+    let expirationDate = await prisma.User.findUnique({
+        where: { resetPasswordToken: searchVal },
+        select: {
+            resetPasswordExpires: true,
+        }
+    });
+
+    if (!expirationDate || expirationDate < Date.now()) result = true;
+    
+    return result;
+}
+
 // Gets whether a post exists or not based on the field leading the query.
 async function getPostExists(searchVal, searchType) {
     let result;
@@ -86,5 +100,6 @@ module.exports = {
     getUserExists: getUserExists,
     getPostExists: getPostExists,
     getPlaylistExists: getPlaylistExists,
-    getLikeExists: getLikeExists
+    getLikeExists: getLikeExists,
+    getIsTokenExpired: getIsTokenExpired
 }
