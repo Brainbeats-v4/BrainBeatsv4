@@ -43,7 +43,21 @@
     font-weight: 350;
 }
 
-#track-col{
+.track-col{
     display: flex;
     justify-content: center;
+}
+
+.btn-primary{
+    --bs-btn-active-bg: #585858;
+    --bs-btn-active-border-color: rgb(44, 44, 44);
+}
+
+#pop-up
+{
+    /* display: none; */
+    background-color: rone;
+    width: 100%;
+    height: 100%;
+
 }
