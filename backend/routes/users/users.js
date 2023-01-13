@@ -239,8 +239,6 @@ router.post('/forgotPassword', async (req, res) => {
 
         const userExists = await getUserExists(email, "email");
 
-        console.log("this user exists?" + userExists);
-
         if (!userExists) {
             return res.status(400).json({
                 msg: "Email does not exist"
@@ -254,7 +252,7 @@ router.post('/forgotPassword', async (req, res) => {
                 where: { email },
                 data: {
                     resetPasswordToken: token,
-                    resetPasswordExpires: new Date(Date.now() + 3600000)
+                    resetPasswordExpires: new Date(Date.now() + 1400000) // 30 mins exp
                 }
             });
 
@@ -282,6 +280,7 @@ router.post('/forgotPassword', async (req, res) => {
                     + 'Please click the following link, or paste this into your browser to complete the process within one hour of receiving it: \n\n'
                     + devDomain // TODO Change back to prodDomain
                     + `reset-password?token=${token} \n\n`
+                    + 'Your reset link will remain valid for 30 minutes.\n\n'
                     + 'If you did not request this, please ignore this email and your password will remain unchanged. \n\n',
             };
 
@@ -309,14 +308,14 @@ router.put('/reset', async (req, res) => {
             newPassword
          } = req.body;
 
-        // console.log(getIsTokenExpired(resetPasswordToken));
-
         // Check if the token is expired
-        // if (getIsTokenExpired(resetPasswordToken)){
-        //     return res.status(400).json({
-        //         msg: "Password reset link is expired."
-        //     });
-        // }
+        let tok = await getIsTokenExpired(resetPasswordToken);
+
+        if (tok) {
+            return res.status(400).send({
+                msg: "Password reset link is expired."
+            });
+        }
 
         //Encrypt user password
         encryptedPassword = await bcrypt.hash(newPassword, 10);
@@ -328,18 +327,12 @@ router.put('/reset', async (req, res) => {
             //     $gt: Date.now(),
             // },
             data: {
-                password: encryptedPassword
+                password: encryptedPassword,
+                resetPasswordExpires: null,
+                resetPasswordToken: null
             }
         });
 
-        // // If no user was found, error 400
-        // if (!user) {
-        //     return res.status(400).json({
-        //         msg: "Password reset link is invalid."
-        //     });
-        // }
-
-        res.json(user);
         res.status(200).send({msg: "Password was successfully changed"});
     } catch (err) {
         console.log(err);

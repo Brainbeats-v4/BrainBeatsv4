@@ -1,6 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
+const { join } = require("@prisma/client/runtime");
 const prisma = new PrismaClient();
 const bcrypt = require('bcryptjs');
+
 
 // Gets whether a user exists or not based on the field leading the query.
 async function getUserExists(searchVal, searchType) {
@@ -37,17 +39,14 @@ async function getUserExists(searchVal, searchType) {
 }
 
 async function getIsTokenExpired(searchVal) {
-    let result = false;
-    let expirationDate = await prisma.User.findUnique({
+    let data = await prisma.User.findUnique({
         where: { resetPasswordToken: searchVal },
         select: {
             resetPasswordExpires: true,
         }
     });
 
-    if (!expirationDate || expirationDate < Date.now()) result = true;
-    
-    return result;
+    return data == null ? false : data.resetPasswordExpires < Date.now();
 }
 
 // Gets whether a post exists or not based on the field leading the query.

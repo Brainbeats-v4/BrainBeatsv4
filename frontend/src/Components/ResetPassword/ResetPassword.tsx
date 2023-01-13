@@ -35,8 +35,8 @@ const ResetPassword = () => {
             navigate("/login");
 
         }).catch((err) => {
-            // setErrorMsg(err);
-            // setSuccessMsg("");
+            setErrorMsg("Link expired" + "  " + err);
+            setSuccessMsg("");
             console.log(err);
         })
     }
@@ -49,7 +49,6 @@ const ResetPassword = () => {
     function doReset() {
         if (!passwordsMatch) return;
         console.log(parseToken());
-        setErrorMsg(parseToken());
         changePassword();
     }
 
