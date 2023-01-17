@@ -8,15 +8,13 @@ import Carousel from '../Carousel/Carousel';
 
 
 const Home = () => {
-
-
     // Api call for featured tracks
     return (
         <div className='container' id='home-container'>
             <Carousel />
             <h2 className="text-decoration-underline" id="featured-tracks-heading">Featured Tracks</h2>
             <div className='container' id='track-card-container'>
-                <TrackCard />
+                <TrackCard cardType={'Popular'} userId={null}/>
             </div>
         </div>);
 

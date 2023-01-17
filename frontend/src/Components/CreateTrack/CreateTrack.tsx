@@ -6,7 +6,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { userJWT, userModeState } from "../../JWT";
 import { upload } from '@testing-library/user-event/dist/upload';
 
-
+/* uploadPost will be moved from here into the record, the logic is useful for now though */
 
 const CreateTrack = () => {
 

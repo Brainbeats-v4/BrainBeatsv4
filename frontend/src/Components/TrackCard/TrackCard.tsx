@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import './TrackCard.css';
-import {Button, Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import TrackModal from '../Modal/TrackModal';
 import sendAPI from '../../SendAPI';
 
-const TrackCard = () => {
+type Props = {
+    cardType:string;
+    userId: any;
+}
+
+const TrackCard: React.FC<Props> = ({cardType, userId}) => {
     interface Track {
         createdAt: string;
         id: string;
@@ -36,7 +41,6 @@ const TrackCard = () => {
             .then(res => {
                 for(var i = 0; i < res.data.length; i++) {
                     if(i > numTracks) break;
-                    console.log(res.data[i]);
                     var currentTrack:Track = {
                         createdAt: res.data[i].createdAt,
                         id: res.data[i].id,
@@ -57,6 +61,29 @@ const TrackCard = () => {
             });
         return;
     }
+    async function getProfileTracks() {
+        var objArray:Track[] = [];
+        var user = {userID: userId};
+        await sendAPI('get', '/posts/getUserPostsByID', user)
+        .then(res => {
+            for(var i = 0; i < res.data.length; i++) {
+                var currentTrack:Track = {
+                    createdAt: res.data[i].createdAt,
+                    id: res.data[i].id,
+                    likeCount: res.data[i].likeCount,
+                    midi: res.data[i].midi,
+                    public: res.data[i].public,
+                    thumbnail: res.data[i].thumbnail,
+                    title: res.data[i].title,
+                    userID: res.data[i].userID,
+                    username: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
+                }
+                objArray.push(currentTrack);
+            }
+            setTrackList(objArray);
+        })
+
+    }
     
     function PopulateTrackCards() {
         const MAX_COLS:number = 4;
@@ -65,9 +92,12 @@ const TrackCard = () => {
         var currentTrackCounter:number = 0;
         const defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
         if(trackList.length === 0) {
-            getPopularTracks(MAX_COLS * MAX_ROWS);
+            if(cardType === 'Profile') {
+                getProfileTracks();
+            } else if(cardType === 'Popular'){
+                getPopularTracks(MAX_COLS * MAX_ROWS);
+            }
         }
-        console.log(trackList);
         for(let i = 0; i < MAX_ROWS; i++){
             for(let j = 0; j < MAX_COLS; j++) {
                 let currentTrack = trackList[currentTrackCounter++];

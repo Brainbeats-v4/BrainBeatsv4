@@ -137,9 +137,8 @@ router.get('/getPostsByTitle', async (req, res) => {
 router.get('/getUserPostsByID', async (req, res) => {
     try {
         const userID = req.query.userID;
-
         const userExists = await getUserExists(userID, "id");
-
+        console.log('got here');
         if (!userExists) {
             return res.status(400).json({
                 msg: "User not found"
