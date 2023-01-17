@@ -1,18 +1,50 @@
 import react from 'react';
 import './CreateTrack.css';
+import sendAPI from "../../SendAPI";
+import { useState } from 'react';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { userJWT, userModeState } from "../../JWT";
+import { upload } from '@testing-library/user-event/dist/upload';
+
+
 
 const CreateTrack = () => {
 
     const [generationType, setGenerationType] = react.useState('slowAndMelodic');
-
-    const press = function (btn: string) {
-        setGenerationType(btn);
-    }
-    
     // Function for toggling between Basic and Advanced Settings.
     const[advSettingsOpen, setAdvSettingsOpen] = react.useState(false);
     const toggle = () => setAdvSettingsOpen(!advSettingsOpen);
+    const [postTitle, setPostTitle] = useState('');
+    const [thumbnail, setThumbnail] = useState('');
+    const [likes, setLikes] = useState(0);
+    const [user, setUser] = useRecoilState(userModeState);
+    const jwt = useRecoilValue(userJWT);
+    
+    const press = function (btn: string) {
+        
+    }
 
+    function uploadPost() {
+        console.log(likes);
+        const info = {
+            userID: user.userId,
+            title: postTitle,
+            bpm: 0,
+            key: '',
+            midi: '',
+            instruments: {},
+            noteTypes: {},
+            token: jwt,
+            thumbnail: thumbnail,
+            likeCount: likes
+        }
+        sendAPI('post', '/posts/createPost', info)
+            .then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
+            })
+    }
     return (
         <div className='container' id='main-container'>
             {/* Displays on Basic Settings */}
@@ -171,7 +203,22 @@ const CreateTrack = () => {
                     </div>
                 </div>
              </div>
-        </div>);
+            <div>
+                <label className="form-label signup-text">Title</label>
+                <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setPostTitle(event.target.value)}/>
+            </div>
+            <div>
+                <label className="form-label signup-text">Thumbnail</label>
+                <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setThumbnail(event.target.value)}/>
+            </div>
+            <div>
+                <label className="form-label signup-text">Likes</label>
+                <input type="number" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setLikes(event.target.valueAsNumber)}/>
+            </div>
+            <button onClick={uploadPost}>Click me</button>
+        </div>
+        
+        );
 }
 
 export default CreateTrack;

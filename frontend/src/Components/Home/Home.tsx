@@ -4,10 +4,13 @@ import './Home.css';
 import TrackCard from '../TrackCard/TrackCard';
 import Carousel from '../Carousel/Carousel';
 
+
+
+
 const Home = () => {
 
+
     // Api call for featured tracks
-    
     return (
         <div className='container' id='home-container'>
             <Carousel />
@@ -15,7 +18,6 @@ const Home = () => {
             <div className='container' id='track-card-container'>
                 <TrackCard />
             </div>
-            
         </div>);
 
 

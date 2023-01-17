@@ -40,8 +40,8 @@ model Post {
   user   User         @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID String // relation scalar field  (used in the `@relation` attribute above)
   createdAt DateTime  @default(now())
-  Likes Like[]
   PlaylistPosts PlaylistPost[]
+  public Boolean
 }
 
 model Playlist {

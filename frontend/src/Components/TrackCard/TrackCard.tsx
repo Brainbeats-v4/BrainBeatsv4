@@ -2,65 +2,23 @@ import { useState } from 'react';
 import './TrackCard.css';
 import {Button, Modal } from 'react-bootstrap';
 import TrackModal from '../Modal/TrackModal';
-
-let getPopularTracks = (numTracks:number) => {
-    // hit api for 'numTracks' tracks
-    
-    let objArray = [
-        {"user":"leinecker", "title":"BrainBeats Track", "imageSrc": "https://blog.dozmia.com/content/images/2019/01/Portrait-The-Weeknd.jpg", "trackLink":"#"},
-        {"user":"heinrich", "title":"bot", "imageSrc": "https://preview.redd.it/q12z8iajgqm01.jpg?auto=webp&s=910c47b3bf8b9458f88bcc13208b0175455dbb35","trackLink":"#"},
-        {"user":"knightro", "title":"just another knight", "imageSrc": "https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png","trackLink":"#"},
-        {"user":"people", "title":"making music", "imageSrc": "", "trackLink":"#"},
-        {"user":"people", "title":"making music", "imageSrc": "", "trackLink":"#"},
-        {"user":"people", "title":"making music", "imageSrc": "", "trackLink":"#"},
-        {"user":"people", "title":"making music", "imageSrc": "", "trackLink":"#"},
-        {"user":"people", "title":"making music", "imageSrc": "", "trackLink":"#"}
-    ];
-
-    return objArray;
-}
-
-function redirectToTrack() {
-    
-    return;
-}
-
-function PopulateTrackCards() {
-    const MAX_COLS:number = 4;
-    const MAX_ROWS:number = 2;
-    const POPULAR_TRACKS = getPopularTracks((MAX_ROWS * MAX_COLS));
-    
-    var gridArray:any[] = [];
-    
-    var currentTrackCounter:number = 0;
-    let testArr = [];
-    for(let i = 0; i < MAX_ROWS; i++){
-        
-        let defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
-        for(let j = 0; j < MAX_COLS; j++) {
-            let currentTrack = POPULAR_TRACKS[currentTrackCounter++];
-            let image = currentTrack.imageSrc === "" ? defaultImage : currentTrack.imageSrc;
-            //let trackLink = JSON.stringify(currentTrack.trackLink);
-            let title = currentTrack.title;
-            let user = currentTrack.user;
-
-            var obj = {
-                title: title,
-                user: user,
-                image: image
-            }
-            gridArray.push(obj);
-        }
-    }
-    return gridArray;
-}
+import sendAPI from '../../SendAPI';
 
 const TrackCard = () => {
+    interface Track {
+        createdAt: string;
+        id: string;
+        likeCount: number;
+        midi: string;
+        public: boolean;
+        thumbnail: string;
+        title: string;
+        userID: string;
+    }
 
     // For displaying Modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    
     const [currentTrack, setCurrentTrack] = useState(
         {
             title: '',
@@ -68,8 +26,66 @@ const TrackCard = () => {
             image: ' ',
         }
     );
+    const [trackList, setTrackList] = useState<Track[]>([])
 
-   function setTrack(currentTrack: any) {
+    async function getPopularTracks(numTracks:number) {
+        // hit api for 'numTracks' tracks
+        var objArray:Track[] = [];
+        await sendAPI('get', '/posts/getPublicPopularPosts')
+            .then(res => {
+                for(var i = 0; i < res.data.length; i++) {
+                    if(i > numTracks) break;
+                    var currentTrack:Track = {
+                        createdAt: res.data[i].createdAt,
+                        id: res.data[i].string,
+                        likeCount: res.data[i].likeCount,
+                        midi: res.data[i].midi,
+                        public: res.data[i].public,
+                        thumbnail: res.data[i].thumbnail,
+                        title: res.data[i].title,
+                        userID: res.data[i].userID
+                    }
+                    objArray.push(currentTrack);
+                }
+                setTrackList(objArray);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        return;
+    }
+    
+    function PopulateTrackCards() {
+        const MAX_COLS:number = 4;
+        const MAX_ROWS:number = 2;
+        var gridArray:any[] = [];
+        var currentTrackCounter:number = 0;
+        const defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
+        
+        if(trackList.length === 0) {
+            getPopularTracks(MAX_COLS * MAX_ROWS);
+        }
+        for(let i = 0; i < MAX_ROWS; i++){
+            for(let j = 0; j < MAX_COLS; j++) {
+                let currentTrack = trackList[currentTrackCounter++];
+                if(currentTrack == null) break;
+                let image = currentTrack.thumbnail === "" ? defaultImage : currentTrack.thumbnail;
+                //let trackLink = JSON.stringify(currentTrack.trackLink);
+                let title = currentTrack.title;
+                let user = currentTrack.userID;
+    
+                var obj = {
+                    title: title,
+                    user: user,
+                    image: image
+                }
+                gridArray.push(obj);
+            }
+        }
+        return gridArray;
+    }
+
+   function setTrack(currentTrack:any) {
         setShow(true);
         setCurrentTrack(currentTrack);
     }

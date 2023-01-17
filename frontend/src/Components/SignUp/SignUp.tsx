@@ -56,7 +56,7 @@ const SignUp = () => {
                     setSuccessMsg('Account created successfully, you will shortly be redirected.');
                     setErrorMsg('');
                     console.log(res);
-
+                    
                     sendValidationEmail(userInformation);
                     navigate("/login");
 

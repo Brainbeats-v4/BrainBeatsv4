@@ -10,8 +10,8 @@ const { getUserExists, getPostExists } = require("../../utils/database");
 // Create a post
 router.post('/createPost', async (req, res) => {
     try {
-        const { userID, title, bpm, key, midi, instruments, noteTypes, visibility, token, thumbnail} = req.body;
-
+        const { userID, title, bpm, key, midi, instruments, noteTypes, token, thumbnail, likeCount} = req.body;
+        console.log(likeCount);
         const decoded = verifyJWT(token);
 
         if (!decoded) {
@@ -21,7 +21,7 @@ router.post('/createPost', async (req, res) => {
         }
 
         const userExists = await getUserExists(userID, "id");
-
+        console.log(userExists);
         if (!userExists) {
             return res.status(400).json({
                 msg: "User not found"
@@ -30,7 +30,11 @@ router.post('/createPost', async (req, res) => {
             // Create a single record
             const newPost = await prisma.Post.create({
                 data: {
-                    userID: userID,
+                    user: {
+                        connect: {
+                            id: userID
+                        }
+                    },
                     title: title,
                     bpm: bpm,
                     key: key,
@@ -38,7 +42,8 @@ router.post('/createPost', async (req, res) => {
                     noteTypes: noteTypes,
                     thumbnail: thumbnail,
                     midi: midi,
-                    likeCount: 0
+                    likeCount: likeCount,
+                    public: true
                 }
             });
 
@@ -191,6 +196,20 @@ router.delete('/deletePost', async (req, res) => {
         console.log(err);
         res.status(500).send(err);
     }
+});
+
+router.get('/getPublicPopularPosts', async(req, res) => {
+    const posts = await prisma.Post.findMany({
+        where: {
+          likeCount: {
+            gte: 10,
+          },
+          public: {
+            equals: true
+          }
+        },
+    })
+    res.json(posts)
 });
 
 // Update user post info 

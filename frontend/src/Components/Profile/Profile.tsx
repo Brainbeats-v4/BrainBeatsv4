@@ -1,7 +1,6 @@
 import './Profile.css'
 
-import { useRecoilValue } from 'recoil';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { userJWT, userModeState } from "../../JWT";
 import sendAPI from '../../SendAPI';
 
