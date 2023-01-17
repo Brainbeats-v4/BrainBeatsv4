@@ -41,7 +41,7 @@ model Post {
   userID String // relation scalar field  (used in the `@relation` attribute above)
   createdAt DateTime  @default(now())
   PlaylistPosts PlaylistPost[]
-  public Boolean
+  public Boolean,
 }
 
 model Playlist {

@@ -25,7 +25,6 @@ const CreateTrack = () => {
     }
 
     function uploadPost() {
-        console.log(likes);
         const info = {
             userID: user.userId,
             title: postTitle,

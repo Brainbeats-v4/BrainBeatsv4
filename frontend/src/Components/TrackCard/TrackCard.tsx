@@ -14,6 +14,7 @@ const TrackCard = () => {
         thumbnail: string;
         title: string;
         userID: string;
+        username: string;
     }
 
     // For displaying Modal
@@ -35,15 +36,17 @@ const TrackCard = () => {
             .then(res => {
                 for(var i = 0; i < res.data.length; i++) {
                     if(i > numTracks) break;
+                    console.log(res.data[i]);
                     var currentTrack:Track = {
                         createdAt: res.data[i].createdAt,
-                        id: res.data[i].string,
+                        id: res.data[i].id,
                         likeCount: res.data[i].likeCount,
                         midi: res.data[i].midi,
                         public: res.data[i].public,
                         thumbnail: res.data[i].thumbnail,
                         title: res.data[i].title,
-                        userID: res.data[i].userID
+                        userID: res.data[i].userID,
+                        username: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
                     }
                     objArray.push(currentTrack);
                 }
@@ -61,10 +64,10 @@ const TrackCard = () => {
         var gridArray:any[] = [];
         var currentTrackCounter:number = 0;
         const defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
-        
         if(trackList.length === 0) {
             getPopularTracks(MAX_COLS * MAX_ROWS);
         }
+        console.log(trackList);
         for(let i = 0; i < MAX_ROWS; i++){
             for(let j = 0; j < MAX_COLS; j++) {
                 let currentTrack = trackList[currentTrackCounter++];
@@ -72,7 +75,7 @@ const TrackCard = () => {
                 let image = currentTrack.thumbnail === "" ? defaultImage : currentTrack.thumbnail;
                 //let trackLink = JSON.stringify(currentTrack.trackLink);
                 let title = currentTrack.title;
-                let user = currentTrack.userID;
+                let user = currentTrack.username;
     
                 var obj = {
                     title: title,
