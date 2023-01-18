@@ -2,8 +2,8 @@ import {useState} from "react";
 import './Login.css';
 import sendAPI from '../../SendAPI';
 import { useRecoilState } from 'recoil';
-import { useNavigate } from "react-router-dom";
 import { userJWT, userModeState } from "../../JWT";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -13,7 +13,6 @@ const Login = () => {
     const navigate = useNavigate();
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
-
 
     async function doLogin() {
         const userInformation = {
