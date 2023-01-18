@@ -10,7 +10,7 @@ const { getUserExists, getPostExists } = require("../../utils/database");
 // Create a post
 router.post('/createPost', async (req, res) => {
     try {
-        const { userID, title, bpm, key, midi, instruments, noteTypes, token, thumbnail, likeCount, author} = req.body;
+        const { userID, title, bpm, key, midi, instruments, noteTypes, token, thumbnail, likeCount} = req.body;
         console.log(likeCount);
         const decoded = verifyJWT(token);
 
@@ -44,7 +44,6 @@ router.post('/createPost', async (req, res) => {
                     midi: midi,
                     likeCount: likeCount,
                     public: true,
-                    author: author
                 }
             });
 
@@ -197,28 +196,28 @@ router.delete('/deletePost', async (req, res) => {
     }
 });
 
-// router.get('/getPublicPopularPosts', async(req, res) => {
-//     const posts = await prisma.Post.findMany({
-//         where: {
-//           likeCount: {
-//             gte: 10,
-//           },
-//           public: {
-//             equals: true
-//           }
-//         },
-//         include: {
-//             user: {
-//                 select: {
-//                     firstName: true,
-//                     lastName: true
-//                 }
-//             }
-//           },
-//     })
-//     console.log(posts);
-//     res.json(posts)
-// });
+router.get('/getPublicPopularPosts', async(req, res) => {
+    const posts = await prisma.Post.findMany({
+        where: {
+          likeCount: {
+            gte: 10,
+          },
+          public: {
+            equals: true
+          }
+        },
+        include: {
+            user: {
+                select: {
+                    firstName: true,
+                    lastName: true
+                }
+            }
+          },
+    })
+    console.log(posts);
+    res.json(posts)
+});
 
 // Update user post info 
 router.put('/updatePost', async (req, res) => {

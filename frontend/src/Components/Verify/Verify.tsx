@@ -30,7 +30,7 @@ const Verify = () => {
         setSuccessMsg("Your account has been validated!");
         await wait(5);
 
-        navigate("profile");
+        navigate("/profile");
 
     }
     

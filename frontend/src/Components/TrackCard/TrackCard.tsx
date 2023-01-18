@@ -19,7 +19,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
         thumbnail: string;
         title: string;
         userID: string;
-        username: string;
+        fullname: string;
     }
 
     // For displaying Modal
@@ -50,7 +50,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                         thumbnail: res.data[i].thumbnail,
                         title: res.data[i].title,
                         userID: res.data[i].userID,
-                        username: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
+                        fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
                     }
                     objArray.push(currentTrack);
                 }
@@ -76,7 +76,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                     thumbnail: res.data[i].thumbnail,
                     title: res.data[i].title,
                     userID: res.data[i].userID,
-                    username: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
+                    fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
                 }
                 objArray.push(currentTrack);
             }
@@ -105,7 +105,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                 let image = currentTrack.thumbnail === "" ? defaultImage : currentTrack.thumbnail;
                 //let trackLink = JSON.stringify(currentTrack.trackLink);
                 let title = currentTrack.title;
-                let user = currentTrack.username;
+                let user = currentTrack.fullname;
     
                 var obj = {
                     title: title,
@@ -119,8 +119,8 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
     }
 
    function setTrack(currentTrack:any) {
-        setShow(true);
-        setCurrentTrack(currentTrack);
+       setCurrentTrack(currentTrack);
+       setShow(true);
     }
 
     var trackCards = PopulateTrackCards();
@@ -141,7 +141,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                 ))}
             </div>
             <Modal id='pop-up' show={show} onHide={handleClose}>
-                <TrackModal {...{title: currentTrack.title, user:currentTrack.user, image: currentTrack.image}}/>
+                {/* {currentTrack !== null && <TrackModal track={currentTrack}/>} */}
             </Modal>
         </div>
     )
