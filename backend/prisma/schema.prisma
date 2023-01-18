@@ -18,13 +18,14 @@ model User {
   username  String    @unique @db.VarChar(20)
   password  String
   bio       String?   @db.LongText
+  verified  Boolean   @default(false)
   profilePicture String? @db.LongText // Store file path in database instead of the actual image
   createdAt DateTime  @default(now())
   resetPasswordToken String? @unique @db.VarChar(255) // @db.LongText
   resetPasswordExpires DateTime? @db.DateTime
-  Posts Post[]
-  Playlists Playlist[]
-  Likes Like[]
+  posts Post[]
+  playlists Playlist[]
+  likes Like[]
 }
 
 model Post {
@@ -38,11 +39,11 @@ model Post {
   midi     String?    @db.LongText // Store file path in database instead of the actual midi
   thumbnail String?   @db.LongText // Store file path in database instead of the actual image
   user   User         @relation(fields: [userID], references: [id], onDelete: Cascade)
-  author String       @db.VarChar(255)
   userID String // relation scalar field  (used in the `@relation` attribute above)
   createdAt DateTime  @default(now())
   PlaylistPosts PlaylistPost[]
   public Boolean
+  like Like[]
 }
 
 model Playlist {
@@ -66,7 +67,7 @@ model PlaylistPost {
 
 model Like {
   postID String         
-  // post Post          @relation(fields: [postID], references: [id], onDelete: Cascade)
+  post Post          @relation(fields: [postID], references: [id], onDelete: Cascade)
   userID String
   user User          @relation(fields: [userID], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())

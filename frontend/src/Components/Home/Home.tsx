@@ -13,8 +13,7 @@ import { userJWT } from '../../JWT';
 
 const Home = () => {
 
-    const [userId, setUserId] = useState("609a4cef-e9b2-45a5-acca-7469b71fbe54");
-
+    const userId = "";
     // Api call for featured tracks
     return (
         <div className='container' id='home-container'>

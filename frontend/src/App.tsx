@@ -19,10 +19,33 @@ import Sidebar from './Components/Sidebar/Sidebar';
 import Navbar from './Components/Navbar/Navbar';
 
 
-// import { useRecoilValue } from 'recoil';
-// import { userModeState } from './Components/context/GlobalState'
+import { useRecoilValue } from 'recoil';
+import { userModeState } from './Components/context/GlobalState'
+import { userJWT } from './JWT'
+import { useEffect, useState } from 'react';
+import { constants } from 'crypto';
+
+
+
 
 function App() {
+  
+  // const user = useState(userJWT);
+
+  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  const checkUserToken = () => {
+    const userToken = userJWT;
+	  if (!userToken || userToken == undefined) {
+		  setIsLoggedIn(false);
+	  }
+		setIsLoggedIn(true);
+  }
+
+  useEffect(() => {
+	  checkUserToken();
+  }, [isLoggedIn]);
 
 
   return (
@@ -38,7 +61,7 @@ function App() {
           <Route path='/forgot' element={<Forgot />} />
           <Route path='/verify' element={<Verify />} />
           <Route path='/reset-password' element={<ResetPassword />} />
-          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile' element={isLoggedIn ? <Profile /> : <Navigate to='/login' replace={true}/>} />
 
           {/* <Route path='/Login' element={user ? <Navigate to='/' /> : <Login />}/>
           <Route path='/Signup' element={user ? <Home /> :<Signup />} /> */}
