@@ -1,14 +1,14 @@
+import Navbar from '../Components/Navbar/Navbar';
 import SignUpPage from '../Components/SignUp/SignUp'
-// import Navbar from '../Components/Navbar/Navbar'
 
 const SignUp = () => {
-    return (
-      <>
-      
-      {/* <Navbar /> */}
-      <SignUpPage />
-      </>
-    )
+  return (
+    <>
+      <Navbar>
+        <SignUpPage />
+      </Navbar>      
+    </>
+  )
   }
   
   export default SignUp;

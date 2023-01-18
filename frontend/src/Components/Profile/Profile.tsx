@@ -53,7 +53,7 @@ const Profile = () => {
             <div id='profile-top-container'>
             <img src={userProfilePic} alt="userImage" id='profile-image' onClick={() => {}}/>
                 <div id='profile-top-name-div'>
-                    {/* <img src={user.profilePicture} alt="userImage" id='profile-image' onClick={() => {}}/> */}
+                    <img src={user.profilePicture} alt="userImage" id='profile-image' onClick={() => {}}/>
                     <h1 id='profile-name'>Example Text {user.firstName} {user.lastName}</h1>
                 </div>
                 <div id='profile-top-follower-div'>

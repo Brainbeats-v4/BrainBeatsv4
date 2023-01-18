@@ -12,13 +12,15 @@ import { userJWT } from '../../JWT';
 // import { userJWT, userModeState } from "../../JWT"; 
 
 const Home = () => {
+
+    const userId = "";
     // Api call for featured tracks
     return (
         <div className='container' id='home-container'>
             <Carousel />
             <h2 className="text-decoration-underline" id="featured-tracks-heading">Featured Tracks</h2>
             <div className='container' id='track-card-container'>
-                <TrackCard cardType={'Popular'} userId={null}/>
+                <TrackCard cardType={'Popular'} userId={userId}/>
             </div>
         </div>);
 }

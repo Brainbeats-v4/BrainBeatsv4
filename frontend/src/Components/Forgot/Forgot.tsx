@@ -46,7 +46,8 @@ const Forgot = () => {
         <div className='container' id='main-login-container'>
             <div className='container' id='login-container'>
                 <div className="bbLogo"></div>
-                <h1 className="login-text text-center fw-semibold">Enter the email <br/> associated with <br/> your account</h1>
+                <h1 className="login-text text-center fw-semibold">Forgot Password?</h1>
+                <p>Enter the email associated with your account.</p>
                 <div className="mt-3">
                     <label className="form-label form-text login-text">Email</label>
                     <input type="text" className="form-control" id="formGroupExampleInput" placeholder="example@example.com" onChange={event => setEmail(event.target.value)}/>

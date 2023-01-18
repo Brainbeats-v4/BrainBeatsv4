@@ -4,6 +4,8 @@ import { ReactHTMLElement } from "react";
 import sendAPI from '../../SendAPI'
 import { wait } from "@testing-library/user-event/dist/utils";
 
+import './Verify.css'
+
 const Verify = () => {
     const [successMsg, setSuccessMsg] = useState('');
     const [errMsg, setErrMsg] = useState('');
@@ -13,8 +15,6 @@ const Verify = () => {
         let url = window.location.href;
         return url.split("=")[1];
     }
-
-    
 
     async function doValidate() {
 
@@ -35,10 +35,30 @@ const Verify = () => {
     }
     
     
-    return (<div>
-        <button onClick={() => doValidate()}>Validate</button>
-        <span>{successMsg}</span>
-        <span>{errMsg}</span>
+    // function hideNav() {
+    //     const nav = document.getElementById('header-ID') as HTMLDivElement | null;
+    //     console.log(nav?.innerHTML);
+        
+    //     if (nav != null) {
+    //         console.log('nav not null')
+    //         nav.style.display = 'none';
+    //     }
+
+
+    //     // let nav = document.getElementById('header-ID')
+    //     // if(nav) {
+    //     //     (nav as HTMLDivElement).style.display = 'none';
+    //     //     console.log("console entered");
+    //     // } 
+    // }
+
+    return (
+    <div id='verify-container'>
+        <div id='verify-div'>
+            <button type="submit" className="btn btn-primary" id='validate-btn' onClick={() => doValidate()}>Validate</button>
+            <span>{successMsg}</span>
+            <span>{errMsg}</span>
+        </div>
     </div>);
 }
 
