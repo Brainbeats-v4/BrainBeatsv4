@@ -1,6 +1,6 @@
 .error-msg {
     color: rgb(255, 0, 0);
-    padding-top: 0%;
+    padding-top: 1%;
     max-width: 300px;
     overflow-wrap: break-word;
     margin-top: 5px;
@@ -9,7 +9,12 @@
 .success-msg {
     color: green;
     padding-top: 1%;
+    max-width: 300px;
+    overflow-wrap: break-word;
+    margin-top: 5px;
+    font-size: small;
 }
+
 .signup-text {
     color: black;
 }
