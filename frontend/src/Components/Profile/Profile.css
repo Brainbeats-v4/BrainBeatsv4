@@ -1,3 +1,120 @@
 .user-profile {
+    background-color: #252525;
+    border-radius: 10px;
+    height: 100vh;
+    width: 50vw;
+    min-width: fit-content;
     color: #fff;
+}
+
+#profile-top-container {
+    /* background-color: red; */
+    border-radius: 10px;
+    height: 40%;
+}
+
+#profile-top-name-div {
+    background: linear-gradient(180deg, #40BBCE 0%, #008BA0 100%);
+    display: flex;
+    align-items: flex-end;
+    border-radius: 10px 10px 0px 0px;
+    height: 60%;
+    position: relative;
+}
+
+#profile-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 5;
+    background-color: purple;
+    border-color: white;
+    border-radius: 50%;
+    border-width: 5px;
+    width: 12.5%;
+    height: 25%;
+    margin-left: 2%;
+    margin-top: 6%;
+}
+
+#profile-name {
+    /* background-color: orange; */
+    color: #fff;
+    display: flex;
+    width: 50%;
+    height: 30%;
+    margin-left: 32%;
+}
+
+#profile-top-follower-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: rgba(123, 123, 123, 1);
+    height: 25%;
+}
+
+#count-all-div {
+    /* background-color: orange; */
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.count-div {
+    /* background-color: orange; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5%;
+    width: 25%;
+}
+
+#profile-top-tabs-div {
+    background-color: rgba(100, 100, 100, 1);
+    border-radius: 0px 0px 10px 10px;
+    display: flex;
+    justify-content: flex-end;
+    height: 15%;
+    /* height: fit-content; */
+    width: 100%;
+    padding: 1px;
+}
+
+#tracks-btn {
+    background-color: #F8607C;
+    border-color: #F8607C;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0px;
+    width: 33%;
+    min-width: fit-content;
+    margin: 5px;
+    column-gap: 10px;
+}
+#tracks-btn:hover{
+    background-color:#e33051;
+    border-color: #e33051;
+    text-decoration: underline;
+}
+
+#playlists-btn {
+    background-color: #323232;
+    border-color: #323232;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0px;
+    width: 33%;
+    min-width: fit-content;
+    margin: 5px;
+    column-gap: 10px;
+}
+#playlists-btn:hover{
+    background-color: #1d1d1d;
+    border-color: #1d1d1d;;
+    text-decoration: underline;
 }

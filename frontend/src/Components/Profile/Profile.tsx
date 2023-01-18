@@ -5,6 +5,7 @@ import { userJWT, userModeState } from "../../JWT";
 import sendAPI from '../../SendAPI';
 import { useState } from 'react';
 import TrackCard from '../TrackCard/TrackCard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const Profile = () => {
@@ -44,9 +45,38 @@ const Profile = () => {
 
     return(
         <div className="user-profile">
-            <div>
-                <img src={user.profilePicture} alt="userImage" onClick={() => {}}/>
-                <h1>{user.firstName} {user.lastName}</h1>
+            <div id='profile-top-container'>
+            <img src={user.profilePicture} alt="userImage" id='profile-image' onClick={() => {}}/>
+                <div id='profile-top-name-div'>
+                    {/* <img src={user.profilePicture} alt="userImage" id='profile-image' onClick={() => {}}/> */}
+                    <h1 id='profile-name'>Example Text {user.firstName} {user.lastName}</h1>
+                </div>
+                <div id='profile-top-follower-div'>
+                    <div id='count-all-div'>
+                        <div className='count-div' id='playlist-count-div'>
+                            <h5>0</h5>
+                            <h6>Playlists</h6>
+                        </div>
+                        <div className='count-div' id='following-count-div'>
+                            <h5>0</h5>
+                            <h6>Following</h6>
+                        </div>
+                        <div className='count-div' id='follower-count-div'>
+                            <h5>0</h5>
+                            <h6>Follower</h6>
+                        </div>
+                    </div>
+                </div>
+                <div id='profile-top-tabs-div'>
+                    <button type="button" className="btn btn-secondary" id='tracks-btn'>
+                        <FontAwesomeIcon icon={["fas", "music"]} />
+                        My Tracks
+                    </button>
+                    <button type="button" className="btn btn-secondary" id='playlists-btn'>
+                        <FontAwesomeIcon icon={["fas", "list"]} />
+                        Playlists
+                    </button>
+                </div>
             </div>
             <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} type="file"/>
             <hr></hr>
