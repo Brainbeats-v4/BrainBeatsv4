@@ -5,7 +5,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const { user, post } = new PrismaClient();
 // const { JSON } = require("express");
-const { getJWT, verifyJWT } = require("../../utils/jwt");
+const { createJWT, verifyJWT } = require("../../utils/jwt");
 const { getUserExists, getIsTokenExpired } = require("../../utils/database");
 var nodemailer = require("nodemailer");
 // const multer  = require('multer')
@@ -41,7 +41,7 @@ router.post('/createUser', async (req, res) => {
             });
 
             // Create JWT
-            const token = getJWT(newUser.id, newUser.email);
+            const token = createJWT(newUser.id, newUser.email);
             const data = {
                 user: newUser,
                 token: token
@@ -57,6 +57,30 @@ router.post('/createUser', async (req, res) => {
     }
 });
 
+// Logout an existing user
+router.post('/logoutUser', async (req, res) => {
+    try {
+        // Get user input
+        const { email, jwt } = req.body;
+
+        // Validate if user exists in our database
+        const userExists = await getUserExists(email, "email");
+        console.log(userExists);
+
+        // If password is related to the email console log a successful login
+        if (userExists && verifyJWT(jwt)) {
+            res.status(200);
+        } else {
+            return res.status(400).json({
+                msg: "Logout failed"
+            });
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({ msg: err });
+    }
+});
+
 // Login an existing user
 router.post('/loginUser', async (req, res) => {
     try {
@@ -69,7 +93,7 @@ router.post('/loginUser', async (req, res) => {
 
         // If password is related to the email console log a successful login
         if (userExists && await (bcrypt.compare(password, userExists.password))) {
-            const token = getJWT(userExists.id, userExists.email);
+            const token = createJWT(userExists.id, userExists.email);
             const data = {
                 user: {
                     firstName: userExists.firstName,

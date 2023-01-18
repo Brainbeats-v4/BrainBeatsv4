@@ -11,23 +11,22 @@ import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import Profile from './Pages/Profile';
 import Forgot from './Pages/Forgot';
-import ResetPassword from './Components/ResetPassword/ResetPassword';
+import ResetPassword from './Pages/ResetPassword'
+import Verify from './Pages/Verify';
 
 // Importing sidebar and navbar
 import Sidebar from './Components/Sidebar/Sidebar';
 import Navbar from './Components/Navbar/Navbar';
 
 
-import { useRecoilValue } from 'recoil';
-import { userModeState } from './Components/context/GlobalState'
+// import { useRecoilValue } from 'recoil';
+// import { userModeState } from './Components/context/GlobalState'
 
 function App() {
 
-  // let user = useRecoilValue(userModeState);
 
   return (
     <Router>
-      {/* <Navbar></Navbar> */}
       <Sidebar>
         <Routes>
           <Route path='/' element={<Home />} />
@@ -37,6 +36,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<SignUp />} />
           <Route path='/forgot' element={<Forgot />} />
+          <Route path='/verify' element={<Verify />} />
           <Route path='/reset-password' element={<ResetPassword />} />
           <Route path='/profile' element={<Profile />} />
 

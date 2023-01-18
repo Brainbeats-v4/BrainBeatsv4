@@ -1,8 +1,6 @@
 import { atom } from "recoil";
 import {recoilPersist} from 'recoil-persist';
 
-// Testing new github repo
-
 const { persistAtom } = recoilPersist()
 
 export const userModeState = atom({

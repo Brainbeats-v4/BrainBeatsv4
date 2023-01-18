@@ -4,13 +4,18 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const { user, post } = new PrismaClient();
 var nodemailer = require("nodemailer");
-const { getJWT, verifyJWT} = require("../../utils/jwt");
+const { getJWT, verifyJWT, createJWT, removeJWT } = require("../../utils/jwt");
 // const { JSON } = require("express");
 const dbUtil = require("../../utils/database");
+
+// TODO Check env for if dev, set url to localhost:3000 else, dev url
 
 router.get('/verifyJWT', async (req, res) => {
     try {
         const jwt = req.query.jwt;
+        if (jwt == undefined)
+            res.status(400).send("usage: {jwt: string}")
+
         res.json(verifyJWT(jwt));
     } catch (err) {
         console.log(err);
@@ -34,7 +39,10 @@ router.post('/sendVerificationEmail', async (req, res) => {
         const { email, subject, text} = req.body;
         const userExists = await prisma.user.findUnique({
             where: { email },
-            select: { email: true }
+            select: {
+                email: true,
+                id: true
+            }
         });
 
         // If the user is an existing user, then send a verification email based on their ID
@@ -43,9 +51,9 @@ router.post('/sendVerificationEmail', async (req, res) => {
                 from: 'brainbeatsucf@gmail.com',  // Sender address
                 to: email,                           // List of receivers
                 subject: subject,
-                text: "Verify your login to BrainBeats by clicking the following link, or copy and paste it into your browser: ",
+                text: `Verify your login to BrainBeats by clicking the following link, or copy and paste it into your browser: `,
                 // html: '<a href=\"https://www.brainbeats.dev/verify/${userExists._id}\">Verify Email</a>',
-                html: '<a href=\"http://localhost:3000/verify/${userExists._id}\">Verify Email</a>',
+                html: `<a href=\"http://localhost:3000/verify?id=${userExists.id}\">Verify Email</a>`,
             };
 
             transporter.sendMail(mailData, function (err, info) {
@@ -55,7 +63,7 @@ router.post('/sendVerificationEmail', async (req, res) => {
                     console.log('Email Sent: ' + info.response);
                 }
 
-                res.status(200).send({ message: "Mail send", message_id: info.messageId });
+                res.status(200).send({ message: "Mail sent", message_id: info.messageId });
             });
         }
     }
