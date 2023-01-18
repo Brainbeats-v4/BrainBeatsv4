@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import sendAPI from "../../SendAPI";
 import validateEmail from "../../util/validateEmail";
 import './SignUp.css';
+import defaultProfilePic from '../../images/bbmascot1.png'
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
@@ -41,13 +42,35 @@ const SignUp = () => {
         return false;
     }
     
+    function convertToBase64(file:string) {
+        return new Promise((resolve, reject) => {
+            var fileBlob = new Blob([file], {
+                type: 'text/plain'
+            });
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(fileBlob);
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+            fileReader.onerror = (error) => {
+                reject(error);
+            }
+        })
+    }
+
     async function doSignUp() {
+        var base64result;
+        await convertToBase64(defaultProfilePic).then(res => {
+            base64result = res;
+        })
+        console.log(base64result);
         const userInformation = {
             "email": email,
             "username": username,
             "password": password,
             "firstName": firstName,
-            "lastName": lastName
+            "lastName": lastName,
+            "profilePicture": base64result
         };
 
         if(validateFields()) {

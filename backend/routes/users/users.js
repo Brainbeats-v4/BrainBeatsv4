@@ -16,10 +16,9 @@ const crypto = require('crypto');
 // Create a new user
 router.post('/createUser', async (req, res) => {
     try {
-        const { firstName, lastName, email, username, password } = req.body;
+        const { firstName, lastName, email, username, password, profilePicture } = req.body;
         const userEmailExists = await getUserExists(email, "email");
         const userNameExists = await getUserExists(username, "username");
-
         if (userEmailExists || userNameExists) {
             return res.status(400).json({
                 msg: "Email or username already exists. Please try again."
@@ -37,9 +36,9 @@ router.post('/createUser', async (req, res) => {
                     email,
                     username,
                     password: encryptedPassword,
+                    profilePicture
                 }
             });
-
             // Create JWT
             const token = createJWT(newUser.id, newUser.email);
             const data = {
