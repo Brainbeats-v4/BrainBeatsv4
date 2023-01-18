@@ -27,7 +27,7 @@ function App() {
 
   return (
     <Router>
-      <Sidebar>
+      {/* <Sidebar> */}
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
@@ -53,7 +53,7 @@ function App() {
           <Route path='/Test' element={<Test />} />
           <Route path='/About' element={<AboutUs />} /> */}
         </Routes>
-      </Sidebar>
+      {/* </Sidebar> */}
     </Router>
   );
 }

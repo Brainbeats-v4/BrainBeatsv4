@@ -45,7 +45,7 @@ const Sidebar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
 
   return (
       <div className="page">
-        <header className="header">
+        {/* <header className="header">
           <div className="header-toggle top_section">
             <h1 style={{display: isOpen? "block" : "none", color: "white"}} className="logo">BrainBeats</h1>
             <div style={{marginLeft: isOpen? "35px" : "0px"}} className="bars">
@@ -53,7 +53,7 @@ const Sidebar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
             </div>
             <Navbar></Navbar>
           </div>
-        </header> 
+        </header>  */}
 
         <div className="sidebar-container">
           <div style={{width: isOpen? "200px" : "60px"}} className="sidebar">

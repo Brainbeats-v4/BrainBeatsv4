@@ -1,0 +1,38 @@
+#verify-container {
+    display: flex;
+    justify-content: center;
+    /* background-color: black; */
+    height: 100vh;
+    min-width: 70vw;
+}
+
+#verify-div {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(18, 18, 18);
+    height: 70%;
+    width: 90%;
+}
+
+
+#validate-btn{
+    width: 50%;
+    height: 10%;
+    margin-top: 5%;
+    background-color: #43ABBB;
+    border-color: #43ABBB;
+    border-radius: 0px;
+}
+#validate-btn:hover{
+    background-color: #107888;
+    border-color: #107888;
+    text-decoration: underline;
+
+}
+/* #header-ID {
+    display: none;
+}
+
+.header {
+    display: none;
+} */
