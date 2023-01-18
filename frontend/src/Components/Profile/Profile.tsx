@@ -50,6 +50,7 @@ const Profile = () => {
             </div>
             <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} type="file"/>
             <hr></hr>
+            <h1>My Tracks</h1>
             <TrackCard cardType={'Profile'} userId={user.userId} />
             {/* <div>
                 <ul>
