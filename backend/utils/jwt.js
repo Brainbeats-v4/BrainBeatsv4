@@ -29,7 +29,7 @@ function verifyJWT(jwtToken) {
 }
 
 // Creates and saves a JWT onto their machine's local storage
-function getJWT(id, email) {
+function createJWT(id, email) {
     try {
         const token = jwt.sign({
             id: id,
@@ -38,33 +38,19 @@ function getJWT(id, email) {
             expiresIn: '30d'
         });
 
+        // Temporarily not saving
+        // saveJWT(token);
+
         console.log("token: " + token);
         return token;
     } catch (err) {
-        console.log('error here\n');
+        console.log('error creating jwt\n');
         console.log(err);
     }
 }
 
-// TODO : Turn these into API calls for frontend to use so it's actually client side local storage
-
-// Save a JWT onto local storage
-/*function saveJWT(token) {
-    localStorage.setItem('BrainBeatsToken', token);
-    console.log("Saved JWT", token);
-}
-
-// Retrive JWT from local storage
-function getJWT() {
-    return localStorage.getItem('BrainBeatsToken');
-}
-
-// Remove JWT from local storage
-function removeJWT() {
-    return localStorage.removeItem('BrainBeatsToken');
-}*/
 
 module.exports = {
     verifyJWT: verifyJWT,
-    getJWT: getJWT,
+    createJWT: createJWT,
 }

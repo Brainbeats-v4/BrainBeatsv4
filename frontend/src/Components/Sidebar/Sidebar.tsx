@@ -11,7 +11,6 @@ import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontaw
 // Implemented using combination of the links below (converted to TypeScript): 
 // how to create sidebar in react JS: https://www.youtube.com/watch?v=IathdVB65Lw&t=711s
 // Responsive Menu Sidebar using React JS: https://www.youtube.com/watch?v=RiF1VFwgbOs&t=1121s
-
 const Sidebar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
   
   const[isOpen, setIsOpen] = useState(false);
