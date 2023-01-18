@@ -80,8 +80,14 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
             </ul>}
             {user && <ul className="navbar-nav ml-auto">
                 <form className="form-inline" id="formID">
-                    <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doLogout()} type="button" id="signUpBtn">Sign Out</button>
-                    <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doNavigate("/Profile")} type="button" id="signUpBtn">Profile</button>
+                    <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doLogout()} type="button" id="signUpBtn">
+                      <FontAwesomeIcon id='profile-icon' icon={["fas", "right-from-bracket"]} />
+                      Sign Out
+                    </button>
+                    <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doNavigate("/Profile")} type="button" id="profileBtn">
+                      <FontAwesomeIcon id='profile-icon' icon={["fas", "user"]} />
+                      Profile
+                    </button>
                 </form>    
             </ul>
             }
