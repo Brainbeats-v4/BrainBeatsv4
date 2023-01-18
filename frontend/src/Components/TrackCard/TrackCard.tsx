@@ -25,13 +25,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
     // For displaying Modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const [currentTrack, setCurrentTrack] = useState(
-        {
-            title: '',
-            user: ' ',
-            image: ' ',
-        }
-    );
+    const [currentTrack, setCurrentTrack] = useState<Track>();
     const [trackList, setTrackList] = useState<Track[]>([])
 
     async function getPopularTracks(numTracks:number) {
@@ -76,7 +70,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                     thumbnail: res.data[i].thumbnail,
                     title: res.data[i].title,
                     userID: res.data[i].userID,
-                    fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
+                    fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName,
                 }
                 objArray.push(currentTrack);
             }
@@ -119,6 +113,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
     }
 
    function setTrack(currentTrack:any) {
+        console.log("current track: " + currentTrack);
        setCurrentTrack(currentTrack);
        setShow(true);
     }
@@ -141,7 +136,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                 ))}
             </div>
             <Modal id='pop-up' show={show} onHide={handleClose}>
-                {/* {currentTrack !== null && <TrackModal track={currentTrack}/>} */}
+                {/* <TrackModal track={currentTrack}/> */}
             </Modal>
         </div>
     )

@@ -37,7 +37,8 @@ function App() {
   
   const checkUserToken = () => {
     const userToken = userJWT;
-	  if (!userToken || userToken == undefined) {
+    // const userToken = localStorage.getItem('BrainBeatsToken');
+	  if (userToken == undefined) {
 		  setIsLoggedIn(false);
 	  }
 		setIsLoggedIn(true);
