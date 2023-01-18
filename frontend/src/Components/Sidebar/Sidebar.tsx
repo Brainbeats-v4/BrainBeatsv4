@@ -22,6 +22,11 @@ const Sidebar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
       icon:<FontAwesomeIcon icon={["fas", "home"]} />
     },
     {
+      path:"../profile",
+      name:"Profile",
+      icon:<FontAwesomeIcon icon={["fas", "user"]} />
+    },
+    {
       path:"../about",
       name:"About",
       icon:<FontAwesomeIcon icon={["fas", "circle-info"]} />
