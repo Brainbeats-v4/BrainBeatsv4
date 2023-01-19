@@ -22,17 +22,29 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
         fullname: string;
     }
 
+    const emptyTrack:Track = {
+        "createdAt": "",
+        "id": "",
+        "likeCount": -1,
+        "midi": "",
+        "public": false,
+        "thumbnail": "",
+        "title": "",
+        "userID": "",
+        "fullname": ""
+    }
+
     // For displaying Modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const [currentTrack, setCurrentTrack] = useState<Track>();
+    const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
     const [trackList, setTrackList] = useState<Track[]>([])
 
     async function getPopularTracks(numTracks:number) {
         // hit api for 'numTracks' tracks
         var objArray:Track[] = [];
         await sendAPI('get', '/posts/getPublicPopularPosts')
-            .then(res => {
+        .then(res => {
                 for(var i = 0; i < res.data.length; i++) {
                     if(i > numTracks) break;
                     var currentTrack:Track = {
@@ -96,23 +108,18 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
             for(let j = 0; j < MAX_COLS; j++) {
                 let currentTrack = trackList[currentTrackCounter++];
                 if(currentTrack == null) break;
-                let image = currentTrack.thumbnail === "" ? defaultImage : currentTrack.thumbnail;
+                currentTrack.thumbnail = currentTrack.thumbnail === "" ? defaultImage : currentTrack.thumbnail;
                 //let trackLink = JSON.stringify(currentTrack.trackLink);
                 let title = currentTrack.title;
                 let user = currentTrack.fullname;
     
-                var obj = {
-                    title: title,
-                    user: user,
-                    image: image
-                }
-                gridArray.push(obj);
+                gridArray.push(currentTrack);
             }
         }
         return gridArray;
     }
 
-   function setTrack(currentTrack:any) {
+   function setTrack(currentTrack:Track) {
         console.log("current track: " + currentTrack);
        setCurrentTrack(currentTrack);
        setShow(true);
@@ -126,7 +133,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                 {trackCards.map((trackCard) => (
                     <div className="col track-col">
                         <button className=" btn btn-primary card" onClick={() => setTrack(trackCard)}>
-                            <img src={trackCard.image} className="card-img-top" id="card-img-ID" alt="..."/>
+                            <img src={trackCard.thumbnail} className="card-img-top" id="card-img-ID" alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">{trackCard.title}</h5>
                                 <p className="card-text">{trackCard.user}</p>
@@ -136,7 +143,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                 ))}
             </div>
             <Modal id='pop-up' show={show} onHide={handleClose}>
-                {/* <TrackModal track={currentTrack}/> */}
+                <TrackModal track={currentTrack}/>
             </Modal>
         </div>
     )
