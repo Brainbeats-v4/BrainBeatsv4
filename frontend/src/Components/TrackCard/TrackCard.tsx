@@ -39,6 +39,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
     const handleClose = () => setShow(false);
     const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
     const [trackList, setTrackList] = useState<Track[]>([])
+    const [tracksPulled, setTracksPulled] = useState(false);
 
     async function getPopularTracks(numTracks:number) {
         // hit api for 'numTracks' tracks
@@ -61,6 +62,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                     objArray.push(currentTrack);
                 }
                 setTrackList(objArray);
+                setTracksPulled(true)
             })
             .catch(err => {
                 console.log(err);
@@ -87,6 +89,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                 objArray.push(currentTrack);
             }
             setTrackList(objArray);
+            setTracksPulled(true)
         })
 
     }
@@ -97,7 +100,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
         var gridArray:any[] = [];
         var currentTrackCounter:number = 0;
         const defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
-        if(trackList.length === 0) {
+        if(!tracksPulled) {
             if(cardType === 'Profile') {
                 getProfileTracks();
             } else if(cardType === 'Popular'){

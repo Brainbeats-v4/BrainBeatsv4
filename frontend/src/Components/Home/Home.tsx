@@ -23,8 +23,6 @@ const Home = () => {
                 <TrackCard cardType={'Popular'} userId={userId}/>
             </div>
         </div>);
-
-
 }
 
 export default Home;

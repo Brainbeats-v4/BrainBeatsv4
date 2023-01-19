@@ -6,6 +6,8 @@ import sendAPI from '../../SendAPI';
 import { useState } from 'react';
 import TrackCard from '../TrackCard/TrackCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Buffer } from 'buffer';
+import buildPath from '../../util/ImagePath';
 
 
 const Profile = () => {
@@ -13,7 +15,10 @@ const Profile = () => {
     const jwt = useRecoilValue(userJWT);
     const [playlist, setPlaylist] = useState([]); 
     const [posts, setPosts] = useState([])
-
+    var encodedProfilePic = user.profilePicture;
+    encodedProfilePic = (encodedProfilePic as string).split(',')[1];
+    var decodedProfilePic = Buffer.from(encodedProfilePic, 'base64').toString('ascii');
+    var userProfilePic = buildPath(decodedProfilePic)
     var userTracks = [
         {songTitle: 'New Song', songImage: ''},
         {songTitle: 'Old Song', songImage: ''}
@@ -46,10 +51,10 @@ const Profile = () => {
     return(
         <div className="user-profile">
             <div id='profile-top-container'>
-            <img src={user.profilePicture} alt="userImage" id='profile-image' onClick={() => {}}/>
+            <img src={userProfilePic} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>
                 <div id='profile-top-name-div'>
-                    <img src={user.profilePicture} alt="userImage" id='profile-image' onClick={() => {}}/>
-                    <h1 id='profile-name'>Example Text {user.firstName} {user.lastName}</h1>
+                    {/* <img src={user.profilePicture} alt="userImage" id='profile-image' onClick={() => {}}/> */}
+                    <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>
                 </div>
                 <div id='profile-top-follower-div'>
                     <div id='count-all-div'>
@@ -80,6 +85,7 @@ const Profile = () => {
             </div>
             <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} type="file"/>
             <hr></hr>
+            <h1>My Tracks</h1>
             <TrackCard cardType={'Profile'} userId={user.userId} />
             {/* <div>
                 <ul>
