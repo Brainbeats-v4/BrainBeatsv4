@@ -79,8 +79,8 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
                 </form>    
             </ul>}
             {user && <ul className="navbar-nav ml-auto">
+                <h4 id="username">{user.firstName}, {user.lastName}</h4>
                 <form className="form-inline" id="formID">
-                  s<h1>User</h1>
                     <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doLogout()} type="button" id="signUpBtn">
                       <FontAwesomeIcon id='profile-icon' icon={["fas", "right-from-bracket"]} />
                       Sign Out
@@ -90,8 +90,7 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
                       Profile
                     </button>
                 </form>    
-            </ul>
-            }
+            </ul>}
         </div>
       </div>
     </header> 

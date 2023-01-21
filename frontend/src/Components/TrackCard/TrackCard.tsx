@@ -5,11 +5,11 @@ import TrackModal from '../Modal/TrackModal';
 import sendAPI from '../../SendAPI';
 
 type Props = {
-    cardtype:string;
+    cardType:string;
     input: any;
 }
 
-const TrackCard: React.FC<Props> = ({cardtype, input}) => {
+const TrackCard: React.FC<Props> = ({cardType, input}) => {
     interface Track {
         createdAt: string;
         id: string;
@@ -74,7 +74,9 @@ const TrackCard: React.FC<Props> = ({cardtype, input}) => {
         var objArray:Track[] = [];
         console.log(title)
         await sendAPI('get', '/posts/getPostsByTitle', title)
-        .then(res => {
+        .then((res) => {
+            console.log("status: " + res.status);
+
                 for(var i = 0; i < res.data.length; i++) {
                     if(i > numTracks) break;
                     var currentTrack:Track = {
@@ -131,11 +133,11 @@ const TrackCard: React.FC<Props> = ({cardtype, input}) => {
         var currentTrackCounter:number = 0;
         const defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
         if(!tracksPulled) {
-            if(cardtype === 'Profile') {
+            if(cardType === 'Profile') {
                 getProfileTracks();
-            } else if (cardtype === 'Search') {
+            } else if (cardType === 'Search') {
                 getSearchTracks(MAX_COLS * MAX_ROWS, input);
-            } else if(cardtype === 'Popular'){
+            } else if(cardType === 'Popular'){
                 getPopularTracks(MAX_COLS * MAX_ROWS);
             }
         }

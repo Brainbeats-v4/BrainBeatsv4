@@ -15,11 +15,12 @@ const Profile = () => {
     const jwt = useRecoilValue(userJWT);
     const [playlist, setPlaylist] = useState([]); 
     const [posts, setPosts] = useState([])
-    var encodedProfilePic = user.profilePicture;
-    encodedProfilePic = (encodedProfilePic as string).split(',')[1];
-    var decodedProfilePic = Buffer.from(encodedProfilePic, 'base64').toString('ascii');
-    var userProfilePic = buildPath(decodedProfilePic)
-    console.log(userProfilePic);
+    console.log(user);
+    // var encodedProfilePic = user.profilePicture;
+    // encodedProfilePic = (encodedProfilePic as string).split(',')[1];
+    // var decodedProfilePic = Buffer.from(encodedProfilePic, 'base64').toString('ascii');
+    // var userProfilePic = buildPath(decodedProfilePic)
+    // console.log(userProfilePic);
     var userTracks = [
         {songTitle: 'New Song', songImage: ''},
         {songTitle: 'Old Song', songImage: ''}
@@ -72,7 +73,7 @@ const Profile = () => {
     return(
         <div className="user-profile">
             <div id='profile-top-container'>
-            <img src={userProfilePic} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>
+            {/* <img src={userProfilePic} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/> */}
                 <div id='profile-top-name-div'>
                     <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>
                     <h2>{user.username}</h2>
@@ -107,7 +108,7 @@ const Profile = () => {
             <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} type="file" accept='image/*'/>
             <hr></hr>
             <h1>My Tracks</h1>
-            <TrackCard cardtype={'Profile'} input={user.userId} />
+            <TrackCard cardType={'Profile'} input={user.userId} />
             {/* <div>
                 <ul>
                     {
