@@ -23,12 +23,12 @@ interface Track {
 }
 
 const TrackModal: React.FC<Props> = ({track}) => {
+
+  const [editing, setEditing] = useState(false);
+  
   const [trackName, setTrackName] = useState('');
-
-  function doEdit() {
-
-    console.log("Editing");
-  }
+  const [visibility, setVisibility] = useState(false);
+  const [thumbnail, setThumbnail] = useState('');
 
 
   return (
@@ -70,10 +70,14 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "plus"]} />
                 Add to Playlist
               </button>
-              <button className='btn btn-secondary modal-btn' onClick={() => doEdit()}>
+              {editing && <button className='btn btn-secondary modal-btn' onClick={() => setEditing(!editing)}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "edit"]} />
                 Edit
-              </button>
+              </button>}
+              {!editing && <button className='btn btn-secondary modal-btn' onClick={() => setEditing(!editing)}>
+                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "edit"]} />
+                Save
+              </button>}
             </div>
           </Modal.Footer>
         </div>

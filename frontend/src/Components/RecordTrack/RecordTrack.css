@@ -1,0 +1,121 @@
+.record-heading{
+    color:white;
+}
+
+#record-container{
+    /* background-color: aqua; */
+    display: flex;
+    flex-direction: column;
+    width: 70vw;
+    height: 75%;
+}
+
+#record-card-info-div{
+    /* background-color: purple; */
+    display: flex;
+    flex-direction: row;
+    width: 70vw;
+    height: 85%;
+}
+
+#card-settings-div{
+    display: flex;
+    flex-direction: column;
+    /* background-color: red; */
+    width: 25%;
+    height: 100%;
+    padding: 1%;
+
+}
+
+#record-uploads-div{
+    background-color: rgb(94, 94, 94);
+    display: flex;
+    flex-direction: column;
+    height: 85%;
+    padding: 2%;
+}
+.record-upload {
+    background-color: rgb(158, 158, 158);
+    /* border-color: orange; */
+    width: 90%;
+    margin: auto;
+}
+.record-upload-background{
+    background-color: blue;
+    height: 100;
+}
+#file-upload{
+    /* background-color: white; */
+    border-color: gray;
+}
+
+#add-card-btn {
+    background-color: #259FB1;
+    border-color: #259FB1;
+    border-radius: 0px;
+    margin-top: 5%;
+}
+#add-card-btn:hover{
+    background-color: #0c7b8b;
+    border-color: #0c7b8b;
+    text-decoration: underline;
+}
+
+#display-card-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    /* background-color: green; */
+    width: 75%;
+    height: 100%;
+}
+
+#card-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0e0e0e;
+    color: white;
+    width: 95%;
+    height: 90%;
+}
+
+#record-buttons-div{
+    /* background-color: orange; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 3%;
+    width: 100%;
+    height: 15%;
+}
+
+#skip-step-btn {
+    background-color: #aaaaaa;
+    border-color: #aaaaaa;
+    border-radius: 0px;
+    width: 40%;
+    height: 65%;
+    margin-top: 1%;
+}
+#skip-step-btn:hover{
+    background-color: #7a7a7a;
+    border-color: #7a7a7a;
+    text-decoration: underline;
+}
+
+#go-record-btn {
+    background-color: #F8607C;
+    border-color: #F8607C;
+    border-radius: 0px;
+    width: 40%;
+    height: 65%;
+    margin-top: 1%;
+}
+#go-record-btn:hover{
+    background-color:#e33051;
+    border-color: #e33051;
+    text-decoration: underline;
+}

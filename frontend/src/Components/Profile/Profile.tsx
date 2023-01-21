@@ -72,7 +72,7 @@ const Profile = () => {
     return(
         <div className="user-profile">
             <div id='profile-top-container'>
-            <img src={userProfilePic} alt="userImage" id='profile-image' onClick={() => {}}/>
+            <img src={userProfilePic} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>
                 <div id='profile-top-name-div'>
                     <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>
                     <h2>{user.username}</h2>

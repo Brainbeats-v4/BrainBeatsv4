@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Routes, Route, BrowserRouter as Router, Navigate} from 'react-router-dom'
+import { Routes, Route, BrowserRouter as Router, Navigate, useNavigate} from 'react-router-dom'
 import Home from './Pages/Home';
 import About from './Pages/About';
 import Search from './Pages/Search';
@@ -24,31 +24,32 @@ import { userModeState } from './Components/context/GlobalState'
 import { userJWT } from './JWT'
 import { useEffect, useState } from 'react';
 import { constants } from 'crypto';
-
-
-
+import RecordTrack from './Pages/RecordTrack';
 
 function App() {
   
-  // const user = useState(userJWT);
-
-  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // const user = useState(userJWT);
   
   const checkUserToken = () => {
     const userToken = userJWT;
-	  if (!userToken || userToken == undefined) {
+	  if (userToken == undefined) {
 		  setIsLoggedIn(false);
 	  }
 		setIsLoggedIn(true);
   }
 
   useEffect(() => {
-	  checkUserToken();
+	  let res = checkUserToken();
+    console.log(res);
   }, [isLoggedIn]);
+  
+  
 
 
   return (
+
     <Router>
       {/* <Sidebar> */}
         <Routes>
@@ -56,13 +57,18 @@ function App() {
           <Route path='/about' element={<About />} />
           <Route path='/search' element={<Search />} />
           <Route path='/create-track' element={<CreateTrack />} />
+          <Route path='/record-track' element={<RecordTrack />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<SignUp />} />
           <Route path='/forgot' element={<Forgot />} />
           <Route path='/verify' element={<Verify />} />
           <Route path='/reset-password' element={<ResetPassword />} />
-          <Route path='/profile' element={isLoggedIn ? <Profile /> : <Navigate to='/login' replace={true}/>} />
-
+          {
+            isLoggedIn? 
+            <Route path='/profile' element={<Profile />} />
+            :
+            <Route path='/profile' element={<Navigate to='/login'/>} />
+          }
           {/* <Route path='/Login' element={user ? <Navigate to='/' /> : <Login />}/>
           <Route path='/Signup' element={user ? <Home /> :<Signup />} /> */}
 
@@ -78,6 +84,8 @@ function App() {
         </Routes>
       {/* </Sidebar> */}
     </Router>
+    
+    
   );
 }
 

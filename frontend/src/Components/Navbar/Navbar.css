@@ -21,7 +21,7 @@
 }
 
 /* CSS For Navbar buttons */
-#signUpBtn, #loginBtn {
+#signUpBtn, #loginBtn, #profileBtn {
   border-radius: 15px;
   width: 100px;
 }
@@ -48,4 +48,18 @@
     background-color:#e33051;
     border-color: #e33051;
     text-decoration: underline;
+}
+
+#profileBtn {
+  background-color: #F8607C;
+  border-color: #F8607C;
+  color: white;
+}
+#profileBtn:hover {
+  background-color:#e33051;
+  border-color: #e33051;
+  text-decoration: underline;
+}
+#profile-icon {
+  margin-right: 8%;
 }
