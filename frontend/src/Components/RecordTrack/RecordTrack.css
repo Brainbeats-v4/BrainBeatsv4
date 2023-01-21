@@ -1,19 +1,26 @@
 .record-heading{
     color:white;
 }
+.input-card-text{
+    border: solid;
+    border-color: white;
+    border-radius: 1px;
+}
 
 #record-container{
     /* background-color: aqua; */
     display: flex;
     flex-direction: column;
     width: 70vw;
-    height: 75%;
+    height: fit-content;
 }
 
 #record-card-info-div{
     /* background-color: purple; */
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    column-gap: 2.5%;
     width: 70vw;
     height: 85%;
 }
@@ -22,9 +29,9 @@
     display: flex;
     flex-direction: column;
     /* background-color: red; */
-    width: 25%;
-    height: 100%;
-    padding: 1%;
+    width: fit-content;
+    height: fit-content;
+    /* padding: 1%; */
 
 }
 
@@ -33,21 +40,36 @@
     display: flex;
     flex-direction: column;
     height: 85%;
-    padding: 2%;
+    width: fit-content;
+    padding: 3%;
+    border-color: #0e0e0e;
+    border-radius: 10px;
+    filter: drop-shadow(0px 4px 4px #272727);
+
 }
 .record-upload {
-    background-color: rgb(158, 158, 158);
+    background-color: rgb(176, 176, 176);
     /* border-color: orange; */
-    width: 90%;
-    margin: auto;
+    width: 95%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    padding: 1%;
+
 }
+.record-upload1 {
+    width: 90%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
 .record-upload-background{
-    background-color: blue;
-    height: 100;
+    /* background-color: blue; */
+    height: 100%;
 }
 #file-upload{
-    /* background-color: white; */
-    border-color: gray;
+    background-color: white;
+    width: 100%;
+    /* border-color: gray; */
 }
 
 #add-card-btn {
@@ -55,6 +77,10 @@
     border-color: #259FB1;
     border-radius: 0px;
     margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
+    height: 8vh;
 }
 #add-card-btn:hover{
     background-color: #0c7b8b;
@@ -63,13 +89,17 @@
 }
 
 #display-card-div{
+    color: rgb(190, 190, 190);
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    margin: auto;
+    /* align-items: center; */
+    row-gap: 2%;
+    margin-top: 2%;
+    margin-left: 1%;
     /* background-color: green; */
-    width: 75%;
-    height: 100%;
+    width: 70%;
+    height: 65vh;
 }
 
 #card-display {
@@ -79,7 +109,7 @@
     background-color: #0e0e0e;
     color: white;
     width: 95%;
-    height: 90%;
+    height: 100%;
 }
 
 #record-buttons-div{
@@ -89,7 +119,8 @@
     justify-content: center;
     column-gap: 3%;
     width: 100%;
-    height: 15%;
+    /* height: 100%; */
+    margin-top: 2%;
 }
 
 #skip-step-btn {
@@ -97,8 +128,8 @@
     border-color: #aaaaaa;
     border-radius: 0px;
     width: 40%;
-    height: 65%;
-    margin-top: 1%;
+    height: 7vh;
+    /* margin-top: 1%; */
 }
 #skip-step-btn:hover{
     background-color: #7a7a7a;
@@ -111,8 +142,8 @@
     border-color: #F8607C;
     border-radius: 0px;
     width: 40%;
-    height: 65%;
-    margin-top: 1%;
+    height: 7vh;
+    /* margin-top: 1%; */
 }
 #go-record-btn:hover{
     background-color:#e33051;
