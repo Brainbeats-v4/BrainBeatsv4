@@ -222,7 +222,6 @@ router.put('/updateUser', async (req, res) => {
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
-                    username: username,
                     bio: bio,
                     profilePicture: profilePicture
                 }
