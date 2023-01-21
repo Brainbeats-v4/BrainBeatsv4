@@ -24,6 +24,7 @@ import { userModeState } from './Components/context/GlobalState'
 import { userJWT } from './JWT'
 import { useEffect, useState } from 'react';
 import { constants } from 'crypto';
+import RecordTrack from './Pages/RecordTrack';
 
 
 
@@ -56,6 +57,7 @@ function App() {
           <Route path='/about' element={<About />} />
           <Route path='/search' element={<Search />} />
           <Route path='/create-track' element={<CreateTrack />} />
+          <Route path='/record-track' element={<RecordTrack />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<SignUp />} />
           <Route path='/forgot' element={<Forgot />} />
