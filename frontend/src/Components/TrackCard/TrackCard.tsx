@@ -139,7 +139,7 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
                             <img src={trackCard.thumbnail} className="card-img-top" id="card-img-ID" alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">{trackCard.title}</h5>
-                                <p className="card-text">{trackCard.user}</p>
+                                <p className="card-text">{trackCard.fullname}</p>
                             </div>
                         </button>
                     </div>

@@ -43,6 +43,10 @@
     font-weight: 350;
 }
 
+.track-row{
+    float: left;    
+}
+
 .track-col{
     display: flex;
     justify-content: center;
