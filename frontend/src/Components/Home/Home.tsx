@@ -20,7 +20,7 @@ const Home = () => {
             <Carousel />
             <h2 className="text-decoration-underline" id="featured-tracks-heading">Featured Tracks</h2>
             <div className='container' id='track-card-container'>
-                <TrackCard cardType={'Popular'} userId={userId}/>
+                <TrackCard cardtype={'Popular'} input={userId}/>
             </div>
         </div>);
 }

@@ -5,11 +5,11 @@ import TrackModal from '../Modal/TrackModal';
 import sendAPI from '../../SendAPI';
 
 type Props = {
-    cardType:string;
-    userId: any;
+    cardtype:string;
+    input: any;
 }
 
-const TrackCard: React.FC<Props> = ({cardType, userId}) => {
+const TrackCard: React.FC<Props> = ({cardtype, input}) => {
     interface Track {
         createdAt: string;
         id: string;
@@ -69,9 +69,39 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
             });
         return;
     }
+
+    async function getSearchTracks(numTracks:number, title:string) {
+        var objArray:Track[] = [];
+        console.log(title)
+        await sendAPI('get', '/posts/getPostsByTitle', title)
+        .then(res => {
+                for(var i = 0; i < res.data.length; i++) {
+                    if(i > numTracks) break;
+                    var currentTrack:Track = {
+                        createdAt: res.data[i].createdAt,
+                        id: res.data[i].id,
+                        likeCount: res.data[i].likeCount,
+                        midi: res.data[i].midi,
+                        public: res.data[i].public,
+                        thumbnail: res.data[i].thumbnail,
+                        title: res.data[i].title,
+                        userID: res.data[i].userID,
+                        fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
+                    }
+                    objArray.push(currentTrack);
+                }
+                setTrackList(objArray);
+                setTracksPulled(true)
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        return;
+    }
+
     async function getProfileTracks() {
         var objArray:Track[] = [];
-        var user = {userID: userId};
+        var user = {userID: input};
         await sendAPI('get', '/posts/getUserPostsByID', user)
         .then(res => {
             for(var i = 0; i < res.data.length; i++) {
@@ -101,9 +131,11 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
         var currentTrackCounter:number = 0;
         const defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
         if(!tracksPulled) {
-            if(cardType === 'Profile') {
+            if(cardtype === 'Profile') {
                 getProfileTracks();
-            } else if(cardType === 'Popular'){
+            } else if (cardtype === 'Search') {
+                getSearchTracks(MAX_COLS * MAX_ROWS, input);
+            } else if(cardtype === 'Popular'){
                 getPopularTracks(MAX_COLS * MAX_ROWS);
             }
         }

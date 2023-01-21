@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useCallback, ReactPropTypes } from "react";
+import parse from 'html-react-parser';
+
+import { Suspense, lazy } from 'react';
 // import {
 //   FaHeart,
 //   FaRegHeart,
@@ -19,6 +22,7 @@ import { useRecoilValue } from "recoil";
 
 import { userJWT, userModeState } from "../context/GlobalState";
 import sendAPI from "../../SendAPI";
+import TrackCard from "../TrackCard/TrackCard";
 
 // import { playMidiFile } from "../Record/Playback";
 
@@ -41,9 +45,14 @@ const SearchPage = () => {
   const [picture, setPicture] = useState();
   const [message, setMessage] = useState("");
   const [title, setTitle] = useState("");
+  const [query, setQuery] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [currentSelectPost, setCurretSelectPost] = useState("");
   const [addedToPlay, setAddedToPlay] = useState("");
+
+  const trackcard = React.lazy(() => import('../TrackCard/TrackCard'));
+
+  const [html, setHtml] = useState('<TrackCard cardType="Search" input="' + query + '"} />');
 
   const [liked, setLiked] = useState([]) as any;
 
@@ -67,6 +76,10 @@ const SearchPage = () => {
     }
   }, [liked]);
 
+  useEffect(() => {
+    searchFuntion();
+  }, [query])
+
   function showAdd(event: any) {
     console.log(event);
     setAddPlay(true);
@@ -84,13 +97,40 @@ const SearchPage = () => {
     setMessage("");
   }
 
-  function searchFuntion() {
-    const bodyData = {
-      title: title,
-    };
-    sendAPI("get", "/posts/getPostsByTitle", bodyData).then((res) => {
-      setPost(res.data);
-    });
+function searchFuntion() {
+    console.log("search triggered");
+    // let parentDiv = document.getElementsByClassName("searchBody")
+
+    let html = '<TrackCard cardType={Search} input=' + '{' + query + '} />'
+
+    setHtml(html);
+    
+    // parentDiv[0].appendChild(parse(html));
+
+    // let heading = document.create("Trac");
+    
+    // ) = "cardType={'Search'} input={query}";
+
+    // heading.cardType = "Search"
+    // heading.textContent = "GeeksforGeeks"
+    // heading.innerHTML = "something is here"
+
+    // if (parentDiv[0] != null)
+    //   parentDiv[0].appendChild(heading)
+    // else console.log("is null");
+    // let div = document.getElementsByClassName("searchBody");
+    // let child = document.createElement("TrackCard");
+
+
+
+    // div[0].appendChild(child);
+
+
+  //   <Suspense fallback={<h1>Still Loading…</h1>}>
+  //   <TrackCard cardType={'Search'} input={query} />
+  // </Suspense>
+
+
   }
 
   function createPlaylist() {
@@ -177,69 +217,6 @@ const SearchPage = () => {
       <div>
         <h1>Search</h1>
       </div>
-      <Modal show={addPlay} onHide={hideModals}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add to playlist</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {userPlaylist.map((item: any, index) => {
-            return (
-              <div key={index}>
-                <div className="row" style={{ margin: "3px" }}>
-                  <div className="col-sm-3">
-                    <img
-                      // src={thumbnail ? thumbnail : Logo}
-                      className="modalImg"
-                    />
-                  </div>
-                  <div
-                    className="col"
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <p className="ModalTitle">{item.name}</p>
-                    <button
-                      className="ModalAddButton"
-                      onClick={(e) => addToPlaylist(item)}
-                    >
-                      Add to Playlist
-                    </button>
-                  </div>
-                </div>
-                <hr />
-              </div>
-            );
-          })}
-          <p>{addedToPlay}</p>
-        </Modal.Body>
-      </Modal>
-      <Modal show={createPlay} onHide={hideModals}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create Playlist</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p style={{ textAlign: "left" }}>
-            Playlist Title <span style={{ color: "red" }}>*</span>
-          </p>
-          <input
-            onChange={(e) => setPlayListTitle(e.target.value)}
-            className="inputModal"
-          />
-          <p style={{ textAlign: "left" }}>Playlist Thumbnail</p>
-          {/* <label for="file-upload" className="custom-file-upload">
-    				Upload Image (optional)
-				</label> */}
-          {/* <input id="file-upload" onChange={(event) => updateProfilePic(event.target.files[0])} type="file"/> */}
-        </Modal.Body>
-        <Modal.Footer>
-          <p>{message}</p>
-          <Button variant="primary" onClick={createPlaylist}>
-            Create
-          </Button>
-        </Modal.Footer>
-      </Modal>
 
       <div className="searchMainBody">
         <div className="Header">
@@ -248,8 +225,7 @@ const SearchPage = () => {
             placeholder="Search"
             className="me-2"
             aria-label="Search"
-            onKeyPress={handleSearch}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
           />
           <Button className="buttonStyle" onClick={searchFuntion}>
             Search
@@ -258,84 +234,12 @@ const SearchPage = () => {
           <hr />
         </div>
         <div className="searchBody">
-          {post.map((item, index) => {
-            return (
-              <div key={index}>
-                <div>
-                  <div className="row">
-                    <div style={{ width: "200px" }}>
-                      <Card className="cardStyleSearch">
-                        <Card.Img
-                          variant="top"
-                          className="playhover"
-                          alt=""
-                          // src={item.thumbnail ? item.thumbnail : Logo}
-                          style={{ height: "150px", width: "150px" }}
-                        />
-                        <Card.Body>
-                          <button
-                            className="cardPlayButton"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              // playMidiFile(item.midi, item.instruments, item.noteTypes, item.bpm);
-                            }}
-                          >
-                            {/* <FaPlayCircle size={90} /> */}
-                            <FontAwesomeIcon icon={["fas", "play-circle"]} />
-                          </button>
-                        </Card.Body>
-                      </Card>
-                    </div>
-                    <div className="col">
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <p className="username">
-                          Username {/*item.user.username*/}
-                        </p>
-                        <p className="createdDate">
-                          {/* {item.createdAt.substr(0, 10)} */}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="postText">tlte {/*{item.title}*/} </p>
-                      </div>
-                      <div style={{ display: "flex" }}>
-                        <button className="statusButton">
-                          {/* {liked.filter((like) => like.postID === item.id).length ? <FaHeart onClick={()=>onRemove(item.id)}/> : <FaRegHeart onClick={() => onLike(item.id)}/>}
-                          &nbsp; <p className="statusText">{item.likeCount}</p> */}
-                        </button>
-                        <Dropdown className="reactDrop">
-                          <Dropdown.Toggle
-                            variant="default"
-                            id="dropdown-basic"
-                          >
-                            {/* <FaEllipsisH /> &nbsp; More */}
-                            <FontAwesomeIcon
-                              icon={["fas", "ellipsis-h"]}
-                            />{" "}
-                            &nbsp; More
-                          </Dropdown.Toggle>
 
-                          <Dropdown.Menu>
-                            <Dropdown.Item onClick={showCreate}>
-                              Create playlist
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={(e) => showAdd(item)}>
-                              Add to playlist
-                            </Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {parse(html, {htmlparser2: {
+            lowerCaseTags: false,
+            lowerCaseAttributeNames: false
+          }})}
+          
         </div>
       </div>
     </>

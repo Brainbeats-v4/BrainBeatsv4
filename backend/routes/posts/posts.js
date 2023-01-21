@@ -223,7 +223,7 @@ router.get('/getPublicPopularPosts', async(req, res) => {
 router.put('/updatePost', async (req, res) => {
 
     try {
-        const { id, title, midi, bio, thumbnail, likeCount, token} = req.body;
+        const { id, title, midi, thumbnail, likeCount, public, token} = req.body;
 
         const decoded = verifyJWT(token);
 
@@ -245,14 +245,14 @@ router.put('/updatePost', async (req, res) => {
                 where: { id },
                 data: {
                     title: title,
-                    bio: bio,
                     likeCount: likeCount,
                     midi: midi,
+                    public: public,
                     thumbnail: thumbnail
                 }
             });
 
-            res.json(updatePost);
+            res.status(200).json(updatePost);
       }
     } catch (err) {
         console.log(err);
