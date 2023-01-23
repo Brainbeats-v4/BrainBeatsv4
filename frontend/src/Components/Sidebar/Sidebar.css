@@ -32,6 +32,7 @@ main{
   display: flex;
   flex-direction: row;
   overflow-x: auto;
+  min-height: 100vh;
 }
 
 .sidebar{

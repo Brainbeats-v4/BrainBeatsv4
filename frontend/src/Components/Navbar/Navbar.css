@@ -26,6 +26,10 @@
   width: 100px;
 }
 
+#username {
+  float: left;
+}
+
 #signUpBtn {
     background-color: #5B5B5B;
     border-color: #5B5B5B;

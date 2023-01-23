@@ -11,7 +11,6 @@ const { getUserExists, getPostExists } = require("../../utils/database");
 router.post('/createPost', async (req, res) => {
     try {
         const { userID, title, bpm, key, midi, instruments, noteTypes, token, thumbnail, likeCount} = req.body;
-        console.log(likeCount);
         const decoded = verifyJWT(token);
 
         if (!decoded) {
@@ -21,7 +20,6 @@ router.post('/createPost', async (req, res) => {
         }
 
         const userExists = await getUserExists(userID, "id");
-        console.log(userExists);
         if (!userExists) {
             return res.status(400).json({
                 msg: "User not found"
@@ -215,7 +213,6 @@ router.get('/getPublicPopularPosts', async(req, res) => {
             }
           },
     })
-    console.log(posts);
     res.json(posts)
 });
 

@@ -37,9 +37,27 @@ const TrackModal: React.FC<Props> = ({track}) => {
   
   const [trackName, setTrackName] = useState(track.title);
   const [visibility, setVisibility] = useState(track.public);
+  const [buttonText, setButtonText] = useState(visibility ? "Make Private" : "Make Public");
   const [thumbnail, setThumbnail] = useState(track.thumbnail);
 
-  function updateTrack () {
+
+
+  function setVisibilityButton() {
+    setVisibility(!visibility);
+    setButtonText(visibility ? "Make Private" : "Make Public");
+
+    console.log("clicking");
+    console.log(visibility, buttonText);
+  }
+
+
+  useEffect(() => {
+
+    updateTrack(visibility);
+
+  }, [visibility])
+
+  function updateTrack (visibility = track.public, trackName = track.title, thumbnail = track.thumbnail) {
 
     if (jwt == null || user == null) navigate("/login");
 
@@ -49,17 +67,19 @@ const TrackModal: React.FC<Props> = ({track}) => {
       midi: track.midi,
       thumbnail: thumbnail,
       likeCount: track.likeCount,
-      public: track.public,
-      token: jwt
+      public: visibility,
+      token: jwt,
     }
     
     sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
       if (res.status == 200) {
-        setErrMsg("");
-        setSuccessMsg("Track updated")
+        setErrMsg(trackName);
+        // setSuccessMsg(JSON.stringify(res.data));
       }
-      else setErrMsg("Could not save post.");
-
+      else {
+        setErrMsg("Could not save post.");
+        setSuccessMsg("");
+      }
     })
 
     setEditing(false);
@@ -78,12 +98,16 @@ const TrackModal: React.FC<Props> = ({track}) => {
               <img src={track.thumbnail} className="card-img-top modal-track-cover" id="card-img-ID" alt="..."/>
             </div>
             <div id='modal-track-text-div'>
-              {!visibility && <h6 id="hidden-track-text">
+              {visibility && <h6 id="hidden-track-text">
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye-slash"]} />
                 hidden track
               </h6>}
-              {!editing && <h1 id='track-title-text'>{track.title}</h1>}
-              {editing && <input type="text" id='track-title-text' defaultValue={trackName}></input>}
+              {!visibility && <h6 id="hidden-track-text">
+                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye"]} />
+                Public track
+              </h6>}
+              {!editing && <h1 id='track-title-text'>{trackName}</h1>}
+              {editing && <input type="text" id='track-title-text' defaultValue={trackName} onChange={(e) => setTrackName(e.target.value)}></input>}
               
               <h6 id="track-author-text">{track.fullname}</h6>
               <button type="button" className="btn btn-primary" id='play-btn'>
@@ -94,10 +118,10 @@ const TrackModal: React.FC<Props> = ({track}) => {
           </Modal.Body>
           <Modal.Footer className='modal-container2'>
             <div id='modal-container-20'>
-              {editing && <button className='btn btn-secondary modal-btn-public'>
-                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye"]} onClick={() => setVisibility(!visibility)} />
-                {!visibility && "Make Public"}
-                {visibility && "Make Private"}
+              {editing && <button className='btn btn-secondary modal-btn-public' onClick={() => setVisibilityButton()}>
+                {visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye"]} id="visibilityButton" />}
+                {!visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye-slash"]} id="visibilityButton" />}
+                  {!visibility ? "Make Private" : "Make Public"}
               </button>}
             </div>
             <div id='modal-container-21'>
@@ -117,6 +141,8 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "edit"]} />
                 Edit
               </button>}
+              {successMsg}
+              {errMsg}
             </div>
           </Modal.Footer>
         </div>
