@@ -91,7 +91,6 @@ const TrackCard: React.FC<Props> = ({cardType, userId}) => {
             setTrackList(objArray);
             setTracksPulled(true)
         })
-
     }
     
     function PopulateTrackCards() {

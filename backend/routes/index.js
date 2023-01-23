@@ -42,6 +42,7 @@ app.use('/api/posts', require('./posts/posts'));
 app.use('/api/playlists', require('./playlists/playlists')); 
 app.use('/api/music', require('./music/music')); 
 app.use('/api/likes', require('./likes/likes')); 
+app.use('/api/images', require('./images/images'));
 app.use('/api/authentication', require('./authentication/authentication')); 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
