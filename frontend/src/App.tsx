@@ -63,12 +63,12 @@ function App() {
           <Route path='/forgot' element={<Forgot />} />
           <Route path='/verify' element={<Verify />} />
           <Route path='/reset-password' element={<ResetPassword />} />
-          {
-            isLoggedIn? 
+          {/* { */}
+            {/* // isLoggedIn?  */}
             <Route path='/profile' element={<Profile />} />
-            :
-            <Route path='/profile' element={<Navigate to='/login'/>} />
-          }
+            {/* // : */}
+            {/* // <Route path='/profile' element={<Navigate to='/login'/>} /> */}
+          {/* // } */}
           {/* <Route path='/Login' element={user ? <Navigate to='/' /> : <Login />}/>
           <Route path='/Signup' element={user ? <Home /> :<Signup />} /> */}
 

@@ -69,7 +69,7 @@ const Profile = () => {
     return(
         <div className="user-profile">
             <div id='profile-top-container'>
-            <img src={testStr} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>
+            {/* <img src={userProfilePic} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/> */}
                 <div id='profile-top-name-div'>
                     <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>
                     <h2>{user.username}</h2>
@@ -104,7 +104,7 @@ const Profile = () => {
             <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} name="image" type="file" accept='.jpeg, .png, .jpg'/>
             <hr></hr>
             <h1>My Tracks</h1>
-            <TrackCard cardType={'Profile'} userId={user.userId} />
+            <TrackCard cardType={'Profile'} input={user.userId} />
             {/* <div>
                 <ul>
                     {
