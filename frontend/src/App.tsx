@@ -49,41 +49,43 @@ function App() {
 
 
   return (
+    <div className='bg'>
+      <Router>
+        {/* <Sidebar> */}
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/about' element={<About />} />
+            <Route path='/search' element={<Search />} />
+            <Route path='/create-track' element={<CreateTrack />} />
+            <Route path='/record-track' element={<RecordTrack />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<SignUp />} />
+            <Route path='/forgot' element={<Forgot />} />
+            <Route path='/verify' element={<Verify />} />
+            <Route path='/reset-password' element={<ResetPassword />} />
+            {/* { */}
+              {/* // isLoggedIn?  */}
+              <Route path='/profile' element={<Profile />} />
+              {/* // : */}
+              {/* // <Route path='/profile' element={<Navigate to='/login'/>} /> */}
+            {/* // } */}
+            {/* <Route path='/Login' element={user ? <Navigate to='/' /> : <Login />}/>
+            <Route path='/Signup' element={user ? <Home /> :<Signup />} /> */}
 
-    <Router>
-      {/* <Sidebar> */}
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/search' element={<Search />} />
-          <Route path='/create-track' element={<CreateTrack />} />
-          <Route path='/record-track' element={<RecordTrack />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<SignUp />} />
-          <Route path='/forgot' element={<Forgot />} />
-          <Route path='/verify' element={<Verify />} />
-          <Route path='/reset-password' element={<ResetPassword />} />
-          {/* { */}
-            {/* // isLoggedIn?  */}
-            <Route path='/profile' element={<Profile />} />
-            {/* // : */}
-            {/* // <Route path='/profile' element={<Navigate to='/login'/>} /> */}
-          {/* // } */}
-          {/* <Route path='/Login' element={user ? <Navigate to='/' /> : <Login />}/>
-          <Route path='/Signup' element={user ? <Home /> :<Signup />} /> */}
+            {/* <Route path='/Profile' element={user ? <Profile /> : <Navigate to='/Login' />} /> */}
 
-          {/* <Route path='/Profile' element={user ? <Profile /> : <Navigate to='/Login' />} /> */}
-
-          {/* <Route path='/Record' element={<Record />} /> */}
-          {/* <Route path='/Search' element={<Search />} />
-          <Route path='/Playlist' element={<Playlists />} />
-          <Route path='/Playlist/:pid' element={<Playlist />} /> */}
-          {/* <Route path='/Forgot' element={<Forgot />} />
-          <Route path='/Test' element={<Test />} />
-          <Route path='/About' element={<AboutUs />} /> */}
-        </Routes>
-      {/* </Sidebar> */}
-    </Router>
+            {/* <Route path='/Record' element={<Record />} /> */}
+            {/* <Route path='/Search' element={<Search />} />
+            <Route path='/Playlist' element={<Playlists />} />
+            <Route path='/Playlist/:pid' element={<Playlist />} /> */}
+            {/* <Route path='/Forgot' element={<Forgot />} />
+            <Route path='/Test' element={<Test />} />
+            <Route path='/About' element={<AboutUs />} /> */}
+          </Routes>
+        {/* </Sidebar> */}
+      </Router>
+    </div>
+    
     
     
   );

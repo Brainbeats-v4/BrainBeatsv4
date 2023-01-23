@@ -79,7 +79,6 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         await sendAPI('get', '/posts/getPostsByTitle', query)
         .then((res) => {
             console.log(res);
-
                 for(var i = 0; i < res.data.length; i++) {
                     var currentTrack:Track = {
                         createdAt: res.data[i].createdAt,
