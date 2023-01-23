@@ -10,21 +10,48 @@ import { useState } from 'react';
 import Sidebar from '../Sidebar/Sidebar';
 
 // This component stores both the Navbar and Sidebar.
-const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
+const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {  
 
     const[isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
+    const user = useRecoilValue(userModeState);
+    let menuItem;
 
-    const menuItem=[
+    if (user) {
+      menuItem=[
+          {
+            path:"/",
+            name:"Home",
+            icon:<FontAwesomeIcon icon={["fas", "home"]} />
+          },
+          {
+            path:"../profile",
+            name:"Profile",
+            icon:<FontAwesomeIcon icon={["fas", "user"]} />
+          },
+          {
+            path:"../about",
+            name:"About",
+            icon:<FontAwesomeIcon icon={["fas", "circle-info"]} />
+          },
+          {
+            path:"../search",
+            name:"Search",
+            icon:<FontAwesomeIcon icon={["fas", "search"]} />
+          },
+          {
+            path:"../create-track",
+            name:"Create Track",
+            icon:<FontAwesomeIcon icon={["fas", "plus"]} />
+          },
+        ]
+      }
+    else {
+      menuItem=[
         {
           path:"/",
           name:"Home",
           icon:<FontAwesomeIcon icon={["fas", "home"]} />
-        },
-        {
-          path:"../profile",
-          name:"Profile",
-          icon:<FontAwesomeIcon icon={["fas", "user"]} />
         },
         {
           path:"../about",
@@ -42,8 +69,9 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
           icon:<FontAwesomeIcon icon={["fas", "plus"]} />
         },
       ]
+    }
 
-    const user = useRecoilValue(userModeState);
+    
     const [JWT, setJWT] = useRecoilState(userJWT);
     const [userMode, setUserMode] = useRecoilState(userModeState);
     const navigate = useNavigate();
