@@ -44,4 +44,39 @@ router.put('/updateUserProfilePic', async (req, res) => {
     }
 });
 
+router.put('/updateTrackPic', async (req, res) => {
+    try{
+        const { id, token, thumbnail } = req.body;
+        
+        const decoded = verifyJWT(token);
+        
+        if (!decoded) {
+            return res.status(400).json({
+                msg: "Invalid token"
+            });
+        }
+                
+        // Check if the user already exists in db
+        const postExists = await getPostExists(id, "id");
+
+        if (!postExists) {
+            return res.status(400).json({
+                msg: "Track ID not found"
+            });
+        } else {
+            const updateTrack = await prisma.Post.update({
+                where: { id },
+                data: {
+                    thumbnail
+                }
+            });
+            console.log(updateTrack)
+            res.status(200).send({updateUser});
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
 module.exports = router;
