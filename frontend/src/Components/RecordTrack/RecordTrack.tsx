@@ -2,6 +2,7 @@ import './RecordTrack.css';
 import { BlockPicker, ChromePicker, CompactPicker, PhotoshopPicker, SketchPicker, SliderPicker, TwitterPicker } from 'react-color';
 import { useState } from 'react';
 import { stringify } from 'querystring';
+import React from 'react';
 
 const RecordTrack = () => {
 
@@ -99,7 +100,14 @@ const RecordTrack = () => {
 		setTextColor({ displayColorPicker: textColor.displayColorPicker, color: color.rgb });
 	  };
 
-
+    // Upload Image function
+    // const [img, setImg] = useState();
+    
+    // const onImageChange = (e: { target: { files: [Blob | MediaSource]; }; }) => {
+    //   const [file] = e.target.files;
+    //   setImg(URL.createObjectURL(file));
+    // };
+      
 
     return (
         <div className='container' id='record-container'>
@@ -112,8 +120,17 @@ const RecordTrack = () => {
                        <div id='record-uploads-div'>
                             <label className='record-heading' htmlFor="file-upload">Upload Image:</label>
                             <div className='record-upload'>
-                                <input type="file" id="file-upload" />
+                                <input 
+                                    accept="image/*"
+                                    type="file" 
+                                    id="file-upload" 
+                                    multiple={false}
+                                    // onChange={onImageChange}
+                                    // onChange={(e) => fileChangeEvent(e.target.files)}
+                                    // value={}
+                                />
                             </div>
+                            {/* <img src={img} alt='preview img' /> */}
                             <label className='record-heading' htmlFor="file-upload">Background Color:</label>
                             <div className='record-upload1'>
                                 <CompactPicker
