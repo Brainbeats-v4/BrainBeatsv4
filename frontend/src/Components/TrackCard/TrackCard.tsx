@@ -104,6 +104,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
 
     async function getProfileTracks() {
         var objArray:Track[] = [];
+        console.log(input);
         var user = {userID: input};
         await sendAPI('get', '/posts/getUserPostsByID', user)
         .then(res => {

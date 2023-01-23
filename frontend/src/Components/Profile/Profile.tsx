@@ -11,15 +11,25 @@ import buildPath from '../../util/ImagePath';
 
 const Profile = () => {
     const [user, setUser] = useRecoilState(userModeState);
+    const [userMode, setUserMode] = useRecoilState(userModeState);
     const jwt = useRecoilValue(userJWT);
     const [playlist, setPlaylist] = useState([]); 
     const [posts, setPosts] = useState([])
-    var encodedProfilePic = user.profilePicture;
-    console.log(encodedProfilePic)
-    encodedProfilePic = (encodedProfilePic as string).split(',')[1];
-    var testStr = 'data:image/png;base64,' + user.profilePicture
-    var decodedProfilePic = Buffer.from(encodedProfilePic, 'base64').toString('ascii');
-    var userProfilePic = buildPath(decodedProfilePic)
+    const [displayPicture, setDisplayPicture] = useState(user.profilePicture);
+    if(displayPicture !== undefined) {
+            if ((displayPicture as string).split('/')[0] === 'data:text') {
+            console.log(displayPicture);
+            var encodedProfilePic = (displayPicture as string).split(',')[1];
+            var decodedProfilePic = Buffer.from(encodedProfilePic, 'base64').toString('ascii');
+            setDisplayPicture(buildPath(decodedProfilePic));
+        }
+    }
+    // var encodedProfilePic = user.profilePicture;
+
+    // encodedProfilePic = (encodedProfilePic as string).split(',')[1];
+    // var testStr = 'data:image/png;base64,' + user.profilePicture
+    // var decodedProfilePic = Buffer.from(encodedProfilePic, 'base64').toString('ascii');
+    // var userProfilePic = buildPath(decodedProfilePic)
     //console.log(decodedProfilePic)
     var userTracks = [
         {songTitle: 'New Song', songImage: ''},
@@ -48,7 +58,7 @@ const Profile = () => {
     }
 
     async function updateProfilePic(file:File) {
-        var base64result;
+        var base64result:any;
         await convertToBase64(file).then(res => {
             base64result = res;
         })
@@ -58,9 +68,19 @@ const Profile = () => {
             token: jwt,
             profilePicture: base64result
         };
+        console.log(updatedUser);
         sendAPI('put', '/images/updateUserProfilePic', updatedUser)
             .then(res => {
+                setDisplayPicture(base64result);
                 console.log(res);
+                var updatedUser = {
+                    userId: res.data.updateUser.id,
+                    bio: res.data.updateUser.bio,
+                    firstName: res.data.updateUser.firstName,
+                    lastName: res.data.updateUser.lastName,
+                    profilePicture: res.data.updateUser.profilePicture
+                }
+                setUser(updatedUser);
             }).catch(err => {
                 console.log(err);
             })
@@ -69,7 +89,7 @@ const Profile = () => {
     return(
         <div className="user-profile">
             <div id='profile-top-container'>
-            {/* <img src={userProfilePic} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/> */}
+            <img src={displayPicture} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>
                 <div id='profile-top-name-div'>
                     <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>
                     <h2>{user.username}</h2>
