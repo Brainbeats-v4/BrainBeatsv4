@@ -9,13 +9,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Buffer } from 'buffer';
 import buildPath from '../../util/ImagePath';
 
+
 const Profile = () => {
     const [user, setUser] = useRecoilState(userModeState);
     const [userMode, setUserMode] = useRecoilState(userModeState);
     const jwt = useRecoilValue(userJWT);
     const [playlist, setPlaylist] = useState([]); 
     const [posts, setPosts] = useState([])
-    const [displayPicture, setDisplayPicture] = useState(user.profilePicture);
+    const [displayPicture, setDisplayPicture] = useState(user!==null ? user.profilePicture: undefined);
+
+
     if(displayPicture !== undefined) {
             if ((displayPicture as string).split('/')[0] === 'data:text') {
             console.log(displayPicture);

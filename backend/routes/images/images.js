@@ -35,7 +35,8 @@ router.put('/updateUserProfilePic', async (req, res) => {
                     profilePicture
                 }
             });
-            res.status(200).send({msg: "User was successfully updated"});
+            console.log(updateUser)
+            res.status(200).send({updateUser});
         }
     } catch (err) {
         console.log(err);
