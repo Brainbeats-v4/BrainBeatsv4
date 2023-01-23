@@ -40,6 +40,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
     const [trackList, setTrackList] = useState<Track[]>([])
     const [tracksPulled, setTracksPulled] = useState(false);
+    const [currentSearch, setCurrentSearch] = useState('');
 
     async function getPopularTracks(numTracks:number) {
         // hit api for 'numTracks' tracks
@@ -70,15 +71,16 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         return;
     }
 
-    async function getSearchTracks(numTracks:number, title:string) {
+    async function getSearchTracks(title:string) {
         var objArray:Track[] = [];
+        setCurrentSearch(title);
         console.log(title)
-        await sendAPI('get', '/posts/getPostsByTitle', title)
+        let query = {title: title};
+        await sendAPI('get', '/posts/getPostsByTitle', query)
         .then((res) => {
-            console.log("status: " + res.status);
+            console.log(res);
 
                 for(var i = 0; i < res.data.length; i++) {
-                    if(i > numTracks) break;
                     var currentTrack:Track = {
                         createdAt: res.data[i].createdAt,
                         id: res.data[i].id,
@@ -131,14 +133,12 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         var gridArray:any[] = [];
         var currentTrackCounter:number = 0;
         const defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
+        //cardType Search goes outside of the conditional because there is the case where searching has already happened
+        if (cardType === 'Search')
+            if(currentSearch !== input) getSearchTracks(input);
         if(!tracksPulled) {
-            if(cardType === 'Profile') {
-                getProfileTracks();
-            } else if (cardType === 'Search') {
-                getSearchTracks(MAX_COLS * MAX_ROWS, input);
-            } else if(cardType === 'Popular'){
-                getPopularTracks(MAX_COLS * MAX_ROWS);
-            }
+            if(cardType === 'Profile') getProfileTracks();
+            else if(cardType === 'Popular') getPopularTracks(MAX_COLS * MAX_ROWS);
         }
         for(let i = 0; i < MAX_ROWS; i++){
             for(let j = 0; j < MAX_COLS; j++) {
@@ -156,7 +156,6 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     }
 
    function setTrack(currentTrack:Track) {
-        console.log("current track: " + currentTrack);
        setCurrentTrack(currentTrack);
        setShow(true);
     }

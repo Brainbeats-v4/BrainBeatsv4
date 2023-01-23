@@ -52,7 +52,7 @@ const SearchPage = () => {
   const [currentSelectPost, setCurretSelectPost] = useState("");
   const [addedToPlay, setAddedToPlay] = useState("");
 
-  const TrackCard = React.lazy(() => import('../TrackCard/TrackCard'));
+  //const TrackCard = React.lazy(() => import('../TrackCard/TrackCard'));
 
   const [html, setHtml] = useState('<TrackCard cardType="Search" input="' + query + '"} />');
 
@@ -78,12 +78,7 @@ const SearchPage = () => {
     }
   }, [liked]);
 
-  useEffect(() => {
-    searchFuntion();
-  }, [query])
-
   function showAdd(event: any) {
-    console.log(event);
     setAddPlay(true);
     setCurretSelectPost(event.id);
   }
@@ -100,7 +95,7 @@ const SearchPage = () => {
   }
 
 function searchFuntion() {
-    console.log("search triggered");
+    console.log(query);
     // let parentDiv = document.getElementsByClassName("searchBody")
 
 
