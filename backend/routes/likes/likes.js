@@ -15,7 +15,7 @@ router.post('/createUserLike', async (req, res) => {
         const decoded = verifyJWT(token);
 
         if (!decoded) {
-            return res.status(400).json({
+            return res.status(401).json({
                 msg: "Invalid token"
             });
         }
@@ -43,10 +43,7 @@ router.post('/createUserLike', async (req, res) => {
 
             // Create a like
             const newLike = await prisma.Like.create({
-                data: {
-                    userID: userID,
-                    postID: postID
-                }
+                data: { userID, postID }
             });
 
             const updatePost = await prisma.Post.update({
@@ -59,7 +56,7 @@ router.post('/createUserLike', async (req, res) => {
             res.json(newLike);
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).send({ msg: err });
     }
 });
@@ -116,7 +113,7 @@ router.delete('/removeUserLike', async (req, res) => {
             res.status(200).send({ msg: "Deleted a user like" });
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).send(err);
     }
 });
@@ -135,7 +132,7 @@ router.get('/getUserLike', async (req, res) => {
 
         res.json(likeStatus);
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).send(err);
     }
 });
@@ -149,7 +146,7 @@ router.get('/getAllUserLikes', async (req, res) => {
 
         res.json(allLikes);
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).send(err);
     }
 });

@@ -16,10 +16,10 @@ router.get('/verifyJWT', async (req, res) => {
         if (jwt == undefined)
             res.status(400).send("usage: {jwt: string}")
 
-        res.json(verifyJWT(jwt));
+        return res.json(verifyJWT(jwt));
     } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+        console.error(err);
+        return res.status(500).send(err);
     }
 }); 
 
@@ -33,43 +33,38 @@ const transporter = nodemailer.createTransport({
     secure: true,
 });
 
-// Send Email to user to verify login
 router.post('/sendVerificationEmail', async (req, res) => {
     try {
-        const { email, subject, text} = req.body;
+        const { email, subject } = req.body;
         const userExists = await prisma.user.findUnique({
             where: { email },
-            select: {
-                email: true,
-                id: true
-            }
+            select: { id: true }
         });
 
         // If the user is an existing user, then send a verification email based on their ID
         if (userExists) {
             const mailData = {
-                from: 'brainbeatsucf@gmail.com',  // Sender address
-                to: email,                           // List of receivers
+                from: 'brainbeatsucf@gmail.com',
+                to: email,
                 subject: subject,
-                text: `Verify your login to BrainBeats by clicking the following link, or copy and paste it into your browser: `,
+                text: 'Verify your login to BrainBeats by clicking the following link, or copy and paste it into your browser: ',
                 // html: '<a href=\"https://www.brainbeats.dev/verify/${userExists._id}\">Verify Email</a>',
-                html: `<a href=\"http://localhost:3000/verify?id=${userExists.id}\">Verify Email</a>`,
+                html: `<a href="http://localhost:3000/verify?id=${userExists.id}">Verify Email</a>`,
             };
 
             transporter.sendMail(mailData, function (err, info) {
                 if (err) {
-                    return console.log(err);
+                    console.error(err);
                 } else {
-                    console.log('Email Sent: ' + info.response);
+                    console.log(`Email Sent: ${info.response}`);
                 }
 
                 res.status(200).send({ message: "Mail sent", message_id: info.messageId });
             });
         }
-    }
-    catch (err) {
-        console.log(err)
-        res.status(500).json({ msg: "User does not exist." })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: "User does not exist." });
     }
 });
 

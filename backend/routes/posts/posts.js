@@ -14,7 +14,7 @@ router.post('/createPost', async (req, res) => {
         const decoded = verifyJWT(token);
 
         if (!decoded) {
-            return res.status(400).json({
+            return res.status(401).json({
                 msg: "Invalid token"
             });
         }
@@ -45,11 +45,11 @@ router.post('/createPost', async (req, res) => {
                 }
             });
 
-            res.json(newPost);
+          return res.json(newPost);
         }
     } catch (err) {
         console.log(err);
-        res.status(500).send({ msg: err });
+      return res.status(500).send({ msg: err });
     }
 });
 
@@ -62,7 +62,7 @@ router.get('/getUserPostsByUsername', async (req, res) => {
                 include: {user : true}
             });
 
-            res.json(allPosts);
+            return res.json(allPosts);
             return;
         }
 
@@ -85,11 +85,11 @@ router.get('/getUserPostsByUsername', async (req, res) => {
                 });
             }
 
-            res.json(userPosts);
+            return res.json(userPosts);
         }
     } catch (err) {
         console.log(err);
-        res.status(500).send({ msg: err });
+        return res.status(500).send({ msg: err });
     }
 });
 
@@ -102,7 +102,7 @@ router.get('/getPostsByTitle', async (req, res) => {
                 include: {user : true}
             });
 
-            res.json(allPosts);
+            return res.json(allPosts);
             return;
         }
         
@@ -122,11 +122,11 @@ router.get('/getPostsByTitle', async (req, res) => {
             });
         }
 
-        res.json(posts);
+        return res.json(posts);
         
     } catch (err) {
         console.log(err);
-        res.status(500).send({ msg: err });
+        return res.status(500).send({ msg: err });
     }
 });
 
@@ -151,11 +151,11 @@ router.get('/getUserPostsByID', async (req, res) => {
                 });
             }
 
-            res.json(userPosts);
+            return res.json(userPosts);
         }
     } catch (err) {
         console.log(err);
-        res.status(500).send({ msg: err });
+        return res.status(500).send({ msg: err });
     }
 });
 
@@ -166,10 +166,10 @@ router.get('/getAllPosts', async (req, res) => {
             include: {user: true}
         });
 
-        res.json(posts);
+        return res.json(posts);
     } catch (err) {
         console.log(err);
-        res.status(500).send({ msg: err });
+        return res.status(500).send({ msg: err });
     }
 });
 
@@ -179,7 +179,7 @@ router.delete('/deletePost', async (req, res) => {
         const decoded = verifyJWT(req.body.token);
 
         if (!decoded) {
-            return res.status(400).json({
+            return res.status(401).json({
                 msg: "Invalid token"
                 });
         }
@@ -187,10 +187,10 @@ router.delete('/deletePost', async (req, res) => {
         const deletePost = await prisma.Post.delete({
             where: { id: req.body.id }
         });
-        res.status(200).send({ msg: "Deleted a user post" });
+        return res.status(200).send({ msg: "Deleted a user post" });
     } catch (err) {
         console.log(err);
-        res.status(500).send(err);
+        return res.status(500).send(err);
     }
 });
 
@@ -213,7 +213,7 @@ router.get('/getPublicPopularPosts', async(req, res) => {
             }
           },
     })
-    res.json(posts)
+    return res.json(posts)
 });
 
 // Update user post info 
@@ -225,7 +225,7 @@ router.put('/updatePost', async (req, res) => {
         const decoded = verifyJWT(token);
 
         if (!decoded) {
-            return res.status(400).json({
+            return res.status(401).json({
                 msg: "Invalid token"
             });
         }
@@ -249,11 +249,11 @@ router.put('/updatePost', async (req, res) => {
                 }
             });
 
-            res.status(200).json(updatePost);
+            return res.status(200).json(updatePost);
       }
     } catch (err) {
         console.log(err);
-        res.status(500).send(err);
+        return res.status(500).send({msg: err});
     }
 });
 

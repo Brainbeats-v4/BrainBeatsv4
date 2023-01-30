@@ -27,21 +27,18 @@ router.post('/createPlaylist', async (req, res) => {
             return res.status(400).json({
                 msg: "User not found"
             });
-        } else {
-            const newPlaylist = await prisma.Playlist.create({
-                data: {
-                    name: name,
-                    userID: userID,
-                    thumbnail: thumbnail
-                }
-            });
-      
-            // console.log(profilePicture);
-            res.json(newPlaylist);
         }
+            
+        const newPlaylist = await prisma.Playlist.create({
+            data: { name, userID, thumbnail }
+        });
+      
+        // console.log(profilePicture);
+        return res.json(newPlaylist);
+
     } catch (err) {
-        console.log(err);
-        res.status(500).send({ msg: err });
+        console.error(err);
+        return res.status(500).send({ msg: err });
     }
 });
 
@@ -50,10 +47,10 @@ router.post('/createPlaylist', async (req, res) => {
 router.get('/getAllPlaylists', async (req, res) => {
     try {
         const playlists = await prisma.Playlist.findMany();
-        res.json(playlists);
+        return res.json(playlists);
     } catch (err) {
-        console.log(err);
-        res.status(500).send({ msg: err });
+        console.error(err);
+        return res.status(500).send({ msg: err });
     }
 });
 
@@ -67,10 +64,10 @@ router.get('/getUserPlaylists', async (req, res) => {
                 userID: userID
             }
         });
-        res.json(playlists);
+        return res.json(playlists);
     } catch (err) {
-        console.log(err);
-        res.status(500).send({ msg: err });
+        console.error(err);
+        return res.status(500).send({ msg: err });
     }
 });
 
@@ -85,10 +82,10 @@ router.get('/getPlaylistByID', async (req, res) => {
             });
         }
 
-        res.json(playlistExists);
+        return res.json(playlistExists);
     } catch (err) {
-        console.log(err);
-        res.status(500).send({ msg: err })
+        console.error(err);
+        return res.status(500).send({ msg: err })
     }
 });
 
@@ -110,10 +107,10 @@ router.get('/getPlaylistsByPostID', async (req, res) => {
             })
         }
 
-        res.json(playlists);
+        return res.json(playlists);
     } catch (err) {
-        console.log(err);
-        res.status(500).send({ msg: err })
+        console.error(err);
+        return res.status(500).send({ msg: err })
     }
 
 });
@@ -133,11 +130,11 @@ router.get('/getPostsByPlaylistID', async (req, res) => {
                 select: { post: true }
             });
 
-            res.json(posts);
+            return res.json(posts);
         }
     } catch (err) {
-        console.log(err);
-        res.status(500).send({ msg: err });
+        console.error(err);
+        return res.status(500).send({ msg: err });
     }
 });
 
@@ -157,11 +154,11 @@ router.delete('/deletePlaylist', async (req, res) => {
             where: { id: req.body.id }
         });
 
-        res.status(200).send({ msg: "Deleted a user playlist" });
+        return res.status(200).send({ msg: "Deleted a user playlist" });
     }
     catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+        console.error(err);
+        return res.status(500).send(err);
     }
 
 });
@@ -199,12 +196,12 @@ router.post('/addPostToPlaylist', async (req, res) => {
                     playlistID: playlistID
                 }
             });
-            res.json(newPost);
+            return res.json(newPost);
         }
     }
     catch (err) {
-        console.log(err);
-        res.status(500).send({ msg: err });
+        console.error(err);
+        return res.status(500).send({ msg: err });
     }
 });
 
@@ -229,11 +226,11 @@ router.delete('/removePostFromPlaylist', async (req, res) => {
                 }
             }
         });
-        res.status(200).send({ msg: "Removed a post from a playlist" });
+        return res.status(200).send({ msg: "Removed a post from a playlist" });
     }
     catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+        console.error(err);
+        return res.status(500).send(err);
     }
 });
 
@@ -257,11 +254,11 @@ router.put('/updatePlaylist', async (req, res) => {
                 thumbnail: thumbnail
             }
         });
-        //   res.status(200).send({msg: "Updated OK"});
-        res.json(updatePlaylist);
+        //   return res.status(200).send({msg: "Updated OK"});
+        return res.json(updatePlaylist);
     } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+        console.error(err);
+        return res.status(500).send(err);
     }
 });
 

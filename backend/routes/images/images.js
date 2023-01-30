@@ -8,39 +8,34 @@ const { getJWT, verifyJWT} = require("../../utils/jwt");
 const { getUserExists, getPostExists } = require("../../utils/database");
 
 router.put('/updateUserProfilePic', async (req, res) => {
-    try{
+    try {
         const { id, token, profilePicture } = req.body;
-        
         const decoded = verifyJWT(token);
-        
+
         if (!decoded) {
-            return res.status(400).json({
+            return res.status(401).json({
                 msg: "Invalid token"
             });
         }
-                
-        // Check if the user already exists in db
+
         const userExists = await getUserExists(id, "id");
 
         if (!userExists) {
-            return res.status(400).json({
-                msg: "User ID not found"
+            return res.status(404).json({
+                msg: "User not found"
             });
-        } else {
-            //encryptedPassword = await bcrypt.hash(password, 10);
-
-            const updateUser = await prisma.User.update({
-                where: { id },
-                data: {
-                    profilePicture
-                }
-            });
-            console.log(updateUser)
-            res.status(200).send({updateUser});
         }
+
+        const updateUser = await prisma.User.update({
+            where: { id },
+            data: { profilePicture }
+        });
+
+        return res.status(200).json({updateUser});
+
     } catch (err) {
-        console.log(err);
-        res.status(500).send(err);
+        console.error(err);
+        return res.status(500).send(err);
     }
 });
 
