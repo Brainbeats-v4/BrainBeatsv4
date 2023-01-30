@@ -192,25 +192,26 @@ function searchFuntion() {
 
   return (
     <>
-      <div>
-        <h1>Search</h1>
-      </div>
-
       <div className="searchMainBody">
-        <div className="Header">
-          <input
-            type="search"
-            placeholder="Search"
-            className="me-2"
-            aria-label="Search"
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <Button className="buttonStyle" onClick={searchFuntion}>
-            Search
-          </Button>
-          <p className="searchHeaderText">Search results</p>
-          <hr />
+        <div className="searchbar-header-div">
+          <h2 id="searchTitle">Searching for a track?</h2>
+          <div className="searchbar-div">
+            <FontAwesomeIcon icon={["fas", "search"]} />
+            <input
+              type="search"
+              id="searchbar"
+              placeholder="Search"
+              className="me-2"
+              aria-label="Search"
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            {/* <Button className="buttonStyle" onClick={searchFuntion}>
+              Search
+            </Button> */}
+          </div>
         </div>
+        <hr />
+        <h6 className="searchResultsText">Track Results</h6>
         <div className="searchBody">
           <TrackCard cardType={'Search'} input={query}/>
         </div>

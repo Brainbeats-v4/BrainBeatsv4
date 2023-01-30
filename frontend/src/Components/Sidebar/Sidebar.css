@@ -18,7 +18,8 @@
 main{
   padding: 20px;
   align-content: center;
-  margin: auto;
+  /* margin: auto; */
+  width: 100%;
 }
 
 /* CSS for Sidebar */
