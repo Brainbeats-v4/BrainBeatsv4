@@ -12,9 +12,19 @@ import { useNavigate } from 'react-router-dom';
 // **** If more devices are needed, here are the node modules to begin their acquisition. **** \\
 // import muse from "https://cdn.jsdelivr.net/npm/@brainsatplay/muse@0.0.1/dist/index.esm.js"; // Muse board retrieval
 // import hegduino from "https://cdn.jsdelivr.net/npm/@brainsatplay/hegduino@0.0.3/dist/index.esm.js"; // Hegduino 8 channel board retrieval
+
+
 import * as components from "https://cdn.jsdelivr.net/npm/brainsatplay-ui@0.0.7/dist/index.esm.js"; // UI
 import * as datastreams from "https://cdn.jsdelivr.net/npm/datastreams-api@latest/dist/index.esm.js"; // Data acquisition
+
 import ganglion from "https://cdn.jsdelivr.net/npm/@brainsatplay/ganglion@0.0.2/dist/index.esm.js"; // This is the device aquisition for BrainBeats AKA the ganglion device.
+
+// import cyton from "https://cdn.jsdelivr.net/npm/@openbci/cyton@2.0.1/openBCICyton.min.js";
+
+import cyton from "cytonjs"
+
+// import cyton from "./openBCICyton";
+
 import * as XLSX from 'xlsx';
 import MidiPlayer from 'midi-player-js';
 import _, {cloneDeep, first} from 'lodash'
@@ -355,10 +365,27 @@ function Setting({numNotes, instrumentArr, noteDuration, scale, keyNum, BPM, set
 
 		// Setup for data streaming
 		dataDevices = new datastreams.DataDevices();
-		dataDevices.load(ganglion);
+
+
+		let cyton = new cyton(
+			()=>{console.log("On decoded")},
+			()=>{console.log("onConnectedCallback")},
+			()=>{console.log("onDisconnectedCallback")},
+			"single",
+			CustomDecoder,
+			115200,
+		); 
+
+		// console.log(cyton);
+		
+		// dataDevices.load(ganglion);
+		dataDevices.load(cyton);
 
 		// This runs when the headset is successfully connected via Bluetooth
 		const startAcquisition = async (label) => {
+
+			// console.log("Did we read the file? " + componentDidMount());
+
 			// Get device stream
 			//const dataDevice = await dataDevices.getUserDevice({ label });
 			// cytonBoard.setupSerialAsync(115200); 

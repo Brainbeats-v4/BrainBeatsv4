@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@neurosity/pipes": "^5.1.3"
+  }
+}
