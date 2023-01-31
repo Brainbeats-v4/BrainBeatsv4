@@ -1,99 +1,27 @@
-.record-heading{
-    color:white;
-}
-.input-card-text{
-    border: solid;
-    border-color: white;
-    border-radius: 1px;
-}
-
-#record-container{
-    /* background-color: aqua; */
+#record-track-container{
+    /* background-color: red; */
     display: flex;
     flex-direction: column;
     width: 70vw;
     height: fit-content;
 }
 
-#record-card-info-div{
+#record-track-info-div{
     /* background-color: purple; */
     display: flex;
     flex-direction: row;
     justify-content: center;
-    column-gap: 2.5%;
+    /* column-gap: 2.5%; */
     width: 70vw;
     height: 85%;
 }
 
-#card-settings-div{
-    display: flex;
-    flex-direction: column;
-    /* background-color: red; */
-    width: fit-content;
-    height: fit-content;
-    /* padding: 1%; */
-
-}
-
-#record-uploads-div{
-    background-color: rgb(94, 94, 94);
-    display: flex;
-    flex-direction: column;
-    height: 85%;
-    width: fit-content;
-    padding: 3%;
-    border-color: #0e0e0e;
-    border-radius: 10px;
-    filter: drop-shadow(0px 4px 4px #272727);
-
-}
-.record-upload {
-    background-color: rgb(176, 176, 176);
-    /* border-color: orange; */
-    width: 95%;
-    margin-top: 3%;
-    margin-bottom: 3%;
-    padding: 1%;
-
-}
-.record-upload1 {
-    width: 90%;
-    margin-top: 3%;
-    margin-bottom: 3%;
-}
-
-.record-upload-background{
-    /* background-color: blue; */
-    height: 100%;
-}
-#file-upload{
-    background-color: white;
-    width: 100%;
-    /* border-color: gray; */
-}
-
-#add-card-btn {
-    background-color: #259FB1;
-    border-color: #259FB1;
-    border-radius: 0px;
-    margin-top: 5%;
-    margin-left: auto;
-    margin-right: auto;
-    width: 95%;
-    height: 8vh;
-}
-#add-card-btn:hover{
-    background-color: #0c7b8b;
-    border-color: #0c7b8b;
-    text-decoration: underline;
-}
-
-#display-card-div{
+#display-record-card-div{
     color: rgb(190, 190, 190);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* align-items: center; */
+    align-items: center;
     row-gap: 2%;
     margin-top: 2%;
     margin-left: 1%;
@@ -102,17 +30,16 @@
     height: 65vh;
 }
 
-#card-display {
+.record-btns-div{
+    /* background-color: green; */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #0e0e0e;
-    color: white;
-    width: 95%;
-    height: 100%;
+    flex-direction: column;
+    row-gap: 2%;
+    width: fit-content;
+    padding-top: 7%;
 }
 
-#record-buttons-div{
+#record-publish-buttons-div{
     /* background-color: orange; */
     display: flex;
     flex-direction: row;
@@ -123,7 +50,43 @@
     margin-top: 2%;
 }
 
-#skip-step-btn {
+
+#recording-play-btn {
+    background-color: #B40909;
+    border-color: #B40909;
+    border-radius: 0px;
+    width: 100%;
+    height: 12%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10%;
+}
+#recording-play-btn:hover{
+    background-color:#830000;
+    border-color: #830000;
+    text-decoration: underline;
+}
+
+#recording-pause-btn {
+    background-color: #259FB1;
+    border-color: #259FB1;
+    border-radius: 0px;
+    width: 100%;
+    height: 12%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 10%;
+}
+#recording-pause-btn:hover{
+    background-color:#108193;
+    border-color: #108193;
+    text-decoration: underline;
+}
+
+
+#record-cancel-btn {
     background-color: #aaaaaa;
     border-color: #aaaaaa;
     border-radius: 0px;
@@ -131,13 +94,14 @@
     height: 7vh;
     /* margin-top: 1%; */
 }
-#skip-step-btn:hover{
+#record-cancel-btn:hover{
     background-color: #7a7a7a;
     border-color: #7a7a7a;
     text-decoration: underline;
 }
 
-#go-record-btn {
+
+#record-publish-btn {
     background-color: #F8607C;
     border-color: #F8607C;
     border-radius: 0px;
@@ -145,7 +109,7 @@
     height: 7vh;
     /* margin-top: 1%; */
 }
-#go-record-btn:hover{
+#record-publish-btn:hover{
     background-color:#e33051;
     border-color: #e33051;
     text-decoration: underline;

@@ -1,14 +1,14 @@
 import Navbar from '../Components/Navbar/Navbar'
-import RecordPage from '../Components/RecordTrack/RecordTrack'
+import RecordTrackPage from '../Components/RecordTrack/RecordTrack'
 
-const Home = () => {
+const RecordTrack = () => {
   return (
     <>
       <Navbar>
-        <RecordPage />
+        <RecordTrackPage />
       </Navbar>
     </>
   )
 }
 
-export default Home;
+export default RecordTrack;
