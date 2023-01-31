@@ -6,6 +6,7 @@ const Recording = () => {
   return (
     <>
     <Navbar />
+    
     <Record />
     </>
   )
