@@ -49,7 +49,7 @@
     padding: 0%;
 }
 
-#formGroupExampleInput, #formGroupExampleInput2{
+.formGroupExampleInput, .formGroupExampleInput2{
     border-radius: 0px;
     background-color: white;
     border-color: #CFCFCF;
