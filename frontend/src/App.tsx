@@ -15,6 +15,8 @@ import ResetPassword from './Pages/ResetPassword'
 import Verify from './Pages/Verify';
 import Script from './Pages/Script';
 import RecordTrack from './Pages/RecordTrack';
+import RecordCards from './Pages/RecordCards';
+
 
 // Importing sidebar and navbar
 import Sidebar from './Components/Sidebar/Sidebar';
@@ -64,6 +66,8 @@ function App() {
             <Route path='/verify' element={<Verify />} />
             <Route path='/reset-password' element={<ResetPassword />} />
             <Route path='/record' element={<RecordTrack />} />
+            <Route path='/record-cards' element={<RecordCards />} />
+
             {/* { */}
               {/* // isLoggedIn?  */}
               <Route path='/profile' element={<Profile />} />
