@@ -1,7 +1,6 @@
 import { Devices, initDevice } from "device-decoder";
 import { DataStream } from "../../util/Interfaces";
 
-
 function Record() {
     var device:any;
     
