@@ -100,22 +100,21 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
 
         <div className="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
             {/* If there isn't a user signed in, prompt them to do so */}
-            {!user && <ul className="navbar-nav ml-auto">
-                <form className="form-inline" id="formID">
+            {!user && <ul className="navbar-nav ml-auto  nav-btns-div">
+                <form className="form-inline nav-btns" id="formID">
                     <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doNavigate('/Register')} type="button" id="signUpBtn">Sign Up</button>
                     <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doNavigate('/Login')} type="button" id="loginBtn">Login</button>
                 </form>    
             </ul>}
-            {user && <ul className="navbar-nav ml-auto">
-                <h4 id="username">{user.firstName}, {user.lastName}</h4>
-                <form className="form-inline" id="formID">
+            {user && <ul className="navbar-nav ml-auto nav-btns-div">
+                <form className="form-inline nav-btns" id="formID">
                     <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doLogout()} type="button" id="signUpBtn">
                       <FontAwesomeIcon id='profile-icon' icon={["fas", "right-from-bracket"]} />
                       Sign Out
                     </button>
                     <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doNavigate("/Profile")} type="button" id="profileBtn">
                       <FontAwesomeIcon id='profile-icon' icon={["fas", "user"]} />
-                      Profile
+                      {user.lastName}, {user.firstName}
                     </button>
                 </form>    
             </ul>}
