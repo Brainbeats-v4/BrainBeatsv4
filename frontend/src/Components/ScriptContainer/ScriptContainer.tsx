@@ -1,5 +1,5 @@
 import './ScriptContainer.css';
-import Cards from './Scripts/Cards';
+import Cards from './Scripts/Cards/Cards';
 import { useNavigate } from 'react-router-dom';
 
 const ScriptContainer = () => {

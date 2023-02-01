@@ -43,7 +43,6 @@ function App() {
 
   useEffect(() => {
 	  let res = checkUserToken();
-    console.log(res);
   }, [isLoggedIn]);
   
   
