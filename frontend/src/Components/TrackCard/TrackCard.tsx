@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './TrackCard.css';
 import { Modal } from 'react-bootstrap';
-import TrackModal from '../Modal/TrackModal';
+import TrackModal from '../TrackModal/TrackModal';
 import sendAPI from '../../SendAPI';
 
 type Props = {
