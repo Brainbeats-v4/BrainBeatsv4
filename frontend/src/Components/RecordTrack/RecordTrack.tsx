@@ -1,7 +1,16 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
 import './RecordTrack.css'
 
 const RecordTrack = () => {
+
+    // Toggles Record and Stop button when recording
+    const [recordVisibility, setRecordVisibility] = useState(true);
+
+    function setVisibilityButton() {
+        setRecordVisibility(!recordVisibility);
+    }
+
     return (
         <div className='container' id='record-track-container'>
             <h2 className='record-heading'>Recording Music</h2>
@@ -13,10 +22,17 @@ const RecordTrack = () => {
                         </div>
                     </div>
                     <div className='record-btns-div'>
-                        <button type="button" className="btn btn-secondary" id='recording-play-btn'>
+                        {recordVisibility && <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={setVisibilityButton}>
                             <FontAwesomeIcon icon={["fas", "circle"]} />
                             Record
                         </button>
+                        }
+                         {!recordVisibility && <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={setVisibilityButton}>
+                            <FontAwesomeIcon icon={["fas", "square"]} />
+                            Stop
+                        </button>
+                        }
+                        
                         <button type="button" className="btn btn-secondary" id='recording-pause-btn'>
                             <FontAwesomeIcon icon={["fas", "pause"]} />
                             Pause

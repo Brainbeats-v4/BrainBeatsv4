@@ -36,6 +36,7 @@
     flex-direction: column;
     row-gap: 2%;
     width: fit-content;
+    min-width: 15%;
     padding-top: 7%;
 }
 
