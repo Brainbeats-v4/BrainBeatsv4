@@ -1,16 +1,14 @@
-import Record from "../Components/Record/Record";
-
 import Navbar from '../Components/Navbar/Navbar'
 import ScriptContainer from '../Components/ScriptContainer/ScriptContainer'
 
-const RecordTrack = () => {
+const Script = () => {
   return (
     <>
       <Navbar>
-        <Record />
+        <ScriptContainer />
       </Navbar>
     </>
   )
 }
 
-export default RecordTrack;
+export default Script;
