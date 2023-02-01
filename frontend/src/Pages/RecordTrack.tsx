@@ -1,11 +1,11 @@
+import Record from "../Components/Record/Record";
 import Navbar from '../Components/Navbar/Navbar'
-import RecordTrackPage from '../Components/RecordTrack/RecordTrack'
 
 const RecordTrack = () => {
   return (
     <>
       <Navbar>
-        <RecordTrackPage />
+        <Record />
       </Navbar>
     </>
   )

@@ -1,14 +1,15 @@
 import react from 'react';
-import './CreateTrack.css';
+import './TrackSettings.css';
 import sendAPI from "../../SendAPI";
 import { useState } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userJWT, userModeState } from "../../JWT";
 import { upload } from '@testing-library/user-event/dist/upload';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
-const CreateTrack = () => {
+const TrackSettings = () => {
 
     const [generationType, setGenerationType] = react.useState('slowAndMelodic');
     // Function for toggling between Basic and Advanced Settings.
@@ -19,6 +20,10 @@ const CreateTrack = () => {
     const [likes, setLikes] = useState(0);
     const [user, setUser] = useRecoilState(userModeState);
     const jwt = useRecoilValue(userJWT);
+    const navigate = useNavigate();
+    const doNavigate = (route:string) => {
+        navigate(route);
+    }
     
     const press = function (btn: string) {
         
@@ -75,9 +80,7 @@ const CreateTrack = () => {
 
                     <div className='form-group row justify-content-center'>
                         <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className="btn btn-secondary" id='back-btn' onClick={() => press('back pressed')}>Back</button>
-                            <br />
-                            <button type="button" className="btn btn-primary" id='next-btn' onClick={() => press('next pressed')}>Next</button>
+                            <button type="button" className="btn btn-primary" id='next-btn' onClick={() => doNavigate("/script-settings")}>Next</button>
                         </div>
                     </div>
                 </form>
@@ -198,26 +201,26 @@ const CreateTrack = () => {
                     <div className="btn-group" role="group" aria-label="Basic example">
                         <button type="button" className="btn btn-secondary" id='back-btn-adv' onClick={toggle}>Back</button>
                         <br />
-                        <button type="button" className="btn btn-primary" id='next-btn' onClick={() => press('next pressed')}>Next</button>
+                        <button type="button" className="btn btn-primary" id='next-btn' onClick={() => doNavigate("/script-settings")}>Next</button>
                     </div>
                 </div>
              </div>
-            <div>
-                <label className="form-label signup-text">Title</label>
-                <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setPostTitle(event.target.value)}/>
-            </div>
-            <div>
-                <label className="form-label signup-text">Thumbnail</label>
-                <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setThumbnail(event.target.value)}/>
-            </div>
-            <div>
-                <label className="form-label signup-text">Likes</label>
-                <input type="number" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setLikes(event.target.valueAsNumber)}/>
-            </div>
-            <button onClick={uploadPost}>Click me</button>
+        {/* <div>
+            <label className="form-label signup-text">Title</label>
+            <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setPostTitle(event.target.value)}/>
+        </div>
+        <div>
+            <label className="form-label signup-text">Thumbnail</label>
+            <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setThumbnail(event.target.value)}/>
+        </div>
+        <div>
+            <label className="form-label signup-text">Likes</label>
+            <input type="number" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setLikes(event.target.valueAsNumber)}/>
+        </div>
+        <button onClick={uploadPost}>Click me</button> */}
         </div>
         
         );
 }
 
-export default CreateTrack;
+export default TrackSettings;

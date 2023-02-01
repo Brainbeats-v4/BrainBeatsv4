@@ -40,7 +40,7 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
             icon:<FontAwesomeIcon icon={["fas", "search"]} />
           },
           {
-            path:"../create-track",
+            path:"../track-settings",
             name:"Create Track",
             icon:<FontAwesomeIcon icon={["fas", "plus"]} />
           },
@@ -64,7 +64,7 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
           icon:<FontAwesomeIcon icon={["fas", "search"]} />
         },
         {
-          path:"../create-track",
+          path:"../track-settings",
           name:"Create Track",
           icon:<FontAwesomeIcon icon={["fas", "plus"]} />
         },
