@@ -10,8 +10,9 @@
 .container{
   display: flex;
   height: fit-content;
-  padding-left: 0px;
+  /* padding-left: 0px; */
   margin-right: 0%;
+  margin: auto;
   width: fit-content;
 }
 
