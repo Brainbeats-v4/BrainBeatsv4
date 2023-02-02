@@ -21,14 +21,33 @@
 }
 
 /* CSS For Navbar buttons */
-#signUpBtn, #loginBtn, #profileBtn {
-  border-radius: 15px;
-  width: 100px;
+.nav-btns-div {
+  display: flex;
+  flex-direction: column;
+  /* background-color: green; */
+  width: 40%;
 }
 
-#username {
-  float: left;
+.nav-btns{
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  /* background-color: purple; */
 }
+
+#signUpBtn, #loginBtn, #profileBtn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  width: 25%;
+  min-width: fit-content;
+}
+
+/* #username {
+  float: left;
+} */
 
 #signUpBtn {
     background-color: #5B5B5B;
