@@ -1,14 +1,15 @@
 .user-profile {
     background-color: #252525;
     border-radius: 10px;
-    height: 100vh;
+    height: 100%;
     width: 50vw;
+    min-height: fit-content;
     min-width: fit-content;
     color: #fff;
 }
 
 .sticky{
-    position: -webkit-sticky;
+    /* position: -webkit-sticky; */
     position: sticky;
     top: 11%;
 }
@@ -16,7 +17,7 @@
 #profile-top-container {
     /* background-color: red; */
     border-radius: 10px;
-    height: 40%;
+    height: 40vh;
 }
 
 #profile-top-name-div {

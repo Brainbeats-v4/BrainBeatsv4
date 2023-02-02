@@ -59,6 +59,7 @@ const SearchPage = () => {
   const [liked, setLiked] = useState([]) as any;
 
   useEffect(() => {
+    console.log("request");
     if (!title) {
       sendAPI("get", "/posts/getAllPosts").then((res) => {
         setPost(res.data);
