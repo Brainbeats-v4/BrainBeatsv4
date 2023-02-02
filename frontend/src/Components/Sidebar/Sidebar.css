@@ -11,16 +11,17 @@
   display: flex;
   height: fit-content;
   /* padding-left: 0px; */
-  margin-right: 0%;
+  /* margin-right: 0%; */
   margin: auto;
-  width: fit-content;
+  /* margin: 0; */
+  width: 100%
 }
 
 main{
-  padding: 20px;
+  /* padding: 20px; */
   align-content: center;
-  margin: auto;
-  /* width: 100%; */
+  /* margin: auto; */
+  width: 100%;
 }
 
 /* CSS for Sidebar */

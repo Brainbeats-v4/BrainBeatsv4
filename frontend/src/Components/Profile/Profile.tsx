@@ -90,7 +90,7 @@ const Profile = () => {
     };
 
     return(
-        <div className="user-profile">
+        <div className="user-profile" id='profile-container'>
             <div id='profile-top-container'>
             <img src={displayPicture} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>
                 <div id='profile-top-name-div'>
@@ -123,23 +123,25 @@ const Profile = () => {
                         Playlists
                     </button>
                 </div>
+                <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} name="image" type="file" accept='.jpeg, .png, .jpg'/>
             </div>
-            <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} name="image" type="file" accept='.jpeg, .png, .jpg'/>
-            <hr></hr>
-            <h1>My Tracks</h1>
-            <TrackCard cardType={'Profile'} input={user.userId} />
-            {/* <div>
-                <ul>
-                    {
-                        userTracks.map(function(userTrack, index) {
-                            return(
-                            <li key={index}>
-                                {userTrack.songTitle}
-                            </li>);
-                        })
-                    }
-                </ul>
-            </div> */}
+            <div id='profile-bottom-container'>
+                <hr></hr>
+                <h1>My Tracks</h1>
+                <TrackCard cardType={'Profile'} input={user.userId} />
+                {/* <div>
+                    <ul>
+                        {
+                            userTracks.map(function(userTrack, index) {
+                                return(
+                                <li key={index}>
+                                    {userTrack.songTitle}
+                                </li>);
+                            })
+                        }
+                    </ul>
+                </div> */}
+            </div>
         </div>
     )
 }
