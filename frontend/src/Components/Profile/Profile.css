@@ -105,30 +105,52 @@
     height: 15%;
     /* height: fit-content; */
     width: 100%;
-    padding: 1px;
+    /* padding: 1px; */
+}
+
+#tracks-btn-text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0px;
+    width: 33%;
+    min-width: fit-content;
+    margin: 5px;
+    column-gap: 10px;
+    height: 50%;
+}
+
+#tracks-btn-line{
+    display: block;
+    background-color: #F8607C;
+    border-color: #F8607C;
+    width: 100%;
+    height: 50%;
+    border-radius: 0px 0px 10px 10px;
 }
 
 #tracks-btn {
-    background-color: #F8607C;
-    border-color: #F8607C;
+    background-color: rgba(100, 100, 100, 1);
+    border-style: none;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 0px;
+    border-radius: 0px 0px 10px 10px;
     width: 33%;
     min-width: fit-content;
-    margin: 5px;
+    /* margin: 5px; */
     column-gap: 10px;
+    padding: 0;
 }
 #tracks-btn:hover{
-    background-color:#e33051;
-    border-color: #e33051;
+    background-color: #F8607C;
+    border-color: #F8607C;
     text-decoration: underline;
+    /* border-radius: 0px; */
 }
 
-#playlists-btn {
-    background-color: #323232;
-    border-color: #323232;
+#playlists-btn-text{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -137,9 +159,35 @@
     min-width: fit-content;
     margin: 5px;
     column-gap: 10px;
+    height: 50%;
+}
+
+#playlists-btn-line{
+    display: none;
+    background-color: #F8607C;
+    border-color: #F8607C;
+    width: 100%;
+    height: 50%;
+    border-radius: 0px 0px 10px 10px;
+}
+
+
+#playlists-btn {
+    background-color: rgba(100, 100, 100, 1);
+    border-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0px 0px 10px 10px;
+    width: 33%;
+    min-width: fit-content;
+    /* margin: 5px; */
+    column-gap: 10px;
+    padding: 0;
 }
 #playlists-btn:hover{
-    background-color: #1d1d1d;
-    border-color: #1d1d1d;;
+    background-color: #F8607C;
+    border-color: #F8607C;
     text-decoration: underline;
 }

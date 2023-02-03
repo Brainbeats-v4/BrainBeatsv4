@@ -3,7 +3,7 @@ import './Profile.css'
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userJWT, userModeState } from "../../JWT";
 import sendAPI from '../../SendAPI';
-import { useState } from 'react';
+import react, { useState } from 'react';
 import TrackCard from '../TrackCard/TrackCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Buffer } from 'buffer';
@@ -27,6 +27,14 @@ const Profile = () => {
             setDisplayPicture(buildPath(decodedProfilePic));
         }
     }
+
+    // Toggle My Tracks and Playlists display
+    const[playlistsOpen, updatePlaylistsOpen] = react.useState(false);
+    const toggleTab = () => updatePlaylistsOpen(!playlistsOpen);
+
+
+
+
     // var encodedProfilePic = user.profilePicture;
 
     // encodedProfilePic = (encodedProfilePic as string).split(',')[1];
@@ -114,21 +122,51 @@ const Profile = () => {
                     </div>
                 </div>
                 <div id='profile-top-tabs-div'>
-                    <button type="button" className="btn btn-secondary" id='tracks-btn'>
-                        <FontAwesomeIcon icon={["fas", "music"]} />
-                        My Tracks
+                    <button type="button" className="btn btn-secondary" id='tracks-btn' onClick={toggleTab}
+                    style={{backgroundColor: playlistsOpen? "rgba(100, 100, 100, 1)": "rgb(83, 83, 83)", borderRadius: "0" }}>
+                        <div id='tracks-btn-text'>
+                            <FontAwesomeIcon icon={["fas", "music"]} />
+                            My Tracks
+                        </div>
+                        <div id='tracks-btn-line' style={{display: playlistsOpen? "none" : "block"}}>
+                        </div>
                     </button>
-                    <button type="button" className="btn btn-secondary" id='playlists-btn'>
-                        <FontAwesomeIcon icon={["fas", "list"]} />
-                        Playlists
+                    <button type="button" className="btn btn-secondary" id='playlists-btn' onClick={toggleTab} 
+                    style={{backgroundColor: !playlistsOpen? "rgba(100, 100, 100, 1)": "rgb(83, 83, 83)", borderRadius: "0" }}>
+                        <div id='playlists-btn-text'>
+                            <FontAwesomeIcon icon={["fas", "list"]} />
+                            Playlists
+                        </div>
+                        <div id='playlists-btn-line' style={{display: playlistsOpen? "block" : "none"}}>
+                        </div>
                     </button>
                 </div>
                 <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} name="image" type="file" accept='.jpeg, .png, .jpg'/>
             </div>
-            <div id='profile-bottom-container'>
-                <hr></hr>
+            {/* Displays when My Tracks tab selected */}
+            <div id='profile-bottom-container' style={{display: playlistsOpen? "none" : "block"}}>
                 <h1>My Tracks</h1>
+                <hr></hr>
                 <TrackCard cardType={'Profile'} input={user.userId} />
+                {/* <div>
+                    <ul>
+                        {
+                            userTracks.map(function(userTrack, index) {
+                                return(
+                                <li key={index}>
+                                    {userTrack.songTitle}
+                                </li>);
+                            })
+                        }
+                    </ul>
+                </div> */}
+            </div>
+
+            {/* Displays when Playlists tab selected */}
+            <div id='profile-bottom-container' style={{display: playlistsOpen? "block" : "none"}}>
+                <h1>My Playlist</h1>
+                <hr></hr>
+                {/* <TrackCard cardType={'Profile'} input={user.userId} /> */}
                 {/* <div>
                     <ul>
                         {
