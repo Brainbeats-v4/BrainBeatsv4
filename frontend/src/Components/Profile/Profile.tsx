@@ -102,8 +102,16 @@ const Profile = () => {
             <div id='profile-top-container'>
             <img src={displayPicture} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>
                 <div id='profile-top-name-div'>
-                    <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>
-                    <h2>{user.username}</h2>
+                    <div id='edit-profile-div'>
+                        <button type="button" className="btn btn-secondary" id='edit-profile-btn'> 
+                            <FontAwesomeIcon icon={["fas", "edit"]} />
+                            Edit Profile
+                        </button>
+                    </div>
+                    <div id='user-info-div'>
+                        <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>
+                        <h5 id='user-name'>@ user name{user.username}</h5>
+                    </div>
                 </div>
                 <div id='profile-top-follower-div'>
                     <div id='count-all-div'>
@@ -123,7 +131,7 @@ const Profile = () => {
                 </div>
                 <div id='profile-top-tabs-div'>
                     <button type="button" className="btn btn-secondary" id='tracks-btn' onClick={toggleTab}
-                    style={{backgroundColor: playlistsOpen? "rgba(100, 100, 100, 1)": "rgb(83, 83, 83)", borderRadius: "0" }}>
+                    style={{backgroundColor: !playlistsOpen? "rgb(83, 83, 83) ": "rgba(100, 100, 100, 1)"}}>
                         <div id='tracks-btn-text'>
                             <FontAwesomeIcon icon={["fas", "music"]} />
                             My Tracks
@@ -132,7 +140,7 @@ const Profile = () => {
                         </div>
                     </button>
                     <button type="button" className="btn btn-secondary" id='playlists-btn' onClick={toggleTab} 
-                    style={{backgroundColor: !playlistsOpen? "rgba(100, 100, 100, 1)": "rgb(83, 83, 83)", borderRadius: "0" }}>
+                    style={{backgroundColor: playlistsOpen? "rgb(83, 83, 83)": "rgba(100, 100, 100, 1)"}}>
                         <div id='playlists-btn-text'>
                             <FontAwesomeIcon icon={["fas", "list"]} />
                             Playlists
