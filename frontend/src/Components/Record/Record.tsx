@@ -1,5 +1,7 @@
 import { Devices, initDevice } from "device-decoder";
+import { MIDIManager } from "../../util/Classes";
 import { DataStream } from "../../util/Interfaces";
+
 
 function Record() {
     var device:any;
@@ -36,6 +38,7 @@ function Record() {
        }
 
        // Pass to MIDIManager class
+       var channelAnaylizer = new MIDIManager(currentData);
 
         console.log(currentData);
     }

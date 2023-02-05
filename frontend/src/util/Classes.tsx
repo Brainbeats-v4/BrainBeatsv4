@@ -1,4 +1,4 @@
-import {IMusicSettings} from "./Interfaces"
+import {IMusicSettings, DataStream} from "./Interfaces"
 import {InstrumentTypes, NoteDurations} from "./Enums"
 
 export class MusicGenerationSettings implements IMusicSettings {
@@ -53,6 +53,25 @@ export class MusicGenerationSettings implements IMusicSettings {
         this.instruments.fill(InstrumentTypes.NULL);
         this.durations.fill(NoteDurations.NULL);
     }
+}
+
+export class MIDIManager {
+    channels:DataStream;
+
+    constructor(channels:DataStream) {
+        this.channels = channels;
+    }
+
+    public getChannels() {
+        return this.channels;
+    }
+
+    public noteGeneration(generationSettings:MusicGenerationSettings) {
+        // in progress
+        //let output = originalNoteGeneration(track, data, generationSettings.instruments[0], generationSettings.noteType[0], generationSettings.volume[0])
+
+    }
+    
 }
 
  
