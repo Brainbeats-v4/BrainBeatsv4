@@ -55,27 +55,6 @@ export class MusicGenerationSettings implements IMusicSettings {
     }
 }
 
-export class MIDIManager {
-    channels:DataStream;
-
-    constructor(channels:DataStream) {
-        this.channels = channels;
-    }
-
-    public getChannels() {
-        return this.channels;
-    }
-
-    public noteGeneration(generationSettings:MusicGenerationSettings) {
-        // in progress
-        //let output = originalNoteGeneration(track, data, generationSettings.instruments[0], generationSettings.noteType[0], generationSettings.volume[0])
-
-    }
-    
-}
-
- 
-
 // function setNoteSpeed(speed) {
 //     switch (speed) {
 //         case speed === slow:

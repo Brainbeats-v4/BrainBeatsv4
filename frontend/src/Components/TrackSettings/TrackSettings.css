@@ -35,7 +35,7 @@
 #main-container {
     max-width: 100%;
     max-height: 100%;
-    height: 100vh;
+    /* height: 100vh; */
     display: block;
     justify-content: center;
 }
@@ -105,9 +105,9 @@
 }
 
 #settings-container1, #settings-container2 {
-    /* max-width: 90vw; */
+    max-width: 70%;
     padding: 10px 10px 20px 10px;
-    margin: 0%;
+    margin: auto;
     height: fit-content;
     position: relative;
     background-color:rgb(198, 198, 198);
@@ -128,10 +128,10 @@
 /* CSS for Advanced Settings ('settings2') Container */
 
 .adv-settings-container {
-    max-width: 60vw;
-    max-height: 40vh;
+    max-width: 70%;
+    /* max-height: 40%; */
     padding: 10px 10px 20px 10px;
-    margin: 0%;
+    margin: auto;
     height: fit-content;
     position: relative;
     background-color:rgb(198, 198, 198);

@@ -1,4 +1,4 @@
-export interface DataStream {
+export interface DataStream8Ch {
     channel00:number;
     channel01:number;
     channel02:number;
@@ -7,6 +7,14 @@ export interface DataStream {
     channel05:number;
     channel06:number;
     channel07:number;
+    timeStamp:number;
+}
+
+export interface DataStream4Ch {
+    channel00:number;
+    channel01:number;
+    channel02:number;
+    channel03:number;
     timeStamp:number;
 }
 
