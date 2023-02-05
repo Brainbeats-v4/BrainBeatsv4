@@ -13,6 +13,9 @@ import { faEye, faEyeSlash, faEdit, faPlay, faPause, faUser, faList, faRightFrom
 
 import {RecoilRoot} from 'recoil'
 
+// Redux
+import { store } from './Redux/store'
+import { Provider } from 'react-redux'
 
 // Adding icons to global library
 library.add(fab, faBars, faHome, faInfo, faCircleInfo, faSearch, faPlusCircle, faPlus, faHeart, faPlayCircle, faEllipsisH)
@@ -24,7 +27,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <RecoilRoot>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </RecoilRoot>
   </React.StrictMode>
 );

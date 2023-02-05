@@ -25,12 +25,51 @@ interface AbstractGanglionStream {
 }
 
 interface AbstractCytonStream {
+    device:any;
     initializeConnection(): any;
     setStopFlag(): boolean;
-    handleChannels(): DataStream8Ch;
+    handleChannels(data:any): DataStream8Ch;
 }
 
+export class ConcreteCytonStream implements AbstractCytonStream {
+    public device:any;
+        
+    public async initializeConnection() {
+        await initDevice(Devices['USB']['cyton'],
+                {   // this pushes the data from the headband as it is received from the board into the channels array
+                    ondecoded: (data) => { this.handleChannels(data)}, 
+                    onconnect: (deviceInfo) => console.log(deviceInfo), 
+                    ondisconnect: (deviceInfo) => console.log(deviceInfo)
+                }).then((res) => {
+                    if(res) {
+                        this.device = res; // store the connected device's stream into the global variable
+                    }
+                }).catch((err)=> {
+                    console.log(err);
+                })
+    }
 
+    public handleChannels(data:any) {
+        let currentData:DataStream8Ch = {
+            channel00: data[0][0],
+            channel01: data[1][0],
+            channel02: data[2][0],
+            channel03: data[3][0],
+            channel04: data[4][0],
+            channel05: data[5][0],
+            channel06: data[6][0],
+            channel07: data[7][0],
+            timeStamp: data['timestamp'][0]
+       }
+
+        return currentData;
+    }
+
+    public setStopFlag() {
+        if(this.device.disconnect()) return true;
+        return false;
+    }
+}
 
 // // Concreate Ganglion factory 
 // class ConcreteGanglionStream implements AbstractGanglionStream {

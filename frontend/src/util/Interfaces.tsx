@@ -18,46 +18,51 @@ export interface DataStream4Ch {
     timeStamp:number;
 }
 
-export interface IMusicSettings {
+export interface GanglionSettings {
     // Defines what instument sound is to be associated with each node
-    instruments: [
+    instruments: {
         _00: number,    // FP1
         _01: number,    // FP2
         _02: number,    // C3
         _03: number,    // C4
-        _04: number,
-        _05: number,
-        _06: number,
-        _07: number,
-    ]
+    }
 
     // Defines what duration of note each node will have
-    durations: [
+    durations: {
         _00: number,    // FP1
         _01: number,    // FP2
         _02: number,    // C3
-        _03: number,    // C4
-        _04: number,
-        _05: number,
-        _06: number,
-        _07: number,
-    ]
+        _03: number,    // C4x
+    }
 
     // Defines the Beats per Minute (BPM) of the output track
     bpm: number;
 }
 
-export interface IMusicSettingsPreset1 extends IMusicSettings {
+export interface CytonSettings {
+    // Used to store the instrument each node should be used to output
+    instruments: {
+        _00: number; // FP1 Node
+        _01: number; // FP2 Node
+        _02: number; // C3 Node
+        _03: number; // C4 Node
+        _04: number;
+        _05: number;
+        _06: number;
+        _07: number;
+    }
 
-    
-    // -3, 0, 4, 7, 2, 1, 1, 0, 100
-    // -3, 2, 5, 6, 2, 2, 1, 1, 120
-    // 4, 2, 3, 0, 3, 3, 2, 2, 140
-    // -3, 0, 4, 3, 4, 4, 3, 3, 160
+    // Used to store the duration of each note a given node should be used to output
+    durations: {
+        _00: number; // FP1 Node
+        _01: number; // FP2 Node
+        _02: number; // C3 Node
+        _03: number; // C4 Node
+        _04: number;
+        _05: number;
+        _06: number;
+        _07: number;
+    }
 
+    bpm: number;
 }
-
-export interface IMusicSettingsPreset2 extends IMusicSettings {}
-export interface IMusicSettingsPreset3 extends IMusicSettings {}
-export interface IMusicSettingsPreset4 extends IMusicSettings {}
-            

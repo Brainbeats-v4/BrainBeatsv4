@@ -6,6 +6,12 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { userJWT, userModeState } from "../../JWT";
 import { upload } from '@testing-library/user-event/dist/upload';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { CytonSettings } from '../../util/Interfaces';
+import { InstrumentTypes, NoteDurations } from '../../util/Enums';
+
+
+// Redux state to hold settings for specificed board
+import {set, quickSet, unset} from '../../Redux/slices/cytonMusicGenerationSettingsSlice'
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
@@ -15,40 +21,106 @@ const TrackSettings = () => {
     // Function for toggling between Basic and Advanced Settings.
     const[advSettingsOpen, setAdvSettingsOpen] = react.useState(false);
     const toggle = () => setAdvSettingsOpen(!advSettingsOpen);
-    const [postTitle, setPostTitle] = useState('');
-    const [thumbnail, setThumbnail] = useState('');
-    const [likes, setLikes] = useState(0);
-    const [user, setUser] = useRecoilState(userModeState);
-    const jwt = useRecoilValue(userJWT);
+    const [device, setDevice] = useState('cyton');
     const navigate = useNavigate();
     const doNavigate = (route:string) => {
         navigate(route);
     }
+
+    /* These useStates set the music generation settings to be passed to the classes for each respective device,
+        the first 4 of each case are used for ganglion and cyton and the next four are for the cyton board. */
     
-    const press = function (btn: string) {
-        
+    /* These define the instrument type that will play based on the readings from each electrode. */
+    const [instrument00, setInstrument00] = useState(InstrumentTypes.NULL)
+    const [instrument01, setInstrument01] = useState(InstrumentTypes.NULL)
+    const [instrument02, setInstrument02] = useState(InstrumentTypes.NULL)
+    const [instrument03, setInstrument03] = useState(InstrumentTypes.NULL)
+    const [instrument04, setInstrument04] = useState(InstrumentTypes.NULL)
+    const [instrument05, setInstrument05] = useState(InstrumentTypes.NULL)
+    const [instrument06, setInstrument06] = useState(InstrumentTypes.NULL)
+    const [instrument07, setInstrument07] = useState(InstrumentTypes.NULL)
+
+    const [duration00, setDuration00] = useState(NoteDurations.NULL)
+    const [duration01, setDuration01] = useState(NoteDurations.NULL)
+    const [duration02, setDuration02] = useState(NoteDurations.NULL)
+    const [duration03, setDuration03] = useState(NoteDurations.NULL)
+    const [duration04, setDuration04] = useState(NoteDurations.NULL)
+    const [duration05, setDuration05] = useState(NoteDurations.NULL)
+    const [duration06, setDuration06] = useState(NoteDurations.NULL)
+    const [duration07, setDuration07] = useState(NoteDurations.NULL)
+
+
+    function applySettingsEvent() {
+        if(device === 'cyton') {
+            var generationSettings:CytonSettings = {
+                // Used to store the instrument each node should be used to output
+                instruments: {
+                    _00: instrument00, // FP1 Node
+                    _01: instrument01, // FP2 Node
+                    _02: instrument02, // C3 Node
+                    _03: instrument03, // C4 Node
+                    _04: instrument04,
+                    _05: instrument05,
+                    _06: instrument06,
+                    _07: instrument07,
+                },
+                // Used to store the duration of each note a given node should be used to output
+                durations: {
+                    _00: duration00, // FP1 Node
+                    _01: duration01, // FP2 Node
+                    _02: duration02, // C3 Node
+                    _03: duration03, // C4 Node
+                    _04: duration04,
+                    _05: duration05,
+                    _06: duration06,
+                    _07: duration07,
+                },
+                bpm: 120
+            }
+
+            // Set the redux state
+            set(generationSettings);
+
+        }
+
+        doNavigate("/script-settings")
     }
 
-    function uploadPost() {
-        const info = {
-            userID: user.userId,
-            title: postTitle,
-            bpm: 0,
-            key: '',
-            midi: '',
-            instruments: {},
-            noteTypes: {},
-            token: jwt,
-            thumbnail: thumbnail,
-            likeCount: likes
+    /*  This function just maps the enum InstrumentTypes into an options list to be displayed on the settings to keep the
+        code cleaner, it starts at -3 since it is the initial value described in the Enum, adding the NULL value at the end */
+    function InstrumentSettings() {
+        var instrumentArray:any[] = [];
+        for(var i = -3; i <= 7; i++) {
+            let instrument = { value: i, name: InstrumentTypes[i] }
+            instrumentArray.push(instrument);
         }
-        sendAPI('post', '/posts/createPost', info)
-            .then(res => {
-                console.log(res);
-            }).catch(err => {
-                console.log(err);
-            })
+        instrumentArray.push({value: -Infinity, name: "NULL"})
+        return( 
+            <>
+                {instrumentArray.map((instrument) =>
+                    <option key={instrument.name} value={instrument.value}>{instrument.name}</option>)
+                }
+            </>
+        )    
     }
+
+    /* This function serves the same purpose as the InstrumentSettings function above with the same logic just extended for NoteDuration */
+    function NoteSettings() {
+        var noteArray:any[] = [];
+        for(var i = 0; i <= 4; i++) {
+            let noteDuration = { value: i, name: NoteDurations[i] }
+            noteArray.push(noteDuration);
+        }
+        noteArray.push({value: -Infinity, name: "NULL"})
+        return( 
+            <>
+                {noteArray.map((noteDuration) =>
+                    <option key={noteDuration.name} value={noteDuration.value}>{noteDuration.name}</option>)
+                }
+            </>
+        )    
+    }
+
     return (
         <div className='container' id='main-container'>
             {/* Displays on Basic Settings */}
@@ -56,6 +128,12 @@ const TrackSettings = () => {
                 <h1 className='heading'>Music Settings</h1>
                 <form className='justify-content-center' id='settings-container1'>
                     <h2 id='settings-text'>Basic Settings</h2>
+                    <p id='settings-text'>Please select your input device:</p>                    
+                    <select className="dropdowns" name="instrument2-note" onChange={(e) => setDevice(e.target.value)}>
+                        <option value="cyton">Cyton Board</option>
+                        <option value="ganglion">Ganglion Board</option>
+                    </select>
+                    <br /><br />
                     <p id='settings-text'>Please select one of the following music generation options:</p>                    
                     <div className='row' id='checkbox-div'>
                         <div className='justify-content-center' id="setting-options-div">
@@ -110,56 +188,98 @@ const TrackSettings = () => {
                     <div className='row instruments-div'>
                         <div className='col instrument-box'>
                             <label htmlFor="instrument1">Instrument 1:</label>
-                            <select className="dropdowns" name="instrument1" id="instrument1-options">
-                                <option value="instrument-example">  </option>
-                                <option value="instrument-example">instrument example</option>
+                            <select className="dropdowns" name="instrument1" id="instrument1-options" onChange={(e => {setInstrument00(Number(e.target.value))})}>         
+                                <InstrumentSettings />
                             </select>
                             <br></br>
                             <label htmlFor="instrument1-note">Instrument 1 Note Type:</label>
-                            <select className="dropdowns" name="instrument1-note" id="instrument1-notes">
-                                <option value="instrument-example">  </option>
-                                <option value="instrument-note">instrument note</option>
+                            <select className="dropdowns" name="instrument1-note" id="instrument1-notes" onChange={(e => {setDuration00(Number(e.target.value))})}>
+                                <NoteSettings />
                             </select>
                         </div>
                         <div className='col instrument-box'>
                             <label htmlFor="instrument2">Instrument 2:</label>
-                            <select className="dropdowns" name="instrument2" id="instrument2-options">
-                                <option value="instrument-example">  </option>
-                                <option value="instrument-example">instrument example</option>
+                            <select className="dropdowns" name="instrument2" id="instrument2-options" onChange={(e => {setInstrument01(Number(e.target.value))})}>
+                                <InstrumentSettings />
                             </select>
                             <br></br>
                             <label htmlFor="instrument2-note">Instrument 2 Note Type:</label>
-                            <select className="dropdowns" name="instrument2-note" id="instrument2-notes">
-                                <option value="instrument-example">  </option>
-                                <option value="instrument-note">instrument note</option>
+                            <select className="dropdowns" name="instrument2-note" id="instrument2-notes" onChange={(e => {setDuration01(Number(e.target.value))})}>
+                                <NoteSettings />
                             </select>
                         </div>
                         <div className='col instrument-box'>
                             <label htmlFor="instrument3">Instrument 3:</label>
-                            <select className="dropdowns" name="instrument3" id="instrument3-options">
-                                <option value="instrument-example">  </option>
-                                <option value="instrument-example">instrument example</option>
+                            <select className="dropdowns" name="instrument3" id="instrument3-options" onChange={(e => {setInstrument02(Number(e.target.value))})}>
+                                <InstrumentSettings />
                             </select>
                             <br></br>
                             <label htmlFor="instrument3-note">Instrument 3 Note Type:</label>
-                            <select className="dropdowns" name="instrument3-note" id="instrument3-notes">
-                                <option value="instrument-example">  </option>
-                                <option value="instrument-note">instrument note</option>
+                            <select className="dropdowns" name="instrument3-note" id="instrument3-notes" onChange={(e => {setDuration02(Number(e.target.value))})}>
+                                <NoteSettings />
                             </select>
                         </div>
                         <div className='col instrument-box'>
                             <label htmlFor="instrument4">Instrument 4:</label>
-                            <select className="dropdowns" name="instrument4" id="instrument4-options">
-                                <option value="instrument-example">  </option>
-                                <option value="instrument-example">instrument example</option>
+                            <select className="dropdowns" name="instrument4" id="instrument4-options" onChange={(e => {setInstrument03(Number(e.target.value))})}>
+                                <InstrumentSettings />
                             </select>
                             <br></br>
                             <label htmlFor="instrument4-note">Instrument 4 Note Type:</label>
-                            <select className="dropdowns" name="instrument4-note" id="instrument4-notes">
-                                <option value="instrument-example">  </option>
-                                <option value="instrument-note">instrument note</option>
+                            <select className="dropdowns" name="instrument4-note" id="instrument4-notes" onChange={(e => {setDuration03(Number(e.target.value))})}>
+                               <NoteSettings />
                             </select>
                         </div>
+                        {/* This conditional here will render the advanced settings to have more electrode options */}
+                        {(device === 'cyton') && 
+                            <>
+                            <div className='col instrument-box'>
+                            <label htmlFor="instrument5">Instrument 5:</label>
+                            <select className="dropdowns" name="instrument5" id="instrument5-options" onChange={(e => {setInstrument04(Number(e.target.value))})}>
+                                <InstrumentSettings />
+                            </select>
+                            <br></br>
+                            <label htmlFor="instrument5-note">Instrument 5 Note Type:</label>
+                            <select className="dropdowns" name="instrument5-note" id="instrument5-notes" onChange={(e => {setDuration04(Number(e.target.value))})}>
+                               <NoteSettings />
+                            </select>
+                        </div>
+                        <div className='col instrument-box'>
+                            <label htmlFor="instrument6">Instrument 6:</label>
+                            <select className="dropdowns" name="instrument6" id="instrument6-options" onChange={(e => {setInstrument05(Number(e.target.value))})}>
+                                <InstrumentSettings />
+                            </select>
+                            <br></br>
+                            <label htmlFor="instrument6-note">Instrument 6 Note Type:</label>
+                            <select className="dropdowns" name="instrument6-note" id="instrument6-notes" onChange={(e => {setDuration05(Number(e.target.value))})}>
+                               <NoteSettings />
+                            </select>
+                        </div>
+                        <div className='col instrument-box'>
+                            <label htmlFor="instrument7">Instrument 7:</label>
+                            <select className="dropdowns" name="instrument7" id="instrument7-options" onChange={(e => {setInstrument06(Number(e.target.value))})}>
+                                <InstrumentSettings />
+                            </select>
+                            <br></br>
+                            <label htmlFor="instrument7-note">Instrument 7 Note Type:</label>
+                            <select className="dropdowns" name="instrument7-note" id="instrument7-notes" onChange={(e => {setDuration06(Number(e.target.value))})}>
+                               <NoteSettings />
+                            </select>
+                        </div>
+                        <div className='col instrument-box'>
+                            <label htmlFor="instrument8">Instrument 8:</label>
+                            <select className="dropdowns" name="instrument8" id="instrument8-options" onChange={(e => {setInstrument07(Number(e.target.value))})}>
+                                <InstrumentSettings />
+                            </select>
+                            <br></br>
+                            <label htmlFor="instrumeny8-note">Instrument 8 Note Type:</label>
+                            <select className="dropdowns" name="instrument8-note" id="instrument8-notes" onChange={(e => {setDuration07(Number(e.target.value))})}>
+                               <NoteSettings />
+                            </select>
+                        </div>
+                        </>
+                        }
+                        
                     </div>
                 </form>
                 <br></br>
@@ -201,23 +321,10 @@ const TrackSettings = () => {
                     <div className="btn-group" role="group" aria-label="Basic example">
                         <button type="button" className="btn btn-secondary" id='back-btn-adv' onClick={toggle}>Back</button>
                         <br />
-                        <button type="button" className="btn btn-primary" id='next-btn' onClick={() => doNavigate("/script-settings")}>Next</button>
+                        <button type="button" className="btn btn-primary" id='next-btn' onClick={applySettingsEvent}>Next</button>
                     </div>
                 </div>
              </div>
-        {/* <div>
-            <label className="form-label signup-text">Title</label>
-            <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setPostTitle(event.target.value)}/>
-        </div>
-        <div>
-            <label className="form-label signup-text">Thumbnail</label>
-            <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setThumbnail(event.target.value)}/>
-        </div>
-        <div>
-            <label className="form-label signup-text">Likes</label>
-            <input type="number" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setLikes(event.target.valueAsNumber)}/>
-        </div>
-        <button onClick={uploadPost}>Click me</button> */}
         </div>
         
         );
