@@ -94,6 +94,7 @@ const SignUp = () => {
     return (
         <div className='container' id='main-signup-container'>
             <div className="container" id="signup-container">
+                <div className="bbLogo"></div>
                 <h1 className="text-center fw-semibold signup-text">Welcome to BrainBeats!</h1>
                 <div className="mt-3">
                     <label className="form-label signup-text">Email</label>
