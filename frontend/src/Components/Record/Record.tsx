@@ -1,5 +1,5 @@
 import { Devices, initDevice } from "device-decoder";
-import { DataStream } from "../../util/Interfaces";
+import { DataStream8Ch } from "../../util/Interfaces";
 
 function Record() {
     var device:any;
@@ -7,7 +7,8 @@ function Record() {
     /*  This function tells the device to begin storing input, the initDevice function
         will be dynamic based on whether we input ganglion/cyton */
     async function initializeConnection () {
-        await initDevice(Devices['USB']['cyton'],
+        // Devices['USB']['cyton']
+        await initDevice(Devices['USB']['hegduino'],
                 {   // this pushes the data from the headband as it is received from the board into the channels array
                     ondecoded: (data) => { handleChannels(data)}, 
                     onconnect: (deviceInfo) => console.log(deviceInfo), 
@@ -19,11 +20,13 @@ function Record() {
                 })
     }
 
+    
+
     // Device output passed here
     function handleChannels(data:any) {
 
         // Convert to our interface
-        let currentData:DataStream = {
+        let currentData:DataStream8Ch = {
             channel00: data[0][0],
             channel01: data[1][0],
             channel02: data[2][0],

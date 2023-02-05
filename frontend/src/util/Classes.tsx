@@ -55,8 +55,6 @@ export class MusicGenerationSettings implements IMusicSettings {
     }
 }
 
- 
-
 // function setNoteSpeed(speed) {
 //     switch (speed) {
 //         case speed === slow:
