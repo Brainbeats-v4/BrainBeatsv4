@@ -17,11 +17,7 @@ import Script from './Pages/Script';
 import RecordTrack from './Pages/RecordTrack';
 import RecordCards from './Pages/RecordCards';
 
-
-// Redux
-import { store } from './Redux/store'
-import { Provider } from 'react-redux'
-
+// import SliceProvider from './Redux/SliceProvider';
 
 // Importing sidebar and navbar
 import Sidebar from './Components/Sidebar/Sidebar';
@@ -57,6 +53,7 @@ function App() {
 
   return (
     <div className='bg'>
+      
       <Router>
         {/* <Sidebar> */}
           <Routes>

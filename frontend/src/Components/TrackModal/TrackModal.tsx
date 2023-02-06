@@ -42,7 +42,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
   const [buttonText, setButtonText] = useState(visibility ? "Make Private" : "Make Public");
   const [thumbnail, setThumbnail] = useState(track.thumbnail);
 
-
   function setVisibilityButton() {
     setVisibility(!visibility);
     setButtonText(visibility ? "Make Private" : "Make Public");

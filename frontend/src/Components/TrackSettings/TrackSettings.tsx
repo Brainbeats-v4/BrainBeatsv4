@@ -1,17 +1,13 @@
-import react from 'react';
+import react, { useContext } from 'react';
 import './TrackSettings.css';
-import sendAPI from "../../SendAPI";
 import { useState } from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { userJWT, userModeState } from "../../JWT";
-import { upload } from '@testing-library/user-event/dist/upload';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CytonSettings } from '../../util/Interfaces';
 import { InstrumentTypes, NoteDurations } from '../../util/Enums';
 
 
 // Redux state to hold settings for specificed board
-import {set, quickSet, unset} from '../../Redux/slices/cytonMusicGenerationSettingsSlice'
+import {set} from '../../Redux/slices/cytonMusicGenerationSettingsSlice'
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
@@ -23,9 +19,6 @@ const TrackSettings = () => {
     const toggle = () => setAdvSettingsOpen(!advSettingsOpen);
     const [device, setDevice] = useState('cyton');
     const navigate = useNavigate();
-    const doNavigate = (route:string) => {
-        navigate(route);
-    }
 
     /* These useStates set the music generation settings to be passed to the classes for each respective device,
         the first 4 of each case are used for ganglion and cyton and the next four are for the cyton board. */
@@ -39,7 +32,7 @@ const TrackSettings = () => {
     const [instrument05, setInstrument05] = useState(InstrumentTypes.NULL)
     const [instrument06, setInstrument06] = useState(InstrumentTypes.NULL)
     const [instrument07, setInstrument07] = useState(InstrumentTypes.NULL)
-
+    /* These define the duration of each note. */
     const [duration00, setDuration00] = useState(NoteDurations.NULL)
     const [duration01, setDuration01] = useState(NoteDurations.NULL)
     const [duration02, setDuration02] = useState(NoteDurations.NULL)
@@ -49,9 +42,12 @@ const TrackSettings = () => {
     const [duration06, setDuration06] = useState(NoteDurations.NULL)
     const [duration07, setDuration07] = useState(NoteDurations.NULL)
 
+    const [bpm, setBpm] = useState(120);
+
 
     function applySettingsEvent() {
         if(device === 'cyton') {
+
             var generationSettings:CytonSettings = {
                 // Used to store the instrument each node should be used to output
                 instruments: {
@@ -75,15 +71,16 @@ const TrackSettings = () => {
                     _06: duration06,
                     _07: duration07,
                 },
-                bpm: 120
+                bpm: bpm
             }
 
             // Set the redux state
             set(generationSettings);
 
+            // console.log(store.getState());
+            navigate("/script-settings")
         }
 
-        doNavigate("/script-settings")
     }
 
     /*  This function just maps the enum InstrumentTypes into an options list to be displayed on the settings to keep the
@@ -158,7 +155,7 @@ const TrackSettings = () => {
 
                     <div className='form-group row justify-content-center'>
                         <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className="btn btn-primary" id='next-btn' onClick={() => doNavigate("/script-settings")}>Next</button>
+                            <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Next</button>
                         </div>
                     </div>
                 </form>
@@ -294,10 +291,13 @@ const TrackSettings = () => {
                             </select>
                         </div>
                         <div className='col instrument-box-other'>
-                            <label htmlFor="tempo">Tempo:</label>
-                            <select className="dropdowns2" name="tempo" id="tempo-option">
-                                <option value="tempo-example">  </option>
-                                <option value="tempo-example1">tempo example</option>
+                            <label htmlFor="tempo">Set Bpm:</label>
+                            <select className="dropdowns2" name="tempo" id="tempo-option" onChange={(e) => setBpm(Number(e.target.value))}>
+                                <option value="100">100</option>
+                                <option value="120">120</option>
+                                <option value="140">140</option>
+                                <option value="160">160</option>
+
                             </select>
                         </div>
                         <div className='col instrument-box-other'>
@@ -321,7 +321,7 @@ const TrackSettings = () => {
                     <div className="btn-group" role="group" aria-label="Basic example">
                         <button type="button" className="btn btn-secondary" id='back-btn-adv' onClick={toggle}>Back</button>
                         <br />
-                        <button type="button" className="btn btn-primary" id='next-btn' onClick={applySettingsEvent}>Next</button>
+                        <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Next</button>
                     </div>
                 </div>
              </div>

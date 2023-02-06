@@ -1,25 +1,35 @@
 import { Devices, initDevice } from "device-decoder";
 import { DataStream8Ch } from "../../util/Interfaces";
-import { ConcreteCytonStream } from '../../util/DeviceAbstractFactory';
-
+import { DeviceAbstractFactory, ConcreteCytonStream, ConcreteGanglionStream, AbstractGanglionStream, AbstractCytonStream } from '../../util/DeviceAbstractFactory';
+import { useAppSelector, useAppDispatch } from "../../Redux/hooks";
 
 
 function Record() {
+    const settings = useAppSelector(state => state.cytonMusicGenerationSettingsSlice)
+    const dispatch = useAppDispatch();
+    console.log(settings);
+
     var deviceType:string;
-    var device:any
+    var device: AbstractGanglionStream | AbstractCytonStream;
     
-    function doRecording() {
+    async function doRecording() {
         // Later create new instance of parent class, which decides which constructor to utilize
         // based on device type string
-
-        if(deviceType === 'cyton')
-            device = new ConcreteCytonStream();
-        // else if (deviceType === 'ganglion')
-        //     device = new ConcreateGanglionStream();
+        switch (deviceType) {
+            case "cyton":
+                device = new ConcreteCytonStream();
+                break;
+            case "ganglion": 
+                device = new ConcreteGanglionStream();
+                break;      
+            default: return;
+        }
+        
         device.initializeConnection();
     }
-
+    
     function stopRecording() {
+        console.log("stopping...");
         if(device !== undefined) {
             device.setStopFlag();
         }

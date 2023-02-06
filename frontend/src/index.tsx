@@ -17,6 +17,8 @@ import {RecoilRoot} from 'recoil'
 import { store } from './Redux/store'
 import { Provider } from 'react-redux'
 
+
+
 // Adding icons to global library
 library.add(fab, faBars, faHome, faInfo, faCircleInfo, faSearch, faPlusCircle, faPlus, faHeart, faPlayCircle, faEllipsisH)
 library.add(faEye, faEyeSlash, faEdit, faPlay, faPause, faUser, faMusic, faList, faRightFromBracket, faCircle, faSquare, faArrowUpFromBracket, faDownload)
