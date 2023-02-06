@@ -1,67 +1,94 @@
+/* CSS for Profile page */
+
+.sticky{
+    position: sticky;
+    top: 20%;
+}
+
 .user-profile {
     /* background-color: #252525; */
     border-radius: 10px;
     height: 100%;
     width: 75%;
-    /* min-width: fit-content; */
     color: #fff;
     margin: auto;
     padding-top: 2%;
-}
-
-.sticky{
-    /* position: -webkit-sticky; */
-    position: sticky;
-    top: 20%;
 }
 
 #profile-container{
     /* background-color: red; */
     max-width: 100%;
     max-height: 100%;
-    /* height: 100vh; */
     display: block;
 }
 
 #profile-top-container {
     /* background-color: red; */
     border-radius: 10px;
-    /* height: 40%; */
 }
 
-#profile-bottom-container {
-    padding-top: 2%;
-    background-color: #252525;
-    margin-top: 2%;
-    border-radius: 10px;
-    /* height: 40%; */
-}
-#profile-top-name-div {
-    background: linear-gradient(180deg, #40BBCE 0%, #008BA0 100%);
+#profile-image-div {
+    background-color: red;
+    border-color: rgb(255, 255, 255);
+    position: absolute;
+    z-index: 3;
     display: flex;
     flex-direction: column;
-    /* align-items: flex-end; */
-    border-radius: 10px 10px 0px 0px;
-    height: 25vh;
-    position: relative;
+    justify-content: center;
+    align-items: center;
+    border-style: solid;
+    border-radius: 50%;
+    border-width: 3px;
+    width: 15%;
+    height: 30%;
+    margin-left: 4%;
+    margin-top: 5%;
 }
 
 #profile-image {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    z-index: 5;
     background-color: darkgray;
     border-color: white;
     border-radius: 50%;
     border-width: 5px;
-    width: 15%;
-    /* width: 230px; */
-    /* height: 230px; */
-    height: 30%;
-    margin-left: 2%;
-    /* margin-top: 5%; */
+    width: 100%;
+    height: 100%;
+}
+
+#profile-file-upload-div{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.522);
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+#profile-file-upload-label{
+    /* background-color: red; */
+    margin-top: 35%;
+    margin-left: 5%;
+    width: 90%;
+}
+
+#profile-file-upload{
+    width: 90%;
+   margin-left: 5%;
+}
+
+#profile-top-name-div {
+    background: linear-gradient(180deg, #40BBCE 0%, #008BA0 100%);
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px 10px 0px 0px;
+    height: 25vh;
+    position: relative;
 }
 
 #edit-profile-div{
@@ -93,6 +120,11 @@
     height: 100%;
     margin-left: 32%;
     padding-left: 2%;
+}
+
+#user-profile-name-div{
+    display: flex;
+    column-gap: 1%;
 }
 
 #profile-name {
@@ -143,9 +175,7 @@
     display: flex;
     justify-content: flex-end;
     height: 15%;
-    /* height: fit-content; */
     width: 100%;
-    /* padding: 1px; */
 }
 
 #tracks-btn-line{
@@ -168,17 +198,16 @@
     border-radius: 0px 0px 10px 10px;
     width: 33%;
     min-width: fit-content;
-    /* margin: 5px; */
     column-gap: 10px;
     padding: 0;
 }
+
 #tracks-btn:hover{
     color: white !important;
     font-weight: 600 !important;
     background-color: #F8607C !important;
     border-color: #F8607C !important;
     text-decoration: underline;
-    /* border-radius: 0px; */
 }
 
 #tracks-btn-text{
@@ -202,7 +231,6 @@
     border-radius: 0px 0px 10px 10px;
 }
 
-
 #playlists-btn {
     background-color: rgba(100, 100, 100, 1);
     color: white;
@@ -214,10 +242,10 @@
     border-radius: 0px 0px 10px 10px;
     width: 33%;
     min-width: fit-content;
-    /* margin: 5px; */
     column-gap: 10px;
     padding: 0;
 }
+
 #playlists-btn:hover{
     color: white !important;
     font-weight: 600 !important;
@@ -226,17 +254,23 @@
     text-decoration: underline;
 }
 
-
 #playlists-btn-text{
     /* background-color: #00798B; */
     display: flex;
     justify-content: center;
     align-items: center;
-    /* color: white; */
     border-radius: 0px;
     width: 33%;
     min-width: fit-content;
     margin: 5px;
     column-gap: 10px;
     height: 50%;
+}
+
+#profile-bottom-container {
+    background-color: #10101032;
+    padding-top: 2%;
+    padding-left: 1%;
+    margin-top: 2%;
+    border-radius: 10px;
 }
