@@ -49,6 +49,8 @@ const TrackSettings = () => {
     const [duration06, setDuration06] = useState(NoteDurations.NULL)
     const [duration07, setDuration07] = useState(NoteDurations.NULL)
 
+    const [bpm, setBpm] = useState(120);
+
 
     function applySettingsEvent() {
         if(device === 'cyton') {
@@ -75,7 +77,7 @@ const TrackSettings = () => {
                     _06: duration06,
                     _07: duration07,
                 },
-                bpm: 120
+                bpm: bpm
             }
 
             // Set the redux state
@@ -294,10 +296,13 @@ const TrackSettings = () => {
                             </select>
                         </div>
                         <div className='col instrument-box-other'>
-                            <label htmlFor="tempo">Tempo:</label>
-                            <select className="dropdowns2" name="tempo" id="tempo-option">
-                                <option value="tempo-example">  </option>
-                                <option value="tempo-example1">tempo example</option>
+                            <label htmlFor="tempo">Set Bpm:</label>
+                            <select className="dropdowns2" name="tempo" id="tempo-option" onChange={(e) => setBpm(Number(e.target.value))}>
+                                <option value="100">100</option>
+                                <option value="120">120</option>
+                                <option value="140">140</option>
+                                <option value="160">160</option>
+
                             </select>
                         </div>
                         <div className='col instrument-box-other'>
