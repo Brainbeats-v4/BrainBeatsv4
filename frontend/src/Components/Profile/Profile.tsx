@@ -16,9 +16,9 @@ const Profile = () => {
     const jwt = useRecoilValue(userJWT);
     const [playlist, setPlaylist] = useState([]); 
     const [posts, setPosts] = useState([])
+
+    // For displaying profile picture
     const [displayPicture, setDisplayPicture] = useState(user!==null ? user.profilePicture: undefined);
-
-
     if(displayPicture !== undefined) {
             if ((displayPicture as string).split('/')[0] === 'data:text') {
             console.log(displayPicture);
@@ -28,12 +28,16 @@ const Profile = () => {
         }
     }
 
+    // Toggle edit profile
+    const[editProfile, updateEditProfile] = react.useState(false);
+    const toggleEdit = () => updateEditProfile(!editProfile);
+
+    const [profileFirstName, setProfileFirstName] = useState(user.firstName);
+    const [profileLastName, setProfileLastName] = useState(user.lastName);
+
     // Toggle My Tracks and Playlists display
     const[playlistsOpen, updatePlaylistsOpen] = react.useState(false);
     const toggleTab = () => updatePlaylistsOpen(!playlistsOpen);
-
-
-
 
     // var encodedProfilePic = user.profilePicture;
 
@@ -42,6 +46,7 @@ const Profile = () => {
     // var decodedProfilePic = Buffer.from(encodedProfilePic, 'base64').toString('ascii');
     // var userProfilePic = buildPath(decodedProfilePic)
     //console.log(decodedProfilePic)
+
     var userTracks = [
         {songTitle: 'New Song', songImage: ''},
         {songTitle: 'Old Song', songImage: ''}
@@ -68,6 +73,7 @@ const Profile = () => {
         })
     }
 
+    // Function updating profile picture
     async function updateProfilePic(file:File) {
         var base64result:any;
         await convertToBase64(file).then(res => {
@@ -100,19 +106,33 @@ const Profile = () => {
     return(
         <div className="user-profile" id='profile-container'>
             <div id='profile-top-container'>
-            <img src={displayPicture} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>
+                <div id="profile-image-div">
+                    <img src={displayPicture} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>        
+                    <div id='profile-file-upload-div' style={{display: editProfile?"block" : "none"}}>
+                        <label id="profile-file-upload-label" htmlFor="profileInputTag">
+                            Select Profile Image:
+                        </label>
+                        <input id="profile-file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} name="image" type="file" accept='.jpeg, .png, .jpg'/>
+                    </div>
+                </div>
+
                 <div id='profile-top-name-div'>
                     <div id='edit-profile-div'>
-                        <button type="button" className="btn btn-secondary" id='edit-profile-btn'> 
+                        <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={toggleEdit}> 
                             <FontAwesomeIcon icon={["fas", "edit"]} />
                             Edit Profile
                         </button>
                     </div>
                     <div id='user-info-div'>
-                        <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>
+                        <div id='user-profile-name-div'>
+                            {!editProfile && <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>}
+                            {editProfile && <input type="text" id='user-firstName' defaultValue={user.firstName} onChange={(e) => setProfileFirstName(e.target.value)}></input>}
+                            {editProfile && <input type="text" id='user-lastName' defaultValue={user.lastName} onChange={(e) => setProfileLastName(e.target.value)}></input>}
+                        </div>
                         <h5 id='user-name'>@ user name{user.username}</h5>
                     </div>
                 </div>
+
                 <div id='profile-top-follower-div'>
                     <div id='count-all-div'>
                         <div className='count-div' id='playlist-count-div'>
@@ -129,6 +149,7 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
+
                 <div id='profile-top-tabs-div'>
                     <button type="button" className="btn btn-secondary" id='tracks-btn' onClick={toggleTab}
                     style={{backgroundColor: !playlistsOpen? "rgb(83, 83, 83) ": "rgba(100, 100, 100, 1)"}}>
@@ -149,7 +170,6 @@ const Profile = () => {
                         </div>
                     </button>
                 </div>
-                <input id="file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} name="image" type="file" accept='.jpeg, .png, .jpg'/>
             </div>
             {/* Displays when My Tracks tab selected */}
             <div id='profile-bottom-container' style={{display: playlistsOpen? "none" : "block"}}>
