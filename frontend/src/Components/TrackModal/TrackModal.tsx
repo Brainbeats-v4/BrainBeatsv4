@@ -40,7 +40,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
   const [buttonText, setButtonText] = useState(visibility ? "Make Private" : "Make Public");
   const [thumbnail, setThumbnail] = useState(track.thumbnail);
 
-
   function setVisibilityButton() {
     setVisibility(!visibility);
     setButtonText(visibility ? "Make Private" : "Make Public");
@@ -48,13 +47,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
     console.log("clicking");
     console.log(visibility, buttonText);
   }
-
-
-  useEffect(() => {
-
-    updateTrack(visibility);
-
-  }, [visibility])
 
   function updateTrack (visibility = track.public, trackName = track.title, thumbnail = track.thumbnail) {
 

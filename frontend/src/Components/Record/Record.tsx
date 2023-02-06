@@ -8,18 +8,22 @@ function Record() {
     var deviceType:string;
     var device:any
     
-    function doRecording() {
+    async function doRecording() {
         // Later create new instance of parent class, which decides which constructor to utilize
         // based on device type string
 
+        deviceType = 'cyton';
         if(deviceType === 'cyton')
             device = new ConcreteCytonStream();
         // else if (deviceType === 'ganglion')
         //     device = new ConcreateGanglionStream();
-        device.initializeConnection();
+
+        let a = await device.initializeConnection();
+
     }
 
     function stopRecording() {
+        console.log("stopping...");
         if(device !== undefined) {
             device.setStopFlag();
         }
