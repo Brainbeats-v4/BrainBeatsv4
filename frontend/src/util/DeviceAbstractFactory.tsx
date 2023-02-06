@@ -8,27 +8,29 @@ import { Devices, initDevice } from "device-decoder";
 import {Devices as DevicesThirdParty} from 'device-decoder.third-party'
  
 
-import { DataStream8Ch, DataStream4Ch } from "./Interfaces";
+import { DataStream8Ch, DataStream4Ch, CytonSettings } from "./Interfaces";
 import { Stream } from "stream";
+import { useSelector } from "react-redux";
 
 
 // Device factory for separate connection methods. (This is because either ganglion will require
 // the old connection code, or we will need to create our own custom device.)
-interface DeviceAbstractFactory {
+export interface DeviceAbstractFactory {
     createGanglionStream(): AbstractGanglionStream;
 
     createCytonStream(): AbstractCytonStream;
 }
 
-interface AbstractGanglionStream { 
+export interface AbstractGanglionStream { 
     initializeConnection(): any; //datastreams.dataDevice;
     setStopFlag(): boolean;
     handleChannels(stream: any): DataStream4Ch
 }
 
-interface AbstractCytonStream {
+export interface AbstractCytonStream {
     device:any;
     flag:boolean;
+    // userSettings:CytonSettings;
     initializeConnection(): any;
     setStopFlag(): boolean;
     handleChannels(data:any): DataStream8Ch;
@@ -37,7 +39,9 @@ interface AbstractCytonStream {
 export class ConcreteCytonStream implements AbstractCytonStream {
     public device:any;
     public flag:boolean = false;
-        
+    // public userSettings:CytonSettings = ();
+
+
     public async initializeConnection() {
         this.flag = false;
         await initDevice(Devices['USB']['cyton'],
@@ -55,6 +59,9 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     }
 
     public handleChannels(data:any) {
+        // const selector = useSelector(state);
+        // console.log(state);
+
         let currentData:DataStream8Ch = {
             channel00: data[0][0],
             channel01: data[1][0],
@@ -67,6 +74,11 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             timeStamp: data['timestamp'][0]
        }
         // console.log(currentData.channel00);
+        
+        // Pass this data to music generation
+
+    
+        
         return currentData;
     }
 
@@ -84,7 +96,7 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
             
         public async initializeConnection() {
             this.flag = false;
-            await initDevice(DevicesThirdParty['USB']['ganglion'],
+            await initDevice(DevicesThirdParty['BLE']['ganglion'],
                     {   // this pushes the data from the headband as it is received from the board into the channels array
                         ondecoded: (data) => { this.handleChannels(data) }, 
                         onconnect: (deviceInfo) => console.log(deviceInfo), 

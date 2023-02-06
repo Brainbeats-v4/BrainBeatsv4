@@ -1,27 +1,28 @@
 import { Devices, initDevice } from "device-decoder";
 import { DataStream8Ch } from "../../util/Interfaces";
-import { ConcreteCytonStream } from '../../util/DeviceAbstractFactory';
-
+import { DeviceAbstractFactory, ConcreteCytonStream, ConcreteGanglionStream, AbstractGanglionStream, AbstractCytonStream } from '../../util/DeviceAbstractFactory';
 
 
 function Record() {
     var deviceType:string;
-    var device:any
+    var device: AbstractGanglionStream | AbstractCytonStream;
     
     async function doRecording() {
         // Later create new instance of parent class, which decides which constructor to utilize
         // based on device type string
-
-        deviceType = 'cyton';
-        if(deviceType === 'cyton')
-            device = new ConcreteCytonStream();
-        // else if (deviceType === 'ganglion')
-        //     device = new ConcreateGanglionStream();
-
-        let a = await device.initializeConnection();
-
+        switch (deviceType) {
+            case "cyton":
+                device = new ConcreteCytonStream();
+                break;
+            case "ganglion": 
+                device = new ConcreteGanglionStream();
+                break;      
+            default: return;
+        }
+        
+        device.initializeConnection();
     }
-
+    
     function stopRecording() {
         console.log("stopping...");
         if(device !== undefined) {
