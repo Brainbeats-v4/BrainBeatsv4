@@ -5,6 +5,8 @@ import sendAPI from '../../SendAPI';
 import { userJWT, userModeState } from "../../JWT";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+import buildPath from '../../util/ImagePath';
+
 
 // Import CSS
 import './TrackModal.css';
@@ -49,14 +51,67 @@ const TrackModal: React.FC<Props> = ({track}) => {
     console.log(visibility, buttonText);
   }
 
+  // For displaying track thumbnail picture
+  const [displayThumbnail, setDisplayThumbnail] = useState(track!==null ? track.thumbnail: undefined);
+  if(displayThumbnail !== undefined) {
+    if ((displayThumbnail as string).split('/')[0] === 'data:text') {
+      console.log(displayThumbnail);
+      var encodedThumbnailPic = (displayThumbnail as string).split(',')[1];
+      var decodedThumbnailPic = Buffer.from(encodedThumbnailPic, 'base64').toString('ascii');
+      setDisplayThumbnail(buildPath(decodedThumbnailPic));
+    } 
+  }
 
-  useEffect(() => {
+  function convertToBase64(file:File) {
+        
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        /* This block of code converts the file's old name into one that includes the user's ID for storing */
+        // var fileName:string = file.name;
+        // var extensionArray:string[] = fileName.split('.');
+        // var fileExtension:string = extensionArray[extensionArray.length - 1]; // in the case that there may be any extra '.' for some reason
+        // var renameStr:string = user.userId + '.' + fileExtension
+        // var renamedFile:File = new File([file], renameStr)
+        fileReader.readAsDataURL(file);
+        
+        fileReader.onload = () => {
+            resolve(fileReader.result);
+        };
+        fileReader.onerror = (error) => {
+            reject(error);
+        }
+    })
+  }
 
-    updateTrack(visibility);
+  // Function updating thumbnail picture
+  async function updateThumbnail(track: Track) {
+    if (displayThumbnail != null)
+    {
+      console.log("updating thumbnail");
+      track.thumbnail = displayThumbnail;
+    }
+  };
 
-  }, [visibility])
+  async function updateDisplayThumbnail(file: File){
+    var base64result:any;
+    await convertToBase64(file).then(res => {
+        base64result = res;
+    })
+    // console.log(base64result);
+    var updatedPost = {
+        id: track.id,
+        token: jwt,
+        thumbnail: base64result
+    };
+    // console.log(updatedPost);
+    // track.thumbnail = updatedPost.thumbnail;
+    setDisplayThumbnail(updatedPost.thumbnail);
+  }
 
-  function updateTrack (visibility = track.public, trackName = track.title, thumbnail = track.thumbnail) {
+
+
+
+  function updateTrack (visibility = track.public, trackName = track.title, thumbnailPic = displayThumbnail) {
 
     if (jwt == null || user == null) navigate("/login");
 
@@ -64,7 +119,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
       id: track.id,
       title: trackName,
       midi: track.midi,
-      thumbnail: thumbnail,
+      thumbnail: thumbnailPic,
       likeCount: track.likeCount,
       public: visibility,
       token: jwt,
@@ -82,7 +137,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
     })
 
     setEditing(false);
-
   }
 
 
@@ -94,7 +148,13 @@ const TrackModal: React.FC<Props> = ({track}) => {
           </Modal.Header>
           <Modal.Body className='modal-container1'>
             <div id='modal-track-cover-div'>
-              <img src={track.thumbnail} className="card-img-top modal-track-cover" id="card-img-ID" alt="..."/>
+              {editing && <div id='edit-track-cover-div'>
+                <label id="track-cover-upload-label" htmlFor="trackInputTag">
+                  Select Track Image:
+                </label>
+                <input id="track-cover-upload" onChange={event=> {if(!event.target.files) {return} else {updateDisplayThumbnail(event.target.files[0])}}} name="image" type="file" accept='.jpeg, .png, .jpg'/>
+              </div>}
+              <img src={displayThumbnail} className="card-img-top modal-track-cover" id="card-img-ID" alt="track image" onClick={() => {}}/>
             </div>
             <div id='modal-track-text-div'>
               {visibility && <h6 id="hidden-track-text">
@@ -108,7 +168,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
               {!editing && <h1 id='track-title-text'>{trackName}</h1>}
               {editing && <input type="text" id='track-title-text' defaultValue={trackName} onChange={(e) => setTrackName(e.target.value)}></input>}
               
-              <h6 id="track-author-text">{track.fullname}</h6>
+              <h6 id="track-author-text">By {track.fullname}</h6>
               <button type="button" className="btn btn-primary" id='play-btn'>
                 <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "play"]} />
                 <h3>Play</h3>
@@ -132,7 +192,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "plus"]} />
                 Add to Playlist
               </button>
-              {editing && <button className='btn btn-secondary modal-btn' onClick={() => updateTrack()}>
+              {editing && <button className='btn btn-secondary modal-btn' onClick={() => {updateTrack(); updateThumbnail(track)}}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "edit"]} />
                 Save
               </button>}
@@ -140,8 +200,8 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "edit"]} />
                 Edit
               </button>}
-              {successMsg}
-              {errMsg}
+              {/* {successMsg}
+              {errMsg} */}
             </div>
           </Modal.Footer>
         </div>
