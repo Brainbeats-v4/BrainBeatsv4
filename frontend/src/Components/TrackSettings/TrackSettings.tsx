@@ -1,4 +1,4 @@
-import react from 'react';
+import react, { useContext } from 'react';
 import './TrackSettings.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,13 @@ import { InstrumentTypes, NoteDurations } from '../../util/Enums';
 
 // Redux state to hold settings for specificed board
 import {cytonMusicGenerationSettingsSlice} from '../../Redux/slices/cytonMusicGenerationSettingsSlice'
+import { RootState, store } from '../../Redux/store';
+
+// Access the redux store
+import { ReactReduxContext } from 'react-redux'
+import { isConstructorDeclaration } from 'typescript';
+import { SERVFAIL } from 'dns';
+
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
@@ -75,8 +82,15 @@ const TrackSettings = () => {
                 bpm: bpm
             }
             // Set the redux state
+            let settings = cytonMusicGenerationSettingsSlice.actions;
+            
+            
+            // ! State not setting
+            settings.set(generationSettings);
+
             console.log(cytonMusicGenerationSettingsSlice);
 
+            // console.log(store.getState());
             navigate("/script-settings")
         }
 
