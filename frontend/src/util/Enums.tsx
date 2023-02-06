@@ -1,5 +1,5 @@
 export enum InstrumentTypes {
-    NULL = -99,
+    NULL = -Infinity,
     SINEWAVE = -3,
     TRIANGLEWAVE = -2,
     SQUAREWAVE = -1,
@@ -14,7 +14,7 @@ export enum InstrumentTypes {
 }
 
 export enum NoteDurations {
-    NULL = -99,
+    NULL = -Infinity,
     WHOLE = 0,
     HALF = 1,
     QUARTER = 2,
