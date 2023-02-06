@@ -1,24 +1,64 @@
-import react, { useContext } from 'react';
-import './TrackSettings.css';
-import { useState } from 'react';
+import react, { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CytonSettings } from '../../util/Interfaces';
 import { InstrumentTypes, NoteDurations } from '../../util/Enums';
+import { CytonSettings } from '../../util/Interfaces';
+import './TrackSettings.css';
 
-
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../Redux/hooks';
 // Redux state to hold settings for specificed board
-import {set} from '../../Redux/slices/cytonMusicGenerationSettingsSlice'
+import { set } from '../../Redux/slices/cytonMusicGenerationSettingsSlice';
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
+/*  This function just maps the enum InstrumentTypes into an options list to be displayed on the settings to keep the
+    code cleaner, it starts at -3 since it is the initial value described in the Enum, adding the NULL value at the end */
+const InstrumentSettings = memo(() => {
+    var instrumentArray:any[] = [];
+    for(var i = -3; i <= 7; i++) {
+        let instrument = { value: i, name: InstrumentTypes[i] }
+        instrumentArray.push(instrument);
+    }
+    instrumentArray.push({value: -Infinity, name: "NULL"})
+    return( 
+        <>
+            {instrumentArray.map((instrument) =>
+                <option key={instrument.name} value={instrument.value}>{instrument.name}</option>)
+            }
+        </>
+    )    
+})
+
+/* This function serves the same purpose as the InstrumentSettings function above with the same logic just extended for NoteDuration */
+const NoteSettings = memo(() => {
+    var noteArray:any[] = [];
+    for(var i = 0; i <= 4; i++) {
+        let noteDuration = { value: i, name: NoteDurations[i] }
+        noteArray.push(noteDuration);
+    }
+    noteArray.push({value: -Infinity, name: "NULL"})
+    return( 
+        <>
+            {noteArray.map((noteDuration) =>
+                <option key={noteDuration.name} value={noteDuration.value}>{noteDuration.name}</option>)
+            }
+        </>
+    )    
+});
+
+
+
+
 const TrackSettings = () => {
 
+    const settings = useAppSelector(state => state.cytonMusicGenerationSettingsSlice)
     const [generationType, setGenerationType] = react.useState('slowAndMelodic');
     // Function for toggling between Basic and Advanced Settings.
     const[advSettingsOpen, setAdvSettingsOpen] = react.useState(false);
     const toggle = () => setAdvSettingsOpen(!advSettingsOpen);
     const [device, setDevice] = useState('cyton');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     /* These useStates set the music generation settings to be passed to the classes for each respective device,
         the first 4 of each case are used for ganglion and cyton and the next four are for the cyton board. */
@@ -41,6 +81,35 @@ const TrackSettings = () => {
     const [duration05, setDuration05] = useState(NoteDurations.NULL)
     const [duration06, setDuration06] = useState(NoteDurations.NULL)
     const [duration07, setDuration07] = useState(NoteDurations.NULL)
+
+    let defaultSettings = {
+        instruments: {
+            _00: InstrumentTypes.NULL,
+            _01: InstrumentTypes.NULL,
+            _02: InstrumentTypes.NULL,    
+            _03: InstrumentTypes.NULL,
+            _04: InstrumentTypes.NULL,
+            _05: InstrumentTypes.NULL,
+            _06: InstrumentTypes.NULL,    
+            _07: InstrumentTypes.NULL,
+          },
+      
+          durations: {
+            _00: NoteDurations.NULL,
+            _01: NoteDurations.NULL,
+            _02: NoteDurations.NULL,    
+            _03: NoteDurations.NULL,
+            _04: NoteDurations.NULL,
+            _05: NoteDurations.NULL,
+            _06: NoteDurations.NULL,    
+            _07: NoteDurations.NULL,
+          },
+          
+          bpm: 120,
+    }
+
+    const [settingsChoices, setSettingsChoices] = useState(defaultSettings);
+
 
     const [bpm, setBpm] = useState(120);
 
@@ -74,48 +143,12 @@ const TrackSettings = () => {
                 bpm: bpm
             }
 
-            // Set the redux state
-            set(generationSettings);
-
-            // console.log(store.getState());
+            // Apply settings to redux
+            dispatch(set(generationSettings));
+        
             navigate("/script-settings")
         }
 
-    }
-
-    /*  This function just maps the enum InstrumentTypes into an options list to be displayed on the settings to keep the
-        code cleaner, it starts at -3 since it is the initial value described in the Enum, adding the NULL value at the end */
-    function InstrumentSettings() {
-        var instrumentArray:any[] = [];
-        for(var i = -3; i <= 7; i++) {
-            let instrument = { value: i, name: InstrumentTypes[i] }
-            instrumentArray.push(instrument);
-        }
-        instrumentArray.push({value: -Infinity, name: "NULL"})
-        return( 
-            <>
-                {instrumentArray.map((instrument) =>
-                    <option key={instrument.name} value={instrument.value}>{instrument.name}</option>)
-                }
-            </>
-        )    
-    }
-
-    /* This function serves the same purpose as the InstrumentSettings function above with the same logic just extended for NoteDuration */
-    function NoteSettings() {
-        var noteArray:any[] = [];
-        for(var i = 0; i <= 4; i++) {
-            let noteDuration = { value: i, name: NoteDurations[i] }
-            noteArray.push(noteDuration);
-        }
-        noteArray.push({value: -Infinity, name: "NULL"})
-        return( 
-            <>
-                {noteArray.map((noteDuration) =>
-                    <option key={noteDuration.name} value={noteDuration.value}>{noteDuration.name}</option>)
-                }
-            </>
-        )    
     }
 
     return (
@@ -186,7 +219,7 @@ const TrackSettings = () => {
                         <div className='col instrument-box'>
                             <label htmlFor="instrument1">Instrument 1:</label>
                             <select className="dropdowns" name="instrument1" id="instrument1-options" onChange={(e => {setInstrument00(Number(e.target.value))})}>         
-                                <InstrumentSettings />
+                               <InstrumentSettings />
                             </select>
                             <br></br>
                             <label htmlFor="instrument1-note">Instrument 1 Note Type:</label>
@@ -256,6 +289,7 @@ const TrackSettings = () => {
                             <label htmlFor="instrument7">Instrument 7:</label>
                             <select className="dropdowns" name="instrument7" id="instrument7-options" onChange={(e => {setInstrument06(Number(e.target.value))})}>
                                 <InstrumentSettings />
+          
                             </select>
                             <br></br>
                             <label htmlFor="instrument7-note">Instrument 7 Note Type:</label>
@@ -266,7 +300,9 @@ const TrackSettings = () => {
                         <div className='col instrument-box'>
                             <label htmlFor="instrument8">Instrument 8:</label>
                             <select className="dropdowns" name="instrument8" id="instrument8-options" onChange={(e => {setInstrument07(Number(e.target.value))})}>
-                                <InstrumentSettings />
+                            <option value={-Infinity}>NULL</option>
+                            <InstrumentSettings />
+
                             </select>
                             <br></br>
                             <label htmlFor="instrumeny8-note">Instrument 8 Note Type:</label>

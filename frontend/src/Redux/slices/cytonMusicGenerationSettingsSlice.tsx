@@ -85,9 +85,11 @@ export const cytonMusicGenerationSettingsSlice = createSlice({
   name: 'cytonMusicGenerationSettings',
   initialState,
   reducers: {
-    set: (state, action: PayloadAction<Interfaces.CytonSettings >) => {
+    set: (state, action: PayloadAction<Interfaces.CytonSettings>) => {
       // state = action.payload;
-      state = action.payload;
+      state.instruments = action.payload.instruments;
+      state.durations = action.payload.durations;
+      state.bpm = action.payload.bpm;
     },
     quickSet: (state, action: PayloadAction<string>) => {
       state = doQuickSet(state, action.payload);

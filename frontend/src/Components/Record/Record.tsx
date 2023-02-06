@@ -6,7 +6,6 @@ import { useAppSelector, useAppDispatch } from "../../Redux/hooks";
 
 function Record() {
     const settings = useAppSelector(state => state.cytonMusicGenerationSettingsSlice)
-    const dispatch = useAppDispatch();
     console.log(settings);
 
     var deviceType:string;
