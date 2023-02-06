@@ -11,7 +11,7 @@ function Record() {
     function doRecording() {
         // Later create new instance of parent class, which decides which constructor to utilize
         // based on device type string
-
+        
         if(deviceType === 'cyton')
             device = new ConcreteCytonStream();
         // else if (deviceType === 'ganglion')

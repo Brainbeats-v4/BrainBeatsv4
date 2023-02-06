@@ -1,11 +1,7 @@
 import react from 'react';
 import './TrackSettings.css';
-import sendAPI from "../../SendAPI";
 import { useState } from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { userJWT, userModeState } from "../../JWT";
-import { upload } from '@testing-library/user-event/dist/upload';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CytonSettings } from '../../util/Interfaces';
 import { InstrumentTypes, NoteDurations } from '../../util/Enums';
 
@@ -79,7 +75,6 @@ const TrackSettings = () => {
                 },
                 bpm: bpm
             }
-
             // Set the redux state
             set(generationSettings);
 
