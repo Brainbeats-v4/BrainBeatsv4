@@ -110,13 +110,13 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
 
 
-  function updateTrack (visibility = track.public, trackName = track.title, thumbnailPic = displayThumbnail) {
+  function updateTrack (visibility = track.public, newTrackName = trackName, thumbnailPic = displayThumbnail) {
 
     if (jwt == null || user == null) navigate("/login");
 
     let updatedTrack = {
       id: track.id,
-      title: trackName,
+      title: newTrackName,
       midi: track.midi,
       thumbnail: thumbnailPic,
       likeCount: track.likeCount,
@@ -124,6 +124,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
       token: jwt,
     }
     
+    console.log("track name: " + newTrackName);
     sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
       if (res.status == 200) {
         setErrMsg(trackName);
@@ -136,6 +137,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
     })
 
     setEditing(false);
+    track.title = newTrackName;
   }
 
 
