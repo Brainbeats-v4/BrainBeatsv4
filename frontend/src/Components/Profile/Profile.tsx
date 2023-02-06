@@ -118,10 +118,14 @@ const Profile = () => {
 
                 <div id='profile-top-name-div'>
                     <div id='edit-profile-div'>
-                        <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={toggleEdit}> 
+                        {!editProfile && <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={toggleEdit}> 
                             <FontAwesomeIcon icon={["fas", "edit"]} />
                             Edit Profile
-                        </button>
+                        </button>}
+                        {editProfile && <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={toggleEdit}> 
+                            <FontAwesomeIcon icon={["fas", "floppy-disk"]} />
+                            Save Profile
+                        </button>}
                     </div>
                     <div id='user-info-div'>
                         <div id='user-profile-name-div'>

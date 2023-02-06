@@ -103,6 +103,10 @@
     width: fit-content;
     border-style: none;
     color: #00798B;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 5px;
 }
 
 #edit-profile-btn:hover{
