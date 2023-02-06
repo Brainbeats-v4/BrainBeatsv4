@@ -7,7 +7,7 @@ import { InstrumentTypes, NoteDurations } from '../../util/Enums';
 
 
 // Redux state to hold settings for specificed board
-import {cytonMusicGenerationSettingsSlice} from '../../Redux/slices/cytonMusicGenerationSettingsSlice'
+import {set} from '../../Redux/slices/cytonMusicGenerationSettingsSlice'
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
@@ -19,7 +19,6 @@ const TrackSettings = () => {
     const toggle = () => setAdvSettingsOpen(!advSettingsOpen);
     const [device, setDevice] = useState('cyton');
     const navigate = useNavigate();
-
 
     /* These useStates set the music generation settings to be passed to the classes for each respective device,
         the first 4 of each case are used for ganglion and cyton and the next four are for the cyton board. */
@@ -74,8 +73,9 @@ const TrackSettings = () => {
                 },
                 bpm: bpm
             }
+
             // Set the redux state
-            console.log(cytonMusicGenerationSettingsSlice);
+            set(generationSettings);
 
             navigate("/script-settings")
         }

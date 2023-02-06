@@ -17,6 +17,7 @@ import Script from './Pages/Script';
 import RecordTrack from './Pages/RecordTrack';
 import RecordCards from './Pages/RecordCards';
 
+// import SliceProvider from './Redux/SliceProvider';
 
 // Importing sidebar and navbar
 import Sidebar from './Components/Sidebar/Sidebar';

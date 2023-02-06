@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import * as Interfaces from '../../util/Interfaces'
 import { InstrumentTypes, NoteDurations } from '../../util/Enums'
+import type { RootState } from '../store'
+
 
 // Initial null state (where NULL is -99 and does not pertain to an instrument or duration)
 const initialState:Interfaces.CytonSettings = {
@@ -80,27 +82,25 @@ function doQuickSet(state: any, setting: string) {
 }
 
 export const cytonMusicGenerationSettingsSlice = createSlice({
-  name: 'cytonMusicGenerationSettingsSlice',
+  name: 'cytonMusicGenerationSettings',
   initialState,
   reducers: {
     set: (state, action: PayloadAction<Interfaces.CytonSettings>) => {
       state = action.payload;
-      console.log(state);
     },
     quickSet: (state, action: PayloadAction<string>) => {
       state = doQuickSet(state, action.payload);
     },
-    get: (state, action) => {
-      state = action.payload;
-    },
     unset: (state) => {
       state = initialState;
-    },
+    }
   },
 })
 
 
 
-export const { set, quickSet, get, unset } = cytonMusicGenerationSettingsSlice.actions
+export const { set, quickSet, unset } = cytonMusicGenerationSettingsSlice.actions
+
+export const getSettings = (state: RootState) => state.cytonMusicGenerationSettingsSlice;
 
 export default cytonMusicGenerationSettingsSlice.reducer

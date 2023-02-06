@@ -1,9 +1,14 @@
 import { Devices, initDevice } from "device-decoder";
 import { DataStream8Ch } from "../../util/Interfaces";
 import { DeviceAbstractFactory, ConcreteCytonStream, ConcreteGanglionStream, AbstractGanglionStream, AbstractCytonStream } from '../../util/DeviceAbstractFactory';
+import { useAppSelector, useAppDispatch } from "../../Redux/hooks";
 
 
 function Record() {
+    const settings = useAppSelector(state => state.cytonMusicGenerationSettingsSlice)
+    const dispatch = useAppDispatch();
+    console.log(settings);
+
     var deviceType:string;
     var device: AbstractGanglionStream | AbstractCytonStream;
     
