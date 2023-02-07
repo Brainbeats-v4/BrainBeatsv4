@@ -19,9 +19,13 @@ const initialState:Interfaces.GanglionSettings = {
     },
     
     bpm: 120,
+    octaves:2,
+    numNotes:14,
+    key:'Major',
+
 } 
 
-function apply(state: any, ins1:number, ins2:number, ins3:number, ins4:number, dur1:number, dur2:number, dur3:number, dur4:number, bpm:number){
+function apply(state: any, ins1:number, ins2:number, ins3:number, ins4:number, dur1:number, dur2:number, dur3:number, dur4:number, bpm:number, octaves:number, numNotes:number, key:string){
   let tempState = {
     instruments: {
       _00: ins1,
@@ -38,6 +42,9 @@ function apply(state: any, ins1:number, ins2:number, ins3:number, ins4:number, d
     },
     
     bpm: bpm,
+    octaves,
+    numNotes,
+    key,
   }
   
   return tempState;
@@ -46,15 +53,15 @@ function apply(state: any, ins1:number, ins2:number, ins3:number, ins4:number, d
 function doQuickSet(state: any, setting: string) {
   switch (setting) {
         case "slow":
-            return apply(state, -3, 0, 4, 7, 2, 1, 1, 0, 100);
+            return apply(state, -3, 0, 4, 7, 2, 1, 1, 0, 100, 1, 7, 'Minor');
         case "med":
-            return apply(state, -3, 2, 5, 6, 2, 2, 1, 1, 120);
+            return apply(state, -3, 2, 5, 6, 2, 2, 1, 1, 120, 1, 7, 'Minor');
         case "quick":
-            return apply(state, 4, 2, 3, 0, 3, 3, 2, 2, 140);
+            return apply(state, 4, 2, 3, 0, 3, 3, 2, 2, 140, 1, 7, 'Major');
         case "fast":
-            return apply(state, -3, 0, 4, 3, 4, 4, 3, 3, 160);
+            return apply(state, -3, 0, 4, 3, 4, 4, 3, 3, 160, 2, 14, 'Major');
         default:
-            return apply(state, -3, 2, 5, 6, 2, 2, 1, 1, 120);
+            return apply(state, -3, 2, 5, 6, 2, 2, 1, 1, 120, 2, 14, 'Major');
     }
 
 }

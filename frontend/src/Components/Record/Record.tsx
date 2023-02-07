@@ -6,7 +6,6 @@ import { useAppSelector, useAppDispatch } from "../../Redux/hooks";
 
 function Record() {
     const settings = useAppSelector(state => state.cytonMusicGenerationSettingsSlice)
-    const dispatch = useAppDispatch();
     console.log(settings);
 
     var deviceType:string;
@@ -26,6 +25,12 @@ function Record() {
         }
         
         device.initializeConnection();
+
+        // Create instance of MIDIDriver class containing impl of interface for both
+            // interface MIDIPlayer
+            // interface MIDIWriter
+                // Each containes init() begin() end()
+            // Begin each passing the data channels callback, and the music settings
     }
     
     function stopRecording() {

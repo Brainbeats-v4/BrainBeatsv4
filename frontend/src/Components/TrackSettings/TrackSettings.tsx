@@ -1,24 +1,68 @@
-import react, { useContext } from 'react';
-import './TrackSettings.css';
-import { useState } from 'react';
+import react, { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CytonSettings } from '../../util/Interfaces';
 import { InstrumentTypes, NoteDurations } from '../../util/Enums';
+import { KEY_SIGNATURES } from '../../util/Constants';
+import { CytonSettings } from '../../util/Interfaces';
 
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../Redux/hooks';
 
 // Redux state to hold settings for specificed board
-import {set} from '../../Redux/slices/cytonMusicGenerationSettingsSlice'
+import { set } from '../../Redux/slices/cytonMusicGenerationSettingsSlice';
+
+import './TrackSettings.css';
+
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
+/*  This function just maps the enum InstrumentTypes into an options list to be displayed on the settings to keep the
+    code cleaner, it starts at -3 since it is the initial value described in the Enum, adding the NULL value at the end */
+const InstrumentSettings = memo(() => {
+    var instrumentArray:any[] = [];
+    for(var i = -3; i <= 7; i++) {
+        let instrument = { value: i, name: InstrumentTypes[i] }
+        instrumentArray.push(instrument);
+    }
+    instrumentArray.push({value: -Infinity, name: "NULL"})
+    return( 
+        <>
+            {instrumentArray.map((instrument) =>
+                <option key={instrument.name} value={instrument.value}>{instrument.name}</option>)
+            }
+        </>
+    )    
+})
+
+/* This function serves the same purpose as the InstrumentSettings function above with the same logic just extended for NoteDuration */
+const NoteSettings = memo(() => {
+    var noteArray:any[] = [];
+    for(var i = 0; i <= 4; i++) {
+        let noteDuration = { value: i, name: NoteDurations[i] }
+        noteArray.push(noteDuration);
+    }
+    noteArray.push({value: -Infinity, name: "NULL"})
+    return( 
+        <>
+            {noteArray.map((noteDuration) =>
+                <option key={noteDuration.name} value={noteDuration.value}>{noteDuration.name}</option>)
+            }
+        </>
+    )    
+});
+
+
+
+
 const TrackSettings = () => {
 
+    const settings = useAppSelector(state => state.cytonMusicGenerationSettingsSlice)
     const [generationType, setGenerationType] = react.useState('slowAndMelodic');
     // Function for toggling between Basic and Advanced Settings.
     const[advSettingsOpen, setAdvSettingsOpen] = react.useState(false);
     const toggle = () => setAdvSettingsOpen(!advSettingsOpen);
     const [device, setDevice] = useState('cyton');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     /* These useStates set the music generation settings to be passed to the classes for each respective device,
         the first 4 of each case are used for ganglion and cyton and the next four are for the cyton board. */
@@ -42,11 +86,23 @@ const TrackSettings = () => {
     const [duration06, setDuration06] = useState(NoteDurations.NULL)
     const [duration07, setDuration07] = useState(NoteDurations.NULL)
 
+    let curSettingsState = useAppSelector(state => state.cytonMusicGenerationSettingsSlice);
+
+    const [settingsChoices, setSettingsChoices] = useState(curSettingsState);
+
     const [bpm, setBpm] = useState(120);
+    const [octaves, setOctaves] = useState(1);
+    const [numNotes, setNumNotes] = useState(7);
+    const [key, setKey] = useState('');
 
 
     function applySettingsEvent() {
+
+        
         if(device === 'cyton') {
+            
+            setNumNotes(octaves*7);
+
 
             var generationSettings:CytonSettings = {
                 // Used to store the instrument each node should be used to output
@@ -71,51 +127,23 @@ const TrackSettings = () => {
                     _06: duration06,
                     _07: duration07,
                 },
-                bpm: bpm
+
+                
+                // numNotes: octaves * 7,
+                // octaves,
+
+                numNotes,
+                octaves,
+                bpm,
+                key,
             }
 
-            // Set the redux state
-            set(generationSettings);
-
-            // console.log(store.getState());
+            // Apply settings to redux
+            dispatch(set(generationSettings));
+        
             navigate("/script-settings")
         }
 
-    }
-
-    /*  This function just maps the enum InstrumentTypes into an options list to be displayed on the settings to keep the
-        code cleaner, it starts at -3 since it is the initial value described in the Enum, adding the NULL value at the end */
-    function InstrumentSettings() {
-        var instrumentArray:any[] = [];
-        for(var i = -3; i <= 7; i++) {
-            let instrument = { value: i, name: InstrumentTypes[i] }
-            instrumentArray.push(instrument);
-        }
-        instrumentArray.push({value: -Infinity, name: "NULL"})
-        return( 
-            <>
-                {instrumentArray.map((instrument) =>
-                    <option key={instrument.name} value={instrument.value}>{instrument.name}</option>)
-                }
-            </>
-        )    
-    }
-
-    /* This function serves the same purpose as the InstrumentSettings function above with the same logic just extended for NoteDuration */
-    function NoteSettings() {
-        var noteArray:any[] = [];
-        for(var i = 0; i <= 4; i++) {
-            let noteDuration = { value: i, name: NoteDurations[i] }
-            noteArray.push(noteDuration);
-        }
-        noteArray.push({value: -Infinity, name: "NULL"})
-        return( 
-            <>
-                {noteArray.map((noteDuration) =>
-                    <option key={noteDuration.name} value={noteDuration.value}>{noteDuration.name}</option>)
-                }
-            </>
-        )    
     }
 
     return (
@@ -186,7 +214,7 @@ const TrackSettings = () => {
                         <div className='col instrument-box'>
                             <label htmlFor="instrument1">Instrument 1:</label>
                             <select className="dropdowns" name="instrument1" id="instrument1-options" onChange={(e => {setInstrument00(Number(e.target.value))})}>         
-                                <InstrumentSettings />
+                               <InstrumentSettings />
                             </select>
                             <br></br>
                             <label htmlFor="instrument1-note">Instrument 1 Note Type:</label>
@@ -256,6 +284,7 @@ const TrackSettings = () => {
                             <label htmlFor="instrument7">Instrument 7:</label>
                             <select className="dropdowns" name="instrument7" id="instrument7-options" onChange={(e => {setInstrument06(Number(e.target.value))})}>
                                 <InstrumentSettings />
+          
                             </select>
                             <br></br>
                             <label htmlFor="instrument7-note">Instrument 7 Note Type:</label>
@@ -266,7 +295,9 @@ const TrackSettings = () => {
                         <div className='col instrument-box'>
                             <label htmlFor="instrument8">Instrument 8:</label>
                             <select className="dropdowns" name="instrument8" id="instrument8-options" onChange={(e => {setInstrument07(Number(e.target.value))})}>
-                                <InstrumentSettings />
+                            <option value={-Infinity}>NULL</option>
+                            <InstrumentSettings />
+
                             </select>
                             <br></br>
                             <label htmlFor="instrumeny8-note">Instrument 8 Note Type:</label>
@@ -285,9 +316,10 @@ const TrackSettings = () => {
                     <div className='row instruments-div'>
                         <div className='col instrument-box-other'>
                             <label htmlFor="octave">Number of Octaves:</label>
-                            <select className="dropdowns2" name="octave" id="octave-option">
-                                <option value="octave-example">  </option>
-                                <option value="octave-example1">octave example</option>
+                            <select className="dropdowns2" name="octave" id="octave-option" onChange={(e) => setOctaves(Number(e.target.value))}>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
                             </select>
                         </div>
                         <div className='col instrument-box-other'>
@@ -302,9 +334,9 @@ const TrackSettings = () => {
                         </div>
                         <div className='col instrument-box-other'>
                             <label htmlFor="key-signature">Key Signature:</label>
-                            <select className="dropdowns2" name="key-signature" id="key-signature-option">
-                                <option value="key-signature-example">  </option>
-                                <option value="key-signature-example1">key signature example</option>
+                            <select className="dropdowns2" name="key-signature" id="key-signature-option" onChange={(e) => setKey(e.target.value)}>
+                                <option value="Major">Major</option>
+                                <option value="Minor">Minor</option>
                             </select>
                         </div>
                         <div className='col instrument-box-other'>

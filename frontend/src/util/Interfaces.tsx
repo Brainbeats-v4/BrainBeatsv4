@@ -36,7 +36,10 @@ export interface GanglionSettings {
     }
 
     // Defines the Beats per Minute (BPM) of the output track
+    octaves: number;
+    numNotes: number;
     bpm: number;
+    key: string;
 }
 
 export interface CytonSettings {
@@ -64,5 +67,8 @@ export interface CytonSettings {
         _07: number;
     }
 
+    octaves: number;
+    numNotes: number;
     bpm: number;
+    key: string;
 }
