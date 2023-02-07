@@ -15,6 +15,7 @@ async function getUserExists(searchVal, searchType) {
                     email: true,
                     password: true,
                     firstName: true,
+                    username: true,
                     lastName: true,
                     bio: true,
                     profilePicture: true,

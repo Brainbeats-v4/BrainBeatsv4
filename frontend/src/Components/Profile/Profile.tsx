@@ -133,7 +133,7 @@ const Profile = () => {
                             {editProfile && <input type="text" id='user-firstName' defaultValue={user.firstName} onChange={(e) => setProfileFirstName(e.target.value)}></input>}
                             {editProfile && <input type="text" id='user-lastName' defaultValue={user.lastName} onChange={(e) => setProfileLastName(e.target.value)}></input>}
                         </div>
-                        <h5 id='user-name'>@ user name{user.username}</h5>
+                        <h5 id='user-name'>@ {user.username}</h5>
                     </div>
                 </div>
 
