@@ -110,6 +110,16 @@
     color: white;
     width: 95%;
     height: 100%;
+    word-wrap: break-word;
+}
+
+#card-text{
+    /* background-color: red; */
+    max-width: 100%;
+    max-height: 100%;
+    word-wrap: break-word;
+    text-align: center;
+    padding: 4%;
 }
 
 #record-buttons-div{

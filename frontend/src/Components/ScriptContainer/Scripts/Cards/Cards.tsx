@@ -141,7 +141,9 @@ function Cards() {
                         background: `rgba(${backgroundColor.color.r}, ${backgroundColor.color.g}, ${backgroundColor.color.b}, ${backgroundColor.color.a})`,
                     }}
                 >
-                {cardText}
+                <div id='card-text'>
+                    <h1>{cardText}</h1>
+                </div>
                 </div>
             </div>
         </div>);
