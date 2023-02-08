@@ -23,7 +23,7 @@ import sendAPI from '../sendAPI';
 
 import {getNoteLengthStringFromInt, getInstrumentNameFromInt, getIntFromNoteTypeString, getIntFromNoteTypeStringWithMidiWriterJsValues,
 	getNoteLengthMultiplier, getMilliecondsFromBPM, GetFloorOctave, findNumSamples, getFrequencyFromNoteOctaveString} from './HelperFunctions.js';
-import * as Constants from './Constants.js';
+import * as Constants from '../Constants.js';
 
 
 

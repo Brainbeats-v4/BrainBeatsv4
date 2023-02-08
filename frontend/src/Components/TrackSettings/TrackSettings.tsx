@@ -1,13 +1,17 @@
 import react, { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InstrumentTypes, NoteDurations } from '../../util/Enums';
+import { KEY_SIGNATURES } from '../../util/Constants';
 import { CytonSettings } from '../../util/Interfaces';
-import './TrackSettings.css';
 
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../Redux/hooks';
+
 // Redux state to hold settings for specificed board
 import { set } from '../../Redux/slices/cytonMusicGenerationSettingsSlice';
+
+import './TrackSettings.css';
+
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
@@ -82,40 +86,25 @@ const TrackSettings = () => {
     const [duration06, setDuration06] = useState(NoteDurations.NULL)
     const [duration07, setDuration07] = useState(NoteDurations.NULL)
 
-    let defaultSettings = {
-        instruments: {
-            _00: InstrumentTypes.NULL,
-            _01: InstrumentTypes.NULL,
-            _02: InstrumentTypes.NULL,    
-            _03: InstrumentTypes.NULL,
-            _04: InstrumentTypes.NULL,
-            _05: InstrumentTypes.NULL,
-            _06: InstrumentTypes.NULL,    
-            _07: InstrumentTypes.NULL,
-          },
-      
-          durations: {
-            _00: NoteDurations.NULL,
-            _01: NoteDurations.NULL,
-            _02: NoteDurations.NULL,    
-            _03: NoteDurations.NULL,
-            _04: NoteDurations.NULL,
-            _05: NoteDurations.NULL,
-            _06: NoteDurations.NULL,    
-            _07: NoteDurations.NULL,
-          },
-          
-          bpm: 120,
-    }
+    let curSettingsState = useAppSelector(state => state.cytonMusicGenerationSettingsSlice);
 
-    const [settingsChoices, setSettingsChoices] = useState(defaultSettings);
-
+    const [settingsChoices, setSettingsChoices] = useState(curSettingsState);
 
     const [bpm, setBpm] = useState(120);
 
 
     function applySettingsEvent() {
+
+        
         if(device === 'cyton') {
+            
+            let octaveElem = document.getElementById('octave-option');
+            // let octave = octaveElem ? octaveElem.value : 1;
+        
+            
+            // Temp vars
+            let octaves = 1;
+            let numNotes = octaves * 7;
 
             var generationSettings:CytonSettings = {
                 // Used to store the instrument each node should be used to output
@@ -140,7 +129,14 @@ const TrackSettings = () => {
                     _06: duration06,
                     _07: duration07,
                 },
-                bpm: bpm
+
+                
+                // numNotes: octaves * 7,
+                // octaves,
+
+                numNotes,
+                octaves,
+                bpm,
             }
 
             // Apply settings to redux
@@ -322,8 +318,9 @@ const TrackSettings = () => {
                         <div className='col instrument-box-other'>
                             <label htmlFor="octave">Number of Octaves:</label>
                             <select className="dropdowns2" name="octave" id="octave-option">
-                                <option value="octave-example">  </option>
-                                <option value="octave-example1">octave example</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
                             </select>
                         </div>
                         <div className='col instrument-box-other'>
@@ -339,8 +336,8 @@ const TrackSettings = () => {
                         <div className='col instrument-box-other'>
                             <label htmlFor="key-signature">Key Signature:</label>
                             <select className="dropdowns2" name="key-signature" id="key-signature-option">
-                                <option value="key-signature-example">  </option>
-                                <option value="key-signature-example1">key signature example</option>
+                                <option value="Major">Major</option>
+                                <option value="Minor">Minor</option>
                             </select>
                         </div>
                         <div className='col instrument-box-other'>

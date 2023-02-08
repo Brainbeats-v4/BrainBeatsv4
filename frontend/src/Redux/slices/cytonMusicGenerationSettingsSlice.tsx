@@ -29,13 +29,16 @@ const initialState:Interfaces.CytonSettings = {
       _07: NoteDurations.NULL,
     },
     
+
+    octaves: 1,
+    numNotes: 7,
     bpm: 120,
 } 
 
 // Apply the provided preset, returned the populated state
 function apply(state: any, ins1:number, ins2:number, ins3:number, ins4:number, ins5:number, ins6:number, ins7:number, ins8:number, 
                 dur1:number, dur2:number, dur3:number, dur4:number, dur5:number, dur6:number, dur7:number, dur8:number, 
-                bpm:number){
+                bpm:number, octaves:number, numNotes:number){
   let tempState = {
     instruments: {
         _00: ins1,
@@ -59,7 +62,9 @@ function apply(state: any, ins1:number, ins2:number, ins3:number, ins4:number, i
         _07: dur8,
     },
     
-    bpm: bpm,
+    numNotes, 
+    octaves,
+    bpm,
   }
   
   return tempState;
@@ -69,15 +74,15 @@ function apply(state: any, ins1:number, ins2:number, ins3:number, ins4:number, i
 function doQuickSet(state: any, setting: string) {
   switch (setting) {
         case "slow":
-            return apply(state, -3, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 100);
+            return apply(state, -3, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 100, 1, 7);
         case "med":
-            return apply(state, -3, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 120);
+            return apply(state, -3, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 120, 1, 7);
         case "quick":
-            return apply(state, 4, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 140);
+            return apply(state, 4, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 140, 1, 7);
         case "fast":
-            return apply(state, -3, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 160);
+            return apply(state, -3, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 160, 2, 14);
         default:
-            return apply(state, -3, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 120);
+            return apply(state, -3, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 2, 3, 4, 120, 2, 14);
     }
 }
 
@@ -90,9 +95,17 @@ export const cytonMusicGenerationSettingsSlice = createSlice({
       state.instruments = action.payload.instruments;
       state.durations = action.payload.durations;
       state.bpm = action.payload.bpm;
+      state.numNotes = action.payload.numNotes;
+      state.octaves = action.payload.octaves;
     },
     quickSet: (state, action: PayloadAction<string>) => {
-      state = doQuickSet(state, action.payload);
+      let temp = doQuickSet(state, action.payload);
+
+      state.instruments = temp.instruments; 
+      state.durations = temp.durations;
+      state.bpm = temp.bpm;
+      state.octaves = temp.octaves;
+      state.numNotes = temp.numNotes;
     },
     unset: (state) => {
       state = initialState;

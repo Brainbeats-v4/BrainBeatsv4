@@ -1,11 +1,11 @@
-// This file houses functions that are commonly used by multiple different parts of the software
+// This file houses functions related to interperating music from inputed EEG frequencies.
 
-import * as Constants from './Constants.js'
+import * as Constants from '../Constants.js'
 
 // ------------------------------------------------------------------------------ NOTE TYPE/LENGTH FUNCTIONS ------------------------------------------------------------------------------
 
 // Takes an int, returns the respective note type in string form.
-export function getNoteLengthStringFromInt(input)
+export function getNoteLengthStringFromInt(input:number)
 {
     if (input == 0) return "whole";
     else if (input == 1) return "half";
@@ -15,7 +15,7 @@ export function getNoteLengthStringFromInt(input)
 }
 
 // Takes a string, returns the respective note type in int form.
-export function getIntFromNoteTypeString(input) {
+export function getIntFromNoteTypeString(input:String) {
     if (input.localeCompare("sixteenth") == 0) return 0;
     else if (input.localeCompare("eighth") == 0) return 1;
     else if (input.localeCompare("quarter") == 0) return 2;
@@ -24,7 +24,7 @@ export function getIntFromNoteTypeString(input) {
 }
 
 // Takes a string, returns the respective note type in int form, but using the values that MidiWriterJS wants.
-export function getIntFromNoteTypeStringWithMidiWriterJsValues(input)
+export function getIntFromNoteTypeStringWithMidiWriterJsValues(input:String)
 {
     if (input.localeCompare("sixteenth") == 0) return 16;
     else if (input.localeCompare("eighth") == 0) return 8;
@@ -35,7 +35,7 @@ export function getIntFromNoteTypeStringWithMidiWriterJsValues(input)
 
 // This if/else stack returns a note length multiplier based off an int. Quarter notes are used as the baseline (x1.0 multiplier).
 // Input should just be a lowercase string of the note type. Ex: "quarter", "half"
-export function getNoteLengthMultiplier(noteType) {
+export function getNoteLengthMultiplier(noteType:string) {
     var noteLengthMultiplier = 1;
     if (noteType.localeCompare("sixteenth") == 0) // A sixteenth note is 1/4 the length of a quarter note.
         noteLengthMultiplier = 0.25;
@@ -54,7 +54,7 @@ export function getNoteLengthMultiplier(noteType) {
 // ------------------------------------------------------------------------------ INSTRUMENT FUNCTIONS ------------------------------------------------------------------------------
 
 // Takes an int, returns the respective instrument in string form.
-export function getInstrumentNameFromInt(input) {
+export function getInstrumentNameFromInt(input:number) {
     if (input == -3) return "Sine Wave";
     else if (input == -2) return "Triangle Wave";
     else if (input == -1) return "Square Wave";
@@ -71,11 +71,11 @@ export function getInstrumentNameFromInt(input) {
 // ------------------------------------------------------------------------------ OTHER FUNCTIONS ------------------------------------------------------------------------------
 
 // Takes in a BPM int and returns the length of one QUARTER NOTE in milliseconds at that BPM.
-export function getMilliecondsFromBPM(bpm) {
+export function getMilliecondsFromBPM(bpm:number) {
     return 60000 / bpm;
 }
 
-export function GetFloorOctave(numberNotes) {
+export function GetFloorOctave(numberNotes:number) {
     if (numberNotes == 7 || numberNotes == 14)
         return 5;
     if (numberNotes == 21)
@@ -83,7 +83,7 @@ export function GetFloorOctave(numberNotes) {
 }
 
 // Finds the amount of samples that fit into the given amount of time in ms
-export function findNumSamples(ms) {
+export function findNumSamples(ms:number) {
     // Sample rate is number of samples every second
     // numSamples is the number of total samples played
     // ms is how many milliseconds we want something to play for
@@ -94,14 +94,14 @@ export function findNumSamples(ms) {
 
 // Borrowed from https://gist.github.com/stuartmemo/3766449. Thanks!!
 // Takes in a note and octave in string form (ex: 'C#6', 'F4') and returns the raw frequency for that note.
-export function getFrequencyFromNoteOctaveString(note)
+export function getFrequencyFromNoteOctaveString(note:String)
 {
-    var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'], octave, keyNumber;
+    var notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'], octave:number, keyNumber:number;
 
     if (note.length === 3)
-        octave = note.charAt(2);
+        octave = parseInt(note.charAt(2));
     else
-        octave = note.charAt(1);
+        octave = parseInt(note.charAt(1));
 
     keyNumber = notes.indexOf(note.slice(0, -1));
 
