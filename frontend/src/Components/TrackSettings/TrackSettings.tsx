@@ -91,6 +91,9 @@ const TrackSettings = () => {
     const [settingsChoices, setSettingsChoices] = useState(curSettingsState);
 
     const [bpm, setBpm] = useState(120);
+    const [octaves, setOctaves] = useState(1);
+    const [numNotes, setNumNotes] = useState(7);
+    const [key, setKey] = useState('');
 
 
     function applySettingsEvent() {
@@ -98,13 +101,8 @@ const TrackSettings = () => {
         
         if(device === 'cyton') {
             
-            let octaveElem = document.getElementById('octave-option');
-            // let octave = octaveElem ? octaveElem.value : 1;
-        
-            
-            // Temp vars
-            let octaves = 1;
-            let numNotes = octaves * 7;
+            setNumNotes(octaves*7);
+
 
             var generationSettings:CytonSettings = {
                 // Used to store the instrument each node should be used to output
@@ -137,6 +135,7 @@ const TrackSettings = () => {
                 numNotes,
                 octaves,
                 bpm,
+                key,
             }
 
             // Apply settings to redux
@@ -317,7 +316,7 @@ const TrackSettings = () => {
                     <div className='row instruments-div'>
                         <div className='col instrument-box-other'>
                             <label htmlFor="octave">Number of Octaves:</label>
-                            <select className="dropdowns2" name="octave" id="octave-option">
+                            <select className="dropdowns2" name="octave" id="octave-option" onChange={(e) => setOctaves(Number(e.target.value))}>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -335,7 +334,7 @@ const TrackSettings = () => {
                         </div>
                         <div className='col instrument-box-other'>
                             <label htmlFor="key-signature">Key Signature:</label>
-                            <select className="dropdowns2" name="key-signature" id="key-signature-option">
+                            <select className="dropdowns2" name="key-signature" id="key-signature-option" onChange={(e) => setKey(e.target.value)}>
                                 <option value="Major">Major</option>
                                 <option value="Minor">Minor</option>
                             </select>

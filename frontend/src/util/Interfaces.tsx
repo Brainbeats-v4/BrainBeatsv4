@@ -39,6 +39,7 @@ export interface GanglionSettings {
     octaves: number;
     numNotes: number;
     bpm: number;
+    key: string;
 }
 
 export interface CytonSettings {
@@ -69,4 +70,5 @@ export interface CytonSettings {
     octaves: number;
     numNotes: number;
     bpm: number;
+    key: string;
 }

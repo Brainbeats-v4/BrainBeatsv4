@@ -33,6 +33,7 @@ const initialState:Interfaces.CytonSettings = {
     octaves: 1,
     numNotes: 7,
     bpm: 120,
+    key: "Major",
 } 
 
 // Apply the provided preset, returned the populated state
