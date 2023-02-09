@@ -84,7 +84,7 @@ router.get('/getUserPostsByUsername', async (req, res) => {
                     msg: "Posts not found"
                 });
             }
-
+            
             return res.json(userPosts);
         }
     } catch (err) {

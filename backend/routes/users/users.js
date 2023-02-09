@@ -103,7 +103,8 @@ router.post('/loginUser', async (req, res) => {
                     username: userExists.username,
                     bio: userExists.bio,
                     profilePicture: userExists.profilePicture,
-                    userId: userExists.id
+                    userId: userExists.id,
+                    likes: userExists.likes
                 },
                 token: token
             }
@@ -200,7 +201,7 @@ router.get('/getUserImages', async (req, res) => {
 // Update user info 
 router.put('/updateUser', async (req, res) => {
     try{
-        const { id, firstName, lastName, email, bio, token, profilePicture } = req.body;
+        const { id, firstName, lastName, email, bio, token, profilePicture, likes } = req.body;
         
         const decoded = verifyJWT(token);
 
@@ -227,10 +228,11 @@ router.put('/updateUser', async (req, res) => {
                     lastName: lastName,
                     email: email,
                     bio: bio,
-                    profilePicture: profilePicture
+                    profilePicture: profilePicture,
+                    likes: likes
                 }
             });
-            res.status(200).send({msg: "User was successfully updated"});
+            res.status(200).send(updateUser);
         }
     } catch (err) {
         console.log(err);
