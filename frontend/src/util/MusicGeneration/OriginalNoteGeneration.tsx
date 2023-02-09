@@ -4,11 +4,21 @@ import {getNoteLengthStringFromInt, getInstrumentNameFromInt, getIntFromNoteType
 // import {initMIDIWriter, addNoteToMIDITrack, printTrack, generateMIDIURIAndDownloadFile, generateMIDIURI, generateMIDIFileFromURI} from '../MusicGeneration/MIDIWriting';
 import { useAppSelector } from '../../Redux/hooks.js';
 import * as Constants from '../Constants.js';
+import { CytonSettings } from '../Interfaces';
+
+class NoteHandler {
+    private var curSettingsState:CytonSettings;
+
+    function init() {
+
+        // Get Current Settings
+        var curSettingsState = useAppSelector(state => state.cytonMusicGenerationSettingsSlice);
+        var numNotes = curSettingsState.numNotes;
+    }
+
+}
 
 
-// Get Current Settings
-var curSettingsState = useAppSelector(state => state.cytonMusicGenerationSettingsSlice);
-var numNotes = curSettingsState.numNotes;
 
 
 /* An array of size numNotes is used to store the cutoff values for each increment. 
@@ -38,8 +48,6 @@ function InitIncrementArr() {
 }
 
 // ! 
-
-/*
 // Takes in a raw value from the headset and assigns a note.
 function NoteDeclarationRaw(ampValue:number) {
     let ampValue2 = 0;
@@ -117,4 +125,3 @@ export const originalNoteGeneration = async (track:any, data:any, instrument:num
         return {noteFrequency, noteVolume, instrument, noteType};
     else return -1; // If the note is a rest (or something went wrong), return -1.
 };
-*/

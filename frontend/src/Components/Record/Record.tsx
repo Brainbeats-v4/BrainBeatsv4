@@ -16,7 +16,7 @@ function Record() {
         // based on device type string
         switch (deviceType) {
             case "cyton":
-                device = new ConcreteCytonStream();
+                device = new ConcreteCytonStream(settings);
                 break;
             case "ganglion": 
                 device = new ConcreteGanglionStream();
