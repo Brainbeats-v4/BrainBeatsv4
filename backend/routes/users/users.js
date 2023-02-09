@@ -201,7 +201,7 @@ router.get('/getUserImages', async (req, res) => {
 // Update user info 
 router.put('/updateUser', async (req, res) => {
     try{
-        const { id, firstName, lastName, email, bio, token, profilePicture, likes } = req.body;
+        const { id, firstName, lastName, email, bio, token, profilePicture } = req.body;
         
         const decoded = verifyJWT(token);
 
@@ -230,7 +230,6 @@ router.put('/updateUser', async (req, res) => {
                     email: email,
                     bio: bio,
                     profilePicture: profilePicture,
-                    likes: likes
                 }
             });
             res.status(200).send(updateUser);
