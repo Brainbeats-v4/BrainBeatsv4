@@ -48,7 +48,7 @@
 
 }
 .record-upload {
-    background-color: rgb(176, 176, 176);
+    /* background-color: rgb(176, 176, 176); */
     /* border-color: orange; */
     width: 95%;
     margin-top: 3%;
@@ -66,10 +66,25 @@
     /* background-color: blue; */
     height: 100%;
 }
-#file-upload{
+
+#image-card-btn {
     background-color: white;
+    color: #259FB1;
+    border-color: rgb(209, 209, 209);
+    border-width: 2px;
+    border-style: line;
+    border-radius: 0px;
+    margin-left: auto;
+    margin-right: auto;
     width: 100%;
-    /* border-color: gray; */
+    height: 5vh;
+    font-weight: 550;
+}
+#image-card-btn:hover{
+    background-color: #259FB1;
+    border-color: #259FB1;
+    color: #ffffff;
+    text-decoration: underline;
 }
 
 #add-card-btn {

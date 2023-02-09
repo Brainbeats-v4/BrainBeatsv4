@@ -1,0 +1,16 @@
+/* CSS for Image Search Modal */
+
+#image-search-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#image-search-footer{
+    color: rgb(194, 194, 194);
+    width: 100%;
+    height: 100%
+}

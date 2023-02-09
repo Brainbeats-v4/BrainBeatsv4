@@ -3,6 +3,7 @@ import './TrackCard.css';
 import { Modal } from 'react-bootstrap';
 import TrackModal from '../TrackModal/TrackModal';
 import sendAPI from '../../SendAPI';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type Props = {
     cardType:string;
@@ -171,7 +172,14 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                             <img src={trackCard.thumbnail} className="card-img-top" id="card-img-ID" alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">{trackCard.title}</h5>
-                                <p className="card-text">{trackCard.fullname}</p>
+                                <div className="card-text">
+                                    <p id='card-author'>{trackCard.fullname}</p>
+                                    <div id='card-likes'>
+                                        <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
+                                         {trackCard.likeCount} 
+                                    </div>
+                                </div>
+                                
                             </div>
                         </button>
                     </div>

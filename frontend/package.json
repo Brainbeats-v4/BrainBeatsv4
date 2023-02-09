@@ -41,6 +41,7 @@
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
     "typescript": "^4.8.4",
+    "unsplash-js": "^7.0.15",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

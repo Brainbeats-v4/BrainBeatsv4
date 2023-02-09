@@ -2,6 +2,8 @@ import { BlockPicker, ChromePicker, CompactPicker, PhotoshopPicker, SketchPicker
 import { useState } from 'react';
 import { stringify } from 'querystring';
 import './Cards.css';
+import { Modal } from 'react-bootstrap';
+import ImageModal from '../../../ImageModal/ImageModal';
 
 
 
@@ -76,24 +78,23 @@ function Cards() {
         console.log(...cards);
 	}
 
+      // For displaying Modal
+      const [show, setShow] = useState(false);
+      const handleClose = () => setShow(false);
+
     return(
         <div id='record-card-info-div'>
+             <Modal id='pop-up' show={show} onHide={handleClose}>
+                <ImageModal/>
+            </Modal>
             <div id='card-settings-div'>
                 <h6 className='record-heading'>Card Settings</h6>
                 <div id='record-uploads-div'>
-                    <label className='record-heading' htmlFor="file-upload">Upload Image:</label>
+                    <label className='record-heading' htmlFor="file-upload">Background Image:</label>
                     <div className='record-upload'>
-                        <input 
-                            accept="image/*"
-                            type="file" 
-                            id="file-upload" 
-                            multiple={false}
-                            // onChange={onImageChange}
-                            // onChange={(e) => fileChangeEvent(e.target.files)}
-                            // value={}
-                        />
+                        <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Select an Image</button>
+
                     </div>
-                    {/* <img src={img} alt='preview img' /> */}
                     <label className='record-heading' htmlFor="file-upload">Background Color:</label>
                     <div className='record-upload1'>
                         <CompactPicker
@@ -103,7 +104,6 @@ function Cards() {
                     <label className='record-heading' htmlFor="file-upload">Text Color:</label>
                     <div className='record-upload1'>
                         <CompactPicker
-                            // color={textColor.color}
                             onChange={setColorText}
                         />
                     </div>
@@ -113,10 +113,6 @@ function Cards() {
                             className="input-card-text"
                             placeholder="Your text here"
                             onChange={(e) => setCardTextState(e.target.value)}
-                            // style={{
-                            //     color: `rgba(${textColor.color.r}, ${textColor.color.g}, ${textColor.color.b}, ${textColor.color.a})`,
-                            //     background: `rgba(${backgroundColor.color.r}, ${backgroundColor.color.g}, ${backgroundColor.color.b}, ${backgroundColor.color.a})`,
-                            // }}
                             value={cardText}
                         />
                     </div>
