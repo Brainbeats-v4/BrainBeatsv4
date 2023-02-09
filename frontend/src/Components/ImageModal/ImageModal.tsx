@@ -35,7 +35,6 @@ const ImageModal = () => {
       <div>
         <div className='modal-background'>
           <Modal.Header className='modal-container0' closeButton>
-            Image Search
           </Modal.Header>
           <Modal.Body className='modal-container1'>
             <div className="searchbar-div">

@@ -90,12 +90,11 @@ function Cards() {
             <div id='card-settings-div'>
                 <h6 className='record-heading'>Card Settings</h6>
                 <div id='record-uploads-div'>
-                    <label className='record-heading' htmlFor="file-upload">Select an Image:</label>
+                    <label className='record-heading' htmlFor="file-upload">Background Image:</label>
                     <div className='record-upload'>
-                        <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Image Search</button>
+                        <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Select an Image</button>
 
                     </div>
-                    {/* <img src={img} alt='preview img' /> */}
                     <label className='record-heading' htmlFor="file-upload">Background Color:</label>
                     <div className='record-upload1'>
                         <CompactPicker
@@ -105,7 +104,6 @@ function Cards() {
                     <label className='record-heading' htmlFor="file-upload">Text Color:</label>
                     <div className='record-upload1'>
                         <CompactPicker
-                            // color={textColor.color}
                             onChange={setColorText}
                         />
                     </div>
@@ -115,10 +113,6 @@ function Cards() {
                             className="input-card-text"
                             placeholder="Your text here"
                             onChange={(e) => setCardTextState(e.target.value)}
-                            // style={{
-                            //     color: `rgba(${textColor.color.r}, ${textColor.color.g}, ${textColor.color.b}, ${textColor.color.a})`,
-                            //     background: `rgba(${backgroundColor.color.r}, ${backgroundColor.color.g}, ${backgroundColor.color.b}, ${backgroundColor.color.a})`,
-                            // }}
                             value={cardText}
                         />
                     </div>
