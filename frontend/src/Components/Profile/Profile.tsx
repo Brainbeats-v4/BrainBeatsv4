@@ -103,6 +103,43 @@ const Profile = () => {
             })
     };
 
+    //  // Function updating profile picture
+    async function updateProfileName(newFName: String, newLName: String) {
+
+        console.log(user.userId);
+
+        var updatedUser = {
+            id: user.userId,
+            firstName: newFName,
+            lastName: newLName,
+            email: user.email,
+            bio: user.bio,
+            token: jwt,
+            profilePicture: user.profilePicture
+        };
+        console.log(updatedUser);
+        sendAPI('put', '/users/updateUser', updatedUser)
+            .then(res => {
+                console.log(res);
+                var updatedUser = {
+                    userId: res.data.id,
+                    firstName: res.data.firstName,
+                    lastName: res.data.lastName,
+                    email: res.data.email,
+                    bio: res.data.bio,
+                    profilePicture: res.data.profilePicture,
+                    username: user.username
+                }
+                setUser(updatedUser);
+                console.log(updatedUser);
+
+            }).catch(err => {
+                console.log(err);
+            })
+
+            console.log(user.firstName);
+    };
+
     return(
         <div className="user-profile" id='profile-container'>
             <div id='profile-top-container'>
@@ -122,7 +159,7 @@ const Profile = () => {
                             <FontAwesomeIcon icon={["fas", "edit"]} />
                             Edit Profile
                         </button>}
-                        {editProfile && <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={toggleEdit}> 
+                        {editProfile && <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={() => {toggleEdit(); updateProfileName(profileFirstName, profileLastName);}}> 
                             <FontAwesomeIcon icon={["fas", "floppy-disk"]} />
                             Save Profile
                         </button>}

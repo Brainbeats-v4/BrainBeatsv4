@@ -223,14 +223,15 @@ router.put('/updateUser', async (req, res) => {
             const updateUser = await prisma.User.update({
                 where: { id },
                 data: {
+                    id: id,
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
                     bio: bio,
-                    profilePicture: profilePicture
+                    profilePicture: profilePicture,
                 }
             });
-            res.status(200).send({msg: "User was successfully updated"});
+            res.status(200).send(updateUser);
         }
     } catch (err) {
         console.log(err);
