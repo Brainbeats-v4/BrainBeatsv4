@@ -42,6 +42,10 @@ const TrackModal: React.FC<Props> = ({track}) => {
   const [buttonText, setButtonText] = useState(visibility ? "Make Private" : "Make Public");
   const [thumbnail, setThumbnail] = useState(track.thumbnail);
 
+  const [likeCount, setLikeCount] = useState(track.likeCount);
+  const [favorited, setFavorited] = useState (false); // change this later
+
+
   function setVisibilityButton() {
     setVisibility(!visibility);
     setButtonText(visibility ? "Make Private" : "Make Public");
@@ -174,6 +178,10 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "play"]} />
                 <h3>Play</h3>
               </button>
+              <h5 id='favorites-text'>
+                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
+                {track.likeCount} Favorites
+              </h5>
             </div>
           </Modal.Body>
           <Modal.Footer className='modal-container2'>
@@ -182,6 +190,10 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 {visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye"]} id="visibilityButton" />}
                 {!visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye-slash"]} id="visibilityButton" />}
                   {!visibility ? "Make Private" : "Make Public"}
+              </button>}
+              {editing && <button className='btn btn-secondary modal-btn-public' id='delete-track-btn'>
+                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "trash"]} />
+                Delete Track
               </button>}
             </div>
             <div id='modal-container-21'>

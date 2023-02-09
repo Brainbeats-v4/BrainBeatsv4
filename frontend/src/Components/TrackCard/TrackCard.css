@@ -21,6 +21,7 @@
 }
 
 .card-body{
+    width: 100%;
     color: white;
     overflow-wrap: break-word;
     overflow-x: hidden;
@@ -40,10 +41,23 @@
 }
 
 .card-text{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     text-align: left;
     font-weight: 350;
 }
 
+#card-author{
+    justify-content: left;
+    text-align: left;
+}
+
+#card-likes{
+    color: rgb(203, 203, 203);
+    justify-content: right;
+    text-align: right;
+}
 .track-row{
     /* float: left;     */
 }

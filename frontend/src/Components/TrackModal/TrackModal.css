@@ -120,6 +120,12 @@
     text-decoration: underline;
 }
 
+#favorites-text {
+    column-gap: 1%;
+    margin-top: 2%;
+    color: rgb(207, 207, 207);
+}
+
 #hidden-track-text{
     color: black;
     font-weight: 400;
@@ -175,5 +181,16 @@
 .modal-btn-public:active{
     background-color: #067081;
     border-color: #085966;
+    text-decoration: underline;
+}
+
+#delete-track-btn{
+    background-color: #B40909;
+    border-color: #B40909;
+    margin-left: 3%;
+}
+#delete-track-btn:hover{
+    background-color: #7e0000;
+    border-color: #7e0000;
     text-decoration: underline;
 }
