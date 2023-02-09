@@ -4,10 +4,10 @@ import {getNoteLengthStringFromInt, getInstrumentNameFromInt, getIntFromNoteType
 // import {initMIDIWriter, addNoteToMIDITrack, printTrack, generateMIDIURIAndDownloadFile, generateMIDIURI, generateMIDIFileFromURI} from '../MusicGeneration/MIDIWriting';
 import { useAppSelector } from '../../Redux/hooks.js';
 import * as Constants from '../Constants.js';
-
+import { CytonSettings } from '../Interfaces';
 
 class NoteHandler {
-    private var curSettingsState:;
+    private var curSettingsState:CytonSettings;
 
     function init() {
 
