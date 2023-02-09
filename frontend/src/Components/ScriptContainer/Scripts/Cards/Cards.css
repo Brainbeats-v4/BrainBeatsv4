@@ -66,10 +66,20 @@
     /* background-color: blue; */
     height: 100%;
 }
-#file-upload{
-    background-color: white;
+
+#image-card-btn {
+    background-color: #ffffff;
+    color: black;
+    border-style: none;
+    border-radius: 0px;
+    margin-left: auto;
+    margin-right: auto;
     width: 100%;
-    /* border-color: gray; */
+    height: 5vh;
+}
+#image-card-btn:hover{
+    background-color: #3b3b3b;
+    text-decoration: underline;
 }
 
 #add-card-btn {
