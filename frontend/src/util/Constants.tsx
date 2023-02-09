@@ -14,20 +14,20 @@ export const MIN_MAX_AMPLITUDE_DIFFERENCE = MAX_AMPLITUDE - MIN_AMPLITUDE;
 // of the calculation, making it simpler for humans to both read and write the code.
 export const AMPLITUDE_OFFSET = 0.001;
 
-export const instrumentEnums =
-{
-    SineWave: -3,
-    TriangleWave: -2,
-    SquareWave: -1,
-    Flute: 0,
-    Oboe: 1,
-    Clarinet: 2,
-    Bassoon: 3,
-    Trumpet: 4,
-    FrenchHorn: 5,
-    Trombone: 6,
-    Tuba: 7
-}
+export const KEYS = [
+    "C",
+    "C#",
+    "D",
+    "D#",
+    "E",
+    "F",
+    "F#",
+    "G",
+    "G#",
+    "A",
+    "A#",
+    "B"
+];
 
 export const KEY_SIGNATURES_MAJOR =
     [

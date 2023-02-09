@@ -8,7 +8,7 @@ import { Devices, initDevice } from "device-decoder";
 import {Devices as DevicesThirdParty} from 'device-decoder.third-party'
  
 
-import { DataStream8Ch, DataStream4Ch, CytonSettings } from "./Interfaces";
+import { DataStream8Ch, DataStream4Ch, MusicSettings } from "./Interfaces";
 import { MIDIManager } from "./MusicGeneration/MIDIManager";
 import { Stream } from "stream";
 import { useSelector } from "react-redux";
@@ -31,7 +31,7 @@ export interface AbstractGanglionStream {
 export interface AbstractCytonStream {
     device:any;
     flag:boolean;
-    settings:CytonSettings;
+    settings:MusicSettings;
     // userSettings:CytonSettings;
     initializeConnection(): any;
     setStopFlag(): boolean;
@@ -41,10 +41,13 @@ export interface AbstractCytonStream {
 export class ConcreteCytonStream implements AbstractCytonStream {
     public device:any;
     public flag:boolean = false;
-    public midiManager = new MIDIManager();
-    public settings:CytonSettings;
-    constructor(settings:CytonSettings) {
+    public settings:MusicSettings;
+    public midiManager;
+
+    constructor(settings:MusicSettings) {
         this.settings = settings;
+        this.midiManager = new MIDIManager(this.settings);
+        this.midiManager.initializeSettings(this.settings);
     }
 
     public async initializeConnection() {
@@ -78,7 +81,8 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             timeStamp: data['timestamp'][0]
        }
 
-       this.midiManager.convertInput(currentData, this.settings)    
+       // This should be passed to the note manager
+       this.midiManager.convertInput(currentData)    
         
         return currentData;
     }

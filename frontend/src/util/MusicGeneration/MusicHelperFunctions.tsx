@@ -1,6 +1,8 @@
 // This file houses functions related to interperating music from inputed EEG frequencies.
 
 import * as Constants from '../Constants.js'
+import { InstrumentTypes, NoteDurations, KeyGroups} from '../Enums';
+
 
 // ------------------------------------------------------------------------------ NOTE TYPE/LENGTH FUNCTIONS ------------------------------------------------------------------------------
 
@@ -113,3 +115,29 @@ export function getFrequencyFromNoteOctaveString(note:String)
     // Return frequency of note
     return 440 * Math.pow(2, (keyNumber - 49) / 12);
 };
+
+
+// Return a number from min inclusive to max exclusive
+function getRandomArbitrary(min:number, max:number) {
+    return Math.random() * (max - min) + min;
+  }
+  
+export function getRandomInstrument() {
+    let length = Object.keys(InstrumentTypes).length / 2;
+    return InstrumentTypes[getRandomArbitrary(-3, length + 1)];
+}
+
+export function getRandomDuration() {
+    let length = Object.keys(NoteDurations).length / 2;
+    return NoteDurations[getRandomArbitrary(0, length + 1)];
+}
+
+export function getRandomScale() {
+    return Constants.KEYS[getRandomArbitrary(0, 8)];
+}
+
+export function getRandomKeyGroup() {
+    let length = Object.keys(KeyGroups).length / 2;
+    return KeyGroups[getRandomArbitrary(0, length + 1)];
+}
+
