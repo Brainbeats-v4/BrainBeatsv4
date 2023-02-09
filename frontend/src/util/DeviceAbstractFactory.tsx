@@ -9,6 +9,7 @@ import {Devices as DevicesThirdParty} from 'device-decoder.third-party'
  
 
 import { DataStream8Ch, DataStream4Ch, CytonSettings } from "./Interfaces";
+import { MIDIManager } from "./MusicGeneration/MIDIManager";
 import { Stream } from "stream";
 import { useSelector } from "react-redux";
 
@@ -30,23 +31,27 @@ export interface AbstractGanglionStream {
 export interface AbstractCytonStream {
     device:any;
     flag:boolean;
+    settings:CytonSettings;
     // userSettings:CytonSettings;
     initializeConnection(): any;
     setStopFlag(): boolean;
-    handleChannels(data:any): DataStream8Ch;
+    recordInputStream(data:any): DataStream8Ch;
 }
 
 export class ConcreteCytonStream implements AbstractCytonStream {
     public device:any;
     public flag:boolean = false;
-    // public userSettings:CytonSettings = ();
-
+    public midiManager = new MIDIManager();
+    public settings:CytonSettings;
+    constructor(settings:CytonSettings) {
+        this.settings = settings;
+    }
 
     public async initializeConnection() {
         this.flag = false;
         await initDevice(Devices['USB']['cyton'],
                 {   // this pushes the data from the headband as it is received from the board into the channels array
-                    ondecoded: (data) => { this.handleChannels(data) }, 
+                    ondecoded: (data) => { this.recordInputStream(data) }, 
                     onconnect: (deviceInfo) => console.log(deviceInfo), 
                     ondisconnect: (deviceInfo) => console.log(deviceInfo)
                 }).then((res) => {
@@ -58,10 +63,9 @@ export class ConcreteCytonStream implements AbstractCytonStream {
                 })
     }
 
-    public handleChannels(data:any) {
-        // const selector = useSelector(state);
-        // console.log(state);
-
+    /* This function records input stream from the device and inputs it into
+       the MIDIManager class which will return us a MIDI file upon request. */
+    public recordInputStream(data:any) {
         let currentData:DataStream8Ch = {
             channel00: data[0][0],
             channel01: data[1][0],
@@ -73,11 +77,8 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             channel07: data[7][0],
             timeStamp: data['timestamp'][0]
        }
-        // console.log(currentData.channel00);
-        
-        // Pass this data to music generation
 
-    
+       this.midiManager.convertInput(currentData, this.settings)    
         
         return currentData;
     }
