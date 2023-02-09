@@ -1,9 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import ganglionMusicGenerationSettingsSlice from './slices/ganglionMusicGenerationSettingsSlice'
-import cytonMusicGenerationSettingsSlice from './slices/cytonMusicGenerationSettingsSlice'
+import musicGenerationSettingsSlice from './slices/musicGenerationSettingsSlice'
 
 export const store = configureStore({
-  reducer: {ganglionMusicGenerationSettingsSlice, cytonMusicGenerationSettingsSlice},
+  reducer: {musicGenerationSettingsSlice},
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

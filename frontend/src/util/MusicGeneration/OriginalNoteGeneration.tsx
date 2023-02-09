@@ -4,17 +4,36 @@ import {getNoteLengthStringFromInt, getInstrumentNameFromInt, getIntFromNoteType
 // import {initMIDIWriter, addNoteToMIDITrack, printTrack, generateMIDIURIAndDownloadFile, generateMIDIURI, generateMIDIFileFromURI} from '../MusicGeneration/MIDIWriting';
 import { useAppSelector } from '../../Redux/hooks.js';
 import * as Constants from '../Constants.js';
-import { CytonSettings } from '../Interfaces';
+import { CytonSettings, GanglionSettings, MusicSettings } from '../Interfaces';
+import { KeyGroups, Keys } from '../Enums';
 
 class NoteHandler {
-    private var curSettingsState:CytonSettings;
+    private instrumentNoteSettings:CytonSettings | GanglionSettings;
 
-    function init() {
+    // Universally used settings
+    private numNotes:number;
+    private octaves:number;
+    
+    private keyGroup:number;
+    private scale:number;
+    private keySignature;
 
-        // Get Current Settings
-        var curSettingsState = useAppSelector(state => state.cytonMusicGenerationSettingsSlice);
-        var numNotes = curSettingsState.numNotes;
+    constructor(settings:MusicSettings) {
+        this.numNotes = settings.numNotes;
+        this.octaves = settings.octaves;        
+        
+        this.keyGroup = KeyGroups[settings.keyGroup as keyof typeof KeyGroups];
+        this.scale = Keys[settings.scale as keyof typeof Keys];
+        this.keySignature = Constants.KEY_SIGNATURES[this.keyGroup][this.scale];
+        
+        this.instrumentNoteSettings = settings.deviceSettings;
     }
+
+
+
+
+
+
 
 }
 

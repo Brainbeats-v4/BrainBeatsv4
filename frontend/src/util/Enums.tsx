@@ -21,3 +21,24 @@ export enum NoteDurations {
     EIGHTH = 3,
     SIXTEENTH = 4,
 }
+
+export enum KeyGroups {
+    "Major",
+    "Minor",
+    "Chromatic",
+}
+
+export enum Keys {
+    "C",
+    "C#",
+    "D",
+    "D#",
+    "E",
+    "F",
+    "F#",
+    "G",
+    "G#",
+    "A",
+    "A#",
+    "B"
+}

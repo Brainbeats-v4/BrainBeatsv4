@@ -1,14 +1,14 @@
 import react, { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { InstrumentTypes, NoteDurations } from '../../util/Enums';
+import { InstrumentTypes, KeyGroups, NoteDurations, Keys } from '../../util/Enums';
 import { KEY_SIGNATURES } from '../../util/Constants';
-import { CytonSettings } from '../../util/Interfaces';
+import { MusicSettings } from '../../util/Interfaces';
 
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../Redux/hooks';
 
 // Redux state to hold settings for specificed board
-import { set } from '../../Redux/slices/cytonMusicGenerationSettingsSlice';
+import { set } from '../../Redux/slices/musicGenerationSettingsSlice';
 
 import './TrackSettings.css';
 
@@ -23,11 +23,25 @@ const InstrumentSettings = memo(() => {
         let instrument = { value: i, name: InstrumentTypes[i] }
         instrumentArray.push(instrument);
     }
-    instrumentArray.push({value: -Infinity, name: "NULL"})
     return( 
         <>
             {instrumentArray.map((instrument) =>
                 <option key={instrument.name} value={instrument.value}>{instrument.name}</option>)
+            }
+        </>
+    )    
+})
+
+const KeySetting = memo(() => {
+    var keysArray:any[] = [];
+    for(var i = 0; i < 12; i++) {
+        let key = { value: Keys[i], name: Keys[i] }
+        keysArray.push(key);
+    }
+    return( 
+        <>
+            {keysArray.map((key) =>
+                <option key={key.name} value={key.value}>{key.name}</option>)
             }
         </>
     )    
@@ -40,7 +54,6 @@ const NoteSettings = memo(() => {
         let noteDuration = { value: i, name: NoteDurations[i] }
         noteArray.push(noteDuration);
     }
-    noteArray.push({value: -Infinity, name: "NULL"})
     return( 
         <>
             {noteArray.map((noteDuration) =>
@@ -55,7 +68,7 @@ const NoteSettings = memo(() => {
 
 const TrackSettings = () => {
 
-    const settings = useAppSelector(state => state.cytonMusicGenerationSettingsSlice)
+    const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
     const [generationType, setGenerationType] = react.useState('slowAndMelodic');
     // Function for toggling between Basic and Advanced Settings.
     const[advSettingsOpen, setAdvSettingsOpen] = react.useState(false);
@@ -68,32 +81,33 @@ const TrackSettings = () => {
         the first 4 of each case are used for ganglion and cyton and the next four are for the cyton board. */
     
     /* These define the instrument type that will play based on the readings from each electrode. */
-    const [instrument00, setInstrument00] = useState(InstrumentTypes.NULL)
-    const [instrument01, setInstrument01] = useState(InstrumentTypes.NULL)
-    const [instrument02, setInstrument02] = useState(InstrumentTypes.NULL)
-    const [instrument03, setInstrument03] = useState(InstrumentTypes.NULL)
-    const [instrument04, setInstrument04] = useState(InstrumentTypes.NULL)
-    const [instrument05, setInstrument05] = useState(InstrumentTypes.NULL)
-    const [instrument06, setInstrument06] = useState(InstrumentTypes.NULL)
-    const [instrument07, setInstrument07] = useState(InstrumentTypes.NULL)
+    const [instrument00, setInstrument00] = useState(InstrumentTypes.SINEWAVE)
+    const [instrument01, setInstrument01] = useState(InstrumentTypes.SINEWAVE)
+    const [instrument02, setInstrument02] = useState(InstrumentTypes.SINEWAVE)
+    const [instrument03, setInstrument03] = useState(InstrumentTypes.SINEWAVE)
+    const [instrument04, setInstrument04] = useState(InstrumentTypes.SINEWAVE)
+    const [instrument05, setInstrument05] = useState(InstrumentTypes.SINEWAVE)
+    const [instrument06, setInstrument06] = useState(InstrumentTypes.SINEWAVE)
+    const [instrument07, setInstrument07] = useState(InstrumentTypes.SINEWAVE)
     /* These define the duration of each note. */
-    const [duration00, setDuration00] = useState(NoteDurations.NULL)
-    const [duration01, setDuration01] = useState(NoteDurations.NULL)
-    const [duration02, setDuration02] = useState(NoteDurations.NULL)
-    const [duration03, setDuration03] = useState(NoteDurations.NULL)
-    const [duration04, setDuration04] = useState(NoteDurations.NULL)
-    const [duration05, setDuration05] = useState(NoteDurations.NULL)
-    const [duration06, setDuration06] = useState(NoteDurations.NULL)
-    const [duration07, setDuration07] = useState(NoteDurations.NULL)
+    const [duration00, setDuration00] = useState(NoteDurations.QUARTER)
+    const [duration01, setDuration01] = useState(NoteDurations.QUARTER)
+    const [duration02, setDuration02] = useState(NoteDurations.QUARTER)
+    const [duration03, setDuration03] = useState(NoteDurations.QUARTER)
+    const [duration04, setDuration04] = useState(NoteDurations.QUARTER)
+    const [duration05, setDuration05] = useState(NoteDurations.QUARTER)
+    const [duration06, setDuration06] = useState(NoteDurations.QUARTER)
+    const [duration07, setDuration07] = useState(NoteDurations.QUARTER)
 
-    let curSettingsState = useAppSelector(state => state.cytonMusicGenerationSettingsSlice);
+    let curSettingsState = useAppSelector(state => state.musicGenerationSettingsSlice);
 
     const [settingsChoices, setSettingsChoices] = useState(curSettingsState);
 
     const [bpm, setBpm] = useState(120);
     const [octaves, setOctaves] = useState(1);
     const [numNotes, setNumNotes] = useState(7);
-    const [key, setKey] = useState('');
+    const [keyGroup, setKeyGroup] = useState('');
+    const [scale, setScale] = useState('');
 
 
     function applySettingsEvent() {
@@ -103,30 +117,32 @@ const TrackSettings = () => {
             
             setNumNotes(octaves*7);
 
-
-            var generationSettings:CytonSettings = {
+            var generationSettings:MusicSettings = {
                 // Used to store the instrument each node should be used to output
-                instruments: {
-                    _00: instrument00, // FP1 Node
-                    _01: instrument01, // FP2 Node
-                    _02: instrument02, // C3 Node
-                    _03: instrument03, // C4 Node
-                    _04: instrument04,
-                    _05: instrument05,
-                    _06: instrument06,
-                    _07: instrument07,
+                deviceSettings: {
+                    instruments: {
+                        _00: instrument00, // FP1 Node
+                        _01: instrument01, // FP2 Node
+                        _02: instrument02, // C3 Node
+                        _03: instrument03, // C4 Node
+                        _04: instrument04,
+                        _05: instrument05,
+                        _06: instrument06,
+                        _07: instrument07,
+                    },
+                    // Used to store the duration of each note a given node should be used to output
+                    durations: {
+                        _00: duration00, // FP1 Node
+                        _01: duration01, // FP2 Node
+                        _02: duration02, // C3 Node
+                        _03: duration03, // C4 Node
+                        _04: duration04,
+                        _05: duration05,
+                        _06: duration06,
+                        _07: duration07,
+                    }
                 },
-                // Used to store the duration of each note a given node should be used to output
-                durations: {
-                    _00: duration00, // FP1 Node
-                    _01: duration01, // FP2 Node
-                    _02: duration02, // C3 Node
-                    _03: duration03, // C4 Node
-                    _04: duration04,
-                    _05: duration05,
-                    _06: duration06,
-                    _07: duration07,
-                },
+                
 
                 
                 // numNotes: octaves * 7,
@@ -135,7 +151,8 @@ const TrackSettings = () => {
                 numNotes,
                 octaves,
                 bpm,
-                key,
+                keyGroup,
+                scale,
             }
 
             // Apply settings to redux
@@ -295,7 +312,6 @@ const TrackSettings = () => {
                         <div className='col instrument-box'>
                             <label htmlFor="instrument8">Instrument 8:</label>
                             <select className="dropdowns" name="instrument8" id="instrument8-options" onChange={(e => {setInstrument07(Number(e.target.value))})}>
-                            <option value={-Infinity}>NULL</option>
                             <InstrumentSettings />
 
                             </select>
@@ -334,16 +350,15 @@ const TrackSettings = () => {
                         </div>
                         <div className='col instrument-box-other'>
                             <label htmlFor="key-signature">Key Signature:</label>
-                            <select className="dropdowns2" name="key-signature" id="key-signature-option" onChange={(e) => setKey(e.target.value)}>
-                                <option value="Major">Major</option>
-                                <option value="Minor">Minor</option>
+                            <select className="dropdowns2" name="key-signature" id="key-signature-option" onChange={(e) => setKeyGroup(e.target.value)}>
+                                <option value={"Major"}>Major</option>
+                                <option value={"Minor"}>Minor</option>
                             </select>
                         </div>
                         <div className='col instrument-box-other'>
                             <label htmlFor="scale">Scale:</label>
-                            <select className="dropdowns2" name="scale" id="scale-option">
-                                <option value="scale-example">  </option>
-                                <option value="scale-example1">scale example</option>
+                            <select className="dropdowns2" name="scale" id="scale-option" onChange={(e) => setScale(e.target.value)}>
+                                <KeySetting />
                             </select>
                         </div>
                     </div>
