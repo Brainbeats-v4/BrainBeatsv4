@@ -177,6 +177,7 @@ router.get('/getAllPosts', async (req, res) => {
 router.delete('/deletePost', async (req, res) => {
     try {
         const decoded = verifyJWT(req.body.token);
+        console.log("JWT: " + req.body.token);
 
         if (!decoded) {
             return res.status(401).json({
@@ -184,9 +185,10 @@ router.delete('/deletePost', async (req, res) => {
                 });
         }
 
-        const deletePost = await prisma.Post.delete({
+        await prisma.Post.delete({
             where: { id: req.body.id }
         });
+
         return res.status(200).send({ msg: "Deleted a user post" });
     } catch (err) {
         console.log(err);

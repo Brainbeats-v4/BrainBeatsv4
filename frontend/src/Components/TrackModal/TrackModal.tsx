@@ -11,6 +11,7 @@ import buildPath from '../../util/ImagePath';
 // Import CSS
 import './TrackModal.css';
 import '../TrackCard/TrackCard.css';
+import TrackCard from '../TrackCard/TrackCard';
 
 type Props = {
   track: Track; 
@@ -44,6 +45,24 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
   const [likeCount, setLikeCount] = useState(track.likeCount);
   const [favorited, setFavorited] = useState (false); // change this later
+
+  function doDelete() {
+    let data = { id:track.id, token:jwt }
+
+    sendAPI("delete", "/posts/deletePost", data).then((res) => {
+      if (res.status != 200) {
+        setErrMsg("Failed To Delete");
+        setSuccessMsg("");
+      }
+      else {
+        // Close the modal, refresh the posts showed on current page
+        setErrMsg("");
+        setSuccessMsg("");
+        
+      }
+    })
+
+  }
 
 
   function setVisibilityButton() {
@@ -191,7 +210,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 {!visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye-slash"]} id="visibilityButton" />}
                   {!visibility ? "Make Private" : "Make Public"}
               </button>}
-              {editing && <button className='btn btn-secondary modal-btn-public' id='delete-track-btn'>
+              {editing && <button className='btn btn-secondary modal-btn-public' id='delete-track-btn' onClick={()=>doDelete()}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "trash"]} />
                 Delete Track
               </button>}
