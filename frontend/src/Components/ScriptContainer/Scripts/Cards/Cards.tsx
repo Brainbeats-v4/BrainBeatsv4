@@ -4,10 +4,10 @@ import { stringify } from 'querystring';
 import './Cards.css';
 import { Modal } from 'react-bootstrap';
 import ImageModal from '../../../ImageModal/ImageModal';
-
-
+import { useAppSelector } from '../../../../Redux/hooks';
 
 function Cards() {
+
     interface card {
         textColor:{
             r: string,
@@ -43,11 +43,13 @@ function Cards() {
 		  a: '255',
 		},
 	}
+
     const [cards, setCards] = useState<card[]>([])
 	const [cardText, setCardTextState] = useState('');
 	const [speed, setSpeed] = useState(1)
 	const [backgroundColor, setBackgroundColor] = useState(initialBackground);
 	const [textColor, setTextColor] = useState(initialTextColor);
+    const image = useAppSelector(state => state.imageSlice)
     const setColorBackground = (color: { rgb: any; }) => {
 		setBackgroundColor({ displayColorPicker: backgroundColor.displayColorPicker, color: color.rgb });
     };
@@ -81,11 +83,12 @@ function Cards() {
       // For displaying Modal
       const [show, setShow] = useState(false);
       const handleClose = () => setShow(false);
+    });
 
     return(
         <div id='record-card-info-div'>
              <Modal id='pop-up' show={show} onHide={handleClose}>
-                <ImageModal/>
+                <ImageModal /*setImageURL={setImageURL}*//>
             </Modal>
             <div id='card-settings-div'>
                 <h6 className='record-heading'>Card Settings</h6>
