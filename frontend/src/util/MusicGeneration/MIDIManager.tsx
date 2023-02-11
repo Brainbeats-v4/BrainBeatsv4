@@ -103,8 +103,8 @@ export class MIDIManager {
             var noteDuration:MidiWriter.Duration = '1';
             if (noteData[i].writer.noteType === "sixteenth") noteDuration = '16';
             else if (noteData[i].writer.noteType === "eigth") noteDuration = '8';
-            else if (noteData[i].noteType === "quarter") noteDuration ='4';
-            else if (noteData[i].noteType === "half") noteDuration = '2';
+            else if (noteData[i].writer.noteType === "quarter") noteDuration ='4';
+            else if (noteData[i].writer.noteType === "half") noteDuration = '2';
             else if (noteData[i].noteType === "whole") noteDuration = '1';
             var generatedNote;
             var pitch:MidiWriter.Pitch = this.definePitch(noteData[i].noteAndOctave);

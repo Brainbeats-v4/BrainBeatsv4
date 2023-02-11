@@ -82,8 +82,27 @@ export type Picture = {
         full: string,
         regular: string,
         small: string,
+        small_s3: string,
         thumb: string,
     },
+}
+
+export type Card = {
+    textColor:{
+        r: string,
+        g: string,
+        b: string,
+        a: string,
+    },
+    backgroundColor: {
+        r: string,
+        g: string,
+        b: string,
+        a: string,
+    },
+    url: string,
+    text: string,
+    speed: number,
 }
 
 /*

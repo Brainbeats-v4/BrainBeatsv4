@@ -51,7 +51,6 @@ const ImageModal:React.FC = (/*setImageURL:(imageURL: string) => void*/) => {
       description: pic.description,
       urls: pic.urls
     }
-    console.log(imageInformation);
     dispatch(set(imageInformation));
   }
 
