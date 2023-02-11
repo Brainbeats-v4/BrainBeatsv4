@@ -200,7 +200,7 @@ export class NoteHandler {
             if (noteAndOctave.note != -1) // If the generated note is not a rest, return all the generated data
                 return {
                     player:{noteFrequency, /*, noteVolume, instrument, noteType*/},
-                    writer:{}
+                    writer:{noteType, noteAndOctave}
                 };
             else return -1; // If the note is a rest (or something went wrong), return -1.
 

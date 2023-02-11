@@ -101,8 +101,8 @@ export class MIDIManager {
     public convertInput(noteData:any[]) {
         for(var i = 0; i < noteData.length; i++) {
             var noteDuration:MidiWriter.Duration = '1';
-            if (noteData[i].noteType === "sixteenth") noteDuration = '16';
-            else if (noteData[i].noteType === "eigth") noteDuration = '8';
+            if (noteData[i].writer.noteType === "sixteenth") noteDuration = '16';
+            else if (noteData[i].writer.noteType === "eigth") noteDuration = '8';
             else if (noteData[i].noteType === "quarter") noteDuration ='4';
             else if (noteData[i].noteType === "half") noteDuration = '2';
             else if (noteData[i].noteType === "whole") noteDuration = '1';
