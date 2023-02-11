@@ -50,6 +50,11 @@
     margin-left: 2%;    
 }
 
+#board-dropdown {
+    /* background-color: #0c7b8b; */
+    margin-left: 2%;
+}
+
 #settings-options-div{
     display: flex;
     justify-content: column;

@@ -3,13 +3,23 @@ import { Modal } from 'react-bootstrap';
 import { useEffect, useState } from "react";
 import { createApi } from 'unsplash-js';
 
+// Redux
+import * as Interfaces from '../../util/Interfaces'
+import { useDispatch } from 'react-redux';
+// Redux state to hold settings for specificed board
+import { set } from '../../Redux/slices/imageSlice';
+
+// import {setImageURL} from "../ScriptContainer/Scripts/Cards/Cards"
+
 // Import CSS
 import './ImageModal.css';
+import { url } from 'inspector';
 
-const ImageModal = () => {
+const ImageModal:React.FC = (/*setImageURL:(imageURL: string) => void*/) => {
     const unsplash = createApi({ accessKey: 'qzTKf-iacxYgt-zPYxlvgbSErhKe3_u7-vbT9fmtInk' });
     const [searchTerm, setSearchTerm] = useState("");
     const [pics, setPics] = useState<any[]>([])
+    const dispatch = useDispatch();
 
     function search() {
       unsplash.search.getPhotos({ query: searchTerm, perPage: 16, orientation: 'squarish' }).then(result => {
@@ -30,10 +40,20 @@ const ImageModal = () => {
       });
     }
 
-  // function selectImage(imageURL: String)
-  // {
-  //   var backImage = imageURL;
-  // }
+  const [clickedImageURL, setClickedImageURL] = useState('');
+
+  // For passing selected image information back to 'Cards.tsx'
+  function sendImageURL(pic: any) {
+    const imageInformation: Interfaces.Picture = {
+      width: pic.width,
+      height: pic.height,
+      color: pic.color,
+      description: pic.description,
+      urls: pic.urls
+    }
+    console.log(imageInformation);
+    dispatch(set(imageInformation));
+  }
 
   return (
     <>
@@ -63,7 +83,7 @@ const ImageModal = () => {
               <h6>Image Results</h6>
               <div className="search-image-list">
                 {pics.map((pic) =>
-                  <div className="search-image" key={pic.id} /* onClick={}*/>
+                  <div className="search-image" id='search-image-id' key={pic.id} onClick={() => sendImageURL(pic)}>
                     <img
                       className="search--image"
                       src={pic.urls.thumb}

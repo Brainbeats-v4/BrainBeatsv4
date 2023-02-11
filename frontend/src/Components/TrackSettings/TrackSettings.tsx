@@ -171,7 +171,7 @@ const TrackSettings = () => {
                 <form className='justify-content-center' id='settings-container1'>
                     <h2 id='settings-text'>Basic Settings</h2>
                     <p id='settings-text'>Please select your input device:</p>                    
-                    <select className="dropdowns" name="instrument2-note" onChange={(e) => setDevice(e.target.value)}>
+                    <select className="dropdowns" id='board-dropdown' name="board-options" onChange={(e) => setDevice(e.target.value)}>
                         <option value="cyton">Cyton Board</option>
                         <option value="ganglion">Ganglion Board</option>
                     </select>

@@ -72,6 +72,20 @@ export type CytonSettings = {
     }
 }
 
+export type Picture = {
+    width: number,
+    height: number,
+    color: string,
+    description: string,
+    urls: {
+        raw: string,
+        full: string,
+        regular: string,
+        small: string,
+        thumb: string,
+    },
+}
+
 /*
 export interface GanglionSettings {
     // Defines what instument sound is to be associated with each node

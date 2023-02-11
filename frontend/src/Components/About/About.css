@@ -1,21 +1,112 @@
 #about-container{
     display: flex;
     flex-direction: column;
-    background-color:rgb(198, 198, 198);
-    height: 100vh;
-    width: 70vw;
-    top: 0vh;
-    left: 15vw;
-    padding: 40px 40px 0px 40px;
-    overflow-x: auto;
-    overflow-y: auto;
+    /* background-color:rgb(198, 198, 198); */
+    max-width: 100%;
+    height: fit-content;
+    /* padding: 40px 40px 0px 40px; */
+    margin: 0;
 }
-#mascot {
-    margin: 1%;
-    position: relative;
-    top: -10%;
-    max-height: 10%; 
-    float: right;
 
-    
+#about-header-div{
+    background-color: #575757;
+    color:white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 20vh;
+
+}
+
+#about-header-title{
+    /* background-color: orange; */
+    /* display: flex;
+    flex-direction: column; */
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#about-linebreak{
+    color: rgb(0, 0, 0) !important;
+    height: 5px;
+    width: 100%;
+}
+
+#about-links-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    column-gap: 1%;
+}
+
+.about-link{
+    font-weight: 350;
+}
+.about-link:hover{
+    font-weight: 400;
+    text-decoration: underline;
+}
+
+#about-body-div{
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: fit-content;
+    width: 100%;
+}
+
+.about-body-titles{
+    color: white;
+    margin-left: 3%;
+}
+
+#about-brainbeats{
+    background: linear-gradient(270deg, #40BBCE 0%, #008BA0 100%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* column-gap: 5%; */
+    padding-left: 3%;
+    padding-right: 3%;
+    color: black;
+    width: 100%;
+    height: fit-content;
+    margin-top: 1%;
+}
+
+#about-bb-image{
+    margin: 2%;
+    background-color: rgb(182, 182, 182);
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 40%;
+    height: 70%;
+}
+
+#mascot {
+    width: 100%;     
+}
+
+#about-bb-text{
+    margin: 2%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 40%;
+    height: 70%;
 }

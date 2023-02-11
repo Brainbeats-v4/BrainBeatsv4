@@ -25,9 +25,13 @@ export interface DeviceAbstractFactory {
 }
 
 export interface AbstractGanglionStream { 
+    device:any;
+    flag:boolean;
+    settings:MusicSettings;
+
     initializeConnection(): any; //datastreams.dataDevice;
-    setStopFlag(): boolean;
-    handleChannels(stream: any): DataStream4Ch
+    stopDevice(): string;
+    recordInputStream(data: any): DataStream4Ch
 }
 
 export interface AbstractCytonStream {
@@ -36,7 +40,7 @@ export interface AbstractCytonStream {
     settings:MusicSettings;
     // userSettings:CytonSettings;
     initializeConnection(): any;
-    setStopFlag(): boolean;
+    stopDevice(): string;
     recordInputStream(data:any): DataStream8Ch;
 }
 
@@ -52,7 +56,6 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         this.noteHandler = new NoteHandler(this.settings);
 
         this.midiManager = new MIDIManager(this.settings);
-        this.midiManager.initializeSettings(this.settings);
     }
 
     public async initializeConnection() {
@@ -95,56 +98,63 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         return currentData;
     }
 
-    public setStopFlag() {
+    public stopDevice() {
         this.flag = true;
         this.device.disconnect();
-        return this.flag;
+        return this.midiManager.returnMIDI();
     }
 }
 
 // Concreate Ganglion factory 
 export class ConcreteGanglionStream implements AbstractGanglionStream {
-        public device:any;
-        public flag:boolean = false;
-            
-        public async initializeConnection() {
-            this.flag = false;
-            await initDevice(DevicesThirdParty['BLE']['ganglion'],
-                    {   // this pushes the data from the headband as it is received from the board into the channels array
-                        ondecoded: (data) => { this.handleChannels(data) }, 
-                        onconnect: (deviceInfo) => console.log(deviceInfo), 
-                        ondisconnect: (deviceInfo) => console.log(deviceInfo)
-                    }).then((res) => {
-                        if(res) {
-                            this.device = res; // store the connected device's stream into the global variable
-                        }
-                    }).catch((err)=> {
-                        console.log(err);
-                    })
-        }
-    
-        public handleChannels(data:any) {
-            let currentData:DataStream8Ch = {
-                channel00: data[0][0],
-                channel01: data[1][0],
-                channel02: data[2][0],
-                channel03: data[3][0],
-                channel04: data[4][0],
-                channel05: data[5][0],
-                channel06: data[6][0],
-                channel07: data[7][0],
-                timeStamp: data['timestamp'][0]
-           }
-            // console.log(currentData.channel00);
-            return currentData;
-        }
-    
-        public setStopFlag() {
-            this.flag = true;
-            this.device.disconnect();
-            return this.flag;
-        }
+    public device:any;
+    public flag:boolean = false;
+    public settings:MusicSettings;
+    public midiManager;
+
+    constructor(settings:MusicSettings) {
+        this.settings = settings;
+        this.midiManager = new MIDIManager(this.settings);
     }
+
+    public async initializeConnection() {
+        this.flag = false;
+        await initDevice(DevicesThirdParty['BLE']['ganglion'],
+                {   // this pushes the data from the headband as it is received from the board into the channels array
+                    ondecoded: (data) => { this.recordInputStream(data) }, 
+                    onconnect: (deviceInfo) => console.log(deviceInfo), 
+                    ondisconnect: (deviceInfo) => console.log(deviceInfo)
+                }).then((res) => {
+                    if(res) {
+                        this.device = res; // store the connected device's stream into the global variable
+                    }
+                }).catch((err)=> {
+                    console.log(err);
+                })
+    }
+
+    /* This function records input stream from the device and inputs it into
+       the MIDIManager class which will return us a MIDI file upon request. */
+    public recordInputStream(data:any) {
+        let currentData:DataStream4Ch = {
+            channel00: data[0][0],
+            channel01: data[1][0],
+            channel02: data[2][0],
+            channel03: data[3][0],
+            timeStamp: data['timestamp'][0]
+       }
+
+       // This should be passed to the note manager
+        
+        return currentData;
+    }
+
+    public stopDevice() {
+        this.flag = true;
+        this.device.disconnect();
+        return this.midiManager.returnMIDI();
+    }
+}
 
 
 // export class GanglionRecording implements DeviceFactory {
