@@ -140,6 +140,8 @@ export class NoteHandler {
     // It has various supporting functions that it calls, but it all stems from here.
     public originalNoteGeneration = async (dataArray:DataStream8Ch|DataStream4Ch, /*instrument:number, noteType:number, noteVolume:number, numNotes:number*/) => {
         var size = Object.keys(dataArray).length / 2;
+        var generatedArr:any[] = [];
+        
         
         this.InitIncrementArr();
         
@@ -149,6 +151,8 @@ export class NoteHandler {
 
         for (var i = 0; i < size; i++){
             var data = Object.values(dataArray).at(i);
+            var noteType = Object.values(this.instrumentNoteSettings.durations).at(i);
+            var instrument = Object.values(this.instrumentNoteSettings.instruments).at(i);
         
 
             // Get note increment
@@ -189,7 +193,7 @@ export class NoteHandler {
 
                     // This if/else stack is just for console output, nothing important happens here.
 
-                console.log("Track: " + noteOctaveString + " [" + getInstrumentNameFromInt(this.instrumentNoteSettings.instruments._00) + " playing " + noteType + " notes] " + data);
+                console.log("Track: " + noteOctaveString + " [" + getInstrumentNameFromInt(instrument) + " playing " + noteType + " notes] " + data);
                 
             }				
 

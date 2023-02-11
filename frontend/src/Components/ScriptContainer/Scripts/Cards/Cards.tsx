@@ -57,33 +57,6 @@ function Cards() {
     setTextColor({ displayColorPicker: textColor.displayColorPicker, color: color.rgb });
     };
 
-    const addCard = () => {
-		if(cardText === ''){
-			alert("Invalid Card format")
-			return
-		}
-		let newCard ={
-			textColor: textColor.color,
-			backgroundColor: backgroundColor.color,
-			speed: speed * 1000,
-			text: cardText,
-		}
-
-		//set input back to default
-		setBackgroundColor(initialBackground);
-		setTextColor(initialTextColor);
-		setCardTextState('');
-		setSpeed(1);
-		setCards(cards => [...cards, newCard])
-
-        // console.log(newCard);
-        console.log(...cards);
-	}
-
-      // For displaying Modal
-      const [show, setShow] = useState(false);
-      const handleClose = () => setShow(false);
-    });
 
     return(
         <div id='record-card-info-div'>
