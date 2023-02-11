@@ -1,30 +1,16 @@
 import { BlockPicker, ChromePicker, CompactPicker, PhotoshopPicker, SketchPicker, SliderPicker, TwitterPicker } from 'react-color';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { stringify } from 'querystring';
 import './Cards.css';
 import { Modal } from 'react-bootstrap';
 import ImageModal from '../../../ImageModal/ImageModal';
 import { useAppSelector } from '../../../../Redux/hooks';
+import { Picture, Card } from '../../../../util/Interfaces'
+import { useDispatch } from 'react-redux';
+// Redux state to hold settings for specificed board
+import { set } from '../../../../Redux/slices/cardArraySlice';
 
 function Cards() {
-
-    interface card {
-        textColor:{
-            r: string,
-            g: string,
-            b: string,
-            a: string,
-          },
-        backgroundColor: {
-            r: string,
-            g: string,
-            b: string,
-            a: string,
-          },
-        speed: number,
-        text: string,
-    }
-
     const initialBackground = {
 		displayColorPicker: false,
 		color: {
@@ -44,29 +30,40 @@ function Cards() {
 		},
 	}
 
-    const [cards, setCards] = useState<card[]>([])
+    // For displaying Modal
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+
+    // For collecting image from Redux
+    const image = useAppSelector(state => state.imageSlice)
+    const dispatch = useDispatch();
+    
+    // For holding card information
+    const [cards, setCards] = useState<Card[]>([])
 	const [cardText, setCardTextState] = useState('');
 	const [speed, setSpeed] = useState(1)
 	const [backgroundColor, setBackgroundColor] = useState(initialBackground);
 	const [textColor, setTextColor] = useState(initialTextColor);
-    const image = useAppSelector(state => state.imageSlice)
+    const [imageURL, setImageURL] = useState('');
+
     const setColorBackground = (color: { rgb: any; }) => {
 		setBackgroundColor({ displayColorPicker: backgroundColor.displayColorPicker, color: color.rgb });
     };
     const setColorText = (color: { rgb: any; }) => {
-    setTextColor({ displayColorPicker: textColor.displayColorPicker, color: color.rgb });
+        setTextColor({ displayColorPicker: textColor.displayColorPicker, color: color.rgb });
     };
 
     const addCard = () => {
-		if(cardText === ''){
-			alert("Invalid Card format")
+		if(cardText === '' && imageURL === ''){
+			alert("Invalid Card format: Must include either an image or text")
 			return
 		}
-		let newCard ={
+		let newCard: Card = {
 			textColor: textColor.color,
 			backgroundColor: backgroundColor.color,
 			speed: speed * 1000,
 			text: cardText,
+            url: imageURL,
 		}
 
 		//set input back to default
@@ -74,16 +71,21 @@ function Cards() {
 		setTextColor(initialTextColor);
 		setCardTextState('');
 		setSpeed(1);
+        setImageURL('');
 		setCards(cards => [...cards, newCard])
 
-        // console.log(newCard);
-        console.log(...cards);
+        console.log(newCard);
+        console.log(cards);
 	}
 
-      // For displaying Modal
-      const [show, setShow] = useState(false);
-      const handleClose = () => setShow(false);
-    });
+    useEffect(() => {
+        dispatch(set(cards));
+    }, [cards])
+
+    useEffect(() => {
+        setImageURL(image.urls.regular)
+        setShow(false);
+      }, [image]);
 
     return(
         <div id='record-card-info-div'>
@@ -138,6 +140,7 @@ function Cards() {
                     style={{
                         color: `rgba(${textColor.color.r}, ${textColor.color.g}, ${textColor.color.b}, ${textColor.color.a})`,
                         background: `rgba(${backgroundColor.color.r}, ${backgroundColor.color.g}, ${backgroundColor.color.b}, ${backgroundColor.color.a})`,
+                        backgroundImage: `url(${imageURL})`,
                     }}
                 >
                 <div id='card-text'>
