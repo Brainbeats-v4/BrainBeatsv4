@@ -25,7 +25,7 @@ export interface MusicSettings {
     bpm: number;
     keyGroup: string;
     scale: string;
-    deviceSettings:GanglionSettings|CytonSettings;
+    deviceSettings:CytonSettings|GanglionSettings;
 }
 
 export type GanglionSettings = {

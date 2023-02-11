@@ -25,6 +25,7 @@ function Record() {
         }
         
         device.initializeConnection();
+        
 
         // Create instance of MIDIDriver class containing impl of interface for both
             // interface MIDIPlayer

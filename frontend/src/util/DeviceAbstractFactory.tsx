@@ -13,6 +13,8 @@ import { MIDIManager } from "./MusicGeneration/MIDIManager";
 import { Stream } from "stream";
 import { useSelector } from "react-redux";
 
+import { NoteHandler } from "./MusicGeneration/OriginalNoteGeneration";
+
 
 // Device factory for separate connection methods. (This is because either ganglion will require
 // the old connection code, or we will need to create our own custom device.)
@@ -43,9 +45,12 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public flag:boolean = false;
     public settings:MusicSettings;
     public midiManager;
+    public noteHandler;
 
     constructor(settings:MusicSettings) {
         this.settings = settings;
+        this.noteHandler = new NoteHandler(this.settings);
+
         this.midiManager = new MIDIManager(this.settings);
         this.midiManager.initializeSettings(this.settings);
     }
@@ -82,7 +87,10 @@ export class ConcreteCytonStream implements AbstractCytonStream {
        }
 
        // This should be passed to the note manager
-       this.midiManager.convertInput(currentData)    
+
+
+       this.noteHandler.originalNoteGeneration(currentData);
+    //    this.midiManager.convertInput(currentData)    
         
         return currentData;
     }

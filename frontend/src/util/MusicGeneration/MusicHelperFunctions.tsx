@@ -82,6 +82,7 @@ export function GetFloorOctave(numberNotes:number) {
         return 5;
     if (numberNotes == 21)
         return 4;
+    return 5;
 }
 
 // Finds the amount of samples that fit into the given amount of time in ms
