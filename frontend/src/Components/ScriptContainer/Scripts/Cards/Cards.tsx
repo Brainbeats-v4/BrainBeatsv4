@@ -8,7 +8,7 @@ import { useAppSelector } from '../../../../Redux/hooks';
 import { Picture, Card } from '../../../../util/Interfaces'
 import { useDispatch } from 'react-redux';
 // Redux state to hold settings for specificed board
-import { set } from '../../../../Redux/slices/cardArraySlice';
+// import { set } from '../../../../Redux/slices/cardArraySlice';
 
 function Cards() {
     const initialBackground = {
@@ -78,9 +78,9 @@ function Cards() {
         console.log(cards);
 	}
 
-    useEffect(() => {
-        dispatch(set(cards));
-    }, [cards])
+    // useEffect(() => {
+    //     dispatch(set(cards));
+    // }, [cards])
 
     useEffect(() => {
         setImageURL(image.urls.regular)

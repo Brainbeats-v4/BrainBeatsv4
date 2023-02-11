@@ -15,6 +15,9 @@ import { useSelector } from "react-redux";
 
 import { NoteHandler } from "./MusicGeneration/OriginalNoteGeneration";
 
+import {MuseClient} from 'muse-js'
+
+
 
 // Device factory for separate connection methods. (This is because either ganglion will require
 // the old connection code, or we will need to create our own custom device.)
@@ -48,17 +51,19 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public device:any;
     public flag:boolean = false;
     public settings:MusicSettings;
-    public midiManager;
     public noteHandler;
 
     constructor(settings:MusicSettings) {
+
+        console.log("Constructed Cyton");
         this.settings = settings;
         this.noteHandler = new NoteHandler(this.settings);
+        this.noteHandler.setDebugOutput(false);
 
-        this.midiManager = new MIDIManager(this.settings);
     }
 
     public async initializeConnection() {
+        console.log("initializedConnection");
         this.flag = false;
         await initDevice(Devices['USB']['cyton'],
                 {   // this pushes the data from the headband as it is received from the board into the channels array
@@ -89,9 +94,8 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             timeStamp: data['timestamp'][0]
        }
 
+       console.log(currentData);
        // This should be passed to the note manager
-
-
        this.noteHandler.originalNoteGeneration(currentData);
     //    this.midiManager.convertInput(currentData)    
         
@@ -101,7 +105,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public stopDevice() {
         this.flag = true;
         this.device.disconnect();
-        return this.midiManager.returnMIDI();
+        return this.noteHandler.returnMIDI();
     }
 }
 
@@ -110,27 +114,41 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
     public device:any;
     public flag:boolean = false;
     public settings:MusicSettings;
-    public midiManager;
+    public noteHandler;
 
     constructor(settings:MusicSettings) {
         this.settings = settings;
-        this.midiManager = new MIDIManager(this.settings);
+        this.noteHandler = new NoteHandler(this.settings);
+        this.noteHandler.setDebugOutput(true);
     }
 
     public async initializeConnection() {
+        console.log("Starting ganglion connection");
         this.flag = false;
-        await initDevice(DevicesThirdParty['BLE']['ganglion'],
-                {   // this pushes the data from the headband as it is received from the board into the channels array
-                    ondecoded: (data) => { this.recordInputStream(data) }, 
-                    onconnect: (deviceInfo) => console.log(deviceInfo), 
-                    ondisconnect: (deviceInfo) => console.log(deviceInfo)
-                }).then((res) => {
-                    if(res) {
-                        this.device = res; // store the connected device's stream into the global variable
-                    }
-                }).catch((err)=> {
-                    console.log(err);
-                })
+        
+        
+
+        let testGanglion = DevicesThirdParty['CUSTOM_BLE']['ganglion']
+                
+
+        testGanglion.connect();
+
+        // testGanglion.onconnect();
+        
+        // await initDevice(DevicesThirdParty['CUSTOM_BLE']['ganglion'],
+        //         {   // this pushes the data from the headband as it is received from the board into the channels array
+        //             ondecoded: (data) => { this.recordInputStream(data) }, 
+        //             onconnect: (deviceInfo) => console.log(deviceInfo), 
+        //             ondisconnect: (deviceInfo) => console.log(deviceInfo)
+
+        //         })
+                // .then((res) => {
+                //     if(res) {
+                //         this.device = res; // store the connected device's stream into the global variable
+                //     }
+                // }).catch((err)=> {
+                //     console.log(err);
+                // })
     }
 
     /* This function records input stream from the device and inputs it into
@@ -143,7 +161,9 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
             channel03: data[3][0],
             timeStamp: data['timestamp'][0]
        }
+       console.log(currentData);
 
+    //    this.noteHandler.originalNoteGeneration(currentData);
        // This should be passed to the note manager
         
         return currentData;
@@ -152,7 +172,7 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
     public stopDevice() {
         this.flag = true;
         this.device.disconnect();
-        return this.midiManager.returnMIDI();
+        return this.noteHandler.returnMIDI();
     }
 }
 

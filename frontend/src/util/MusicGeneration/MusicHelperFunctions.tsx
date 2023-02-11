@@ -1,6 +1,6 @@
 // This file houses functions related to interperating music from inputed EEG frequencies.
 
-import * as Constants from '../Constants.js'
+import * as Constants from '../Constants'
 import { InstrumentTypes, NoteDurations, KeyGroups} from '../Enums';
 
 

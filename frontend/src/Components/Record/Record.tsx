@@ -4,9 +4,8 @@ import React, {useState} from 'react';
 
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
-    console.log(settings);
-
     const [MIDIUri, setMIDIURI] = useState('');
+    console.log(settings);
 
     var deviceType:string;
     var device: AbstractGanglionStream | AbstractCytonStream;
@@ -14,6 +13,10 @@ function Record() {
     async function doRecording() {
         // Later create new instance of parent class, which decides which constructor to utilize
         // based on device type string
+        if((Object.keys(settings.deviceSettings.instruments).length) === 8)
+            deviceType = 'cyton';
+        else
+            deviceType = 'ganglion'
         switch (deviceType) {
             case "cyton":
                 device = new ConcreteCytonStream(settings);
@@ -23,7 +26,6 @@ function Record() {
                 break;      
             default: return;
         }
-        
         device.initializeConnection();
         
 
@@ -36,6 +38,7 @@ function Record() {
     
     function stopRecording() {
         console.log("stopping...");
+        // The purpose of this if case is to prevent errors when pressing stop if there is no device
         if(device !== undefined) {
             /* When the device is stopped it signals the call to return the MIDI since
                we are no longer recording input. This sets a use state here that spits
@@ -47,7 +50,7 @@ function Record() {
     return(<div>
         <button onClick={doRecording}>Record</button>
         <button onClick={stopRecording}>Stop</button>
-        <span>{MIDIUri}</span>
+        <a download={'currentMIDI.MID'} href={MIDIUri}>download the midi</a>
     </div>)
 }
 

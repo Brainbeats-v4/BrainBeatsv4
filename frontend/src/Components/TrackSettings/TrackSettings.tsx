@@ -110,14 +110,13 @@ const TrackSettings = () => {
     const [scale, setScale] = useState('');
 
 
-    function applySettingsEvent() {
-
+    function applySettingsEvent() {        
+        setNumNotes(octaves*7);
+        var generationSettings:MusicSettings;
         
         if(device === 'cyton') {
-            
-            setNumNotes(octaves*7);
 
-            var generationSettings:MusicSettings = {
+           generationSettings = {
                 // Used to store the instrument each node should be used to output
                 deviceSettings: {
                     instruments: {
@@ -142,9 +141,6 @@ const TrackSettings = () => {
                         _07: duration07,
                     }
                 },
-                
-
-                
                 // numNotes: octaves * 7,
                 // octaves,
 
@@ -155,12 +151,38 @@ const TrackSettings = () => {
                 scale,
             }
 
-            // Apply settings to redux
-            dispatch(set(generationSettings));
-        
-            navigate("/script-settings")
+        }
+        // Ganglion
+        else {
+            generationSettings = {
+                // Used to store the instrument each node should be used to output
+                deviceSettings: {
+                    instruments: {
+                        _00: instrument00, // FP1 Node
+                        _01: instrument01, // FP2 Node
+                        _02: instrument02, // C3 Node
+                        _03: instrument03 // C4 Node
+                    },
+                    // Used to store the duration of each note a given node should be used to output
+                    durations: {
+                        _00: duration00, // FP1 Node
+                        _01: duration01, // FP2 Node
+                        _02: duration02, // C3 Node
+                        _03: duration03 // C4 Node
+                    }
+                },
+                numNotes,
+                octaves,
+                bpm,
+                keyGroup,
+                scale
+            }
         }
 
+        // Apply settings to redux
+        dispatch(set(generationSettings));
+        navigate("/script-settings")
+    
     }
 
     return (
