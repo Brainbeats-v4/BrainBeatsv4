@@ -77,7 +77,7 @@ const SearchPage = () => {
         setLiked(res.data);
       });
     }
-  }, [liked]);
+  }, [query]);
 
   function showAdd(event: any) {
     setAddPlay(true);

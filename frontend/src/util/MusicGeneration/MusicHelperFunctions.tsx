@@ -1,7 +1,7 @@
 // This file houses functions related to interperating music from inputed EEG frequencies.
 
 import * as Constants from '../Constants'
-import { InstrumentTypes, NoteDurations, KeyGroups} from '../Enums';
+import { InstrumentTypes, NoteDurations, KeyGroups, Keys} from '../Enums';
 
 
 // ------------------------------------------------------------------------------ NOTE TYPE/LENGTH FUNCTIONS ------------------------------------------------------------------------------
@@ -117,28 +117,39 @@ export function getFrequencyFromNoteOctaveString(note:String)
     return 440 * Math.pow(2, (keyNumber - 49) / 12);
 };
 
+// Will turn the following functions into a class later
+
 
 // Return a number from min inclusive to max exclusive
 function getRandomArbitrary(min:number, max:number) {
-    return Math.random() * (max - min) + min;
+    return Math.floor(Math.random() * (max - min) + min);
   }
   
+// First to last, -3 (Sinewave) 7(Tuba)
 export function getRandomInstrument() {
-    let length = Object.keys(InstrumentTypes).length / 2;
-    return InstrumentTypes[getRandomArbitrary(-3, length + 1)];
+    return getRandomArbitrary(-3, 8);
 }
 
+// Frist to last, 0 (Whole) 4 (Sixteenth)
 export function getRandomDuration() {
-    let length = Object.keys(NoteDurations).length / 2;
-    return NoteDurations[getRandomArbitrary(0, length + 1)];
+    return getRandomArbitrary(0, 5);
 }
 
 export function getRandomScale() {
-    return Constants.KEYS[getRandomArbitrary(0, 8)];
+    return Keys[getRandomArbitrary(0, 8)];
 }
 
+// Excluding chromatic as there is not yet support for this
 export function getRandomKeyGroup() {
-    let length = Object.keys(KeyGroups).length / 2;
-    return KeyGroups[getRandomArbitrary(0, length + 1)];
+    return KeyGroups[getRandomArbitrary(0, 2)];
+}
+
+export function getRandomOctaves() {
+    return getRandomArbitrary(1, 4);
+}
+
+export function getRandomBPM() {
+    let length = Constants.BPMS.length;
+    return Constants.BPMS[getRandomArbitrary(0,length)];
 }
 

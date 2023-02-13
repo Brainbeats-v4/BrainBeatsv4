@@ -14,6 +14,13 @@ export const MIN_MAX_AMPLITUDE_DIFFERENCE = MAX_AMPLITUDE - MIN_AMPLITUDE;
 // of the calculation, making it simpler for humans to both read and write the code.
 export const AMPLITUDE_OFFSET = 0.001;
 
+export const BPMS = [
+    100, 
+    120, 
+    140, 
+    160,
+]
+
 export const KEYS = [
     "C",
     "C#",

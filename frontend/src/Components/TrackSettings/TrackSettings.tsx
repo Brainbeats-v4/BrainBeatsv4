@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { InstrumentTypes, KeyGroups, NoteDurations, Keys } from '../../util/Enums';
 import { KEY_SIGNATURES } from '../../util/Constants';
 import { MusicSettings } from '../../util/Interfaces';
+import * as rand from '../../util/MusicGeneration/MusicHelperFunctions'
 
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../Redux/hooks';
@@ -66,6 +67,8 @@ const NoteSettings = memo(() => {
 
 
 
+
+
 const TrackSettings = () => {
 
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
@@ -99,15 +102,38 @@ const TrackSettings = () => {
     const [duration06, setDuration06] = useState(NoteDurations.QUARTER)
     const [duration07, setDuration07] = useState(NoteDurations.QUARTER)
 
-    let curSettingsState = useAppSelector(state => state.musicGenerationSettingsSlice);
-
-    const [settingsChoices, setSettingsChoices] = useState(curSettingsState);
-
     const [bpm, setBpm] = useState(120);
     const [octaves, setOctaves] = useState(1);
     const [numNotes, setNumNotes] = useState(7);
-    const [keyGroup, setKeyGroup] = useState('');
-    const [scale, setScale] = useState('');
+    const [keyGroup, setKeyGroup] = useState("Major");
+    const [scale, setScale] = useState("C");
+
+    var getRandomMusicSettings = () => {
+    
+        setOctaves(rand.getRandomOctaves());
+        setBpm(rand.getRandomBPM());
+        setKeyGroup(rand.getRandomKeyGroup());
+        setScale(rand.getRandomScale());
+        setNumNotes(octaves * 7);
+        
+        setInstrument00(rand.getRandomInstrument());
+        setInstrument01(rand.getRandomInstrument());
+        setInstrument02(rand.getRandomInstrument());
+        setInstrument03(rand.getRandomInstrument());
+        setInstrument04(rand.getRandomInstrument());
+        setInstrument05(rand.getRandomInstrument());
+        setInstrument06(rand.getRandomInstrument());
+        setInstrument07(rand.getRandomInstrument());
+
+        setDuration00(rand.getRandomDuration());
+        setDuration01(rand.getRandomDuration());
+        setDuration02(rand.getRandomDuration());
+        setDuration03(rand.getRandomDuration());
+        setDuration04(rand.getRandomDuration());
+        setDuration05(rand.getRandomDuration());
+        setDuration06(rand.getRandomDuration());
+        setDuration07(rand.getRandomDuration());
+    }
 
 
     function applySettingsEvent() {        
@@ -249,6 +275,7 @@ const TrackSettings = () => {
                 <h1 className='heading'>Advanced Music Settings</h1>
                 <form className='justify-content-center adv-settings-container'>
                     <h2 id='settings-text'>Instruments</h2>
+                    <button type="button" className="btn btn-secondary" id='back-btn-adv' onClick={getRandomMusicSettings}>Ranomize!</button>
                     <div className='row instruments-div'>
                         <div className='col instrument-box'>
                             <label htmlFor="instrument1">Instrument 1:</label>
@@ -372,14 +399,14 @@ const TrackSettings = () => {
                         </div>
                         <div className='col instrument-box-other'>
                             <label htmlFor="key-signature">Key Signature:</label>
-                            <select className="dropdowns2" name="key-signature" id="key-signature-option" onChange={(e) => setKeyGroup(e.target.value)}>
+                            <select className="dropdowns2" name="key-signature" id="key-signature-option" defaultValue="Major" onChange={(e) => setKeyGroup(e.target.value)}>
                                 <option value={"Major"}>Major</option>
                                 <option value={"Minor"}>Minor</option>
                             </select>
                         </div>
                         <div className='col instrument-box-other'>
                             <label htmlFor="scale">Scale:</label>
-                            <select className="dropdowns2" name="scale" id="scale-option" onChange={(e) => setScale(e.target.value)}>
+                            <select className="dropdowns2" name="scale" id="scale-option" defaultValue="C" onChange={(e) => setScale(e.target.value)}>
                                 <KeySetting />
                             </select>
                         </div>
