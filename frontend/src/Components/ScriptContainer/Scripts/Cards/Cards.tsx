@@ -95,17 +95,20 @@ function Cards() {
             <div id='card-settings-div'>
                 <h6 className='record-heading'>Card Settings</h6>
                 <div id='record-uploads-div'>
-                    <label className='record-heading' htmlFor="file-upload">Background Image:</label>
-                    <div className='record-upload'>
-                        <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Select an Image</button>
-
+                <label className='record-heading' htmlFor="file-upload">Background:</label>
+                    <div id='background-settings'>
+                        <div className='record-upload'>
+                            <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Select Background Image</button>
+                        </div>
+                        <h6 className='OR-subtitle'>OR</h6>
+                        <label className='record-heading2' htmlFor="file-upload">Select Background Color</label>
+                        <div className='record-upload1'>
+                            <CompactPicker
+                                onChange={setColorBackground}
+                            />
+                        </div>
                     </div>
-                    <label className='record-heading' htmlFor="file-upload">Background Color:</label>
-                    <div className='record-upload1'>
-                        <CompactPicker
-                            onChange={setColorBackground}
-                        />
-                    </div>
+                    
                     <label className='record-heading' htmlFor="file-upload">Text Color:</label>
                     <div className='record-upload1'>
                         <CompactPicker
@@ -141,6 +144,9 @@ function Cards() {
                         color: `rgba(${textColor.color.r}, ${textColor.color.g}, ${textColor.color.b}, ${textColor.color.a})`,
                         background: `rgba(${backgroundColor.color.r}, ${backgroundColor.color.g}, ${backgroundColor.color.b}, ${backgroundColor.color.a})`,
                         backgroundImage: `url(${imageURL})`,
+                        backgroundSize: '100% 150%',
+                        backgroundPosition: 'center center',
+                        backgroundRepeat: 'no-repeat',
                     }}
                 >
                 <div id='card-text'>
