@@ -64,8 +64,10 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
     height: fit-content;
-    width: 100%;
+    width: 90%;
 }
 
 .about-body-titles{
@@ -78,7 +80,7 @@
     background: linear-gradient(270deg, #40BBCE 0%, #008BA0 100%);
     display: flex;
     flex-direction: row;
-    align-items: center;
+    /* align-items: center; */
     /* column-gap: 5%; */
     padding-left: 3%;
     padding-right: 3%;
@@ -86,6 +88,7 @@
     width: 100%;
     height: fit-content;
     margin-top: 1%;
+    border-radius: 10px;
 }
 
 #about-bb-image{
@@ -132,6 +135,7 @@
     width: 100%;
     height: fit-content;
     margin-top: 1%;
+    border-radius: 10px;
 }
 
 #about-teams-header{
@@ -141,21 +145,21 @@
     width: 100%;
     min-height: 10vh;
     height: fit-content;
+    border-radius: 10px;
 }
 
 .about-team-btn{
     background-color: #259FB1;
     border-style: none;
-    border-radius: 0px;
     width: 100%;
-    padding-top: 1%;
     font-weight: 600;
     font-size: x-large;
+    border-radius: 0px;
 }
 .about-team-btn:hover{
-    background-color: #005B69;
+    background-color: #007183 !important;
     font-weight: 650;
-    border-radius: 0px 0px 15px 15px;
+    border-radius: 0px 0px 17px 17px;
     /* text-decoration: underline; */
 }
 
@@ -170,20 +174,34 @@
     justify-content: center;
     column-gap: 2%;
     width: 100%;
-    padding: 2%;
+    /* padding: 2%; */
+    padding-left: 2%;
+    padding-right: 2%;
 }
 
 .about-team-info {
     background-color: white;
     border-radius: 10px;
     min-width: 49%;
+    height: fit-content;
     padding: 2%;
+    margin: 2%;
 }
 
 .about-team-members{
-    background-color: lightgray;
+    /* background-color: lightgray; */
     min-width: 49%;
     padding: 2%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#member-card-body{
+    cursor: default;
+    background-color: #818181;
+    border-style: none;
+    max-height: 100%;
 }
 
 .about-team-title{
@@ -214,6 +232,7 @@
     width: 100%;
     height: fit-content;
     margin-top: 1%;
+    border-radius: 10px;
 }
 
 #about-tech-image{
@@ -225,6 +244,7 @@
     align-items: center;
     min-width: 40%;
     height: 70%;
+    border-radius: 10px;
 }
 
 #about-tech-text{
@@ -236,6 +256,7 @@
     flex-direction: column;
     min-width: 40%;
     height: 70%;
+    word-wrap: break-word;
 }
 
 .about-tech-subtitle{

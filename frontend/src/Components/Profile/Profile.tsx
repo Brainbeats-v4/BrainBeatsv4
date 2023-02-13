@@ -1,4 +1,5 @@
 import './Profile.css'
+import profileImage from '../../../images/blankProfile.png'
 
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userJWT, userModeState } from "../../JWT";
@@ -8,7 +9,6 @@ import TrackCard from '../TrackCard/TrackCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Buffer } from 'buffer';
 import buildPath from '../../util/ImagePath';
-
 
 const Profile = () => {
     const [user, setUser] = useRecoilState(userModeState);

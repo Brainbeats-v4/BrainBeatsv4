@@ -4,7 +4,7 @@ import { useState } from 'react';
 import '../../About/About.css'
 import profileImage from '../../../images/blankProfile.png'
 
-const Team4 = () => {
+const Team1 = () => {
 
     // =============================  Enter values for TEAM info here ============================== 
     interface Team {
@@ -15,8 +15,8 @@ const Team4 = () => {
     }
 
     const teamInfo : Team = {
-        "number": 4,  // Format as integer number
-        "yearsFound": "2022-2023",  // format as string 'yyyy-yyyy'
+        "number": 1,  // Format as integer number
+        "yearsFound": "2019-2020",  // format as string 'yyyy-yyyy'
 
         "objectives": "BrainBeats is a Senior Design project for computer science students at the University of Central Florida." +
                         "The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is" +
@@ -36,10 +36,10 @@ const Team4 = () => {
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: defaultImage},
-        {name: "Brandon Mrgich", position: "Music Generation • Backend Developer", image: defaultImage},
-        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: defaultImage},
-        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: defaultImage},
+        {name: "First Last", position: "Project Manager • Machine Learning", image: defaultImage},
+        {name: "First Last", position: "Music Generation • Backend Developer", image: defaultImage},
+        {name: "First Last", position: "Database • Backend Developer", image: defaultImage},
+        {name: "First Last", position: "Frontend Developer • Visual Designer", image: defaultImage},
     ];
     // ============================================================================================= 
     
@@ -95,4 +95,4 @@ const Team4 = () => {
     );
 };
 
-export default Team4;
+export default Team1;

@@ -1,11 +1,19 @@
 
-import React from 'react'
+import React, { useState } from 'react'
+
+// Importing CSS
 import './About.css'
 import bbmascot1 from '../../images/bbmascot1.png'
 
+// Importing Team Segments
 import Team4 from '../TeamInfo/Team4/Team4'
+import Team3 from '../TeamInfo/Team3/Team3'
+import Team2 from '../TeamInfo/Team2/Team2'
+import Team1 from '../TeamInfo/Team1/Team1'
 
 const About = () => {
+
+  const [displayTeam, setDisplayTeam] = useState(4); // displays team 4 by default
   return (
     // <div className='aboutMainBody'>
     //     <h2>About Us</h2>
@@ -44,10 +52,8 @@ const About = () => {
               <p>BrainBeats seeks to improve upon the interaction between the fields of music composition and computer science as well as provide musicians with a more creative interface to create music.</p>
               <h1 className='about-bb-subtitle'>What is BrainBeats?</h1>
               <p>BrainBeats is a web application built for converting electroencephalogram (EEG) into Musical Instrument Digital Interface files (MIDI) which can be converted to generic audio files (.mp3, .wav, etc.). Audio files created by users can then be uploaded, edited, shared, and downloaded on BrainBeats’ web platform with a BrainBeats user account.</p>
-              <h1 className='about-bb-subtitle'>How It Works</h1>
               <p>The functionality of this platform allows you to create a script for your recording session, record your song with an EEG headset utilizing your own unique musical settings, posting your recorded songs, downloading the MIDI equivalent of your song, and creating playlists with music you enjoy. The platform allows you to connect with other users creating music with their own EEG headset, and to interact with their posts.</p>
               <br />
-              <iframe width="80%" height="300px" src="https://www.youtube.com/embed/wvttb2_AZag" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
             </div>
           </div>
           <hr className='about-linebreak' id='about-teams-section'></hr>
@@ -55,37 +61,27 @@ const About = () => {
           <div id='about-teams'>
             <div id='about-teams-header'>
               {/* <h2>Header</h2> */}
-              <button type="button" className="btn btn-secondary about-team-btn">
+              <button type="button" className="btn btn-secondary about-team-btn" style={{backgroundColor: displayTeam == 4?  "#005B69" : "#259FB1"}} onClick={(e) => setDisplayTeam(4)}>
                 Team 4
                 <h6 className='about-team-btn-subtitle'>(2022-2023)</h6>
               </button>
-              <button type="button" className="btn btn-secondary about-team-btn">
+              <button type="button" className="btn btn-secondary about-team-btn" style={{backgroundColor: displayTeam == 3?  "#005B69" : "#259FB1"}} onClick={(e) => setDisplayTeam(3)}>
                 Team 3
                 <h6 className='about-team-btn-subtitle'>(2021-2022)</h6>
               </button>
-              <button type="button" className="btn btn-secondary about-team-btn">
+              <button type="button" className="btn btn-secondary about-team-btn" style={{backgroundColor: displayTeam == 2?  "#005B69" : "#259FB1"}} onClick={(e) => setDisplayTeam(2)}>
                 Team 2
                 <h6 className='about-team-btn-subtitle'>(2020-2021)</h6>
               </button>
-              <button type="button" className="btn btn-secondary about-team-btn">
+              <button type="button" className="btn btn-secondary about-team-btn" style={{backgroundColor: displayTeam == 1?  "#005B69" : "#259FB1"}} onClick={(e) => setDisplayTeam(1)}>
                 Team 1
                 <h6 className='about-team-btn-subtitle'>(2019-2020)</h6>
               </button>
             </div>
-            <Team4></Team4>
-            {/* <div className='about-teams-body'>
-              <div className='about-team-info'>
-                <h1 className='about-team-title'>Team Number</h1>
-                <h6 className='about-team-year'>Founded Year</h6>
-                <h3 className='about-team-subtitle'>Goals and Objectives</h3>
-                <p>BrainBeats is a Senior Design project for computer science students at the University of Central Florida. The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is to take the electrical waves in your brain (using an EEG device) and utilize them to generate "music".</p>
-                <h3 className='about-team-subtitle'>Contributions</h3>
-                <p>BrainBeats is a Senior Design project for computer science students at the University of Central Florida. The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is to take the electrical waves in your brain (using an EEG device) and utilize them to generate "music".</p>
-              </div>
-              <div className='about-team-members'>
-                <h2>Members</h2>
-              </div>
-            </div> */}
+            {displayTeam == 4? <Team4></Team4> : null}
+            {displayTeam == 3? <Team3></Team3> : null}
+            {displayTeam == 2? <Team2></Team2> : null}
+            {displayTeam == 1? <Team1></Team1> : null}
           </div>
           <hr className='about-linebreak' id='about-tech-section'></hr>
           <h1 className='about-body-titles'>Tech Used In Production</h1>

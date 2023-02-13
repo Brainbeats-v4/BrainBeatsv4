@@ -4,7 +4,7 @@ import { useState } from 'react';
 import '../../About/About.css'
 import profileImage from '../../../images/blankProfile.png'
 
-const Team4 = () => {
+const Team3 = () => {
 
     // =============================  Enter values for TEAM info here ============================== 
     interface Team {
@@ -15,8 +15,8 @@ const Team4 = () => {
     }
 
     const teamInfo : Team = {
-        "number": 4,  // Format as integer number
-        "yearsFound": "2022-2023",  // format as string 'yyyy-yyyy'
+        "number": 3,  // Format as integer number
+        "yearsFound": "2021-2022",  // format as string 'yyyy-yyyy'
 
         "objectives": "BrainBeats is a Senior Design project for computer science students at the University of Central Florida." +
                         "The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is" +
@@ -36,10 +36,10 @@ const Team4 = () => {
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: defaultImage},
-        {name: "Brandon Mrgich", position: "Music Generation • Backend Developer", image: defaultImage},
-        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: defaultImage},
-        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: defaultImage},
+        {name: "First Last", position: "Project Manager • Machine Learning", image: defaultImage},
+        {name: "First Last", position: "Music Generation • Backend Developer", image: defaultImage},
+        {name: "First Last", position: "Database • Backend Developer", image: defaultImage},
+        {name: "First Last", position: "Frontend Developer • Visual Designer", image: defaultImage},
     ];
     // ============================================================================================= 
     
@@ -74,6 +74,7 @@ const Team4 = () => {
             <p>{teamInfo.objectives}</p>
             <h3 className='about-team-subtitle'>Contributions</h3>
             <p>{teamInfo.contributions}</p>
+            <iframe width="80%" height="300px" src="https://www.youtube.com/embed/wvttb2_AZag" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
         </div>
         <div className='about-team-members'>
             {memberList.map((teamMember) => (
@@ -95,4 +96,4 @@ const Team4 = () => {
     );
 };
 
-export default Team4;
+export default Team3;

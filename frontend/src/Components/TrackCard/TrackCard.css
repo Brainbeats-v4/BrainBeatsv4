@@ -36,8 +36,13 @@
 }
 
 .card-title{
+    /* background-color: red; */
+    width: 100%;
     text-align: left;
     font-weight: 600;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .card-text{
@@ -46,6 +51,8 @@
     justify-content: space-between;
     text-align: left;
     font-weight: 350;
+    text-overflow: ellipsis;
+
 }
 
 #card-author{
