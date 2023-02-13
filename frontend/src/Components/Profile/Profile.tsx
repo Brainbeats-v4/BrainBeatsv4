@@ -143,13 +143,15 @@ const Profile = () => {
     return(
         <div className="user-profile" id='profile-container'>
             <div id='profile-top-container'>
-                <div id="profile-image-div">
-                    <img src={displayPicture} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>        
-                    <div id='profile-file-upload-div' style={{display: editProfile?"block" : "none"}}>
-                        <label id="profile-file-upload-label" htmlFor="profileInputTag">
-                            Select Profile Image:
-                        </label>
-                        <input id="profile-file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} name="image" type="file" accept='.jpeg, .png, .jpg'/>
+                    <div id="select-profile-image-div">
+                    <div id="profile-image-div">
+                        <img src={displayPicture} alt="userImage" className='sticky' id='profile-image' onClick={() => {}}/>        
+                        <div id='profile-file-upload-div' style={{display: editProfile?"block" : "none"}}>
+                            <label id="profile-file-upload-label" htmlFor="profileInputTag">
+                                Select Profile Image:
+                            </label>
+                            <input id="profile-file-upload" onChange={event=> {if(!event.target.files) {return} else {updateProfilePic(event.target.files[0])}}} name="image" type="file" accept='.jpeg, .png, .jpg'/>
+                        </div>
                     </div>
                 </div>
 

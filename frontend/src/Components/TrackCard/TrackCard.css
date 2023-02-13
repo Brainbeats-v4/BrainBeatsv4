@@ -65,9 +65,10 @@
     justify-content: right;
     text-align: right;
 }
-.track-row{
-    /* float: left;     */
-}
+
+/* .track-row{
+    //float: left;    
+} */
 
 .track-col{
     display: flex;

@@ -25,10 +25,24 @@
 #profile-top-container {
     /* background-color: red; */
     border-radius: 10px;
+    position: relative;
+}
+
+#select-profile-image-div{
+    /* background-color: orange; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 3;
+    height: 100%;
+    width: 30%;
+    padding-left: 3%;
+    /* height: 70vh; */
 }
 
 #profile-image-div {
-    background-color: red;
+    /* background-color: red; */
     border-color: rgb(255, 255, 255);
     position: absolute;
     z-index: 3;
@@ -39,9 +53,8 @@
     border-style: solid;
     border-radius: 50%;
     border-width: 3px;
-    width: 15%;
-    height: 30%;
-    margin-left: 4%;
+    width: 16vw;
+    height: 16vw;
     margin-top: 5%;
 }
 
