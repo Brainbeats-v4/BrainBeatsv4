@@ -25,7 +25,6 @@ model User {
   resetPasswordExpires DateTime? @db.DateTime
   posts Post[]
   playlists Playlist[]
-  likes Like[]
 }
 
 model Post {

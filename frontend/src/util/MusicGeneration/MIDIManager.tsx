@@ -1,4 +1,7 @@
 import { MusicSettings, DataStream4Ch, DataStream8Ch, CytonSettings, GanglionSettings } from "../Interfaces";
+import {getMillisecondsFromBPM} from './MusicHelperFunctions';
+
+
 
 import MidiWriter from 'midi-writer-js';
 import {encode, decode } from 'js-base64';
@@ -158,44 +161,44 @@ export class MIDIManager {
         }
     }
 
-    // public async realtimeGenerate(noteData:any[]) {
-    //     if (this.numContexts >= 45) {
-    //         this.audioQueue[0].ctx.close();
-    //         this.audioQueue[0].node.disconnect();
-    //         this.audioQueue.shift();
-    //         this.numContexts--; // Decrement the numContexts variable because we removed one from the queue
-    //     }
-    //     this.audioQueue.push({ freq: noteData[i].player.frequency, playing: false, ctx: 0, buffer: 0, node: 0, gain: 0, needToClose: false, number: numContexts });
+    public async realtimeGenerate(noteData:any[]) {
+        if (this.numContexts >= 45) {
+            this.audioQueue[0].ctx.close();
+            this.audioQueue[0].node.disconnect();
+            this.audioQueue.shift();
+            this.numContexts--; // Decrement the numContexts variable because we removed one from the queue
+        }
+        this.audioQueue.push({ freq: noteData[i].player.frequency, playing: false, ctx: 0, buffer: 0, node: 0, gain: 0, needToClose: false, number: this.numContexts });
     
-    //     //console.log("Number of current contexts: " + numContexts + ", array: " + queueOfAudio);
+        //console.log("Number of current contexts: " + this.numContexts + ", array: " + audioQueue);
     
-    //     if (queueOfAudio[numContexts].playing)
-    //         return false;
+        if (this.audioQueue[this.numContexts].playing)
+            return false;
     
-    //     queueOfAudio[numContexts].playing = true;
-    //     queueOfAudio[numContexts].needToClose = false;
+        this.audioQueue[this.numContexts].playing = true;
+        this.audioQueue[this.numContexts].needToClose = false;
     
-    //     queueOfAudio[numContexts].ctx = new AudioContext();
-    //     queueOfAudio[numContexts].buffer = getNoteData(soundType, queueOfAudio[numContexts].freq, amplitude, queueOfAudio[numContexts].ctx, noteLength);
-    //     queueOfAudio[numContexts].node = queueOfAudio[numContexts].ctx.createBufferSource();
-    //     queueOfAudio[numContexts].node.buffer = queueOfAudio[numContexts].buffer;
+        this.audioQueue[this.numContexts].ctx = new AudioContext();
+        this.audioQueue[this.numContexts].buffer = getNoteData(soundType, this.audioQueue[this.numContexts].freq, amplitude, this.audioQueue[this.numContexts].ctx, noteLength);
+        this.audioQueue[this.numContexts].node = this.audioQueue[this.numContexts].ctx.createBufferSource();
+        this.audioQueue[this.numContexts].node.buffer = this.audioQueue[this.numContexts].buffer;
     
-    //     // We need this gain object so that at the end of the note play we can taper the sound.
-    //     queueOfAudio[numContexts].gain = queueOfAudio[numContexts].ctx.createGain();
-    //     queueOfAudio[numContexts].node.connect(queueOfAudio[numContexts].gain);
-    //     queueOfAudio[numContexts].gain.connect(queueOfAudio[numContexts].ctx.destination);
-    //     queueOfAudio[numContexts].gain.gain.value = amplitude;
+        // We need this gain object so that at the end of the note play we can taper the sound.
+        this.audioQueue[this.numContexts].gain = this.audioQueue[this.numContexts].ctx.createGain();
+        this.audioQueue[this.numContexts].node.connect(this.audioQueue[this.numContexts].gain);
+        this.audioQueue[this.numContexts].gain.connect(this.audioQueue[this.numContexts].ctx.destination);
+        this.audioQueue[this.numContexts].gain.gain.value = amplitude;
     
-    //     // Set to loop, although there is sill a perceptable break at the end.
-    //     queueOfAudio[numContexts].node.loop = false;
+        // Set to loop, although there is sill a perceptable break at the end.
+        this.audioQueue[this.numContexts].node.loop = false;
     
-    //     // Start the note.
-    //     // This needs to be edited; the third argument of the function will only ever make quarter notes.
-    //     queueOfAudio[numContexts].node.start(0, 0, getMilliecondsFromBPM(BPM) / 1000);
+        // Start the note.
+        // This needs to be edited; the third argument of the function will only ever make quarter notes.
+        this.audioQueue[this.numContexts].node.start(0, 0, getMillisecondsFromBPM(BPM) / 1000);
     
-    //     // Increment the numContexts variable to reflect the new AudioContext added to the queue.
-    //     numContexts++;
+        // Increment the this.numContexts variable to reflect the new AudioContext added to the queue.
+        this.numContexts++;
     
-    //     return true;
-    // }
+        return true;
+    }
 }

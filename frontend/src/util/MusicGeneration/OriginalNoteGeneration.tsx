@@ -1,5 +1,5 @@
 import {getNoteLengthStringFromInt, getInstrumentNameFromInt, getIntFromNoteTypeString, getIntFromNoteTypeStringWithMidiWriterJsValues,
-	getNoteLengthMultiplier, getMilliecondsFromBPM, GetFloorOctave, findNumSamples, getFrequencyFromNoteOctaveString} from './MusicHelperFunctions';
+	getNoteLengthMultiplier, getMillisecondsFromBPM, GetFloorOctave, findNumSamples, getFrequencyFromNoteOctaveString} from './MusicHelperFunctions';
 
 // import {initMIDIWriter, addNoteToMIDITrack, printTrack, generateMIDIURIAndDownloadFile, generateMIDIURI, generateMIDIFileFromURI} from '../MusicGeneration/MIDIWriting';
 import { useAppSelector } from '../../Redux/hooks';
@@ -73,15 +73,15 @@ export class NoteHandler {
         return new Array(
 
             // sixteenth
-            getMilliecondsFromBPM(BPM) / 4,
+            getMillisecondsFromBPM(BPM) / 4,
             // eighth
-            getMilliecondsFromBPM(BPM) / 2,
+            getMillisecondsFromBPM(BPM) / 2,
             // quarter
-            getMilliecondsFromBPM(BPM),
+            getMillisecondsFromBPM(BPM),
             // half
-            getMilliecondsFromBPM(BPM) * 2,
+            getMillisecondsFromBPM(BPM) * 2,
             // whole
-            getMilliecondsFromBPM(BPM) * 4
+            getMillisecondsFromBPM(BPM) * 4
         )
     }
 
