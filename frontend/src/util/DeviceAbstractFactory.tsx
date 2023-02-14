@@ -7,23 +7,18 @@
 import { Devices, initDevice } from "device-decoder";
 import {Devices as DevicesThirdParty, Devices3rdParty} from 'device-decoder.third-party'
  
+import ganglion from '@brainsatplay/ganglion'
+import * as datastreams from "https://cdn.jsdelivr.net/npm/datastreams-api@latest/dist/index.esm.js"; // Data acquisition
+import Ganglion from 'ganglion-ble';
+
+
 import { ganglionSettings } from "device-decoder.third-party";
-
-import device from '@brainsatplay/ganglion'
-
-
-
 import { DataStream8Ch, DataStream4Ch, MusicSettings } from "./Interfaces";
 import { MIDIManager } from "./MusicGeneration/MIDIManager";
 import { Stream } from "stream";
 import { useSelector } from "react-redux";
 
 import { NoteHandler } from "./MusicGeneration/OriginalNoteGeneration";
-
-import {MuseClient} from 'muse-js'
-
-
-
 
 // Device factory for separate connection methods. (This is because either ganglion will require
 // the old connection code, or we will need to create our own custom device.)
@@ -130,24 +125,29 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
 
     public async initializeConnection() {
         this.flag = false;
-        //let device = device;
-        let dev = Devices3rdParty['CUSTOM_BLE']['ganglion'];
-        dev.connect();
-
-        initDevice(Devices3rdParty['CUSTOM_BLE']['ganglion'], {   
-            // this pushes the data from the headband as it is received from the board into the channels array
-            ondecoded: (data) => { this.recordInputStream(data) }, 
-            onconnect: (deviceInfo) => console.log(deviceInfo), 
-            ondisconnect: (deviceInfo) => console.log(deviceInfo)
-        })        
-
-
-
-
-        //console.log(this.device);
-
-
         
+        // Setup for data streaming
+		let dataDevices = new datastreams.DataDevices();
+		
+        dataDevices.load(ganglion);
+        
+        // Get device stream
+        const dataDevice = await dataDevices.getUserDevice({ ganglion });
+        this.device = dataDevice;
+    
+        // Grab datastream from device
+        const stream = dataDevice.stream;
+
+        // Handle all tracks
+        while(!this.flag) {
+            stream.tracks[0].subscribe((data:any) => {
+                this.recordInputStream(data);
+            });
+        }
+        stream.tracks.forEach((t:any) => {t.subscribe((data:any) => console.log(data))});
+      
+
+        console.log(this.device);
     }
 
     /* This function records input stream from the device and inputs it into

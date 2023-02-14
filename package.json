@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@brainsatplay/ganglion": "^0.0.2",
+    "ganglion-ble": "^1.0.0"
+  }
+}
