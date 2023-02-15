@@ -144,9 +144,6 @@ function Cards() {
                         color: `rgba(${textColor.color.r}, ${textColor.color.g}, ${textColor.color.b}, ${textColor.color.a})`,
                         background: `rgba(${backgroundColor.color.r}, ${backgroundColor.color.g}, ${backgroundColor.color.b}, ${backgroundColor.color.a})`,
                         backgroundImage: `url(${imageURL})`,
-                        backgroundSize: '100% 150%',
-                        backgroundPosition: 'center center',
-                        backgroundRepeat: 'no-repeat',
                     }}
                 >
                 <div id='card-text'>
