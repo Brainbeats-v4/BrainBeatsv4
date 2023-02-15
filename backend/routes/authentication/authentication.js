@@ -55,15 +55,16 @@ router.post('/sendVerificationEmail', async (req, res) => {
             transporter.sendMail(mailData, function (err, info) {
                 if (err) {
                     console.error(err);
+                    throw err;
                 } else {
                     console.log(`Email Sent: ${info.response}`);
+                    res.status(200).send({ message: "Mail sent", message_id: info.messageId });
                 }
 
-                res.status(200).send({ message: "Mail sent", message_id: info.messageId });
             });
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).json({ msg: "User does not exist." });
     }
 });

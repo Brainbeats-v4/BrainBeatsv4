@@ -12,6 +12,7 @@ import ganglion from '@brainsatplay/ganglion'
 import * as datastreams from "https://cdn.jsdelivr.net/npm/datastreams-api@latest/dist/index.esm.js"; // Data acquisition
 // import * as datastreams from 'datastreams-api';
 import Ganglion from 'ganglion-ble';
+// import Ganglion from '@openbci/ganglion'
 
 
 import { ganglionSettings } from "device-decoder.third-party";
