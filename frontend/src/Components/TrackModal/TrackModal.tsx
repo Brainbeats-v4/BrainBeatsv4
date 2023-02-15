@@ -32,7 +32,7 @@ interface Track {
 const TrackModal: React.FC<Props> = ({track}) => {
   const navigate = useNavigate();
   const jwt = useRecoilValue(userJWT);
-  const user = useRecoilState(userModeState);
+  const [user, setUser] = useRecoilState(userModeState);
 
   const [editing, setEditing] = useState(false);
   const [errMsg, setErrMsg] = useState('');
@@ -133,7 +133,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
 
 
-  function updateTrack (visibility = track.public, newTrackName = trackName, thumbnailPic = displayThumbnail) {
+  function updateTrack (visibility = track.public, newTrackName = trackName, thumbnailPic = displayThumbnail, likes = likeCount) {
 
     if (jwt == null || user == null) navigate("/login");
 
@@ -161,6 +161,62 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
     setEditing(false);
     track.title = newTrackName;
+    track.likeCount = likeCount;
+  }
+
+  // Creates a new like
+  function addLike() {
+
+    // console.log(user.firstName);
+    let newLike = {
+      userID: user.userId,
+      postID: track.id,
+      token: jwt,
+    }
+    
+    sendAPI("post", "/likes/createUserLike", newLike).then((res) => {
+      if (res.status == 200) {
+        setErrMsg(track.title);
+        console.log(track.title + " liked");
+        setLikeCount(likeCount + 1);
+
+        // setSuccessMsg(JSON.stringify(res.data));
+      }
+      else {
+        setErrMsg("Could not like post.");
+        setSuccessMsg("");
+      }
+    }) 
+
+    console.log(track.title + " likes: " + likeCount);
+  }
+
+   // Removes a new like
+   function removeLike() {
+
+    // console.log(user.firstName);
+    let newLike = {
+      userID: user.userId,
+      postID: track.id,
+      token: jwt,
+    }
+    
+    sendAPI("delete", "/likes/removeUserLike", newLike).then((res) => {
+      if (res.status == 200) {
+        setErrMsg(track.title);
+        console.log(track.title + " like removed");
+        // setSuccessMsg(JSON.stringify(res.data));
+        
+        if(likeCount > 0) 
+        setLikeCount(likeCount - 1);
+      }
+      else {
+        setErrMsg("Could not like post.");
+        setSuccessMsg("");
+      }
+    })
+
+    console.log(track.title + " total likes: " + likeCount);
   }
 
 
@@ -199,7 +255,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
               </button>
               <h5 id='favorites-text'>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
-                {track.likeCount} Favorites
+                {likeCount} Favorites
               </h5>
             </div>
           </Modal.Body>
@@ -216,10 +272,14 @@ const TrackModal: React.FC<Props> = ({track}) => {
               </button>}
             </div>
             <div id='modal-container-21'>
-              <button className='btn btn-secondary modal-btn'>
+              {!favorited && <button className='btn btn-secondary modal-btn' value={track.likeCount} onClick={(e) => {addLike(); updateTrack(); setFavorited(true)}}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
                 Favorite
-              </button>
+              </button>}
+              {favorited && <button className='btn btn-secondary modal-btn' onClick={(e) => {removeLike(); updateTrack(); setFavorited(false)}}>
+                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
+                Unfavorite
+              </button>}
               <button className='btn btn-secondary modal-btn'>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "plus"]} />
                 Add to Playlist
