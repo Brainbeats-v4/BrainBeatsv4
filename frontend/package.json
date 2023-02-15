@@ -25,6 +25,7 @@
     "device-decoder": "^0.4.21",
     "device-decoder.third-party": "^0.3.4",
     "fs": "^0.0.1-security",
+    "ganglion-ble": "^1.0.0",
     "html-react-parser": "^3.0.8",
     "js-base64": "^3.7.5",
     "midi-writer-js": "^2.1.4",
