@@ -46,6 +46,7 @@ function Cards() {
 
     const setColorBackground = (color: { rgb: any; }) => {
 		setBackgroundColor({ displayColorPicker: backgroundColor.displayColorPicker, color: color.rgb });
+        setImageURL('');
     };
     const setColorText = (color: { rgb: any; }) => {
         setTextColor({ displayColorPicker: textColor.displayColorPicker, color: color.rgb });
