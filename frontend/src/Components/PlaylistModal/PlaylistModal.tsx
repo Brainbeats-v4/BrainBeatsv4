@@ -11,7 +11,7 @@ type Props = {
 
 export const PlaylistModal: React.FC<Props> = ({track}) => {
 
-    
+
 
     return (<div>
 
