@@ -1,14 +1,12 @@
-import { BlockPicker, ChromePicker, CompactPicker, PhotoshopPicker, SketchPicker, SliderPicker, TwitterPicker } from 'react-color';
+import { CompactPicker } from 'react-color';
 import { useState, useEffect } from 'react';
-import { stringify } from 'querystring';
 import './Cards.css';
 import { Modal } from 'react-bootstrap';
 import ImageModal from '../../../ImageModal/ImageModal';
 import { useAppSelector } from '../../../../Redux/hooks';
-import { Picture, Card } from '../../../../util/Interfaces'
+import { Card } from '../../../../util/Interfaces'
 import { useDispatch } from 'react-redux';
-// Redux state to hold settings for specificed board
-// import { set } from '../../../../Redux/slices/cardArraySlice';
+import { set } from '../../../../Redux/slices/cardArraySlice'
 
 function Cards() {
     const initialBackground = {
@@ -76,11 +74,8 @@ function Cards() {
 
         console.log(newCard);
         console.log(cards);
+        dispatch(set(cards));
 	}
-
-    // useEffect(() => {
-    //     dispatch(set(cards));
-    // }, [cards])
 
     useEffect(() => {
         setImageURL(image.urls.regular)
