@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@brainsatplay/ganglion": "^0.0.2",
+    "datastreams-api": "^0.0.18",
+    "ganglion-ble": "^1.0.0"
+  }
+}

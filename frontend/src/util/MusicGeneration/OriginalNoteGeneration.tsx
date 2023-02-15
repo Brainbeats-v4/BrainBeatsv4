@@ -1,5 +1,5 @@
 import {getNoteLengthStringFromInt, getInstrumentNameFromInt, getIntFromNoteTypeString, getIntFromNoteTypeStringWithMidiWriterJsValues,
-	getNoteLengthMultiplier, getMillisecondsFromBPM, GetFloorOctave, findNumSamples, getFrequencyFromNoteOctaveString} from './MusicHelperFunctions';
+	getNoteLengthMultiplier, getMillisecondsFromBPM, GetFloorOctave, findNumSamples, getFrequencyFromNoteOctaveString, roundTo7Decimal} from './MusicHelperFunctions';
 
 // import {initMIDIWriter, addNoteToMIDITrack, printTrack, generateMIDIURIAndDownloadFile, generateMIDIURI, generateMIDIFileFromURI} from '../MusicGeneration/MIDIWriting';
 import { useAppSelector } from '../../Redux/hooks';
@@ -45,7 +45,9 @@ export class NoteHandler {
 
 
     constructor(settings:MusicSettings) {
-        console.log("Constructing with the following settings: " + settings);
+        console.log("Constructing originalNoteGeneration Class with the following settings: ");
+        console.log(settings);
+
         this.debugOutput = false;
         this.octaves = settings.octaves;        
         this.numNotes = settings.numNotes;
@@ -112,7 +114,13 @@ export class NoteHandler {
         // Applies the offset to the headset's raw data
         // console.log('ampValue: ' + ampValue);
 
+        // Our rounding logic
         ampValue2 = ampValue / Math.pow(10, 8);
+
+        // There rounding logic: This function contains the following: 
+        // Math.round(`${data[0]}` * 10000000) / 10000000
+        // ampValue2 = roundTo7Decimal(ampValue);
+
         ampValue2 = (ampValue2 - -Constants.AMPLITUDE_OFFSET); 
         
 
