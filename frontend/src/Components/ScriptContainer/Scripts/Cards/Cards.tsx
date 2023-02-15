@@ -71,7 +71,8 @@ function Cards() {
 		setCardTextState('');
 		setSpeed(1);
         setImageURL('');
-		setCards(cards => [...cards, newCard])
+
+        cards.push(newCard);
 
         console.log(newCard);
         console.log(cards);
