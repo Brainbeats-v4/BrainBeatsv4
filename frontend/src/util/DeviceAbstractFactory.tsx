@@ -8,7 +8,9 @@ import { Devices, initDevice } from "device-decoder";
 import {Devices as DevicesThirdParty, Devices3rdParty} from 'device-decoder.third-party'
  
 import ganglion from '@brainsatplay/ganglion'
+// import ganglion from "https://cdn.jsdelivr.net/npm/@brainsatplay/ganglion@0.0.2/dist/index.esm.js";
 import * as datastreams from "https://cdn.jsdelivr.net/npm/datastreams-api@latest/dist/index.esm.js"; // Data acquisition
+// import * as datastreams from 'datastreams-api';
 import Ganglion from 'ganglion-ble';
 
 
@@ -64,7 +66,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     }
 
     public async initializeConnection() {
-        console.log("initializedConnection");
+        console.log("Starting Cyton Connection");
         this.flag = false;
         await initDevice(Devices['USB']['cyton'],
                 {   // this pushes the data from the headband as it is received from the board into the channels array
@@ -123,31 +125,56 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
         this.noteHandler.setDebugOutput(true);
     }
 
-    public async initializeConnection() {
-        this.flag = false;
-        
+    /*
+    public async oldConnection(){
         // Setup for data streaming
-		let dataDevices = new datastreams.DataDevices();
-		
+        let dataDevices = new datastreams.DataDevices();
+                
         dataDevices.load(ganglion);
-        
+
+        console.log("_____Devices lib_____");
+        console.log(dataDevices);
+        console.log("_____ganglion_____");
+        console.log(ganglion);
+        console.log("about to await...");
+
         // Get device stream
-        const dataDevice = await dataDevices.getUserDevice({ ganglion });
+        const dataDevice = await dataDevices.getUserDevice({ label:"ganglion" });
         this.device = dataDevice;
-    
+
+        console.log("_____dataDevice_____");
+        console.log(dataDevice);
+
         // Grab datastream from device
         const stream = dataDevice.stream;
 
-        // Handle all tracks
+        console.log("____stream______");
+        console.log(stream);
+
+        // // Handle all tracks
         while(!this.flag) {
             stream.tracks[0].subscribe((data:any) => {
                 this.recordInputStream(data);
             });
         }
         stream.tracks.forEach((t:any) => {t.subscribe((data:any) => console.log(data))});
-      
+    }
+    */
 
-        console.log(this.device);
+    public async initializeConnection() {
+        console.log("Starting Ganglion Connection");
+        this.flag = false;
+
+        // let device = DevicesThirdParty['BLE_CUSTOM']['ganglion'];
+        let device = new Ganglion();
+        console.log(device);
+        let conn = await device.connect();
+        console.log(conn);
+        let start = await device.start();
+        console.log(start);
+
+
+
     }
 
     /* This function records input stream from the device and inputs it into

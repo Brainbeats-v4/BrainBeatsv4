@@ -117,6 +117,14 @@ export function getFrequencyFromNoteOctaveString(note:String)
     return 440 * Math.pow(2, (keyNumber - 49) / 12);
 };
 
+export function roundTo7Decimal(data:number) {
+    return Math.round(data * 10000000) / 10000000;
+}
+
+
+
+
+
 // Will turn the following functions into a class later
 
 
