@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 import { NoteHandler } from "./MusicGeneration/OriginalNoteGeneration";
 
 import {MuseClient} from 'muse-js'
-
+import Ganglion from 'ganglion-ble';
 
 
 
@@ -129,17 +129,24 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
     }
 
     public async initializeConnection() {
-        this.flag = false;
-        //let device = device;
-        let dev = Devices3rdParty['CUSTOM_BLE']['ganglion'];
-        dev.connect();
+        const ganglion = new Ganglion();
+        await ganglion.connect();
+        await ganglion.start();
 
-        initDevice(Devices3rdParty['CUSTOM_BLE']['ganglion'], {   
-            // this pushes the data from the headband as it is received from the board into the channels array
-            ondecoded: (data) => { this.recordInputStream(data) }, 
-            onconnect: (deviceInfo) => console.log(deviceInfo), 
-            ondisconnect: (deviceInfo) => console.log(deviceInfo)
-        })        
+        ganglion.stream.subscribe((sample:any) => {
+            console.log('sample', sample);
+        });
+      
+        //let device = device;
+        // let dev = Devices3rdParty['CUSTOM_BLE']['ganglion'];
+        // dev.connect();
+
+        // initDevice(Devices3rdParty['CUSTOM_BLE']['ganglion'], {   
+        //     // this pushes the data from the headband as it is received from the board into the channels array
+        //     ondecoded: (data) => { this.recordInputStream(data) }, 
+        //     onconnect: (deviceInfo) => console.log(deviceInfo), 
+        //     ondisconnect: (deviceInfo) => console.log(deviceInfo)
+        // })        
 
 
 

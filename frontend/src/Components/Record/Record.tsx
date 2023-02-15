@@ -4,6 +4,7 @@ import React, {useState} from 'react';
 
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
+    const scriptCards = useAppSelector(state => state.cardArraySlice);
     const [MIDIUri, setMIDIURI] = useState('');
     console.log(settings);
 
@@ -47,7 +48,10 @@ function Record() {
         }
     }
 
+    console.log(scriptCards);
+
     return(<div>
+        
         <button onClick={doRecording}>Record</button>
         <button onClick={stopRecording}>Stop</button>
         <a download={'currentMIDI.MID'} href={MIDIUri}>download the midi</a>
