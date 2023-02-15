@@ -42,6 +42,7 @@ model Post {
   userID String // relation scalar field  (used in the `@relation` attribute above)
   createdAt DateTime  @default(now())
   playlistPosts PlaylistPost[]
+  // playlists Playlist[]     // Simpler alternative to playlists
   public Boolean
   like Like[]
 }
@@ -52,7 +53,10 @@ model Playlist {
   thumbnail String?   @db.LongText // Store file path in database instead of the actual image
   user User           @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID String
+  // posts Post[]     // Simpler alternative to playlists   
   playlistPosts PlaylistPost[]
+
+
 }
 
 model PlaylistPost {

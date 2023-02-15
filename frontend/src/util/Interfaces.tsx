@@ -105,6 +105,18 @@ export type Card = {
     speed: number,
 }
 
+export interface Track {
+    createdAt: string;
+    id: string;
+    likeCount: number;
+    midi: string;
+    public: boolean;
+    thumbnail: string;
+    title: string;
+    userID: string;
+    fullname: string;
+}
+
 /*
 export interface GanglionSettings {
     // Defines what instument sound is to be associated with each node

@@ -5,6 +5,7 @@ import sendAPI from '../../SendAPI';
 import { userJWT, userModeState } from "../../JWT";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+import { Track } from '../../util/Interfaces';
 
 // Import CSS
 import './UploadTrackModal.css';
@@ -14,18 +15,6 @@ import { CloseButton } from 'react-bootstrap';
 
 type Props = {
     track: Track; 
-}
-
-interface Track {
-    createdAt: string;
-    id: string;
-    likeCount: number;
-    midi: string;
-    public: boolean;
-    thumbnail: string;
-    title: string;
-    userID: string;
-    fullname: string;
 }
 
 const UploadTrackModal: React.FC<Props> = ({track}) => {
