@@ -176,7 +176,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                                     <p id='card-author'>{trackCard.fullname}</p>
                                     <div id='card-likes'>
                                         <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
-                                         {trackCard.likeCount} 
+                                        {trackCard.likeCount} 
                                     </div>
                                 </div>
                                 
