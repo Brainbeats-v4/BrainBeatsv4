@@ -55,8 +55,6 @@ model Playlist {
   userID String
   // posts Post[]     // Simpler alternative to playlists   
   playlistPosts PlaylistPost[]
-
-
 }
 
 model PlaylistPost {
