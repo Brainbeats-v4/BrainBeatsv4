@@ -18,13 +18,27 @@ const Team4 = () => {
         "number": 4,  // Format as integer number
         "yearsFound": "2022-2023",  // format as string 'yyyy-yyyy'
 
-        "objectives": "BrainBeats is a Senior Design project for computer science students at the University of Central Florida." +
-                        "The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is" +
-                        "to take the electrical waves in your brain (using an EEG device) and utilize them to generate ", 
+        "objectives": "Version 4 of BrainBeats primary goal was to create a new refactored version of the pre-existing web application. Our objectives included a major redesign of the user interface, modularization of the codebase, to include more complex music generation methods, and improving the scripting system with custom compatibility. ", 
 
-        "contributions": "BrainBeats is a Senior Design project for computer science students at the University of Central Florida." +
-        "The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is" +
-        "to take the electrical waves in your brain (using an EEG device) and utilize them to generate ",
+        "contributions": "Version 4’s contributions include:" +
+        "\n\t• A major redesign of the user interface." +
+        "\n\t\t◦ The creation of a more accessible and modern web application." +
+        "\n\t\t◦ The addition of new pages and features to improve user experience." +
+        
+        "\n\n\t• A modularization of the codebase." +
+        "\n\t\t◦ The refactorization of the existing backend." +
+        "\n\t\t◦ The conversion from JavaScript to TypeScript." +
+        "\n\t\t◦ The inclusion of flexible script generation." +
+        "\n\t\t◦ Ensuring well-documented code for future BrainBeats developers." +
+        
+        "\n\n\t• More complex music generation methods." +
+        "\n\t\t◦ The inclusion of more music generation options." +
+        "\n\t\t◦ The inclusion of plugin discovery with standardized input/output." +
+        "\n\t\t◦ The ability for developers to easily add new generation scripts." +
+        
+        
+        "\n\n\t• Improved scripting system with custom image compatibility." +
+        "\n\t\t◦ The discovery of stock images to improve the visual script system.",
     }
     // ===============================  Enter TEAM MEMBERS info here =============================== 
 
