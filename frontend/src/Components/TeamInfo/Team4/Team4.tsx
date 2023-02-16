@@ -18,7 +18,7 @@ const Team4 = () => {
         "number": 4,  // Format as integer number
         "yearsFound": "2022-2023",  // format as string 'yyyy-yyyy'
 
-        "objectives": "Version 4 of BrainBeats primary goal was to create a new refactored version of the pre-existing web application. Our objectives included a major redesign of the user interface, modularization of the codebase, to include more complex music generation methods, and improving the scripting system with custom compatibility. ", 
+        "objectives": "The primary goal of BrainBeats version 4 was to create a new refactored version of the pre-existing web application. Our objectives included a major redesign of the user interface, a modularization of the codebase, to include more complex music generation methods, and to improve the scripting system with custom compatibility. ", 
 
         "contributions": "Version 4’s contributions include:" +
         "\n\t• A major redesign of the user interface." +
