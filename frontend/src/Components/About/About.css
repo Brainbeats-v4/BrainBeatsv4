@@ -201,12 +201,12 @@ p{
     flex-wrap: wrap;
 }
 
-#member-card-body{
+/* #member-card-body{
     cursor: default;
     background-color: #818181;
     border-style: none;
     max-height: 100%;
-}
+} */
 
 .about-team-title{
     color: #00a5be;

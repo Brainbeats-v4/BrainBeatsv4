@@ -3,6 +3,8 @@ import { useState } from 'react';
 // Importing CSS
 import '../../About/About.css'
 import profileImage from '../../../images/blankProfile.png'
+import { Modal } from 'react-bootstrap';
+import TeamMemberModal from '../../TeamMemberModal/TeamMemberModal';
 
 const Team2 = () => {
 
@@ -32,17 +34,35 @@ const Team2 = () => {
         name: string;
         position: string;
         image: string;
+        bio: string;
+    }
+
+    const emptyTeamMember: TeamMember = {
+        "name": "",
+        "position": "",
+        "image": "",
+        "bio": "",
     }
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "First Last", position: "Project Manager • Machine Learning", image: defaultImage},
-        {name: "First Last", position: "Music Generation • Backend Developer", image: defaultImage},
-        {name: "First Last", position: "Database • Backend Developer", image: defaultImage},
-        {name: "First Last", position: "Frontend Developer • Visual Designer", image: defaultImage},
+        {name: "First Last", position: "Project Manager • Machine Learning", image: defaultImage, bio: "Hello World Empty Text"},
+        {name: "First Last", position: "Music Generation • Backend Developer", image: defaultImage, bio: "Hello World Empty Text"},
+        {name: "First Last", position: "Database • Backend Developer", image: defaultImage, bio: "Hello World Empty Text"},
+        {name: "First Last", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "Hello World Empty Text"},
     ];
     // ============================================================================================= 
     
+    // For displaying Modal
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const [currentMember, setCurrentMember] = useState<TeamMember>(emptyTeamMember);
+
+    function setTeamMember(currentMember:TeamMember) {
+        setCurrentMember(currentMember);
+        setShow(true);
+    }
+
     function PopulateTeamMembers() {
         const MAX_COLS:number = 2;
         const MAX_ROWS:number = 3;
@@ -78,7 +98,7 @@ const Team2 = () => {
         <div className='about-team-members'>
             {memberList.map((teamMember) => (
                     <div className="col track-col">
-                        <button className=" btn btn-primary card" id='member-card-body'>
+                        <button className=" btn btn-primary card" id='member-card-body' onClick={() =>setTeamMember(teamMember)}>
                             <img src={teamMember.image} className="card-img-top" id="card-img-ID" alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">{teamMember.name}</h5>
@@ -91,6 +111,9 @@ const Team2 = () => {
                     </div>
                 ))}
         </div>
+        <Modal id='pop-up' show={show} onHide={handleClose}>
+            <TeamMemberModal teamMember={currentMember}/>
+        </Modal>
     </div>
     );
 };
