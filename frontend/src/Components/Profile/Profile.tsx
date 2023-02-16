@@ -9,6 +9,7 @@ import TrackCard from '../TrackCard/TrackCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Buffer } from 'buffer';
 import buildPath from '../../util/ImagePath';
+import { encode } from '../../util/ImageHelperFunctions';
 
 const Profile = () => {
     const [user, setUser] = useRecoilState(userModeState);
@@ -20,7 +21,13 @@ const Profile = () => {
     // For displaying profile picture
     const [displayPicture, setDisplayPicture] = useState(user!==null ? user.profilePicture: undefined);
     if(displayPicture !== undefined) {
-            if ((displayPicture as string).split('/')[0] === 'data:text') {
+
+        // Logic for display image from Uint8Array 
+        // var bytes = new Uint8Array(displayPicture);
+        // var imageString = 'data:image/png;base64,'+ encode(bytes);
+        // setDisplayPicture(imageString);
+
+        if ((displayPicture as string).split('/')[0] === 'data:text') {
             console.log(displayPicture);
             var encodedProfilePic = (displayPicture as string).split(',')[1];
             var decodedProfilePic = Buffer.from(encodedProfilePic, 'base64').toString('ascii');
@@ -53,6 +60,12 @@ const Profile = () => {
     ]
 
     function convertToBase64(file:File) {
+
+        // const fileReader = new FileReader();
+
+        // fileReader.readAsDataURL(file);
+
+
         
         return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
@@ -76,10 +89,17 @@ const Profile = () => {
     // Function updating profile picture
     async function updateProfilePic(file:File) {
         var base64result:any;
+        var blobResult:any;
         await convertToBase64(file).then(res => {
             base64result = res;
         })
         console.log(base64result);
+        
+        
+        blobResult = await file.arrayBuffer();
+
+        console.log(blobResult);
+
         var updatedUser = {
             id: user.userId,
             token: jwt,
