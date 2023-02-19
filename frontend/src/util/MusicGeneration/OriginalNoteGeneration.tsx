@@ -228,16 +228,29 @@ export class NoteHandler {
             }
 
 
+            let num = i+1;
+
+            var frequencyArray:number[] = [];
+            frequencyArray.fill(-1);
+
             // If the generated note is not a rest
-            console.log(noteAndOctave.note);
-            if (noteAndOctave.note != -1  && this.debugOutput) 
-                console.log("Track: " + noteOctaveString + " [" + instrumentName + " playing " + noteLengthName + " notes] " + curChannelData);
+            if (noteAndOctave.note != -1  && this.debugOutput) {
+                // console.log("Channel " + num + ": Playing " + noteAndOctave.note);
+
+                frequencyArray[i] = Number(noteAndOctave.note);
+                // console.log("Track: " + noteOctaveString + " [" + instrumentName + " playing " + noteLengthName + " notes] " + curChannelData);
+
+            } else {
+                console.log("Channel " + num + ": At Rest");
+            }
 
             currentNoteData = {
                 player:{noteFrequency /*, noteVolume, instrument, noteType*/},
                 writer:{noteLengthName, note: noteAndOctave.note, octave: noteAndOctave.octave+floorOctave}
             };
             generatedArr.push(currentNoteData);
+            
+            frequencyArray.forEach((n:any) => console.log(n));
 
         }
         // console.log(generatedArr);

@@ -62,7 +62,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         console.log("Constructed Cyton");
         this.settings = settings;
         this.noteHandler = new NoteHandler(this.settings);
-        this.noteHandler.setDebugOutput(false);
+        this.noteHandler.setDebugOutput(true);
 
     }
 
@@ -99,7 +99,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
        }
 
        console.log(currentData);
-       // This should be passed to the note manager
+
        this.noteHandler.originalNoteGeneration(currentData);
     //    this.midiManager.convertInput(currentData)    
         
