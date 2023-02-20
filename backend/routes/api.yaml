@@ -7,9 +7,9 @@ info:
     name: Apache 2.0
     url: "http://www.apache.org/liscences/LIS"
   servers:
-    -url: https://api.brainbeats.dev
+    -url: http://api.brainbeatz.xyz #https://api.brainbeats.dev
     description: Local server
-schemes: [https]
+schemes: [http] #[https]
 
 # Path to API
 paths:
