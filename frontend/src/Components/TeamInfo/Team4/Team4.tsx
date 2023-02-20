@@ -49,6 +49,7 @@ const Team4 = () => {
         position: string;
         image: string;
         bio: string;
+        contributions: string;
     }
 
     const emptyTeamMember: TeamMember = {
@@ -56,14 +57,28 @@ const Team4 = () => {
         "position": "",
         "image": "",
         "bio": "",
+        "contributions": "",
     }
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: defaultImage, bio: "Hello World Empty Text 1"},
-        {name: "Brandon Mrgich", position: "Music Generation • Backend Developer", image: defaultImage, bio: "Hello World Empty Text 2"},
-        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: defaultImage, bio: "Hello World Empty Text 3"},
-        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "Hello World Empty Text 4"},
+        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: defaultImage, bio: "Hello World Empty Text 1", 
+        contributions:"\t• Planned meetings and accessed time management" + "\n\t• Ensured target goals were reached" +
+        "\n\t• Developed a machine learning model" + "\n\t • Provided assistance to frontend and backend development"},
+
+        {name: "Brandon Mrgich", position: "Music Generation • Backend Developer", image: defaultImage, bio: "Hello World Empty Text 2",
+        contributions: "\t• Researched neurology, music generation, and EEG" + "\n\t• Restructured the API" + 
+        "\n\t• Restructured previous implementation of music generation" + "\n\t• Assisted with frontend functions and logic"},
+
+        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: defaultImage, bio: "Hello World Empty Text 3", 
+        contributions: "\t• Developed a rework of the original backend system" + "\n\t• Extended the backend as needed to ensure compatibility" +
+        "\n\t• Assisted in creating functional components" + "\n\t• Assisted with modularizing/refactoring the codebase"},
+
+        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "Hello World Empty Text 4", 
+        contributions: "\t• Developed a rework of the original frontend system" +
+        "\n\t• Converted JavaScript to TypeScript" +
+       "\n\t• Developed and implemented UI and UX designs" +
+       "\n\t• Created functional components for frontend development"}
     ];
     // ============================================================================================= 
     

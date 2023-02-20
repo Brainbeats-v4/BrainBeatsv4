@@ -35,6 +35,7 @@ const Team2 = () => {
         position: string;
         image: string;
         bio: string;
+        contributions: string;
     }
 
     const emptyTeamMember: TeamMember = {
@@ -42,14 +43,15 @@ const Team2 = () => {
         "position": "",
         "image": "",
         "bio": "",
+        "contributions": "",
     }
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "First Last", position: "Project Manager • Machine Learning", image: defaultImage, bio: "Hello World Empty Text"},
-        {name: "First Last", position: "Music Generation • Backend Developer", image: defaultImage, bio: "Hello World Empty Text"},
-        {name: "First Last", position: "Database • Backend Developer", image: defaultImage, bio: "Hello World Empty Text"},
-        {name: "First Last", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "Hello World Empty Text"},
+        {name: "First Last", position: "Project Manager • Machine Learning", image: defaultImage, bio: "Hello World Empty Text", contributions: ""},
+        {name: "First Last", position: "Music Generation • Backend Developer", image: defaultImage, bio: "Hello World Empty Text", contributions: ""},
+        {name: "First Last", position: "Database • Backend Developer", image: defaultImage, bio: "Hello World Empty Text", contributions: ""},
+        {name: "First Last", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "Hello World Empty Text", contributions: ""},
     ];
     // ============================================================================================= 
     
