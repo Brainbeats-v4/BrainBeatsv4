@@ -21,6 +21,7 @@ interface TeamMember {
   position: string;
   image: string;
   bio: string;
+  contributions: string;
 }
 
 const TeamMemberModal: React.FC<Props> = ({teamMember}) => {
@@ -39,8 +40,11 @@ const TeamMemberModal: React.FC<Props> = ({teamMember}) => {
               <h1 id='track-title-text'>{teamMember.name}</h1>
               <h6 id="track-author-text">{teamMember.position}</h6>
               <br/>
+              <h6>About Me</h6>
               <p>{teamMember.bio}</p>
-
+              <br/>
+              <h6>Individual Contributions</h6>
+              <p>{teamMember.contributions}</p>
             </div>
           </Modal.Body>
           <Modal.Footer className='modal-container2'>
