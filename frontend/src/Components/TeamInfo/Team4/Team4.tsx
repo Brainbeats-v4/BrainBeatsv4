@@ -3,6 +3,8 @@ import { useState } from 'react';
 // Importing CSS
 import '../../About/About.css'
 import profileImage from '../../../images/blankProfile.png'
+import TeamMemberModal from '../../TeamMemberModal/TeamMemberModal';
+import { Modal } from 'react-bootstrap';
 
 const Team4 = () => {
 
@@ -18,13 +20,27 @@ const Team4 = () => {
         "number": 4,  // Format as integer number
         "yearsFound": "2022-2023",  // format as string 'yyyy-yyyy'
 
-        "objectives": "BrainBeats is a Senior Design project for computer science students at the University of Central Florida." +
-                        "The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is" +
-                        "to take the electrical waves in your brain (using an EEG device) and utilize them to generate ", 
+        "objectives": "The primary goal of BrainBeats version 4 was to create a new refactored version of the pre-existing web application. Our objectives included a major redesign of the user interface, a modularization of the codebase, to include more complex music generation methods, and to improve the scripting system with custom compatibility. ", 
 
-        "contributions": "BrainBeats is a Senior Design project for computer science students at the University of Central Florida." +
-        "The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is" +
-        "to take the electrical waves in your brain (using an EEG device) and utilize them to generate ",
+        "contributions": "Version 4’s contributions include:" +
+        "\n\t• A major redesign of the user interface." +
+        "\n\t\t◦ The creation of a more accessible and modern web application." +
+        "\n\t\t◦ The addition of new pages and features to improve user experience." +
+        
+        "\n\n\t• A modularization of the codebase." +
+        "\n\t\t◦ The refactorization of the existing backend." +
+        "\n\t\t◦ The conversion from JavaScript to TypeScript." +
+        "\n\t\t◦ The inclusion of flexible script generation." +
+        "\n\t\t◦ Ensuring well-documented code for future BrainBeats developers." +
+        
+        "\n\n\t• More complex music generation methods." +
+        "\n\t\t◦ The inclusion of more music generation options." +
+        "\n\t\t◦ The inclusion of plugin discovery with standardized input/output." +
+        "\n\t\t◦ The ability for developers to easily add new generation scripts." +
+        
+        
+        "\n\n\t• Improved scripting system with custom image compatibility." +
+        "\n\t\t◦ The discovery of stock images to improve the visual script system.",
     }
     // ===============================  Enter TEAM MEMBERS info here =============================== 
 
@@ -32,17 +48,51 @@ const Team4 = () => {
         name: string;
         position: string;
         image: string;
+        bio: string;
+        contributions: string;
+    }
+
+    const emptyTeamMember: TeamMember = {
+        "name": "",
+        "position": "",
+        "image": "",
+        "bio": "",
+        "contributions": "",
     }
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: defaultImage},
-        {name: "Brandon Mrgich", position: "Music Generation • Backend Developer", image: defaultImage},
-        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: defaultImage},
-        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: defaultImage},
+        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: defaultImage, bio: "Hello World Empty Text 1", 
+        contributions:"\t• Planned meetings and accessed time management" + "\n\t• Ensured target goals were reached" +
+        "\n\t• Developed a machine learning model" + "\n\t • Provided assistance to frontend and backend development"},
+
+        {name: "Brandon Mrgich", position: "Music Generation • Backend Developer", image: defaultImage, bio: "Hello World Empty Text 2",
+        contributions: "\t• Researched neurology, music generation, and EEG" + "\n\t• Restructured the API" + 
+        "\n\t• Restructured previous implementation of music generation" + "\n\t• Assisted with frontend functions and logic"},
+
+        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: defaultImage, bio: "Hello World Empty Text 3", 
+        contributions: "\t• Developed a rework of the original backend system" + "\n\t• Extended the backend as needed to ensure compatibility" +
+        "\n\t• Assisted in creating functional components" + "\n\t• Assisted with modularizing/refactoring the codebase"},
+
+        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "Hello World Empty Text 4", 
+        contributions: "\t• Developed a rework of the original frontend system" +
+        "\n\t• Converted JavaScript to TypeScript" +
+       "\n\t• Developed and implemented UI and UX designs" +
+       "\n\t• Created functional components for frontend development"}
     ];
     // ============================================================================================= 
     
+
+    // For displaying Modal
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const [currentMember, setCurrentMember] = useState<TeamMember>(emptyTeamMember);
+
+    function setTeamMember(currentMember:TeamMember) {
+        setCurrentMember(currentMember);
+        setShow(true);
+    }
+
     function PopulateTeamMembers() {
         const MAX_COLS:number = 2;
         const MAX_ROWS:number = 3;
@@ -78,7 +128,7 @@ const Team4 = () => {
         <div className='about-team-members'>
             {memberList.map((teamMember) => (
                     <div className="col track-col">
-                        <button className=" btn btn-primary card" id='member-card-body'>
+                        <button className=" btn btn-primary card" id='member-card-body' onClick={() =>setTeamMember(teamMember)}>
                             <img src={teamMember.image} className="card-img-top" id="card-img-ID" alt="..."/>
                             <div className="card-body">
                                 <h5 className="card-title">{teamMember.name}</h5>
@@ -91,6 +141,9 @@ const Team4 = () => {
                     </div>
                 ))}
         </div>
+        <Modal id='pop-up' show={show} onHide={handleClose}>
+            <TeamMemberModal teamMember={currentMember}/>
+        </Modal>
     </div>
     );
 };

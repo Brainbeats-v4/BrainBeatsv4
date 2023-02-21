@@ -25,18 +25,18 @@ router.post('/createUserLike', async (req, res) => {
         const postExists = await getPostExists(postID, "id");
 
         if (!userExists) {
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "User not found"
             });
         } else if (!postExists) { 
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "Post not found"
             });
         } else {
             const likeExists = await getLikeExists(postID, userID);
 
             if (likeExists) {
-                return res.status(400).json({
+                return res.status(409).json({
                     msg: "Like already exists"
                 });
             }
@@ -53,7 +53,7 @@ router.post('/createUserLike', async (req, res) => {
                 }
             });
 
-            res.json(newLike);
+            res.status(201).json(newLike);
         }
     } catch (err) {
         console.error(err);
@@ -70,7 +70,7 @@ router.delete('/removeUserLike', async (req, res) => {
         const decoded = verifyJWT(token);
 
         if (!decoded) {
-            return res.status(400).json({
+            return res.status(401).json({
                 msg: "Invalid token"
             });
         }
@@ -80,11 +80,11 @@ router.delete('/removeUserLike', async (req, res) => {
         const postExists = await getPostExists(postID, "id");
 
         if (!userExists) {
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "User not found"
             });
         } else if (!postExists) { 
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "Post not found"
             });
         } else {
@@ -98,7 +98,7 @@ router.delete('/removeUserLike', async (req, res) => {
             });
 
             if (!deleteLike) {
-                return res.status(400).json({
+                return res.status(404).json({
                     msg: "Like not found"
                 });
             }
@@ -144,7 +144,7 @@ router.get('/getAllUserLikes', async (req, res) => {
             where: { userID: req.query.userID }
         });
 
-        res.json(allLikes);
+        res.status(200).json(allLikes);
     } catch (err) {
         console.error(err);
         res.status(500).send(err);

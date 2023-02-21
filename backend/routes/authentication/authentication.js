@@ -48,22 +48,23 @@ router.post('/sendVerificationEmail', async (req, res) => {
                 to: email,
                 subject: subject,
                 text: 'Verify your login to BrainBeats by clicking the following link, or copy and paste it into your browser: ',
-                // html: '<a href=\"https://www.brainbeats.dev/verify/${userExists._id}\">Verify Email</a>',
-                html: `<a href="http://localhost:3000/verify?id=${userExists.id}">Verify Email</a>`,
+                html: '<a href="http://www.brainbeatz.xyz/verify?id=${userExists.id}">Verify Email</a>',
+                // html: `<a href="http://localhost:3000/verify?id=${userExists.id}">Verify Email</a>`,
             };
 
             transporter.sendMail(mailData, function (err, info) {
                 if (err) {
                     console.error(err);
+                    throw err;
                 } else {
                     console.log(`Email Sent: ${info.response}`);
+                    res.status(200).send({ message: "Mail sent", message_id: info.messageId });
                 }
 
-                res.status(200).send({ message: "Mail sent", message_id: info.messageId });
             });
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
         res.status(500).json({ msg: "User does not exist." });
     }
 });

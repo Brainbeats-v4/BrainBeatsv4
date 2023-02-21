@@ -46,6 +46,7 @@ function Cards() {
 
     const setColorBackground = (color: { rgb: any; }) => {
 		setBackgroundColor({ displayColorPicker: backgroundColor.displayColorPicker, color: color.rgb });
+        setImageURL('');
     };
     const setColorText = (color: { rgb: any; }) => {
         setTextColor({ displayColorPicker: textColor.displayColorPicker, color: color.rgb });
@@ -70,7 +71,8 @@ function Cards() {
 		setCardTextState('');
 		setSpeed(1);
         setImageURL('');
-		setCards(cards => [...cards, newCard])
+
+        cards.push(newCard);
 
         console.log(newCard);
         console.log(cards);
@@ -139,9 +141,6 @@ function Cards() {
                         color: `rgba(${textColor.color.r}, ${textColor.color.g}, ${textColor.color.b}, ${textColor.color.a})`,
                         background: `rgba(${backgroundColor.color.r}, ${backgroundColor.color.g}, ${backgroundColor.color.b}, ${backgroundColor.color.a})`,
                         backgroundImage: `url(${imageURL})`,
-                        backgroundSize: '100% 150%',
-                        backgroundPosition: 'center center',
-                        backgroundRepeat: 'no-repeat',
                     }}
                 >
                 <div id='card-text'>

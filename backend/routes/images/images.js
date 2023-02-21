@@ -46,7 +46,7 @@ router.put('/updateTrackPic', async (req, res) => {
         const decoded = verifyJWT(token);
         
         if (!decoded) {
-            return res.status(400).json({
+            return res.status(401).json({
                 msg: "Invalid token"
             });
         }
@@ -55,7 +55,7 @@ router.put('/updateTrackPic', async (req, res) => {
         const postExists = await getPostExists(id, "id");
 
         if (!postExists) {
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "Track ID not found"
             });
         } else {

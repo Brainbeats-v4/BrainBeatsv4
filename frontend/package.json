@@ -52,6 +52,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "scp -r ./build/* root@178.128.153.117:../var/www/html",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

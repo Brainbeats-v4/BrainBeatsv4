@@ -10,7 +10,7 @@ app.use(bodyParser.json({limit: '3mb'}));
 app.use(bodyParser.urlencoded({limit: '3mb', extended: true}));
 
 
-const PORT = process.env.PORT || 2000;
+const PORT = process.env.PORT || 2001;
 
 const corsOptions ={
     origin: '*', 

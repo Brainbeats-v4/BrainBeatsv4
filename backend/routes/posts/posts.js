@@ -21,7 +21,7 @@ router.post('/createPost', async (req, res) => {
 
         const userExists = await getUserExists(userID, "id");
         if (!userExists) {
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "User not found"
             });
         } else {
@@ -45,7 +45,7 @@ router.post('/createPost', async (req, res) => {
                 }
             });
 
-          return res.json(newPost);
+          return res.status(201).json(newPost);
         }
     } catch (err) {
         console.log(err);
@@ -69,7 +69,7 @@ router.get('/getUserPostsByUsername', async (req, res) => {
         const userExists = await getUserExists(username, "username");
 
         if (!userExists) {
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "Username not found"
             });
         } else {
@@ -80,12 +80,12 @@ router.get('/getUserPostsByUsername', async (req, res) => {
             });
 
             if (!userPosts) {
-                return res.status(400).json({
+                return res.status(404).json({
                     msg: "Posts not found"
                 });
             }
             
-            return res.json(userPosts);
+            return res.status(200).json(userPosts);
         }
     } catch (err) {
         console.log(err);
@@ -117,12 +117,12 @@ router.get('/getPostsByTitle', async (req, res) => {
         });
 
         if (!posts) {
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "Posts not found"
             });
         }
 
-        return res.json(posts);
+        return res.status(200).json(posts);
         
     } catch (err) {
         console.log(err);
@@ -136,7 +136,7 @@ router.get('/getUserPostsByID', async (req, res) => {
         const userID = req.query.userID;
         const userExists = await getUserExists(userID, "id");
         if (!userExists) {
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "User not found"
             });
         } else {
@@ -146,12 +146,12 @@ router.get('/getUserPostsByID', async (req, res) => {
             });
 
             if (!userPosts) {
-                return res.status(400).json({
+                return res.status(404).json({
                     msg: "User ID not found"
                 });
             }
 
-            return res.json(userPosts);
+            return res.status(200).json(userPosts);
         }
     } catch (err) {
         console.log(err);
@@ -166,7 +166,7 @@ router.get('/getAllPosts', async (req, res) => {
             include: {user: true}
         });
 
-        return res.json(posts);
+        return res.status(200).json(posts);
     } catch (err) {
         console.log(err);
         return res.status(500).send({ msg: err });
@@ -197,25 +197,30 @@ router.delete('/deletePost', async (req, res) => {
 });
 
 router.get('/getPublicPopularPosts', async(req, res) => {
-    const posts = await prisma.Post.findMany({
-        where: {
-          likeCount: {
-            gte: 10,
-          },
-          public: {
-            equals: true
-          }
-        },
-        include: {
-            user: {
-                select: {
-                    firstName: true,
-                    lastName: true
-                }
+    try {
+        const posts = await prisma.Post.findMany({
+            where: {
+            likeCount: {
+                gte: 10,
+            },
+            public: {
+                equals: true
             }
-          },
-    })
-    return res.json(posts)
+            },
+            include: {
+                user: {
+                    select: {
+                        firstName: true,
+                        lastName: true
+                    }
+                }
+            },
+        })
+        return res.status(200).json(posts)
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send(err);
+    }
 });
 
 // Update user post info 
@@ -236,7 +241,7 @@ router.put('/updatePost', async (req, res) => {
         const postExists = await getPostExists(id, "id");
 
         if (!postExists) {
-            return res.status(400).json({
+            return res.status(404).json({
                 msg: "Post not found"
             });
         } else {

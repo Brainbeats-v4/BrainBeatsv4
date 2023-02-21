@@ -12,6 +12,7 @@ import ganglion from '@brainsatplay/ganglion'
 import * as datastreams from "https://cdn.jsdelivr.net/npm/datastreams-api@latest/dist/index.esm.js"; // Data acquisition
 // import * as datastreams from 'datastreams-api';
 import Ganglion from 'ganglion-ble';
+// import Ganglion from '@openbci/ganglion'
 
 
 import { ganglionSettings } from "device-decoder.third-party";
@@ -61,7 +62,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         console.log("Constructed Cyton");
         this.settings = settings;
         this.noteHandler = new NoteHandler(this.settings);
-        this.noteHandler.setDebugOutput(false);
+        this.noteHandler.setDebugOutput(true);
 
     }
 
@@ -98,7 +99,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
        }
 
        console.log(currentData);
-       // This should be passed to the note manager
+
        this.noteHandler.originalNoteGeneration(currentData);
     //    this.midiManager.convertInput(currentData)    
         

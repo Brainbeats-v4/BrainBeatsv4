@@ -1,17 +1,13 @@
 .record-heading, .record-heading2{
     color:white;
+    align-self: self-start;
 }
 
 .record-heading2{
-    /* text-align: center; */
-    /* background-color: rgb(255, 255, 255); */
-    /* border-style: solid; */
-    /* border-color: white; */
     border-radius: 3px 3px 0px 0px;
     color: #cdcdcd;
     padding-top: 3px;
     padding-bottom: 3px;
-    /* font-weight: 500; */
     font-size: small;
 }
 
@@ -33,19 +29,20 @@
     /* background-color: purple; */
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    column-gap: 2.5%;
-    width: 70vw;
-    height: 85%;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
 }
 
 #card-settings-div{
+    /* background-color: red; */
     display: flex;
     flex-direction: column;
-    /* background-color: red; */
+    justify-content: center;
+    align-items: center;
     width: fit-content;
     height: fit-content;
-    /* padding: 1%; */
+    padding: 3%;
 
 }
 
@@ -67,7 +64,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* align-items: center; */
     border-radius: 10px ;
     width: fit-content;
     height: fit-content;
@@ -81,7 +77,6 @@
 }
 .record-upload {
     /* background-color: rgb(176, 176, 176); */
-    /* border-color: orange; */
     width: 100%;
     margin-top: 3%;
     margin-bottom: 3%;
@@ -90,7 +85,6 @@
 }
 .record-upload1 {
     width: 90%;
-    /* margin-top: 3%; */
     margin-bottom: 3%;
 }
 
@@ -109,9 +103,8 @@
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-    height: 5vh;
+    height: fit-content;
     font-weight: 550;
-    /* margin-left: 2%; */
 }
 #image-card-btn:hover{
     background-color: #259FB1;
@@ -137,6 +130,7 @@
 }
 
 #display-card-div{
+    /* background-color: green; */
     color: rgb(190, 190, 190);
     display: flex;
     flex-direction: column;
@@ -144,8 +138,6 @@
     align-items: center;
     row-gap: 2%;
     margin-top: 2%;
-    margin-left: 1%;
-    /* background-color: green; */
     width: 70%;
     height: 65vh;
 }
@@ -156,8 +148,9 @@
     align-items: center;
     background-color: #0e0e0e;
     background-image: url('');
+    background-size: 100% 150% !important;
+    background-position: center center !important;
     background-repeat: no-repeat;
-    background-position: center center;
     color: white;
     width: 95%;
     height: 100%;
@@ -180,7 +173,6 @@
     justify-content: center;
     column-gap: 3%;
     width: 100%;
-    /* height: 100%; */
     margin-top: 2%;
 }
 
@@ -190,7 +182,6 @@
     border-radius: 0px;
     width: 40%;
     height: 7vh;
-    /* margin-top: 1%; */
 }
 #skip-step-btn:hover{
     background-color: #7a7a7a;
@@ -204,7 +195,6 @@
     border-radius: 0px;
     width: 40%;
     height: 7vh;
-    /* margin-top: 1%; */
 }
 #go-record-btn:hover{
     background-color:#e33051;
