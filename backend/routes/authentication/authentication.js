@@ -48,8 +48,8 @@ router.post('/sendVerificationEmail', async (req, res) => {
                 to: email,
                 subject: subject,
                 text: 'Verify your login to BrainBeats by clicking the following link, or copy and paste it into your browser: ',
-                // html: '<a href=\"https://www.brainbeats.dev/verify/${userExists._id}\">Verify Email</a>',
-                html: `<a href="http://localhost:3000/verify?id=${userExists.id}">Verify Email</a>`,
+                html: '<a href="http://www.brainbeatz.xyz/verify?id=${userExists.id}">Verify Email</a>',
+                // html: `<a href="http://localhost:3000/verify?id=${userExists.id}">Verify Email</a>`,
             };
 
             transporter.sendMail(mailData, function (err, info) {

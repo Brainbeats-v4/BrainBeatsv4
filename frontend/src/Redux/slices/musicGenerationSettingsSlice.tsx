@@ -3,9 +3,6 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import * as Interfaces from '../../util/Interfaces'
 import { InstrumentTypes, NoteDurations, KeyGroups } from '../../util/Enums'
 import type { RootState } from '../store'
-import { KEY_SIGNATURES, KEYS } from '../../util/Constants'
-import {getRandomInstrument, getRandomDuration, 
-        getRandomScale, getRandomKeyGroup} from '../../util/MusicGeneration/MusicHelperFunctions'
 
 // Initial null state (where NULL is -99 and does not pertain to an instrument or duration)
 const initialState:Interfaces.MusicSettings = {

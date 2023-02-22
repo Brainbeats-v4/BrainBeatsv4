@@ -6,7 +6,7 @@ function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
     const scriptCards = useAppSelector(state => state.cardArraySlice);
     const [MIDIUri, setMIDIURI] = useState('');
-    console.log(settings);
+    console.log(scriptCards);
 
     var deviceType:string;
     var device: AbstractGanglionStream | AbstractCytonStream;
@@ -47,8 +47,6 @@ function Record() {
             setMIDIURI(device.stopDevice());
         }
     }
-
-    console.log(scriptCards);
 
     return(<div>
         

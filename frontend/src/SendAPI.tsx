@@ -2,6 +2,8 @@ import axios from 'axios'
 import buildPath from './Path'
 
 const sendAPI = async (method:any, path:any, data:any = null) => {
+
+    console.log("builPath: " + buildPath);
     
     const config = {
         method,

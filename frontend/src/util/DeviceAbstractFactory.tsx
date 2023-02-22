@@ -5,7 +5,7 @@
 // Import all cyton connection libs here
 
 import { Devices, initDevice } from "device-decoder";
-import {Devices as DevicesThirdParty, Devices3rdParty} from 'device-decoder.third-party'
+import {Devices as Devices3rdParty} from 'device-decoder.third-party'
  
 import ganglion from '@brainsatplay/ganglion'
 // import ganglion from "https://cdn.jsdelivr.net/npm/@brainsatplay/ganglion@0.0.2/dist/index.esm.js";

@@ -24,6 +24,6 @@ export const cardArraySlice = createSlice({
 
 export const { set, unset } = cardArraySlice.actions
 
-export const getSettings = (state: RootState) => state.cardArraySlice;
+export const getSlice = (state: RootState) => state.cardArraySlice;
 
 export default cardArraySlice.reducer
