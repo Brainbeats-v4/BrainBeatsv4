@@ -5,6 +5,7 @@ import '../../About/About.css'
 import profileImage from '../../../images/blankProfile.png'
 import { Modal } from 'react-bootstrap';
 import TeamMemberModal from '../../TeamMemberModal/TeamMemberModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Team2 = () => {
 
@@ -14,19 +15,29 @@ const Team2 = () => {
         yearsFound: string;
         objectives: string;
         contributions: string;
+        github: string;
     }
 
     const teamInfo : Team = {
         "number": 2,  // Format as integer number
-        "yearsFound": "2020-2021",  // format as string 'yyyy-yyyy'
+        "yearsFound": "2021-2022",  // format as string 'yyyy-yyyy'
 
-        "objectives": "BrainBeats is a Senior Design project for computer science students at the University of Central Florida." +
-                        "The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is" +
-                        "to take the electrical waves in your brain (using an EEG device) and utilize them to generate ", 
+        "objectives": "The primary goal of BrainBeats version 2 was to create a desktop interface for a system" +
+        " that better translates brainwaves (taken as EEG data) into music (output as a MIDI file)." +
+        " Other goals of version 3 included good cybersecurity practices used throughout the system and" +
+        " allowing users to create, read, update, and delete their own MIDI files. ", 
 
-        "contributions": "BrainBeats is a Senior Design project for computer science students at the University of Central Florida." +
-        "The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is" +
-        "to take the electrical waves in your brain (using an EEG device) and utilize them to generate ",
+        "contributions": "Version 2’s contributions include:" +
+        "\n\t• Developing the core application of BrainBeats." +
+        "\n\t\t◦ Allowing BrainBeats to be run as a desktop application or webapp." +
+        
+        "\n\t• Translating EEG data into MIDI files." +
+        "\n\t\t◦ Improved music generation using concepts from music theory." +
+
+        "\n\t• The creation of a well-maintained and scalable system." +
+        "\n\t\t◦ Allowing future developers to easily add upon version 2.",
+        
+        "github": "https://github.com/BrainBeatsV2/BrainBeatsApp/",
     }
     // ===============================  Enter TEAM MEMBERS info here =============================== 
 
@@ -48,10 +59,21 @@ const Team2 = () => {
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "First Last", position: "Project Manager • Machine Learning", image: defaultImage, bio: "Hello World Empty Text", contributions: ""},
-        {name: "First Last", position: "Music Generation • Backend Developer", image: defaultImage, bio: "Hello World Empty Text", contributions: ""},
-        {name: "First Last", position: "Database • Backend Developer", image: defaultImage, bio: "Hello World Empty Text", contributions: ""},
-        {name: "First Last", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "Hello World Empty Text", contributions: ""},
+        {name: "Melanie Brady", position: "Project Manager • Music Generation", image: defaultImage, bio: "Hello World Empty Text",
+        contributions:"\t• Handled sprint planning and weekly scrums" + "\n\t• Oversaw team organization and communications" + 
+        "\n\t• Researched machine learning & music generation models" + "\n\t• Developed framework for music generation model"},
+
+        {name: "Joshua Neumann", position: "Music Generation • Full-Stack Developer", image: defaultImage, bio: "Hello World Empty Text", 
+        contributions:"\t• Researched music generation & machine learning models" + "\n\t• Implemented model for music generation" + 
+        "\n\t• Integrated frontend and backend services" + "\n\t• Researched proper authentication and encryption for system"},
+
+        {name: "Jordy Pantoja", position: "Frontend Developer • Music Generation", image: defaultImage, bio: "Hello World Empty Text",
+        contributions:"\t• Developed front-end web and desktop appliction" + "\n\t• Researched & implemented testing frameworks for frontend" + 
+        "\n\t• Researched EEG and MIDI homebrew implementations" + "\n\t• Curated ideas for different music generation models"},
+
+        {name: "Harry Sauers", position: "Database Engineer • Backend Developer", image: defaultImage, bio: "Hello World Empty Text",
+        contributions:"\t• Researched and managed database system" + "\n\t• Researched & developed backend infrastructure" + 
+        "\n\t• Managed deployment, servers, CI/CD pipeline & testing" + "\n\t• Integrated frontend and backend services"},
     ];
     // ============================================================================================= 
     
@@ -96,6 +118,12 @@ const Team2 = () => {
             <p>{teamInfo.objectives}</p>
             <h3 className='about-team-subtitle'>Contributions</h3>
             <p>{teamInfo.contributions}</p>
+            <h3 className='about-team-subtitle'>See Version {teamInfo.number} Project</h3>
+            <h6>
+                <FontAwesomeIcon className='modal-track-icons' icon={["fab", "github"]} />
+                {'GitHub '} 
+                <a href={teamInfo.github}>{teamInfo.github}</a>
+            </h6>
         </div>
         <div className='about-team-members'>
             {memberList.map((teamMember) => (

@@ -5,6 +5,7 @@ import '../../About/About.css'
 import profileImage from '../../../images/blankProfile.png'
 import TeamMemberModal from '../../TeamMemberModal/TeamMemberModal';
 import { Modal } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Team4 = () => {
 
@@ -14,33 +15,39 @@ const Team4 = () => {
         yearsFound: string;
         objectives: string;
         contributions: string;
+        github: string;
     }
 
     const teamInfo : Team = {
         "number": 4,  // Format as integer number
         "yearsFound": "2022-2023",  // format as string 'yyyy-yyyy'
 
-        "objectives": "The primary goal of BrainBeats version 4 was to create a new refactored version of the pre-existing web application. Our objectives included a major redesign of the user interface, a modularization of the codebase, to include more complex music generation methods, and to improve the scripting system with custom compatibility. ", 
+        "objectives": "The primary goal of BrainBeats version 4 was to create a new refactored version" +
+        " of the pre-existing web application. Our objectives included a major redesign of the user interface," +
+        " a modularization of the codebase, to include more complex music generation methods, and to improve the" +
+        " scripting system with custom compatibility. ", 
 
         "contributions": "Version 4’s contributions include:" +
         "\n\t• A major redesign of the user interface." +
         "\n\t\t◦ The creation of a more accessible and modern web application." +
         "\n\t\t◦ The addition of new pages and features to improve user experience." +
         
-        "\n\n\t• A modularization of the codebase." +
+        "\n\t• A modularization of the codebase." +
         "\n\t\t◦ The refactorization of the existing backend." +
         "\n\t\t◦ The conversion from JavaScript to TypeScript." +
         "\n\t\t◦ The inclusion of flexible script generation." +
         "\n\t\t◦ Ensuring well-documented code for future BrainBeats developers." +
         
-        "\n\n\t• More complex music generation methods." +
+        "\n\t• More complex music generation methods." +
         "\n\t\t◦ The inclusion of more music generation options." +
         "\n\t\t◦ The inclusion of plugin discovery with standardized input/output." +
         "\n\t\t◦ The ability for developers to easily add new generation scripts." +
         
         
-        "\n\n\t• Improved scripting system with custom image compatibility." +
+        "\n\t• Improved scripting system with custom image compatibility." +
         "\n\t\t◦ The discovery of stock images to improve the visual script system.",
+
+        "github": "https://github.com/Brainbeats-v4/BrainBeatsv4",
     }
     // ===============================  Enter TEAM MEMBERS info here =============================== 
 
@@ -124,6 +131,12 @@ const Team4 = () => {
             <p>{teamInfo.objectives}</p>
             <h3 className='about-team-subtitle'>Contributions</h3>
             <p>{teamInfo.contributions}</p>
+            <h3 className='about-team-subtitle'>See Version {teamInfo.number} Project</h3>
+            <h6>
+                <FontAwesomeIcon className='modal-track-icons' icon={["fab", "github"]} />
+                {'GitHub '} 
+                <a href={teamInfo.github}>{teamInfo.github}</a>
+            </h6>
         </div>
         <div className='about-team-members'>
             {memberList.map((teamMember) => (

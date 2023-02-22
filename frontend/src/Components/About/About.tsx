@@ -67,15 +67,15 @@ const About = () => {
               </button>
               <button type="button" className="btn btn-secondary about-team-btn" style={{backgroundColor: displayTeam == 3?  "#005B69" : "#259FB1"}} onClick={(e) => setDisplayTeam(3)}>
                 Team 3
-                <h6 className='about-team-btn-subtitle'>(2021-2022)</h6>
+                <h6 className='about-team-btn-subtitle'>(2022)</h6>
               </button>
               <button type="button" className="btn btn-secondary about-team-btn" style={{backgroundColor: displayTeam == 2?  "#005B69" : "#259FB1"}} onClick={(e) => setDisplayTeam(2)}>
                 Team 2
-                <h6 className='about-team-btn-subtitle'>(2020-2021)</h6>
+                <h6 className='about-team-btn-subtitle'>(2021-2022)</h6>
               </button>
               <button type="button" className="btn btn-secondary about-team-btn" style={{backgroundColor: displayTeam == 1?  "#005B69" : "#259FB1"}} onClick={(e) => setDisplayTeam(1)}>
                 Team 1
-                <h6 className='about-team-btn-subtitle'>(2019-2020)</h6>
+                <h6 className='about-team-btn-subtitle'>(2020)</h6>
               </button>
             </div>
             {displayTeam == 4? <Team4></Team4> : null}

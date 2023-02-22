@@ -196,6 +196,7 @@ p{
     /* background-color: lightgray; */
     min-width: 49%;
     padding: 2%;
+    height: fit-content;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
