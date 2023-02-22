@@ -51,7 +51,8 @@ router.post('/createUser', async (req, res) => {
     } catch (err) {
         console.log(err);
         return res.status(400).json({
-            msg: "Could not create user."
+            err
+            //msg: "Could not create user."
         });
     }
 });
@@ -104,7 +105,7 @@ router.post('/loginUser', async (req, res) => {
                     bio: userExists.bio,
                     profilePicture: userExists.profilePicture,
                     userId: userExists.id,
-                    likes: userExists.likes
+                    like: userExists.like
                 },
                 token: token
             }

@@ -9,7 +9,9 @@ import TrackCard from '../TrackCard/TrackCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Buffer } from 'buffer';
 import buildPath from '../../util/ImagePath';
-import { encode } from '../../util/ImageHelperFunctions';
+import { encode, resize } from '../../util/ImageHelperFunctions';
+
+
 
 const Profile = () => {
     const [user, setUser] = useRecoilState(userModeState);
@@ -17,6 +19,7 @@ const Profile = () => {
     const jwt = useRecoilValue(userJWT);
     const [playlist, setPlaylist] = useState([]); 
     const [posts, setPosts] = useState([])
+    const [msg, setMsg] = useState('');
 
     // For displaying profile picture
     const [displayPicture, setDisplayPicture] = useState(user!==null ? user.profilePicture: undefined);
@@ -88,7 +91,22 @@ const Profile = () => {
 
     // Function updating profile picture
     async function updateProfilePic(file:File) {
+
         var base64result:any;
+        
+        // Resize code
+
+        // base64result = await resize(fileIn);
+
+        // if (!base64result) {
+        //     setMsg("Upload Failed, please try another image");
+        //     return;
+        // }
+        // setMsg("");
+
+        // console.log(base64result);
+
+
         var blobResult:any;
         await convertToBase64(file).then(res => {
             base64result = res;

@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "compress": "zip -r backend.zip ./",
+    "deploy": "scp -r ./* root@178.128.153.117:../home/backend"
   },
   "dependencies": {
     "@prisma/client": "^4.6.1",

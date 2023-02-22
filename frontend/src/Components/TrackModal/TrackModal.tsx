@@ -133,9 +133,11 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
 
 
-  function updateTrack (visibility = track.public, newTrackName = trackName, thumbnailPic = displayThumbnail, likes = likeCount) {
+  function updateTrack (newVisibility = visibility, newTrackName = trackName, thumbnailPic = displayThumbnail, likes = likeCount) {
 
     if (jwt == null || user == null) navigate("/login");
+
+    console.log(visibility);
 
     let updatedTrack = {
       id: track.id,
@@ -143,7 +145,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
       midi: track.midi,
       thumbnail: thumbnailPic,
       likeCount: track.likeCount,
-      public: visibility,
+      public: newVisibility,
       token: jwt,
     }
     
@@ -237,18 +239,18 @@ const TrackModal: React.FC<Props> = ({track}) => {
               <img src={displayThumbnail} className="card-img-top modal-track-cover" id="card-img-ID" alt="track image" onClick={() => {}}/>
             </div>
             <div id='modal-track-text-div'>
-              {visibility && <h6 id="hidden-track-text">
+              {!visibility && <h6 id="hidden-track-text">
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye-slash"]} />
                 hidden track
               </h6>}
-              {!visibility && <h6 id="hidden-track-text">
+              {visibility && <h6 id="hidden-track-text">
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye"]} />
                 Public track
               </h6>}
               {!editing && <h1 id='track-title-text'>{trackName}</h1>}
               {editing && <input type="text" id='track-title-text' defaultValue={trackName} onChange={(e) => setTrackName(e.target.value)}></input>}
               
-              <h6 id="track-author-text">By {track.fullname}</h6>
+              <h6 id="track-author-text">By {track.fullname} </h6>
               <button type="button" className="btn btn-primary" id='play-btn'>
                 <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "play"]} />
                 <h3>Play</h3>
@@ -264,7 +266,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
               {editing && <button className='btn btn-secondary modal-btn-public' onClick={() => setVisibilityButton()}>
                 {visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye"]} id="visibilityButton" />}
                 {!visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye-slash"]} id="visibilityButton" />}
-                  {!visibility ? "Make Private" : "Make Public"}
+                  {visibility ? "Make Private" : "Make Public"}
               </button>}
               {editing && <button className='btn btn-secondary modal-btn-public' id='delete-track-btn' onClick={()=>doDelete()}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "trash"]} />

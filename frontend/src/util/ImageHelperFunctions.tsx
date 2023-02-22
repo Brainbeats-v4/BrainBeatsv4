@@ -1,3 +1,5 @@
+import Resizer from "react-image-file-resizer";
+
 // public method for encoding an Uint8Array to base64
 // from: https://stackoverflow.com/questions/11089732/display-image-from-blob-using-javascript-and-websockets
 
@@ -27,3 +29,19 @@ export function encode (input:Uint8Array) {
     }
     return output;
 }
+
+export function resize (file:File) {
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      512,
+      512,
+      "JPEG",
+      100,
+      0,
+      (uri) => {
+        resolve(uri);
+      },
+      "base64"
+    );
+})}
