@@ -64,17 +64,14 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
   }
 
-
   function setVisibilityButton() {
     setVisibility(!visibility);
     setButtonText(visibility ? "Make Private" : "Make Public");
-
-    console.log("clicking");
-    console.log(visibility, buttonText);
   }
 
   // For displaying track thumbnail picture
-  const [displayThumbnail, setDisplayThumbnail] = useState(track!==null ? track.thumbnail: undefined);
+  const [displayThumbnail, setDisplayThumbnail] = useState(track!==null ? track.thumbnail : undefined);
+
   if(displayThumbnail !== undefined) {
     if ((displayThumbnail as string).split('/')[0] === 'data:text') {
       console.log(displayThumbnail);
@@ -163,6 +160,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
     setEditing(false);
     track.title = newTrackName;
+    track.public = newVisibility;
     track.likeCount = likeCount;
   }
 
