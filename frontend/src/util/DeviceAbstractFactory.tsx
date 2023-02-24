@@ -101,6 +101,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
        console.log(currentData);
 
        this.noteHandler.originalNoteGeneration(currentData);
+       
     //    this.midiManager.convertInput(currentData)    
         
         return currentData;

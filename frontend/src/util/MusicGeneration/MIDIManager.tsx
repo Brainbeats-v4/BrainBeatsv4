@@ -6,6 +6,7 @@ import {getMillisecondsFromBPM} from './MusicHelperFunctions';
 
 import MidiWriter from 'midi-writer-js';
 import {encode, decode } from 'js-base64';
+import musicGenerationSettingsSlice from "../../Redux/slices/musicGenerationSettingsSlice";
 
 export class MIDIManager {
     public MIDIChannels:MidiWriter.Track[] = [];
@@ -23,6 +24,7 @@ export class MIDIManager {
         var channel2 = new MidiWriter.Track();
         var channel3 = new MidiWriter.Track();
         this.MIDIChannels.push(channel0, channel1, channel2, channel3)
+
         /*  This block initializes 4 more channels to write MIDI to in the case that
             we are using the cyton board, it does this by looking at the number of channels
             in the instrument setting since it is specific to the device. */
@@ -40,6 +42,7 @@ export class MIDIManager {
     }
     
     public initializeSettings(settings:MusicSettings) {
+        
         /* This is just a start, we're going to work on a condition here
            where the number of tempos get set by the type of settings */
         for(var i = 0; i < this.MIDIChannels.length; i++) {
@@ -162,44 +165,77 @@ export class MIDIManager {
         }
     }
 
-    // public async realtimeGenerate(noteData:any[]) {
-    //     if (this.numContexts >= 45) {
-    //         this.audioQueue[0].ctx.close();
-    //         this.audioQueue[0].node.disconnect();
-    //         this.audioQueue.shift();
-    //         this.numContexts--; // Decrement the numContexts variable because we removed one from the queue
-    //     }
-    //     this.audioQueue.push({ freq: noteData[i].player.frequency, playing: false, ctx: 0, buffer: 0, node: 0, gain: 0, needToClose: false, number: this.numContexts });
-    
-    //     //console.log("Number of current contexts: " + this.numContexts + ", array: " + audioQueue);
-    
-    //     if (this.audioQueue[this.numContexts].playing)
-    //         return false;
-    
-    //     this.audioQueue[this.numContexts].playing = true;
-    //     this.audioQueue[this.numContexts].needToClose = false;
-    
-    //     this.audioQueue[this.numContexts].ctx = new AudioContext();
-    //     this.audioQueue[this.numContexts].buffer = getNoteData(soundType, this.audioQueue[this.numContexts].freq, amplitude, this.audioQueue[this.numContexts].ctx, noteLength);
-    //     this.audioQueue[this.numContexts].node = this.audioQueue[this.numContexts].ctx.createBufferSource();
-    //     this.audioQueue[this.numContexts].node.buffer = this.audioQueue[this.numContexts].buffer;
-    
-    //     // We need this gain object so that at the end of the note play we can taper the sound.
-    //     this.audioQueue[this.numContexts].gain = this.audioQueue[this.numContexts].ctx.createGain();
-    //     this.audioQueue[this.numContexts].node.connect(this.audioQueue[this.numContexts].gain);
-    //     this.audioQueue[this.numContexts].gain.connect(this.audioQueue[this.numContexts].ctx.destination);
-    //     this.audioQueue[this.numContexts].gain.gain.value = amplitude;
-    
-    //     // Set to loop, although there is sill a perceptable break at the end.
-    //     this.audioQueue[this.numContexts].node.loop = false;
-    
-    //     // Start the note.
-    //     // This needs to be edited; the third argument of the function will only ever make quarter notes.
-    //     this.audioQueue[this.numContexts].node.start(0, 0, getMillisecondsFromBPM(BPM) / 1000);
-    
-    //     // Increment the this.numContexts variable to reflect the new AudioContext added to the queue.
-    //     this.numContexts++;
-    
-    //     return true;
-    // }
+    public async realtimeGenerate(noteData:any[]) {
+        var BPM = this.settings.bpm;
+        var instruments = this.settings.deviceSettings.instruments;
+        var instrumentsArr = [];
+
+        var durations = this.settings.deviceSettings.durations;
+        var durationsArr = [];
+
+        // Convert instruments to array
+        let inst: keyof typeof instruments;
+        for (inst in instruments) {
+          instrumentsArr.push(instruments[inst]);
+        }
+
+        let dur: keyof typeof durations;
+        for (dur in durations) {
+          durationsArr.push(durations[dur]);
+        }
+
+
+        for (var i = 0; i < noteData.length-1; i++) {
+
+            // Setup for their vars
+            var soundType = instrumentsArr[i];
+            var duration = durationsArr[i];
+            var amplitude = noteData[i];
+
+            if (this.numContexts >= 45) {
+                this.audioQueue[0].ctx.close();
+                this.audioQueue[0].node.disconnect();
+                this.audioQueue.shift();
+                this.numContexts--; // Decrement the numContexts variable because we removed one from the queue
+            }
+
+            // our noteData is different than theres.
+            // will have to convert the freq differently?
+
+            this.audioQueue.push({ freq: noteData[i].player.frequency, playing: false, ctx: 0, buffer: 0, node: 0, gain: 0, needToClose: false, number: this.numContexts });
+        
+            //console.log("Number of current contexts: " + this.numContexts + ", array: " + audioQueue);
+        
+            if (this.audioQueue[this.numContexts].playing)
+                return false;
+        
+            this.audioQueue[this.numContexts].playing = true;
+            this.audioQueue[this.numContexts].needToClose = false;
+        
+            this.audioQueue[this.numContexts].ctx = new AudioContext();
+
+            // note sure where function -> getNoteData() is located
+            // this.audioQueue[this.numContexts].buffer = getNoteData(soundType, this.audioQueue[this.numContexts].freq, amplitude, this.audioQueue[this.numContexts].ctx, noteLength);
+            this.audioQueue[this.numContexts].node = this.audioQueue[this.numContexts].ctx.createBufferSource();
+            this.audioQueue[this.numContexts].node.buffer = this.audioQueue[this.numContexts].buffer;
+        
+            // We need this gain object so that at the end of the note play we can taper the sound.
+            this.audioQueue[this.numContexts].gain = this.audioQueue[this.numContexts].ctx.createGain();
+            this.audioQueue[this.numContexts].node.connect(this.audioQueue[this.numContexts].gain);
+            this.audioQueue[this.numContexts].gain.connect(this.audioQueue[this.numContexts].ctx.destination);
+            this.audioQueue[this.numContexts].gain.gain.value = amplitude;
+        
+            // Set to loop, although there is sill a perceptable break at the end.
+            this.audioQueue[this.numContexts].node.loop = false;
+        
+            // Start the note.
+            // This needs to be edited; the third argument of the function will only ever make quarter notes.
+            this.audioQueue[this.numContexts].node.start(0, 0, getMillisecondsFromBPM(BPM) / 1000);
+        
+            // Increment the this.numContexts variable to reflect the new AudioContext added to the queue.
+            this.numContexts++;
+        
+            return true;
+        }
+    }
 }
