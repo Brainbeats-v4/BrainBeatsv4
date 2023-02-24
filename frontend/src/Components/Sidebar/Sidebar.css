@@ -8,7 +8,7 @@
 }
   
 .container{
-  display: flex;
+  /* display: flex; */
   height: fit-content;
   /* padding-left: 0px; */
   /* margin-right: 0%; */
