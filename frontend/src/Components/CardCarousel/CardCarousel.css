@@ -1,0 +1,31 @@
+#cardCarousel-container{
+    width: 50vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    /* background-color: aqua; */
+}
+
+#cardCarousel-container .carousel.carousel-slider {
+    width: 45vw!important;
+}
+
+#cardCarousel-container .carousel .carousel-status{
+    display: none;
+} 
+
+.card-display{
+    height: 60vh !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0e0e0e;
+    background-image: url('');
+    background-size: 100% 150% !important;
+    background-position: center center !important;
+    background-repeat: no-repeat;
+    color: white;
+    word-wrap: break-word;
+
+}

@@ -9,8 +9,22 @@
 }
 
 #carousel-container {
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
     width: 100%;
 }
+
+#carousel-container .carousel.carousel-slider {
+    width: 100%!important;
+}
+
+#carousel-container .carousel .carousel-status{
+    display: none;
+} 
+
+
 /* CSS for Tracks Section on Home */
 #featured-tracks-heading { 
     color: #ffffff;
@@ -26,3 +40,7 @@
     /* margin: 0; */
 }
 
+/* CSS for Mobile View */
+@media only screen and (max-width: 400px) {
+
+}

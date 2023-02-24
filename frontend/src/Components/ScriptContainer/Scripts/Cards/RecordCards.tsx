@@ -1,6 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../../../Redux/hooks';
+import CardCarousel from '../../../CardCarousel/CardCarousel';
 import UploadTrackModal from '../../../UploadTrackModal/UploadTrackModal';
 
 // Import CSS
@@ -13,6 +16,9 @@ const RecordCards = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
 
+    // For collecting image from Redux
+    const cardArray = useAppSelector(state => state.cardArraySlice)
+    const dispatch = useDispatch();
 
     function setVisibilityButton() {
         setRecordVisibility(!recordVisibility);
@@ -61,7 +67,8 @@ const RecordCards = () => {
                 <div id='record-track-info-div'>
                     <div id='display-record-card-div'>
                         Displaying Cards:
-                        <div id='card-display'>
+                        {/* <CardCarousel></CardCarousel> */}
+                        <div className='card-display'>
                         </div>
                     </div>
                     <div className='record-btns-div'>

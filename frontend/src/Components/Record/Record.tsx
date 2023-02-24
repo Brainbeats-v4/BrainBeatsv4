@@ -1,6 +1,9 @@
 import { ConcreteCytonStream, ConcreteGanglionStream, AbstractGanglionStream, AbstractCytonStream } from '../../util/DeviceAbstractFactory';
 import { useAppSelector } from "../../Redux/hooks";
 import React, {useState} from 'react';
+import CardCarousel from '../CardCarousel/CardCarousel';
+
+import './Record.css'
 
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
@@ -48,12 +51,17 @@ function Record() {
         }
     }
 
-    return(<div>
-        
-        <button onClick={doRecording}>Record</button>
-        <button onClick={stopRecording}>Stop</button>
-        <a download={'currentMIDI.MID'} href={MIDIUri}>download the midi</a>
-    </div>)
+    return(
+        <div className='container' id='record-container'>
+            <div id='record-btn-div'>
+                <button id='record-btn' onClick={doRecording}>Record</button>
+                <button id='stop-btn' onClick={stopRecording}>Stop</button>
+                <a download={'currentMIDI.MID'} href={MIDIUri}>download the midi</a>
+            </div>
+            <br></br>
+            <CardCarousel></CardCarousel>
+        </div>
+    )
 }
 
 export default Record;
