@@ -58,16 +58,12 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public noteHandler;
 
     constructor(settings:MusicSettings) {
-
-        console.log("Constructed Cyton");
         this.settings = settings;
         this.noteHandler = new NoteHandler(this.settings);
-        this.noteHandler.setDebugOutput(true);
-
+        this.noteHandler.setDebugOutput(true);                         // Debug
     }
 
     public async initializeConnection() {
-        console.log("Starting Cyton Connection");
         this.flag = false;
         console.log(Devices['USB']);
         await initDevice(Devices['USB']['cyton'],
@@ -99,16 +95,15 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             timeStamp: data['timestamp'][0]
        }
 
-       console.log(currentData);
+        this.noteHandler.originalNoteGeneration(currentData);
+        //    this.midiManager.convertInput(currentData)    
+    
 
-       this.noteHandler.originalNoteGeneration(currentData);
-       
-    //    this.midiManager.convertInput(currentData)    
-        
         return currentData;
     }
 
     public stopDevice() {
+        this.noteHandler.setStopFlag();
         this.flag = true;
         this.device.disconnect();
         return this.noteHandler.returnMIDI();
@@ -190,7 +185,7 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
             channel03: data[3][0],
             timeStamp: data['timestamp'][0]
        }
-       console.log(currentData);
+    //    console.log(currentData);
 
     //    this.noteHandler.originalNoteGeneration(currentData);
        // This should be passed to the note manager

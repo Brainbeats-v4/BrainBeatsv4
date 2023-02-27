@@ -322,3 +322,5 @@ var tuba_note29 = [369.994, 0.1843, 0.017982, 0.004516, 0.000659, 0.000195, 0.00
 var tuba_note30 = [391.995, 0.2552, 0.014882, 0.002343, 0.000552, 0.00016, 0.000145, 0.000221];
 // Aggregate tuba notes
 export const tuba = [tuba_note0, tuba_note1, tuba_note2, tuba_note3, tuba_note4, tuba_note5, tuba_note6, tuba_note7, tuba_note8, tuba_note9, tuba_note10, tuba_note11, tuba_note12, tuba_note13, tuba_note14, tuba_note15, tuba_note16, tuba_note17, tuba_note18, tuba_note19, tuba_note20, tuba_note21, tuba_note22, tuba_note23, tuba_note24, tuba_note25, tuba_note26, tuba_note27, tuba_note28, tuba_note29, tuba_note30];
+
+export const instrumentList = [flute, oboe, clarinet, bassoon, trumpet, frenchhorn, trombone, tuba]

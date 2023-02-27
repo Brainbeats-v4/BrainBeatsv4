@@ -1,7 +1,9 @@
 import { MusicSettings, DataStream4Ch, DataStream8Ch, CytonSettings, GanglionSettings } from "../Interfaces";
 // import { getNoteData } from './Playback'
-import {getMillisecondsFromBPM} from './MusicHelperFunctions';
-
+import {getMillisecondsFromBPM, findNumSamples, getIntFromNoteTypeString} from './MusicHelperFunctions';
+import * as Enums from '../Enums';
+import * as Constants from '../Constants';
+import { instrumentList } from "./InstOvertoneDefinitions";
 
 
 import MidiWriter from 'midi-writer-js';
@@ -9,14 +11,19 @@ import {encode, decode } from 'js-base64';
 import musicGenerationSettingsSlice from "../../Redux/slices/musicGenerationSettingsSlice";
 
 export class MIDIManager {
+    // Settings
     public MIDIChannels:MidiWriter.Track[] = [];
     public channel0:any;
     public settings:MusicSettings
-    public audioQueue:any[] = [];
-    private numContexts = 0;
     public MIDIURI:string;
+    
+    // Playback
+    public audioQueue:any[] = [];
+    private audioContext:AudioContext;
+    // private numContexts:number[] = [];
+    private timeForEachNoteArray:Array<number>;
 
-    constructor(settings:MusicSettings) {
+    constructor(settings:MusicSettings, timeForEachNoteArray:Array<number>) {
         this.MIDIURI = "";
         var channel0 = new MidiWriter.Track();
         this.channel0 = channel0;
@@ -39,6 +46,8 @@ export class MIDIManager {
 
         this.settings = settings;
         this.initializeSettings(settings);
+        this.timeForEachNoteArray = timeForEachNoteArray;
+        this.audioContext = new AudioContext();
     }
     
     public initializeSettings(settings:MusicSettings) {
@@ -64,31 +73,10 @@ export class MIDIManager {
 
     public returnMIDI() {
         var write = new MidiWriter.Writer(this.MIDIChannels);
-        // var fileBuild = write.buildFile()
-        // const midiFileChunks = this.sliceIntoChunks(fileBuild, 5000); 
         var base64String = write.base64();
-        // const fileString = midiFileChunks.map((midiFileChunk:Uint8Array) => {
-        //     return String.fromCharCode.apply(null, Array.from(midiFileChunk));
-        // }).join("");
-
         var prefix = "data:audio/midi;base64,"
-        
         prefix = prefix.concat(base64String);
-
-        console.log(prefix);
-
         return prefix;
-
-
-        // this.MIDIURI = writeURI 
-
-        // return prefix + encode(fileString);
-
-
-
-
-        
-        // return base64;
     }
 
     /* This function is a helper in order to return the proper type to assign to the
@@ -165,7 +153,48 @@ export class MIDIManager {
         }
     }
 
+    private async playWhiteNoise() {
+        const audioCtx = new window.AudioContext;
+
+        // Create an empty three-second stereo buffer at the sample rate of the AudioContext
+        const myArrayBuffer = audioCtx.createBuffer(
+          2,
+          audioCtx.sampleRate * 3,
+          audioCtx.sampleRate
+        );
+        
+        // Fill the buffer with white noise;
+        //just random values between -1.0 and 1.0
+        for (let channel = 0; channel < myArrayBuffer.numberOfChannels; channel++) {
+          // This gives us the actual ArrayBuffer that contains the data
+          const nowBuffering = myArrayBuffer.getChannelData(channel);
+          
+          
+          for (let i = 0; i < myArrayBuffer.length; i++) {
+            // Math.random() is in [0; 1.0]
+            // audio needs to be in [-1.0; 1.0]
+            var arr = [-.2, -.7, 0, .4, .9];
+
+            nowBuffering[i] = Math.random();
+          }
+        }
+        
+        // Get an AudioBufferSourceNode.
+        // This is the AudioNode to use when we want to play an AudioBuffer
+        const source = audioCtx.createBufferSource();
+        // set the buffer in the AudioBufferSourceNode
+        source.buffer = myArrayBuffer;
+        // connect the AudioBufferSourceNode to the
+        // destination so we can hear the sound
+        source.connect(audioCtx.destination);
+        // start the source playing
+        source.start();
+    }
+
     public async realtimeGenerate(noteData:any[]) {
+        // this.playWhiteNoise();
+        // return;
+
         var BPM = this.settings.bpm;
         var instruments = this.settings.deviceSettings.instruments;
         var instrumentsArr = [];
@@ -184,58 +213,298 @@ export class MIDIManager {
           durationsArr.push(durations[dur]);
         }
 
+        // Loop through each note and process the sound
+        
+        for (var i = 0; i < noteData.length; i++) {         
 
-        for (var i = 0; i < noteData.length-1; i++) {
+            var playerInfo = noteData[i].player;
 
             // Setup for their vars
             var soundType = instrumentsArr[i];
             var duration = durationsArr[i];
-            var amplitude = noteData[i];
+            var amplitude = noteData[i].player.amplitude;
 
-            if (this.numContexts >= 45) {
-                this.audioQueue[0].ctx.close();
-                this.audioQueue[0].node.disconnect();
-                this.audioQueue.shift();
-                this.numContexts--; // Decrement the numContexts variable because we removed one from the queue
+            this.audioContext = new AudioContext();
+            var buf = this.audioContext.createBuffer( 
+                2,
+                Constants.sampleRate * this.timeForEachNoteArray[i]/1000,
+                Constants.sampleRate
+              );
+
+            for (let channel = 0; channel < buf.numberOfChannels; channel++) {
+            // This gives us the actual ArrayBuffer that contains the data
+            const nowBuffering = buf.getChannelData(channel);
+            
+            
+                for (let i = 0; i < buf.length; i++) {
+                    // Math.random() is in [0; 1.0]
+                    // audio needs to be in [-1.0; 1.0]
+                    // var arr = [-.2, -.7, 0, .4, .9];
+        
+                    nowBuffering[i] = playerInfo.noteFrequency;
+                }
             }
+            // Get an AudioBufferSourceNode.
+            // This is the AudioNode to use when we want to play an AudioBuffer
+            const source = this.audioContext.createBufferSource();
+            // set the buffer in the AudioBufferSourceNode
+            source.buffer = buf;
+            // connect the AudioBufferSourceNode to the
+            // destination so we can hear the sound
+            source.connect(this.audioContext.destination);
+            // start the source playing
+            source.start();
+            
+            continue;
+        
+            this.audioQueue.push({
+                freq: playerInfo.noteFrequency,
+                playing: false,
+                ctx: this.audioContext,
+                buffer: this.getNoteData(soundType, playerInfo.noteFrequency, amplitude, this.audioContext, duration),
+                node: this.audioContext.createBufferSource(),
+                gain: this.audioContext.createGain(),
+                needToClose: false,
+            })
 
-            // our noteData is different than theres.
-            // will have to convert the freq differently?
+            if(this.audioQueue[i].playing) {
+                console.log("we are continuing");
+                continue;
+            }
+            
+            this.audioQueue[i].node.buffer = this.audioQueue[i].buffer;
 
-            this.audioQueue.push({ freq: noteData[i].player.frequency, playing: false, ctx: 0, buffer: 0, node: 0, gain: 0, needToClose: false, number: this.numContexts });
-        
-            //console.log("Number of current contexts: " + this.numContexts + ", array: " + audioQueue);
-        
-            if (this.audioQueue[this.numContexts].playing)
-                return false;
-        
-            this.audioQueue[this.numContexts].playing = true;
-            this.audioQueue[this.numContexts].needToClose = false;
-        
-            this.audioQueue[this.numContexts].ctx = new AudioContext();
+            this.audioQueue[i].node.connect(this.audioQueue[i].gain);
+            this.audioQueue[i].gain.connect(this.audioQueue[i].ctx.destination);
+            this.audioQueue[i].gain.gain.value = amplitude;
+            
+            this.audioQueue[i].node.loop = false;
+            
+            //URGENT : THe commented line ONLY MAKES QUARTER NOTES (THANKS V3 <3)
+            // var qtr = getMillisecondsFromBPM(BPM) / 1000;
 
-            // note sure where function -> getNoteData() is located
-            // this.audioQueue[this.numContexts].buffer = getNoteData(soundType, this.audioQueue[this.numContexts].freq, amplitude, this.audioQueue[this.numContexts].ctx, noteLength);
-            this.audioQueue[this.numContexts].node = this.audioQueue[this.numContexts].ctx.createBufferSource();
-            this.audioQueue[this.numContexts].node.buffer = this.audioQueue[this.numContexts].buffer;
-        
-            // We need this gain object so that at the end of the note play we can taper the sound.
-            this.audioQueue[this.numContexts].gain = this.audioQueue[this.numContexts].ctx.createGain();
-            this.audioQueue[this.numContexts].node.connect(this.audioQueue[this.numContexts].gain);
-            this.audioQueue[this.numContexts].gain.connect(this.audioQueue[this.numContexts].ctx.destination);
-            this.audioQueue[this.numContexts].gain.gain.value = amplitude;
-        
-            // Set to loop, although there is sill a perceptable break at the end.
-            this.audioQueue[this.numContexts].node.loop = false;
-        
-            // Start the note.
-            // This needs to be edited; the third argument of the function will only ever make quarter notes.
-            this.audioQueue[this.numContexts].node.start(0, 0, getMillisecondsFromBPM(BPM) / 1000);
-        
-            // Increment the this.numContexts variable to reflect the new AudioContext added to the queue.
-            this.numContexts++;
-        
-            return true;
+            this.audioQueue[i].node.start(0, 0, this.timeForEachNoteArray[i] / 1000);
+            this.audioQueue[i].node.disconnect();
+            this.audioContext.close();
         }
+        
+        return true;
     }
+
+    private getNoteData(soundType:number, freq:number, amplitude:number, ctx:any, noteLength:number) {
+        var buffer; // Local buffer variable.
+
+        // For each supported sound type we call the correct function.
+        if (soundType === Enums.InstrumentTypes.SINEWAVE) {
+            buffer = this.generateSineWave(findNumSamples(this.timeForEachNoteArray[noteLength]), freq, amplitude, ctx);
+        }
+        else if (soundType === Enums.InstrumentTypes.TRIANGLEWAVE) {
+            buffer = this.generateTriangleWave(findNumSamples(this.timeForEachNoteArray[noteLength]), freq, amplitude, ctx);
+        }
+        else if (soundType === Enums.InstrumentTypes.SQUAREWAVE) {
+            buffer = this.generateSquareWave(findNumSamples(this.timeForEachNoteArray[noteLength]), freq, amplitude, ctx);
+        }
+        else {
+            buffer = this.generateInstrumentWave(findNumSamples(this.timeForEachNoteArray[noteLength]), freq, ctx, soundType);
+        }
+
+        return buffer;
+    }
+
+    private generateSineWave(numSamples:number, frequency:number, amplitude:number, ctx:any) {
+        let PI_2 = Math.PI * 2;
+
+        // Create the buffer for the node.
+        let buffer = ctx.createBuffer(1, numSamples, Constants.sampleRate);
+    
+        // Create the buffer into which the audio data will be placed.
+        let buf = buffer.getChannelData(0);
+    
+        // Loop numSamples times -- that's how many samples we will calculate and store.
+        for (let i = 0; i < numSamples; i++) {
+            // Calculate and store the value for this sample.
+            buf[i] = Math.sin(frequency * PI_2 * i / Constants.sampleRate) * amplitude;
+        }
+    
+        // Return the channel buffer.
+        return buffer;
+    }
+
+    private generateTriangleWave(numSamples:number, frequency:number, amplitude:number, ctx:any) {
+
+        // Here we calculate the number of samples for each wave oscillation.
+        var samplesPerOscillation = Constants.sampleRate / frequency;
+        // This is the first quarter of the oscillation. 0 - 1/4
+        var first = samplesPerOscillation / 4;
+        // This is the second quarter of the oscillation. 1/4 - 1/2
+        var second = samplesPerOscillation / 2;
+        // This is the third quarter of the oscillation. 1/2 - 3/4
+        var third = (samplesPerOscillation / 2) + (samplesPerOscillation / 4);
+        // We will count the samples as we go.
+        var counter = 0;
+    
+        // Step value. This is how much the sample value changes per sample.
+        var step = 1 / first;
+    
+        // Create the buffer for the node.
+        var buffer = ctx.createBuffer(1, numSamples, Constants.sampleRate);
+    
+        // Create the buffer into which the audio data will be placed.
+        var buf = buffer.getChannelData(0);
+    
+        // Loop numSamples times -- that's how many samples we will calculate and store.
+        for (var i = 0; i < numSamples; i++) {
+            // Increment the counter.
+            counter++;
+    
+            // See if this is the first quarter.
+            if (counter <= first) {
+                // Store the value.
+                buf[i] = step * counter * amplitude;
+            }
+            // See if this is the second quarter.
+            else if (counter <= second) {
+                // We want the count relative to this quarter.
+                var cnt = counter - first;
+    
+                // Store the value.
+                buf[i] = 1 - step * cnt * amplitude;
+            }
+            // See if this is the third quarter.
+            else if (counter <= third) {
+                // We want the count relative to this quarter.
+                var cnt = counter - second;
+    
+                // Store the value.
+                buf[i] = -(step * cnt) * amplitude;
+            }
+            // This is the fourth quarter.
+            else {
+                // We want the count relative to this quarter.
+                var cnt = counter - third;
+    
+                // Store the value.
+                buf[i] = -1 + (step * cnt) * amplitude;
+    
+                // See if we are done with this cycle.
+                if (counter >= samplesPerOscillation) {
+                    // Set to zero so we are ready for another cycle.
+                    counter = 0;
+                }
+            }
+        }
+        return buffer;
+    }
+
+    private generateSquareWave(numSamples:number, frequency:number, amplitude:number, ctx:any) {
+
+        // Here we calculate the number of samples for each wave oscillation.
+        var samplesPerOscillation = Constants.sampleRate / frequency;
+        // Create the value for the first oscillation change.
+        var first = samplesPerOscillation / 2;
+        // We will count the samples as we go.
+        var counter = 0;
+    
+        // Create the buffer for the node.
+        var buffer = ctx.createBuffer(1, numSamples, Constants.sampleRate);
+    
+        // Create the buffer into which the audio data will be placed.
+        var buf = buffer.getChannelData(0);
+    
+        // Loop numSamples times -- that's how many samples we will calculate and store.
+        for (var i = 0; i < numSamples; i++) {
+            // Increment the counter.
+            counter++;
+    
+            // This is the first half of the oscillation. it should be 1.
+            if (counter <= first) {
+                // Store the value.
+                buf[i] = 1 * amplitude;
+            }
+            // This is the second half of the oscillation. It should be -1.
+            else {
+                // Store the value.
+                buf[i] = -1 * amplitude;
+    
+                // See if we are done with this cycle.
+                if (counter >= samplesPerOscillation) {
+                    // Set to zero so we are ready for another cycle.
+                    counter = 0;
+                }
+            }
+        }
+    
+        // Return the channel buffer.
+        return buffer;
+    }
+
+    private generateInstrumentWave(numSamples:number, frequency:number, ctx:any, soundType:number) {    
+        // Get the instrument specs.
+        let inst = this.getOvertoneFrequencies(soundType, frequency);
+    
+        // Precalculate 2PI
+        let PI_2 = Math.PI * 2;
+    
+        // Create the buffer for the node.
+        let buffer = ctx.createBuffer(1, numSamples, Constants.sampleRate);
+    
+        // Create the buffer into which the audio data will be placed.
+        var buf = buffer.getChannelData(0);
+    
+        // Zero the buffer
+        for (var i = 0; i < numSamples; i++) {
+            buf[i] = 0;
+        }
+    
+        // Loop through the instrument spec.
+        for (var j = 0; j < inst.length / 2; j++) {
+            // Get the frequency multiplier from the data array.
+            var f = frequency * inst[j * 2];
+            //console.log("f: ", f, ", which is ", frequency, " times ", inst[j*2])
+            // Get the amplitude value from the data array.
+            var a = inst[j * 2 + 1];
+            //console.log("a: ", a)
+            // Loop numSamples times -- that's how many samples we will calculate and store.
+            for (var i = 0; i < numSamples; i++) {
+                // Calculate and store the value for this sample.
+                buf[i] += (Math.sin(f * PI_2 * i / Constants.sampleRate) * a);
+                //buf[i] = frequency;
+            }
+        }
+    
+        // Return the channel buffer.
+        return buffer;
+    }
+
+    private getOvertoneFrequencies(instrumentIndex:number, frequency:number) {
+        // Get the list of note amplitude values for this instrument.
+        let list = instrumentList[instrumentIndex];
+    
+        // We will start with a default value.
+        let index = 0;
+        //console.log("frequency : " + frequency, ", list: " + list + ", instrumentIndex: " + instrumentIndex);
+        let diff = Math.abs(frequency - list[0][0]);
+    
+        // Loop through the list of frequencies/amplitudes and find the closest match.
+        for (let i = 1; i < list.length; i++) {
+            // Get the difference between incoming frequency value and the frequeny of this list element.
+            let td = Math.abs(frequency - list[i][0]);
+    
+            // If this is less (we are closer to the specified frequency) then we record the index and remember the new difference.
+            if (td < diff) {
+                diff = td;
+                index = i;
+            }
+        }
+    
+        // Here we take the current array and make a new array to return.
+        let retList = [];
+        for (let i = 1; i < list[index].length; i++) {
+            retList.push(i); // Push the harmonic number.
+            retList.push(list[index][i]); // Push the amplitude.
+        }
+    
+        return retList;
+    }
+
 }
