@@ -69,6 +69,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public async initializeConnection() {
         console.log("Starting Cyton Connection");
         this.flag = false;
+        console.log(Devices['USB']);
         await initDevice(Devices['USB']['cyton'],
                 {   // this pushes the data from the headband as it is received from the board into the channels array
                     ondecoded: (data) => { this.recordInputStream(data) }, 
