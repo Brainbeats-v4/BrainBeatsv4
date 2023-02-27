@@ -23,6 +23,7 @@ export function getIntFromNoteTypeString(input:String) {
     else if (input.localeCompare("quarter") == 0) return 2;
     else if (input.localeCompare("half") == 0) return 3;
     else if (input.localeCompare("whole") == 0) return 4;
+    else return 0;
 }
 
 // Takes a string, returns the respective note type in int form, but using the values that MidiWriterJS wants.
