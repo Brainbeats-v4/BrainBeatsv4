@@ -7,6 +7,7 @@ import { useAppSelector } from '../../../../Redux/hooks';
 import { Card } from '../../../../util/Interfaces'
 import { useDispatch } from 'react-redux';
 import { set } from '../../../../Redux/slices/cardArraySlice'
+import { useNavigate } from 'react-router-dom';
 
 function Cards() {
     const initialBackground = {
@@ -44,6 +45,14 @@ function Cards() {
 	const [textColor, setTextColor] = useState(initialTextColor);
     const [imageURL, setImageURL] = useState('');
 
+
+
+    // Navigating
+    const navigate = useNavigate();
+    const doNavigate = (route:string) => {
+        navigate(route);
+    }
+
     const setColorBackground = (color: { rgb: any; }) => {
 		setBackgroundColor({ displayColorPicker: backgroundColor.displayColorPicker, color: color.rgb });
         setImageURL('');
@@ -76,8 +85,12 @@ function Cards() {
 
         console.log(newCard);
         console.log(cards);
-        dispatch(set(cards));
+        // dispatch(set(cards));
 	}
+
+    const sendCards = () => {
+        dispatch(set(cards));
+    }
 
     useEffect(() => {
         setImageURL(image.urls.regular)
@@ -148,7 +161,11 @@ function Cards() {
                 </div>
                 </div>
             </div>
+            <div id='record-buttons-div'>
+                <button type="button" className="btn btn-secondary" id='skip-step-btn' onClick={() => doNavigate("/record")}>Skip This Step</button>
+                <button type="button" className="btn btn-secondary" id='go-record-btn' onClick={() => {doNavigate("/record"); sendCards();}}>Go to Record</button>
+            </div>
         </div>);
 }
 
-export default Cards;
+export default Cards; 

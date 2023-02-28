@@ -15,6 +15,10 @@
     display: none;
 } 
 
+.carousel-control-prev, .carousel-control-next{
+    display: none;
+} 
+
 .card-display{
     height: 60vh !important;
     display: flex;
