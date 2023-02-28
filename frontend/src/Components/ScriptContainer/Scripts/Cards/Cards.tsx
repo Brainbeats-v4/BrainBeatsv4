@@ -102,68 +102,72 @@ function Cards() {
              <Modal id='pop-up' show={show} onHide={handleClose}>
                 <ImageModal /*setImageURL={setImageURL}*//>
             </Modal>
-            <div id='card-settings-div'>
-                <h6 className='record-heading'>Card Settings</h6>
-                <div id='record-uploads-div'>
-                <label className='record-heading' htmlFor="file-upload">Background:</label>
-                    <div id='background-settings'>
-                        <div className='record-upload'>
-                            <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Select Background Image</button>
+            <div className='cards-body-div'>
+                <div id='card-settings-div'>
+                    <h6 className='record-heading'>Card Settings</h6>
+                    <div id='record-uploads-div'>
+                    <label className='record-heading' htmlFor="file-upload">Background:</label>
+                        <div id='background-settings'>
+                            <div className='record-upload'>
+                                <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Select Background Image</button>
+                            </div>
+                            <h6 className='OR-subtitle'>OR</h6>
+                            <label className='record-heading2' htmlFor="file-upload">Select Background Color</label>
+                            <div className='record-upload1'>
+                                <CompactPicker
+                                    onChange={setColorBackground}
+                                />
+                            </div>
                         </div>
-                        <h6 className='OR-subtitle'>OR</h6>
-                        <label className='record-heading2' htmlFor="file-upload">Select Background Color</label>
+                        
+                        <label className='record-heading' htmlFor="file-upload">Text Color:</label>
                         <div className='record-upload1'>
                             <CompactPicker
-                                onChange={setColorBackground}
+                                onChange={setColorText}
+                            />
+                        </div>
+                        <label className='record-heading' htmlFor="file-upload">Enter Text:</label>
+                        <div className='record-upload1'>
+                            <input
+                                className="input-card-text"
+                                placeholder="Your text here"
+                                onChange={(e) => setCardTextState(e.target.value)}
+                                value={cardText}
+                            />
+                        </div>
+                        <label className='record-heading' htmlFor="file-upload">Card Duration (seconds):</label>
+                        <div className='record-upload1'>
+                            <input
+                                type="number"
+                                placeholder="Seconds"
+                                className="timeInput"
+                                onChange={(e) => setSpeed(e.target.valueAsNumber)}
+                                value={speed}
                             />
                         </div>
                     </div>
-                    
-                    <label className='record-heading' htmlFor="file-upload">Text Color:</label>
-                    <div className='record-upload1'>
-                        <CompactPicker
-                            onChange={setColorText}
-                        />
-                    </div>
-                    <label className='record-heading' htmlFor="file-upload">Enter Text:</label>
-                    <div className='record-upload1'>
-                        <input
-                            className="input-card-text"
-                            placeholder="Your text here"
-                            onChange={(e) => setCardTextState(e.target.value)}
-                            value={cardText}
-                        />
-                    </div>
-                    <label className='record-heading' htmlFor="file-upload">Card Duration (seconds):</label>
-                    <div className='record-upload1'>
-                        <input
-                            type="number"
-                            placeholder="Seconds"
-                            className="timeInput"
-                            onChange={(e) => setSpeed(e.target.valueAsNumber)}
-                            value={speed}
-                        />
-                    </div>
+                    <button type="button" className="btn btn-secondary" id='add-card-btn' onClick={addCard}>Add Card</button>
                 </div>
-                <button type="button" className="btn btn-secondary" id='add-card-btn' onClick={addCard}>Add Card</button>
-            </div>
-            <div id='display-card-div'>
-                Card Display:
-                <div id='card-display'
-                    style={{
-                        color: `rgba(${textColor.color.r}, ${textColor.color.g}, ${textColor.color.b}, ${textColor.color.a})`,
-                        background: `rgba(${backgroundColor.color.r}, ${backgroundColor.color.g}, ${backgroundColor.color.b}, ${backgroundColor.color.a})`,
-                        backgroundImage: `url(${imageURL})`,
-                    }}
-                >
-                <div id='card-text'>
-                    <h1>{cardText}</h1>
-                </div>
+                <div id='display-card-div'>
+                    Card Display:
+                    <div id='card-display'
+                        style={{
+                            color: `rgba(${textColor.color.r}, ${textColor.color.g}, ${textColor.color.b}, ${textColor.color.a})`,
+                            background: `rgba(${backgroundColor.color.r}, ${backgroundColor.color.g}, ${backgroundColor.color.b}, ${backgroundColor.color.a})`,
+                            backgroundImage: `url(${imageURL})`,
+                        }}
+                    >
+                        <div id='card-text'>
+                            <h1>{cardText}</h1>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id='record-buttons-div'>
-                <button type="button" className="btn btn-secondary" id='skip-step-btn' onClick={() => doNavigate("/record")}>Skip This Step</button>
-                <button type="button" className="btn btn-secondary" id='go-record-btn' onClick={() => {doNavigate("/record"); sendCards();}}>Go to Record</button>
+            <div className='cards-footer-div'>
+                <div id='record-buttons-div'>
+                    <button type="button" className="btn btn-secondary" id='skip-step-btn' onClick={() => doNavigate("/record")}>Skip This Step</button>
+                    <button type="button" className="btn btn-secondary" id='go-record-btn' onClick={() => {doNavigate("/record"); sendCards();}}>Go to Record</button>
+                </div>
             </div>
         </div>);
 }

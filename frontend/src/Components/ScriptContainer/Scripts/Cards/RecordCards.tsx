@@ -17,8 +17,8 @@ const RecordCards = () => {
     const handleClose = () => setShow(false);
 
     // For collecting image from Redux
-    const cardArray = useAppSelector(state => state.cardArraySlice)
-    const dispatch = useDispatch();
+    const scriptCards = useAppSelector(state => state.cardArraySlice);
+
 
     function setVisibilityButton() {
         setRecordVisibility(!recordVisibility);
@@ -62,16 +62,15 @@ const RecordCards = () => {
             <Modal id='pop-up' show={show} onHide={handleClose}>
                 <UploadTrackModal track={emptyTrack}/>
             </Modal>
-            <h2 className='record-heading'>Recording Music</h2>
             <div>
                 <div id='record-track-info-div'>
                     <div id='display-record-card-div'>
                         Displaying Cards:
-                        {/* <CardCarousel></CardCarousel> */}
-                        <div className='card-display'>
-                        </div>
+                        <CardCarousel></CardCarousel>
+                        {/* <div className='card-display'>
+                        </div> */}
                     </div>
-                    <div className='record-btns-div'>
+                    {/* <div className='record-btns-div'>
                         {recordVisibility && <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={setVisibilityButton}>
                             <FontAwesomeIcon icon={["fas", "circle"]} />
                             Record
@@ -87,7 +86,7 @@ const RecordCards = () => {
                             <FontAwesomeIcon icon={["fas", "pause"]} />
                             Pause
                         </button>
-                    </div>
+                    </div> */}
                 </div>
                 <div id='record-publish-buttons-div'>
                     <button type="button" className="btn btn-secondary" id='record-cancel-btn'>Cancel</button>

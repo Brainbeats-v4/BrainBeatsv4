@@ -4,6 +4,8 @@ import React, {useState} from 'react';
 import CardCarousel from '../CardCarousel/CardCarousel';
 
 import './Record.css'
+import RecordCards from '../ScriptContainer/Scripts/Cards/RecordCards';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
@@ -53,13 +55,26 @@ function Record() {
 
     return(
         <div className='container' id='record-container'>
-            <div id='record-btn-div'>
-                <button id='record-btn' onClick={doRecording}>Record</button>
-                <button id='stop-btn' onClick={stopRecording}>Stop</button>
-                <a download={'currentMIDI.MID'} href={MIDIUri}>download the midi</a>
+            <h2 className='record-heading'>Recording Music</h2>
+            <div id='record-container-body'>
+                <div id='script-div'>
+                    <RecordCards></RecordCards>
+                </div>
+                <div id='record-btns-div'>
+                    <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={doRecording}>
+                        <FontAwesomeIcon icon={["fas", "circle"]} />
+                        Record
+                    </button>
+                    <button type="button" className="btn btn-secondary" id='recording-stop-btn' onClick={stopRecording}>
+                        <FontAwesomeIcon icon={["fas", "square"]} />
+                        Stop
+                    </button>
+                    <a id='download-midi-btn' download={'currentMIDI.MID'} href={MIDIUri}>
+                        <FontAwesomeIcon icon={["fas", "arrow-up-from-bracket"]} />
+                        download the midi
+                    </a>
+                </div>
             </div>
-            <br></br>
-            <CardCarousel></CardCarousel>
         </div>
     )
 }

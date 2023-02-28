@@ -17,6 +17,13 @@
     border-radius: 1px;
 }
 
+.cards-body-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
 #record-container{
     /* background-color: aqua; */
     display: flex;
@@ -28,10 +35,11 @@
 #record-card-info-div{
     /* background-color: purple; */
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     width: 100%;
     height: 100%;
+    padding-bottom: 3%;
 }
 
 #card-settings-div{
@@ -42,7 +50,7 @@
     align-items: center;
     width: fit-content;
     height: fit-content;
-    padding: 3%;
+    padding: 10px;
 
 }
 
@@ -137,9 +145,9 @@
     justify-content: center;
     align-items: center;
     row-gap: 2%;
-    margin-top: 2%;
-    width: 70%;
-    height: 65vh;
+    /* margin-top: 4%; */
+    width: 75%;
+    height: 70vh;
 }
 
 #card-display {
@@ -152,7 +160,7 @@
     background-position: center center !important;
     background-repeat: no-repeat;
     color: white;
-    width: 95%;
+    width: 80%;
     height: 100%;
     word-wrap: break-word;
 }
