@@ -41,7 +41,7 @@
 
 #login-container {
     width: 30%;
-    height: 75%;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     background-color: #CFCFCF;
