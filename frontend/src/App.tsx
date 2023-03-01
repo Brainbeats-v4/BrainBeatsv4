@@ -1,5 +1,3 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, BrowserRouter as Router, Navigate, useNavigate} from 'react-router-dom'
@@ -15,20 +13,9 @@ import ResetPassword from './Pages/ResetPassword'
 import Verify from './Pages/Verify';
 import Script from './Pages/Script';
 import RecordTrack from './Pages/RecordTrack';
-import RecordCards from './Pages/RecordCards';
-
 // import SliceProvider from './Redux/SliceProvider';
-
-// Importing sidebar and navbar
-import Sidebar from './Components/Sidebar/Sidebar';
-import Navbar from './Components/Navbar/Navbar';
-
-
-import { useRecoilValue } from 'recoil';
-import { userModeState } from './Components/context/GlobalState'
 import { userJWT } from './JWT'
 import { useEffect, useState } from 'react';
-import { constants } from 'crypto';
 
 function App() {
   
@@ -68,8 +55,6 @@ function App() {
             <Route path='/verify' element={<Verify />} />
             <Route path='/reset-password' element={<ResetPassword />} />
             <Route path='/record' element={<RecordTrack />} />
-            <Route path='/record-cards' element={<RecordCards />} />
-
             {/* { */}
               {/* // isLoggedIn?  */}
               <Route path='/profile' element={<Profile />} />
