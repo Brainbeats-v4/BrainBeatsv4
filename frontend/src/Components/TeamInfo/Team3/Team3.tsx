@@ -7,6 +7,10 @@ import { Modal } from 'react-bootstrap';
 import TeamMemberModal from '../../TeamMemberModal/TeamMemberModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+// Importing Team Member Images
+import quanminhNguen from '../../../images/Version3Photos/QuanminhNguyen.jpg';
+
+
 const Team3 = () => {
 
     // =============================  Enter values for TEAM info here ============================== 
@@ -61,6 +65,7 @@ const Team3 = () => {
     }
 
     const defaultImage = profileImage;
+    const quanminhNguenImage = quanminhNguen;
     var teamMembers : TeamMember[] = [
         {name: "Shyam Parikh", position: "Project Manager • Script Developer", image: defaultImage, bio: "Hello World Empty Text",
         contributions:"\t• Handled Agile development practices" + "\n\t• Handled system administration" +
@@ -75,7 +80,7 @@ const Team3 = () => {
         contributions: "\t• Researched backend technologies" + "\n\t• Developed API functionality with OpenBCI headset" + 
         "\n\t• Worked in data transmission between browser and EEG device" + "\n\t• Assisted with frontend functionality"},
 
-        {name: "Quanminh Nguyen", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "Hello World Empty Text",
+        {name: "Quanminh Nguyen", position: "Frontend Developer • Visual Designer", image: quanminhNguenImage, bio: "Hello World Empty Text",
         contributions: "\t• Researched frontend technologies" + "\n\t• Designed and implemented UI/UX for web application" + 
         "\n\t• Developed functional frontend components" + "\n\t• Assisted in developing a music generation model"},
     ];
