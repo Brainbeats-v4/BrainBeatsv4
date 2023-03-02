@@ -19,6 +19,7 @@ import { useSelector } from "react-redux";
 import { NoteHandler } from "./MusicGeneration/OriginalNoteGeneration";
 import { WebSerial } from "webserial-wrapper";
 
+
 // Device factory for separate connection methods. (This is because either ganglion will require
 // the old connection code, or we will need to create our own custom device.)
 export interface DeviceAbstractFactory {
@@ -63,8 +64,8 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public async initializeConnection() {
         this.flag = false;
         
-        var serial = new WebSerial()
-        await serial.requestPort(1027, 24597);
+        // var serial = new WebSerial()
+        // await serial.requestPort(1027, 24597);
 
         await initDevice(Devices['USB']['cyton'],
         {   // this pushes the data from the headband as it is received from the board into the channels array

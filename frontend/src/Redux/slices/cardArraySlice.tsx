@@ -10,8 +10,11 @@ export const cardArraySlice = createSlice({
   initialState,
   reducers: {
     set: (state, action: PayloadAction<Card[]>) => {
-      var Card:any = {textColor:{r:"", g:"",b:"",a:""}, backgroundColor:{r:"", g:"",b:"",a:""}, url:"", text:"", speed:0};
-      if (state.length > 0) state.pop();
+      // Clear the state before we add to it again
+      while (state.length > 0) {
+        state.pop();
+      }
+      // state = initialState;
       action.payload.forEach(card => (state.push(card)));
     },
     unset: (state) => {
