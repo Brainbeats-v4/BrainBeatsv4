@@ -7,6 +7,9 @@ import { Modal } from 'react-bootstrap';
 import TeamMemberModal from '../../TeamMemberModal/TeamMemberModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+// Importing Team Member Images
+import joshuaNeumann from '../../../images/Version2Photos/JoshuaNeumann.jpg';
+
 const Team2 = () => {
 
     // =============================  Enter values for TEAM info here ============================== 
@@ -63,7 +66,8 @@ const Team2 = () => {
         contributions:"\t• Handled sprint planning and weekly scrums" + "\n\t• Oversaw team organization and communications" + 
         "\n\t• Researched machine learning & music generation models" + "\n\t• Developed framework for music generation model"},
 
-        {name: "Joshua Neumann", position: "Music Generation • Full-Stack Developer", image: defaultImage, bio: "Hello World Empty Text", 
+        {name: "Joshua Neumann", position: "Music Generation • Full-Stack Developer", image: joshuaNeumann, 
+        bio: "Brain Beats V2 was the highlight of my academic career as a UCF undergrad. I contributed backend API functionality and researching and developing deterministic music generation models.", 
         contributions:"\t• Researched music generation & machine learning models" + "\n\t• Implemented model for music generation" + 
         "\n\t• Integrated frontend and backend services" + "\n\t• Researched proper authentication and encryption for system"},
 
