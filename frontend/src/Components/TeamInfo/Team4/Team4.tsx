@@ -7,6 +7,8 @@ import TeamMemberModal from '../../TeamMemberModal/TeamMemberModal';
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+// Importing Team Member Images
+import brandonMrgich from '../../../images/Version4Photos/BrandonMrgich.png';
 const Team4 = () => {
 
     // =============================  Enter values for TEAM info here ============================== 
@@ -73,7 +75,7 @@ const Team4 = () => {
         contributions:"• Planned meetings and accessed time management" + "\n• Ensured target goals were reached" +
         "\n• Developed a machine learning model" + "\n • Provided assistance to frontend and backend development"},
 
-        {name: "Brandon Mrgich", position: "Music Generation • Backend Developer", image: defaultImage, bio: "Hello World Empty Text 2",
+        {name: "Brandon Mrgich", position: "Music Generation • Backend Developer", image: brandonMrgich, bio: "Hello World Empty Text 2",
         contributions: "• Researched neurology, music generation, and EEG" + "\n• Restructured the API" + 
         "\n• Restructured previous implementation of music generation" + "\n• Assisted with frontend functions and logic"},
 
