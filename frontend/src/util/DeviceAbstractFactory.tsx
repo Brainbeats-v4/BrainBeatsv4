@@ -8,12 +8,7 @@ import { Devices, initDevice } from "device-decoder";
 import {Devices as Devices3rdParty} from 'device-decoder.third-party'
  
 import ganglion from '@brainsatplay/ganglion'
-// import ganglion from "https://cdn.jsdelivr.net/npm/@brainsatplay/ganglion@0.0.2/dist/index.esm.js";
-import * as datastreams from "https://cdn.jsdelivr.net/npm/datastreams-api@latest/dist/index.esm.js"; // Data acquisition
-// import * as datastreams from 'datastreams-api';
 import Ganglion from 'ganglion-ble';
-// import Ganglion from '@openbci/ganglion'
-
 
 import { ganglionSettings } from "device-decoder.third-party";
 import { DataStream8Ch, DataStream4Ch, MusicSettings } from "./Interfaces";
@@ -22,6 +17,7 @@ import { Stream } from "stream";
 import { useSelector } from "react-redux";
 
 import { NoteHandler } from "./MusicGeneration/OriginalNoteGeneration";
+import { WebSerial } from "webserial-wrapper";
 
 // Device factory for separate connection methods. (This is because either ganglion will require
 // the old connection code, or we will need to create our own custom device.)
@@ -56,6 +52,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public flag:boolean = false;
     public settings:MusicSettings;
     public noteHandler;
+    private serial:any;
 
     constructor(settings:MusicSettings) {
         this.settings = settings;
@@ -65,19 +62,23 @@ export class ConcreteCytonStream implements AbstractCytonStream {
 
     public async initializeConnection() {
         this.flag = false;
-        console.log(Devices['USB']);
+        
+        var serial = new WebSerial()
+        await serial.requestPort(1027, 24597);
+
         await initDevice(Devices['USB']['cyton'],
-                {   // this pushes the data from the headband as it is received from the board into the channels array
-                    ondecoded: (data) => { this.recordInputStream(data) }, 
-                    onconnect: (deviceInfo) => console.log(deviceInfo), 
-                    ondisconnect: (deviceInfo) => console.log(deviceInfo)
-                }).then((res) => {
-                    if(res) {
-                        this.device = res; // store the connected device's stream into the global variable
-                    }
-                }).catch((err)=> {
-                    console.log(err);
-                })
+        {   // this pushes the data from the headband as it is received from the board into the channels array
+            ondecoded: (data) => { this.recordInputStream(data) }, 
+            onconnect: (deviceInfo) => console.log(deviceInfo), 
+            ondisconnect: (deviceInfo) => console.log(deviceInfo),
+        }).then((res) => {
+            if(res) {
+                console.log(this.device);
+                this.device = res; // store the connected device's stream into the global variable
+            }
+        }).catch((err)=> {
+            console.log(err);
+        })
     }
 
     /* This function records input stream from the device and inputs it into
