@@ -12,6 +12,7 @@ import buildPath from '../../util/ImagePath';
 import './TrackModal.css';
 import '../TrackCard/TrackCard.css';
 import TrackCard from '../TrackCard/TrackCard';
+import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
 
 type Props = {
   track: Track; 
@@ -46,6 +47,12 @@ const TrackModal: React.FC<Props> = ({track}) => {
   const [likeCount, setLikeCount] = useState(track.likeCount);
   const [favorited, setFavorited] = useState (false); // change this later
 
+  // Initializes favorited variable
+  useEffect(() => {
+    setFavorited(checkLike());
+  }, []);
+
+  // ============================= Functions for Track Updating System =============================
   function doDelete() {
     let data = { id:track.id, token:jwt }
 
@@ -61,7 +68,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
         
       }
     })
-
   }
 
   function setVisibilityButton() {
@@ -69,6 +75,40 @@ const TrackModal: React.FC<Props> = ({track}) => {
     setButtonText(visibility ? "Make Private" : "Make Public");
   }
 
+  // Updates a track
+  function updateTrack (newVisibility = visibility, newTrackName = trackName, thumbnailPic = displayThumbnail, likes = likeCount) {
+
+    if (jwt == null || user == null) navigate("/login");
+
+    let updatedTrack = {
+      id: track.id,
+      title: newTrackName,
+      midi: track.midi,
+      thumbnail: thumbnailPic,
+      likeCount: likes,
+      public: newVisibility,
+      token: jwt,
+    }
+    
+    sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
+      if (res.status == 200) {
+        setErrMsg(trackName);
+      }
+      else {
+        setErrMsg("Could not save post.");
+        setSuccessMsg("");
+      }
+    })
+
+    setEditing(false);
+    track.title = newTrackName;
+    track.public = newVisibility;
+    track.likeCount = likes;
+  }
+
+
+  // ============================= Functions for Track Cover System =============================
+  
   // For displaying track thumbnail picture
   const [displayThumbnail, setDisplayThumbnail] = useState(track!==null ? track.thumbnail : undefined);
 
@@ -82,7 +122,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
   }
 
   function convertToBase64(file:File) {
-        
     return new Promise((resolve, reject) => {
         const fileReader = new FileReader();
         /* This block of code converts the file's old name into one that includes the user's ID for storing */
@@ -111,63 +150,41 @@ const TrackModal: React.FC<Props> = ({track}) => {
     }
   };
 
+  //Function updating display thumbail picture in modal
   async function updateDisplayThumbnail(file: File){
     var base64result:any;
     await convertToBase64(file).then(res => {
         base64result = res;
     })
-    // console.log(base64result);
+
     var updatedPost = {
         id: track.id,
         token: jwt,
         thumbnail: base64result
     };
-    // console.log(updatedPost);
-    // track.thumbnail = updatedPost.thumbnail;
     setDisplayThumbnail(updatedPost.thumbnail);
   }
 
+  // ============================= Functions for Like System =============================
+  // Checks for user like
+  function checkLike() {
 
-
-
-  function updateTrack (newVisibility = visibility, newTrackName = trackName, thumbnailPic = displayThumbnail, likes = likeCount) {
-
-    if (jwt == null || user == null) navigate("/login");
-
-    console.log(visibility);
-
-    let updatedTrack = {
-      id: track.id,
-      title: newTrackName,
-      midi: track.midi,
-      thumbnail: thumbnailPic,
-      likeCount: track.likeCount,
-      public: newVisibility,
+    let newLike = {
+      userID: user.userId,
+      postID: track.id,
       token: jwt,
     }
     
-    console.log("track name: " + newTrackName);
-    sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
-      if (res.status == 200) {
-        setErrMsg(trackName);
-        // setSuccessMsg(JSON.stringify(res.data));
-      }
-      else {
-        setErrMsg("Could not save post.");
-        setSuccessMsg("");
-      }
-    })
+    sendAPI("get", "/likes/getUserLike", newLike).then((res) => {
+      setFavorited(res.status == 200);
+    }) 
 
-    setEditing(false);
-    track.title = newTrackName;
-    track.public = newVisibility;
-    track.likeCount = likeCount;
+    return favorited;
   }
 
   // Creates a new like
   function addLike() {
 
-    // console.log(user.firstName);
     let newLike = {
       userID: user.userId,
       postID: track.id,
@@ -175,26 +192,22 @@ const TrackModal: React.FC<Props> = ({track}) => {
     }
     
     sendAPI("post", "/likes/createUserLike", newLike).then((res) => {
-      if (res.status == 200) {
+      if (res.status == 201) {
         setErrMsg(track.title);
-        console.log(track.title + " liked");
-        setLikeCount(likeCount + 1);
 
-        // setSuccessMsg(JSON.stringify(res.data));
+        // Increments local likeCount
+        setLikeCount(likeCount + 1);
       }
       else {
         setErrMsg("Could not like post.");
         setSuccessMsg("");
       }
     }) 
-
-    console.log(track.title + " likes: " + likeCount);
   }
 
-   // Removes a new like
-   function removeLike() {
+  // Removes a new like
+  function removeLike() {
 
-    // console.log(user.firstName);
     let newLike = {
       userID: user.userId,
       postID: track.id,
@@ -204,21 +217,19 @@ const TrackModal: React.FC<Props> = ({track}) => {
     sendAPI("delete", "/likes/removeUserLike", newLike).then((res) => {
       if (res.status == 200) {
         setErrMsg(track.title);
-        console.log(track.title + " like removed");
-        // setSuccessMsg(JSON.stringify(res.data));
+        setSuccessMsg(JSON.stringify(res.data));
         
+        // Decrements local likeCount
         if(likeCount > 0) 
-        setLikeCount(likeCount - 1);
+          setLikeCount(likeCount - 1);
+              
       }
       else {
         setErrMsg("Could not like post.");
         setSuccessMsg("");
       }
     })
-
-    console.log(track.title + " total likes: " + likeCount);
   }
-
 
   return (
     <>
@@ -272,11 +283,11 @@ const TrackModal: React.FC<Props> = ({track}) => {
               </button>}
             </div>
             <div id='modal-container-21'>
-              {!favorited && <button className='btn btn-secondary modal-btn' value={track.likeCount} onClick={(e) => {addLike(); updateTrack(); setFavorited(true)}}>
+              {!favorited && <button className='btn btn-secondary modal-btn' value={track.likeCount} onClick={() => {addLike(); setFavorited(true)}}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
                 Favorite
               </button>}
-              {favorited && <button className='btn btn-secondary modal-btn' onClick={(e) => {removeLike(); updateTrack(); setFavorited(false)}}>
+              {favorited && <button className='btn btn-secondary modal-btn' onClick={() => {removeLike(); setFavorited(false)}}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
                 Unfavorite
               </button>}
