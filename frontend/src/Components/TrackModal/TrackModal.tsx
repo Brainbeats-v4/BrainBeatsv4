@@ -13,6 +13,7 @@ import './TrackModal.css';
 import '../TrackCard/TrackCard.css';
 import TrackCard from '../TrackCard/TrackCard';
 import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 type Props = {
   track: Track; 
@@ -265,7 +266,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 <h3>Play</h3>
               </button>
               <h5 id='favorites-text'>
-                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
+                <FontAwesomeIcon className='modal-track-icons' icon={faHeart} />
                 {likeCount} Favorites
               </h5>
             </div>
@@ -283,13 +284,13 @@ const TrackModal: React.FC<Props> = ({track}) => {
               </button>}
             </div>
             <div id='modal-container-21'>
-              {!favorited && <button className='btn btn-secondary modal-btn' value={track.likeCount} onClick={() => {addLike(); setFavorited(true)}}>
-                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
+              {!favorited && <button className='btn btn-secondary modal-btn' id='like-track-btn' value={track.likeCount} onClick={() => {addLike(); setFavorited(true)}}>
+                <FontAwesomeIcon className='modal-track-icons' icon={["far", "heart"]} />
                 Favorite
               </button>}
-              {favorited && <button className='btn btn-secondary modal-btn' onClick={() => {removeLike(); setFavorited(false)}}>
-                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
-                Unfavorite
+              {favorited && <button className='btn btn-secondary modal-btn' id='dislike-track-btn' onClick={() => {removeLike(); setFavorited(false)}}>
+                <FontAwesomeIcon className='modal-track-icons' id='favorited-heart' icon={faHeart} />
+                Favorited
               </button>}
               <button className='btn btn-secondary modal-btn'>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "plus"]} />

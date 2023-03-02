@@ -4,6 +4,7 @@ import { Modal } from 'react-bootstrap';
 import TrackModal from '../TrackModal/TrackModal';
 import sendAPI from '../../SendAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 type Props = {
     cardType:string;
@@ -175,7 +176,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                                 <div className="card-text">
                                     <p id='card-author'>{trackCard.fullname}</p>
                                     <div id='card-likes'>
-                                        <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
+                                        <FontAwesomeIcon className='modal-track-icons' icon={faHeart} />
                                         {trackCard.likeCount} 
                                     </div>
                                 </div>
