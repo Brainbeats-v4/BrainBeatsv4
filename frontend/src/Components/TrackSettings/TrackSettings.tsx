@@ -208,16 +208,18 @@ const TrackSettings = () => {
             <div id="settings1" style={{display: advSettingsOpen? "none" : "block"}}>
                 <h1 className='heading'>Music Settings</h1>
                 <form className='justify-content-center' id='settings-container1'>
-                    <h2 id='settings-text'>Basic Settings</h2>
-                    <p id='settings-text'>Please select your input device:</p>                    
-                    <select className="dropdowns" id='board-dropdown' name="board-options" onChange={(e) => setDevice(e.target.value)}>
-                        <option value="cyton">Cyton Board</option>
-                        <option value="ganglion">Ganglion Board</option>
-                    </select>
-                    <br /><br />
-                    <p id='settings-text'>Please select one of the following music generation options:</p>                    
-                    <div className='row' id='checkbox-div'>
-                        <div className='justify-content-center' id="setting-options-div">
+                    <h2 className='settings-text'>Basic Settings</h2>
+                    <div id='select-device-div'>
+                        <h6 id='settings-text'>Please select your input device:</h6>                    
+                        <select className="dropdowns" id='board-dropdown' name="board-options" onChange={(e) => setDevice(e.target.value)}>
+                            <option value="cyton">Cyton Board</option>
+                            <option value="ganglion">Ganglion Board</option>
+                        </select>
+                    </div>
+                    <br></br>
+                    <div id='checkbox-div'>
+                    <p className='settings-text2'>Please select one of the following music generation options:</p>                    
+                        <div id="settings-options-div">
                             <div className="form-check">
                                 <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="slowAndMelodic" onClick={() => setGenerationType('slowAndMelodic')} defaultChecked/>
                                 <label className="form-check-label" htmlFor="inlineRadio1"><span>Slow and Melodic</span></label>
@@ -249,8 +251,8 @@ const TrackSettings = () => {
                 <br />
 
                 <form className='justify-content-center' id='settings-container2'>
-                    <h2 id='settings-text'>Advanced Settings</h2>
-                    <p id='settings-text'>Press the button below to go to advanced music generation settings:</p>
+                    <h2 className='settings-text'>Advanced Settings</h2>
+                    <p className='settings-text'>Press the button below to go to advanced music generation settings:</p>
 
                     <div className='form-group row justify-content-center'>
                         <div className="btn-group" role="group" aria-label="Basic example">
@@ -265,7 +267,7 @@ const TrackSettings = () => {
             <div id="settings2" style={{display: advSettingsOpen? "block" : "none"}}>
                 <h1 className='heading'>Advanced Music Settings</h1>
                 <form className='justify-content-center adv-settings-container'>
-                    <h2 id='settings-text'>Instruments</h2>
+                    <h2 className='settings-text'>Instruments</h2>
                     <button type="button" className="btn btn-secondary" id='back-btn-adv' onClick={getRandomMusicSettings}>Randomize!</button>
                     <div className='row instruments-div'>
                         <div className='col instrument-box'>
@@ -368,7 +370,7 @@ const TrackSettings = () => {
                 </form>
                 <br></br>
                 <form className='justify-content-center adv-settings-container'>
-                    <h2 id='settings-text'>Other</h2>
+                    <h2 className='settings-text'>Other</h2>
                     <div className='row instruments-div'>
                         <div className='col instrument-box-other'>
                             <label htmlFor="octave">Number of Octaves:</label>
