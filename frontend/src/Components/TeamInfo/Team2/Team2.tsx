@@ -63,21 +63,21 @@ const Team2 = () => {
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
         {name: "Melanie Brady", position: "Project Manager • Music Generation", image: defaultImage, bio: "Hello World Empty Text",
-        contributions:"\t• Handled sprint planning and weekly scrums" + "\n\t• Oversaw team organization and communications" + 
-        "\n\t• Researched machine learning & music generation models" + "\n\t• Developed framework for music generation model"},
+        contributions:"• Handled sprint planning and weekly scrums" + "\n• Oversaw team organization and communications" + 
+        "\n• Researched machine learning & music generation models" + "\n• Developed framework for music generation model"},
 
         {name: "Joshua Neumann", position: "Music Generation • Full-Stack Developer", image: joshuaNeumann, 
         bio: "Brain Beats V2 was the highlight of my academic career as a UCF undergrad. I contributed backend API functionality and researching and developing deterministic music generation models.", 
-        contributions:"\t• Researched music generation & machine learning models" + "\n\t• Implemented model for music generation" + 
-        "\n\t• Integrated frontend and backend services" + "\n\t• Researched proper authentication and encryption for system"},
+        contributions:"• Researched music generation & machine learning models" + "\n• Implemented model for music generation" + 
+        "\n• Integrated frontend and backend services" + "\n• Researched proper authentication and encryption for system"},
 
         {name: "Jordy Pantoja", position: "Frontend Developer • Music Generation", image: defaultImage, bio: "Hello World Empty Text",
-        contributions:"\t• Developed front-end web and desktop appliction" + "\n\t• Researched & implemented testing frameworks for frontend" + 
-        "\n\t• Researched EEG and MIDI homebrew implementations" + "\n\t• Curated ideas for different music generation models"},
+        contributions:"• Developed front-end web and desktop appliction" + "\n• Researched & implemented testing frameworks for frontend" + 
+        "\n• Researched EEG and MIDI homebrew implementations" + "\n• Curated ideas for different music generation models"},
 
         {name: "Harry Sauers", position: "Database Engineer • Backend Developer", image: defaultImage, bio: "Hello World Empty Text",
-        contributions:"\t• Researched and managed database system" + "\n\t• Researched & developed backend infrastructure" + 
-        "\n\t• Managed deployment, servers, CI/CD pipeline & testing" + "\n\t• Integrated frontend and backend services"},
+        contributions:"• Researched and managed database system" + "\n• Researched & developed backend infrastructure" + 
+        "\n• Managed deployment, servers, CI/CD pipeline & testing" + "\n• Integrated frontend and backend services"},
     ];
     // ============================================================================================= 
     

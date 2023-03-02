@@ -9,7 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Importing Team Member Images
 import quanminhNguen from '../../../images/Version3Photos/QuanminhNguyen.jpg';
-
+import noahLang from '../../../images/Version3Photos/NoahLang.jpg';
+import shyamParikh from '../../../images/Version3Photos/ShyamParikh.png';
 
 const Team3 = () => {
 
@@ -65,24 +66,26 @@ const Team3 = () => {
     }
 
     const defaultImage = profileImage;
-    const quanminhNguenImage = quanminhNguen;
     var teamMembers : TeamMember[] = [
-        {name: "Shyam Parikh", position: "Project Manager • Script Developer", image: defaultImage, bio: "Hello World Empty Text",
-        contributions:"\t• Handled Agile development practices" + "\n\t• Handled system administration" +
-        "\n\t• Developed scripts for building/testing the web application" + "\n\t• Assisted in creating music generation model" + 
-        "\n\t • Helped in data transmission between browser and EEG device"},
+        {name: "Shyam Parikh", position: "Project Manager • Systems Administrator • Backend Developer", image: shyamParikh, 
+        bio: "Learn more about me and my other projects on GitHub: https://github.com/Aestrus",
+        contributions:"• Handled Agile development practices" + "\n• Handled system administration" +
+        "\n• Developed scripts for building/testing the web application" + "\n• Assisted in creating music generation model" + 
+        "\n • Helped in data transmission between browser and EEG device" + "\n• Handled database design and management" + 
+        "\n• Worked on the API"},
 
-        {name: "Noah Lang", position: "Music Generation • Full-Stack Developer", image: defaultImage, bio: "Hello World Empty Text",
-        contributions: "\t• Researched music generation and algorithms" + "\n\t• Assisted in creating music generation model" + 
-        "\n\t• Helped in data transmission between browser and EEG device" + "\n\t• Assisted with frontend functionality"},
+        {name: "Noah Lang", position: "Music Generation • Full-Stack Developer", image: noahLang, 
+        bio: "I'm a UCF Alumni who graduated in 2022 and is passionate about all things computer science and music. I am excited by the opportunity to combine my passions in a meaningful way via the BrainBeats project.",
+        contributions: "• Researched music generation and algorithms" + "\n• Assisted in creating music generation model" + 
+        "\n• Helped in data transmission between browser and EEG device" + "\n• Assisted with frontend functionality"},
 
         {name: "Sami Eskirjeh", position: "EEG Connection • Backend Developer", image: defaultImage, bio: "Hello World Empty Text",
-        contributions: "\t• Researched backend technologies" + "\n\t• Developed API functionality with OpenBCI headset" + 
-        "\n\t• Worked in data transmission between browser and EEG device" + "\n\t• Assisted with frontend functionality"},
+        contributions: "• Researched backend technologies" + "\n• Developed API functionality with OpenBCI headset" + 
+        "\n• Worked in data transmission between browser and EEG device" + "\n• Assisted with frontend functionality"},
 
-        {name: "Quanminh Nguyen", position: "Frontend Developer • Visual Designer", image: quanminhNguenImage, bio: "Hello World Empty Text",
-        contributions: "\t• Researched frontend technologies" + "\n\t• Designed and implemented UI/UX for web application" + 
-        "\n\t• Developed functional frontend components" + "\n\t• Assisted in developing a music generation model"},
+        {name: "Quanminh Nguyen", position: "Frontend Developer • Visual Designer", image: quanminhNguen, bio: "Hello World Empty Text",
+        contributions: "• Researched frontend technologies" + "\n• Designed and implemented UI/UX for web application" + 
+        "\n• Developed functional frontend components" + "\n• Assisted in developing a music generation model"},
     ];
     // ============================================================================================= 
     
