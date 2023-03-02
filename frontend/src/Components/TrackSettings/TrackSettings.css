@@ -27,9 +27,14 @@
 }
 
 #checkbox-div{
-    padding: 15px;
+    background-color: #a9a9a9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    align-content: center;
+    min-width: fit-content;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 #main-container {
@@ -45,9 +50,19 @@
     float: inline-end;
 }
 
-#settings-text {
+.settings-text {
     color:rgb(57, 57, 57);
-    margin-left: 2%;    
+    /* margin-left: 2%;     */
+    text-align: left;
+    align-self: flex-start;
+    /* background-color: red; */
+}
+.settings-text2 {
+    color:rgb(57, 57, 57);
+    /* margin-left: 2%;     */
+    text-align: left;
+    align-self: flex-start;
+    /* background-color: red; */
 }
 
 #board-dropdown {
@@ -56,8 +71,15 @@
 }
 
 #settings-options-div{
+    background-color:rgb(202, 202, 202);
+    /* color: white; */
     display: flex;
-    justify-content: column;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    padding: 1%;
+    border-radius: 10px;
 }
 
 #OR {
@@ -110,7 +132,8 @@
 }
 
 #settings-container1, #settings-container2 {
-    max-width: 70%;
+    min-width: 70%;
+    width: fit-content;
     padding: 10px 10px 20px 10px;
     margin: auto;
     height: fit-content;
@@ -128,6 +151,13 @@
 
 #settings2{
     display: none;
+}
+
+#select-device-div{
+    /* background-color: white; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 /* CSS for Advanced Settings ('settings2') Container */
