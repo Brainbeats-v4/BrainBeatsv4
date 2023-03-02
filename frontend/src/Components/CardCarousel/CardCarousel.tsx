@@ -26,13 +26,9 @@ const CardCarousel = () => {
       
     // Sets speed of next card in carousel when card changes
     const onChange = (index: number, item: any) => {
-        console.log("Calling onChange at card index: " + index);
         next = getNext(index);
-        console.log("idx", index);
-        console.log("next.speed", next.speed);
         
         setIntervalZ(next.speed);
-        console.log("intervalZ:" + intervalZ);
 
     };
 
@@ -41,8 +37,6 @@ const CardCarousel = () => {
         if(scriptCards.length > 0) {
             next = getNext(idx);
             setIntervalZ(next.speed);
-            console.log("Calling first getNext():  " + next.speed);
-            console.log("Calling first intervalZ:  " + intervalZ);
         }
     }, []);
 

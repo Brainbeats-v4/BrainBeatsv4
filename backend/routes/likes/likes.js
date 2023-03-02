@@ -129,8 +129,9 @@ router.get('/getUserLike', async (req, res) => {
                 },
             }
         });
-
-        res.json(likeStatus);
+        
+        if (likeStatus == undefined) res.status(400);
+        else res.json(likeStatus);
     } catch (err) {
         console.error(err);
         res.status(500).send(err);

@@ -6,7 +6,7 @@ import ImageModal from '../../../ImageModal/ImageModal';
 import { useAppSelector } from '../../../../Redux/hooks';
 import { Card } from '../../../../util/Interfaces'
 import { useDispatch } from 'react-redux';
-import { set } from '../../../../Redux/slices/cardArraySlice'
+import { set, unset } from '../../../../Redux/slices/cardArraySlice'
 import { useNavigate } from 'react-router-dom';
 
 function Cards() {
@@ -44,8 +44,6 @@ function Cards() {
 	const [backgroundColor, setBackgroundColor] = useState(initialBackground);
 	const [textColor, setTextColor] = useState(initialTextColor);
     const [imageURL, setImageURL] = useState('');
-
-
 
     // Navigating
     const navigate = useNavigate();

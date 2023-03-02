@@ -11,6 +11,7 @@ function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
     const scriptCards = useAppSelector(state => state.cardArraySlice);
     const [MIDIUri, setMIDIURI] = useState('');
+    const [isRecording, setRecording] = useState(false);
     console.log(scriptCards);
 
     var deviceType:string;
@@ -33,7 +34,7 @@ function Record() {
             default: return;
         }
         device.initializeConnection();
-        
+        setRecording(true);
 
         // Create instance of MIDIDriver class containing impl of interface for both
             // interface MIDIPlayer
@@ -51,6 +52,7 @@ function Record() {
                it out for our own use later. */
             setMIDIURI(device.stopDevice());
         }
+        setRecording(false);
     }
 
     return(
@@ -61,14 +63,14 @@ function Record() {
                     <RecordCards></RecordCards>
                 </div>
                 <div id='record-btns-div'>
-                    <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={doRecording}>
+                   {!isRecording && <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={doRecording}>
                         <FontAwesomeIcon icon={["fas", "circle"]} />
                         Record
-                    </button>
-                    <button type="button" className="btn btn-secondary" id='recording-stop-btn' onClick={stopRecording}>
+                    </button>}
+                   {isRecording &&  <button type="button" className="btn btn-secondary" id='recording-stop-btn' onClick={stopRecording}>
                         <FontAwesomeIcon icon={["fas", "square"]} />
                         Stop
-                    </button>
+                    </button>}
                     <a id='download-midi-btn' download={'currentMIDI.MID'} href={MIDIUri}>
                         <FontAwesomeIcon icon={["fas", "arrow-up-from-bracket"]} />
                         download the midi
