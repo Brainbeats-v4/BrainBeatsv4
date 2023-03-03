@@ -58,7 +58,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     constructor(settings:MusicSettings) {
         this.settings = settings;
         this.noteHandler = new NoteHandler(this.settings);
-        this.noteHandler.setDebugOutput(true);                         // Debug
+        this.noteHandler.setDebugOutput(false);                         // Debug
     }
 
     public async initializeConnection() {

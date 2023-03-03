@@ -27,7 +27,7 @@ export class NoteHandler {
 
     private midiGenerator;
 
-    private stopFlag:boolean;
+    private stopFlag:boolean = false;
 
     public setStopFlag() {
         this.stopFlag = true;
@@ -51,8 +51,8 @@ export class NoteHandler {
 
 
     constructor(settings:MusicSettings) {
-        console.log("Constructing originalNoteGeneration Class with the following settings: ");
-        console.log(settings);
+        // console.log("Constructing originalNoteGeneration Class with the following settings: ");
+        // console.log(settings);
 
         this.debugOutput = false;
         this.octaves = settings.octaves;        
@@ -71,7 +71,7 @@ export class NoteHandler {
 
         this.midiGenerator = new MIDIManager(settings, this.timeForEachNoteArray);
 
-        console.log("Completed construction");
+        // console.log("Completed construction");
         this.stopFlag = false;
     }
 
@@ -151,7 +151,7 @@ export class NoteHandler {
 
     public returnMIDI() {
         let a = this.midiGenerator.returnMIDI();
-        console.log(a);
+        // console.log(a);
         return this.midiGenerator.returnMIDI();
     }
 
@@ -184,7 +184,10 @@ export class NoteHandler {
     // This is the function that handles all of the note generation. 
     // It has various supporting functions that it calls, but it all stems from here.
     public originalNoteGeneration = async (EEGdataObj:DataStream8Ch|DataStream4Ch, /*instrument:number, noteType:number, noteVolume:number, numNotes:number*/) => {
-        if (this.stopFlag) return;
+        if (this.stopFlag) {
+            this.midiGenerator.setStopFlag();   
+            return;
+        }
 
         this.InitIncrementArr();
         

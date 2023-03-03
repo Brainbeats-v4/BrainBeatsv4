@@ -4,6 +4,7 @@
     filter: drop-shadow(0px 4px 4px #181818);
     width: 18vw;
     height: fit-content;
+    max-height: 50vh;
     border-radius: 10px;  
     margin-bottom: 20px;
     padding: 5px;
@@ -21,10 +22,12 @@
 }
 
 .card-body{
+    /* background-color: red; */
     width: 100%;
     color: white;
     overflow-wrap: break-word;
-    overflow-x: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-img-top {
@@ -56,8 +59,10 @@
 }
 
 #card-author{
+    /* background-color: orange; */
     justify-content: left;
     text-align: left;
+    overflow-wrap: break-word;
 }
 
 #card-likes{

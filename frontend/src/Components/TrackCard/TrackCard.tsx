@@ -4,6 +4,7 @@ import { Modal } from 'react-bootstrap';
 import TrackModal from '../TrackModal/TrackModal';
 import sendAPI from '../../SendAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 type Props = {
     cardType:string;
@@ -158,7 +159,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
 
    function setTrack(currentTrack:Track) {
        setCurrentTrack(currentTrack);
-       setShow(true);
+       setShow(true);      
     }
 
     var trackCards = PopulateTrackCards();
@@ -166,8 +167,8 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     return (
         <div className='container text-center'>
             <div className='row track-row'>
-                {trackCards.map((trackCard) => (
-                    <div className="col track-col">
+                {trackCards.map((trackCard, index) => (
+                    <div className="col track-col" key={index}>
                         <button className=" btn btn-primary card" onClick={() => setTrack(trackCard)}>
                             <img src={trackCard.thumbnail} className="card-img-top" id="card-img-ID" alt="..."/>
                             <div className="card-body">
@@ -175,7 +176,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                                 <div className="card-text">
                                     <p id='card-author'>{trackCard.fullname}</p>
                                     <div id='card-likes'>
-                                        <FontAwesomeIcon className='modal-track-icons' icon={["fas", "heart"]} />
+                                        <FontAwesomeIcon className='modal-track-icons' icon={faHeart} />
                                         {trackCard.likeCount} 
                                     </div>
                                 </div>

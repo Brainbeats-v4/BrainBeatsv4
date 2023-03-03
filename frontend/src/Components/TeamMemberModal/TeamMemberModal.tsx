@@ -11,6 +11,7 @@ import buildPath from '../../util/ImagePath';
 // Import CSS
 import '../TrackModal/TrackModal.css';
 import '../TrackCard/TrackCard.css';
+import './TeamMemberModal.css';
 
 type Props = {
   teamMember: TeamMember; 
@@ -44,7 +45,9 @@ const TeamMemberModal: React.FC<Props> = ({teamMember}) => {
               <p>{teamMember.bio}</p>
               <br/>
               <h6>Individual Contributions</h6>
-              <p>{teamMember.contributions}</p>
+              <div id='member-contributions-div'>
+                <p>{teamMember.contributions}</p>
+              </div>
             </div>
           </Modal.Body>
           <Modal.Footer className='modal-container2'>

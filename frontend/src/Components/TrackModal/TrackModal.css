@@ -31,7 +31,7 @@
     border-color: #8E8E8E;
     color: white;
     width: 100%;
-    min-width: 70vw;
+    min-width: 65vw;
     height: fit-content;
     justify-content: center;
     align-items: center;
@@ -67,8 +67,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 35vw;
-    height: 35vw;
+    width: 30vw;
+    height: 30vw;
     /* padding: 0.5%; */
     /* background-color: red; */
 }
@@ -81,8 +81,8 @@
     align-items: center;
     background-color: rgba(0, 0, 0, 0.522);
     z-index: 2;
-    width: 35vw;
-    height: 35vw;
+    width: 30vw;
+    height: 30vw;
 }
 
 #track-cover-upload-label{
@@ -96,8 +96,8 @@
 
 .modal-track-cover{
     /* background-color: #067081; */
-    width: 35vw;
-    height: 35vw;
+    width: 30vw;
+    height: 30vw;
     filter: drop-shadow(0px 2px 4px #585858);
 }
 
@@ -199,4 +199,25 @@
     background-color: #7e0000;
     border-color: #7e0000;
     text-decoration: underline;
+}
+
+#like-track-btn{
+    background-color: #A9A9A9;
+}
+#like-track-btn:hover{
+    background-color: #8b8b8b;
+    border-color: #525252;
+}
+
+#favorited-heart{
+    color: rgb(255, 255, 255) ;
+}
+#dislike-track-btn{
+    background-color: #585858;
+    border-color: #484848;
+    color: rgb(255, 255, 255)
+}
+#dislike-track-btn:hover{
+    background-color: #434343;
+    border-color: #414141;
 }

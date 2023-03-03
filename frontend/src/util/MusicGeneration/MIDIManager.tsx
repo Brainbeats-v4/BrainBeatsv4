@@ -9,6 +9,7 @@ import { instrumentList } from "./InstOvertoneDefinitions";
 import MidiWriter from 'midi-writer-js';
 import {encode, decode } from 'js-base64';
 import musicGenerationSettingsSlice from "../../Redux/slices/musicGenerationSettingsSlice";
+import { createModifiersFromModifierFlags } from "typescript";
 
 export class MIDIManager {
     // Settings
@@ -16,10 +17,19 @@ export class MIDIManager {
     public channel0:any;
     public settings:MusicSettings
     public MIDIURI:string;
+
+    private stopFlag;
+
+    public setStopFlag() {
+        this.stopFlag = true;
+        this.audioContext.close();
+    }
     
     // Playback
     public audioQueue:any[] = [];
     private audioContext:AudioContext;
+    private audioWorklet:AudioWorkletNode;
+    
     // private numContexts:number[] = [];
     private timeForEachNoteArray:Array<number>;
 
@@ -35,7 +45,7 @@ export class MIDIManager {
         /*  This block initializes 4 more channels to write MIDI to in the case that
             we are using the cyton board, it does this by looking at the number of channels
             in the instrument setting since it is specific to the device. */
-        console.log(Object.keys(settings.deviceSettings.instruments))
+        // console.log(Object.keys(settings.deviceSettings.instruments))
         if((Object.keys(settings.deviceSettings.instruments).length) === 8) {
             var channel4 = new MidiWriter.Track();
             var channel5 = new MidiWriter.Track();
@@ -45,9 +55,12 @@ export class MIDIManager {
         }
 
         this.settings = settings;
+        this.stopFlag = false;
         this.initializeSettings(settings);
         this.timeForEachNoteArray = timeForEachNoteArray;
         this.audioContext = new AudioContext();
+        this.audioWorklet = new AudioWorkletNode(this.audioContext, "name");
+
     }
     
     public initializeSettings(settings:MusicSettings) {
@@ -68,8 +81,6 @@ export class MIDIManager {
         }
         return res;
     }
-
-    
 
     public returnMIDI() {
         var write = new MidiWriter.Writer(this.MIDIChannels);
@@ -175,7 +186,7 @@ export class MIDIManager {
             // audio needs to be in [-1.0; 1.0]
             var arr = [-.2, -.7, 0, .4, .9];
 
-            nowBuffering[i] = Math.random();
+            nowBuffering[i] = Math.random() * 2 - 1;
           }
         }
         
@@ -191,10 +202,28 @@ export class MIDIManager {
         source.start();
     }
 
-    public async realtimeGenerate(noteData:any[]) {
-        // this.playWhiteNoise();
-        // return;
+    // random-noise-processor.js
+    // class RandomNoiseProcessor extends AudioWorkletProcessor {
+    //     super();
+    //     process(inputs, outputs, parameters) {
+    //     const output = outputs[0];
+    //     output.forEach((channel) => {
+    //         for (let i = 0; i < channel.length; i++) {
+    //         channel[i] = Math.random() * 2 - 1;
+    //         }
+    //     });
+    //     return true;
+    //     }
+    // }
+    
+    // registerProcessor("random-noise-processor", RandomNoiseProcessor);
 
+    public async realtimeGenerate(noteData:any[]) {
+        if(this.stopFlag) {
+            this.audioContext.close();
+            return;
+        }
+        
         var BPM = this.settings.bpm;
         var instruments = this.settings.deviceSettings.instruments;
         var instrumentsArr = [];
@@ -211,7 +240,7 @@ export class MIDIManager {
         let dur: keyof typeof durations;
         for (dur in durations) {
           durationsArr.push(durations[dur]);
-        }
+        }        
 
         // Loop through each note and process the sound
         this.audioContext = new AudioContext();
@@ -249,17 +278,22 @@ export class MIDIManager {
             this.audioQueue[queueLength].node.loop = false;
             
             //URGENT : THe commented line ONLY MAKES QUARTER NOTES (THANKS V3 <3)
-            // var qtr = getMillisecondsFromBPM(BPM) / 1000;
+            var qtr = getMillisecondsFromBPM(BPM) / 1000;
+            var allLen = this.timeForEachNoteArray[i] / 1000;
 
             console.log(this.timeForEachNoteArray[i]);
             this.audioQueue[queueLength].node.start(0, 0, this.timeForEachNoteArray[i] / 1000);
         }
+        this.audioQueue[i].node.disconnect();
+
         
         return true;
     }
 
     private getNoteData(soundType:number, freq:number, amplitude:number, ctx:any, noteLength:number) {
         var buffer; // Local buffer variable.
+        console.log("numsamples", findNumSamples(this.timeForEachNoteArray[noteLength]));
+
 
         // For each supported sound type we call the correct function.
         if (soundType === Enums.InstrumentTypes.SINEWAVE) {
