@@ -28,20 +28,22 @@ import { WebSerial } from "webserial-wrapper";
 
 import EventEmitter from "events";
 
+/* So we can leave specific debug statements in 
+ * which will only show in dev */
+var debug = require('debug');
 
 // Device factory for separate connection methods. (This is because either ganglion will require
 // the old connection code, or we will need to create our own custom device.)
 export interface DeviceAbstractFactory {
     createGanglionStream(): AbstractGanglionStream;
-
     createCytonStream(): AbstractCytonStream;
+    setDebugOutput(): void;
 }
 
 export interface AbstractGanglionStream { 
     device:any;
-    flag:boolean;
+    stopFlag:boolean;
     settings:MusicSettings;
-
     initializeConnection(): any; //datastreams.dataDevice;
     stopDevice(): string;
     recordInputStream(data: any): DataStream4Ch
@@ -51,7 +53,6 @@ export interface AbstractCytonStream {
     device:any;
     stopFlag:boolean;
     settings:MusicSettings;
-    // userSettings:CytonSettings;
     initializeConnection(): any;
     stopDevice(): string;
     recordInputStream(data:any): any;
@@ -62,15 +63,29 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public stopFlag:boolean;
     public settings:MusicSettings;
     public noteHandler;
-    // private _eventEmitter: EventEmitter = new EventEmitter();
-
-    public static readonly FLAG_CHANGED_EVENT = 'stopFlagChanged';
+    private debugOutput:boolean;
 
     constructor(settings:MusicSettings) {
         this.stopFlag = false;
         this.settings = settings;
         this.noteHandler = new NoteHandler(this.settings);
-        this.noteHandler.setDebugOutput(false);                         // Debug
+        
+        
+        /* If in dev, and you click "toggle debug", it will cascade and set them all.
+        * (Planning to change to event system if time.)
+        * or, individually set this to true to enable music related output during recording.
+        * Ex: 
+        * Channel 1: At Rest 
+        * ... 
+        * Channel k: Playing G#  
+        */
+        this.debugOutput = false;
+        this.noteHandler.setDebugOutput(false); 
+    }
+
+    public setDebugOutput(b:boolean) {
+        this.debugOutput = b;
+        // if (b) this.noteHandler.setDebugOutput(true);
     }
 
     /*  The initializeConnection function is where the magic happens here, it uses the device-decoder library
@@ -80,17 +95,22 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         this.stopFlag = false;
         /* Devices['USB']['cyton] from BrainsAtPlay stores all the information needed to setup a connection using USB,
             if you are looking to init */
+
         await initDevice(Devices['USB']['cyton'],
         {   // this pushes the data from the headband as it is received from the board into the channels array
-            ondecoded: (data) => {this.recordInputStream(data);}, 
-            onconnect: (deviceInfo) => {
-                console.log(deviceInfo)
+            ondecoded: (data) => {
+                this.recordInputStream(data);
             }, 
-            ondisconnect: (deviceInfo) => console.log(deviceInfo),
+            onconnect: (deviceInfo) => {
+                this.device = deviceInfo;
+                console.log(deviceInfo);
+            }, 
+            ondisconnect: (deviceInfo) => console.log("on disconnect: ", deviceInfo),
         }).then((res) => {
-            this.device = res; // store the connected device's stream into the global variable
+            console.log("device.then res: ", res);
+            //this.device = res; // store the connected device's stream into the global variable
         }).catch((err)=> {
-            console.log(err);
+            console.error("Forcefully halted record!");
         })
     }
 
@@ -123,8 +143,8 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         instances know we're no longer needing them, we return the MIDI, the noteHandler.returnMIDI is further expanded
         upon in the MIDIManager.tsx file. */
     public stopDevice() {
-        this.noteHandler.setStopFlag();
         this.stopFlag = true;
+        this.noteHandler.setStopFlag();
         return this.noteHandler.returnMIDI();
     }
 }
@@ -132,19 +152,26 @@ export class ConcreteCytonStream implements AbstractCytonStream {
 // Concreate Ganglion factory 
 export class ConcreteGanglionStream implements AbstractGanglionStream {
     public device:any;
-    public flag:boolean = false;
+    public stopFlag:boolean;
     public settings:MusicSettings;
-    public noteHandler;
+    public noteHandler:NoteHandler;
+    private debugOutput:boolean;
 
     constructor(settings:MusicSettings) {
         this.settings = settings;
         this.noteHandler = new NoteHandler(this.settings);
         this.noteHandler.setDebugOutput(true);
+        this.stopFlag = false;
+        this.debugOutput = false;
+    }
+
+    public setDebugOutput(b:boolean) {
+        this.debugOutput = b;
     }
 
     public async initializeConnection() {
         console.log("Starting Ganglion Connection");
-        this.flag = false;
+        this.stopFlag = false;
 
         // let device = DevicesThirdParty['BLE_CUSTOM']['ganglion'];
         let device = new Ganglion();
@@ -174,7 +201,7 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
     }
 
     public stopDevice() {
-        this.flag = true;
+        this.stopFlag = true;
         this.device.disconnect();
         return this.noteHandler.returnMIDI();
     }

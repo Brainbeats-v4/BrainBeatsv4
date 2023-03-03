@@ -14,12 +14,18 @@ export class MIDIManager {
     public channel0:any;
     public settings:MusicSettings
     public MIDIURI:string;
-
     private stopFlag;
+    
+    private debugOutput:boolean;
+
 
     public setStopFlag() {
         this.stopFlag = true;
-        this.audioContext.close();
+        // this.audioContext.close();
+    }
+
+    public setDebugOutput(b:boolean){
+        this.debugOutput = b;
     }
     
     // Playback
@@ -52,6 +58,7 @@ export class MIDIManager {
 
         this.settings = settings;
         this.stopFlag = false;
+        this.debugOutput = false;
         this.initializeSettings(settings);
         this.timeForEachNoteArray = timeForEachNoteArray;
         this.audioContext = new AudioContext();
@@ -67,18 +74,18 @@ export class MIDIManager {
         } 
     }
 
-    private sliceIntoChunks(fileBuild:Uint8Array, chunkSize:number) {
-        const res = [];
-        for (let i = 0; i < fileBuild.length; i += chunkSize) {
-            const chunk = fileBuild.slice(i, i + chunkSize);
-            res.push(chunk);
-        }
-        return res;
-    }
-
     public returnMIDI() {
         var write = new MidiWriter.Writer(this.MIDIChannels);
-        var base64String = write.base64();
+        var base64String;
+
+        try {
+            base64String = write.base64();
+        }
+        catch {
+            base64String = "";
+            console.error("Base64 conversion of MIDI FAILED!");
+        }
+
         var prefix = "data:audio/midi;base64,"
         prefix = prefix.concat(base64String);
         return prefix;
@@ -188,7 +195,7 @@ export class MIDIManager {
         // This is the AudioNode to use when we want to play an AudioBuffer
         const source = audioCtx.createBufferSource();
         // set the buffer in the AudioBufferSourceNode
-        source.buffer = myArrayBuffer;
+        source.buffer = myArrayBuffer; 
         // connect the AudioBufferSourceNode to the
         // destination so we can hear the sound
         source.connect(audioCtx.destination);
@@ -201,6 +208,7 @@ export class MIDIManager {
             this.audioContext.close();
             return;
         }
+        console.log("playing sounds");
         
         var BPM = this.settings.bpm;
         var instruments = this.settings.deviceSettings.instruments;
@@ -231,9 +239,15 @@ export class MIDIManager {
             var soundType = instrumentsArr[i];
             var duration = durationsArr[i];
             var amplitude = noteData[i].player.amplitude;
+            var frequency = noteData[i].player.noteFrequency;
 
-            // console.log(i, " ", amplitude);
-        
+            // Debug -----------------------------------------
+            if (this.debugOutput) {
+                var num = i+1;
+                console.log("channel #", num,  ": playing amp(", amplitude, ") freq(", frequency !== undefined ? frequency : 0, ")");
+            }
+            // ------------------------------------- End Debug            
+
             this.audioQueue.push({
                 freq: playerInfo.noteFrequency,
                 playing: false,
