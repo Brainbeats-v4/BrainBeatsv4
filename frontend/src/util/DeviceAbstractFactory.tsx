@@ -64,9 +64,6 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public async initializeConnection() {
         this.flag = false;
         
-        // var serial = new WebSerial()
-        // await serial.requestPort(1027, 24597);
-
         await initDevice(Devices['USB']['cyton'],
         {   // this pushes the data from the headband as it is received from the board into the channels array
             ondecoded: (data) => { this.recordInputStream(data) }, 
@@ -74,7 +71,6 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             ondisconnect: (deviceInfo) => console.log(deviceInfo),
         }).then((res) => {
             if(res) {
-                console.log(this.device);
                 this.device = res; // store the connected device's stream into the global variable
             }
         }).catch((err)=> {

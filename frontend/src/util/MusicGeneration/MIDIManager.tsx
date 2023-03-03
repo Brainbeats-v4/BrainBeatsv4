@@ -214,7 +214,7 @@ export class MIDIManager {
         }
 
         // Loop through each note and process the sound
-        
+        this.audioContext = new AudioContext();
         for (var i = 0; i < noteData.length; i++) {         
 
             var playerInfo = noteData[i].player;
@@ -222,40 +222,7 @@ export class MIDIManager {
             // Setup for their vars
             var soundType = instrumentsArr[i];
             var duration = durationsArr[i];
-            var amplitude = noteData[i].player.amplitude;
-
-            this.audioContext = new AudioContext();
-            var buf = this.audioContext.createBuffer( 
-                2,
-                Constants.sampleRate * this.timeForEachNoteArray[i]/1000,
-                Constants.sampleRate
-              );
-
-            for (let channel = 0; channel < buf.numberOfChannels; channel++) {
-            // This gives us the actual ArrayBuffer that contains the data
-            const nowBuffering = buf.getChannelData(channel);
-            
-            
-                for (let i = 0; i < buf.length; i++) {
-                    // Math.random() is in [0; 1.0]
-                    // audio needs to be in [-1.0; 1.0]
-                    // var arr = [-.2, -.7, 0, .4, .9];
-        
-                    nowBuffering[i] = playerInfo.noteFrequency;
-                }
-            }
-            // Get an AudioBufferSourceNode.
-            // This is the AudioNode to use when we want to play an AudioBuffer
-            const source = this.audioContext.createBufferSource();
-            // set the buffer in the AudioBufferSourceNode
-            source.buffer = buf;
-            // connect the AudioBufferSourceNode to the
-            // destination so we can hear the sound
-            source.connect(this.audioContext.destination);
-            // start the source playing
-            source.start();
-            
-            continue;
+            var amplitude = noteData[i].player.amplitude;          
         
             this.audioQueue.push({
                 freq: playerInfo.noteFrequency,
@@ -266,26 +233,26 @@ export class MIDIManager {
                 gain: this.audioContext.createGain(),
                 needToClose: false,
             })
+            var queueLength:number = this.audioQueue.length - 1
 
-            if(this.audioQueue[i].playing) {
+            if(this.audioQueue[queueLength].playing) {
                 console.log("we are continuing");
                 continue;
             }
             
-            this.audioQueue[i].node.buffer = this.audioQueue[i].buffer;
+            this.audioQueue[queueLength].node.buffer = this.audioQueue[queueLength].buffer;
 
-            this.audioQueue[i].node.connect(this.audioQueue[i].gain);
-            this.audioQueue[i].gain.connect(this.audioQueue[i].ctx.destination);
-            this.audioQueue[i].gain.gain.value = amplitude;
+            this.audioQueue[queueLength].node.connect(this.audioQueue[queueLength].gain);
+            this.audioQueue[queueLength].gain.connect(this.audioQueue[queueLength].ctx.destination);
+            this.audioQueue[queueLength].gain.gain.value = amplitude;
             
-            this.audioQueue[i].node.loop = false;
+            this.audioQueue[queueLength].node.loop = false;
             
             //URGENT : THe commented line ONLY MAKES QUARTER NOTES (THANKS V3 <3)
             // var qtr = getMillisecondsFromBPM(BPM) / 1000;
 
-            this.audioQueue[i].node.start(0, 0, this.timeForEachNoteArray[i] / 1000);
-            this.audioQueue[i].node.disconnect();
-            this.audioContext.close();
+            console.log(this.timeForEachNoteArray[i]);
+            this.audioQueue[queueLength].node.start(0, 0, this.timeForEachNoteArray[i] / 1000);
         }
         
         return true;
@@ -479,7 +446,6 @@ export class MIDIManager {
     private getOvertoneFrequencies(instrumentIndex:number, frequency:number) {
         // Get the list of note amplitude values for this instrument.
         let list = instrumentList[instrumentIndex];
-    
         // We will start with a default value.
         let index = 0;
         //console.log("frequency : " + frequency, ", list: " + list + ", instrumentIndex: " + instrumentIndex);
