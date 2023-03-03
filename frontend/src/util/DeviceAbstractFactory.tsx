@@ -26,6 +26,8 @@ import { useSelector } from "react-redux";
 import { NoteHandler } from "./MusicGeneration/OriginalNoteGeneration";
 import { WebSerial } from "webserial-wrapper";
 
+import EventEmitter from "events";
+
 
 // Device factory for separate connection methods. (This is because either ganglion will require
 // the old connection code, or we will need to create our own custom device.)
@@ -60,6 +62,9 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public stopFlag:boolean;
     public settings:MusicSettings;
     public noteHandler;
+    // private _eventEmitter: EventEmitter = new EventEmitter();
+
+    public static readonly FLAG_CHANGED_EVENT = 'stopFlagChanged';
 
     constructor(settings:MusicSettings) {
         this.stopFlag = false;
@@ -77,8 +82,10 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             if you are looking to init */
         await initDevice(Devices['USB']['cyton'],
         {   // this pushes the data from the headband as it is received from the board into the channels array
-            ondecoded: (data) => { this.recordInputStream(data) }, 
-            onconnect: (deviceInfo) => console.log(deviceInfo), 
+            ondecoded: (data) => {this.recordInputStream(data);}, 
+            onconnect: (deviceInfo) => {
+                console.log(deviceInfo)
+            }, 
             ondisconnect: (deviceInfo) => console.log(deviceInfo),
         }).then((res) => {
             this.device = res; // store the connected device's stream into the global variable
@@ -91,10 +98,10 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         is turning the DataStream into a note to be played back in real time and generates a MIDI file in the process.
         This is being called continuously as the data is input */
     public recordInputStream(data:any) {
-        if(this.stopFlag === true) {
-            console.log('disconnect');
+        if(this.stopFlag) {
+            console.log('heard');
             this.device.disconnect();
-        }
+        };
         let currentData:DataStream8Ch = {
             channel00: data[0][0],
             channel01: data[1][0],
@@ -118,7 +125,6 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public stopDevice() {
         this.noteHandler.setStopFlag();
         this.stopFlag = true;
-
         return this.noteHandler.returnMIDI();
     }
 }

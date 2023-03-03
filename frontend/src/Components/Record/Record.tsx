@@ -52,7 +52,7 @@ function Record() {
         
         if(device) setMIDIURI(device.stopDevice()); 
 
-        setRecording(false);
+
     }
 
     return(
