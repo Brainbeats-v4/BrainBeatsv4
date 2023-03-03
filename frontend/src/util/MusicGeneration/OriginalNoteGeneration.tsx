@@ -79,8 +79,7 @@ export class NoteHandler {
     // Gets Ms for each note type based on BPM.
     private setTimeForEachNoteArray(BPM:number) {
         
-        return new Array(
-
+        return [
             // sixteenth
             getMillisecondsFromBPM(BPM) / 4,
             // eighth
@@ -91,7 +90,7 @@ export class NoteHandler {
             getMillisecondsFromBPM(BPM) * 2,
             // whole
             getMillisecondsFromBPM(BPM) * 4
-        )
+        ]
     }
 
     // This creates the array in which different "increments" for notes are housed. 
@@ -185,6 +184,7 @@ export class NoteHandler {
     // It has various supporting functions that it calls, but it all stems from here.
     public originalNoteGeneration = async (EEGdataObj:DataStream8Ch|DataStream4Ch, /*instrument:number, noteType:number, noteVolume:number, numNotes:number*/) => {
         if (this.stopFlag) {
+            console.log('stopped');
             this.midiGenerator.setStopFlag();   
             return;
         }
@@ -201,9 +201,7 @@ export class NoteHandler {
 
         var generatedArr:any[] = [];
         
-        var currentNoteData = {};
-
-        // Loop through each EEG channel
+        var currentNoteData = {};        // Loop through each EEG channel
         for (var i = 0; i < size; i++){
             var channelNum = i+1;
             // console.log("Processing channel " + channelNum);
@@ -269,8 +267,7 @@ export class NoteHandler {
         }
 
         this.midiGenerator.convertInput(generatedArr);
-        await this.midiGenerator.realtimeGenerate(generatedArr);
-        
+        await this.midiGenerator.realtimeGenerate(generatedArr);        
     };
 
     public prepNotesForMIDI(){

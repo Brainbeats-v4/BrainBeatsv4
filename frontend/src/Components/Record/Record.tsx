@@ -1,7 +1,6 @@
 import { ConcreteCytonStream, ConcreteGanglionStream, AbstractGanglionStream, AbstractCytonStream } from '../../util/DeviceAbstractFactory';
 import { useAppSelector } from "../../Redux/hooks";
-import React, {useState} from 'react';
-import CardCarousel from '../CardCarousel/CardCarousel';
+import {useState} from 'react';
 
 import './Record.css'
 import RecordCards from '../ScriptContainer/Scripts/Cards/RecordCards';
@@ -9,49 +8,50 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
-    const scriptCards = useAppSelector(state => state.cardArraySlice);
     const [MIDIUri, setMIDIURI] = useState('');
     const [isRecording, setRecording] = useState(false);
-    console.log(scriptCards);
-
-    var deviceType:string;
-    var device: AbstractGanglionStream | AbstractCytonStream;
+    /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
+    and import it. */
+    const [device, setDevice] = useState<AbstractGanglionStream | AbstractCytonStream>();
     
+    /*  doRecording simply creates an instance of the device we're using, in our case we only have the ganglion board and the
+        cyton board, the if condition that assigns the deviceType is checking to see the number of channels accepted, here you
+        could define this earlier and pass it down to this function (in the case that you have different EEG device with the same
+        number of channels) but we didn't see a need for it in our case. */
     async function doRecording() {
-        // Later create new instance of parent class, which decides which constructor to utilize
-        // based on device type string
-        if((Object.keys(settings.deviceSettings.instruments).length) === 8)
-            deviceType = 'cyton';
-        else
-            deviceType = 'ganglion'
+        var deviceType:string;
+        if((Object.keys(settings.deviceSettings.instruments).length) === 8) deviceType = 'cyton';
+        else deviceType = 'ganglion'
         switch (deviceType) {
             case "cyton":
-                device = new ConcreteCytonStream(settings);
+                setDevice(new ConcreteCytonStream(settings));
                 break;
             case "ganglion": 
-                device = new ConcreteGanglionStream(settings);
-                break;      
+                setDevice(new ConcreteGanglionStream(settings));
+                break;
             default: return;
         }
-        device.initializeConnection();
-        setRecording(true);
-
-        // Create instance of MIDIDriver class containing impl of interface for both
-            // interface MIDIPlayer
-            // interface MIDIWriter
-                // Each containes init() begin() end()
-            // Begin each passing the data channels callback, and the music settings
+        /*  Once we have defined the class we can initialize it. If you're to add another one of these it's important 
+            to make sure that its class has an initializeConnection function to keep this function clean and avoid 
+            conditionals here. In the case that somebody didn't connect a proper device, it's important not to call the
+            initialize connection function to avoid errors. */
+        if(device) {
+            device.initializeConnection();
+            setRecording(true); // Used for the record button in the HTML.
+        } 
     }
     
     function stopRecording() {
-        console.log("stopping...");
-        // The purpose of this if case is to prevent errors when pressing stop if there is no device
-        if(device !== undefined) {
-            /* When the device is stopped it signals the call to return the MIDI since
-               we are no longer recording input. This sets a use state here that spits
-               it out for our own use later. */
-            setMIDIURI(device.stopDevice());
-        }
+        /* When the device is stopped it signals the call to return the MIDI since
+            we are no longer recording input. This sets a use state here that stores
+            it in base64 to be stored in the database and make it easily downloadable.
+            Technically, the if conditional here isn't necessary since the stop button
+            won't show up unless the device connects, but react can't think that hard. */
+        console.log('stopping device');
+        console.log(device);
+        
+        if(device) setMIDIURI(device.stopDevice()); 
+
         setRecording(false);
     }
 
