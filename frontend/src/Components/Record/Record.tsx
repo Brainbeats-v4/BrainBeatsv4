@@ -21,7 +21,7 @@ function Record() {
     const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
 
     // Dev Debug button ----------------------------------
-    const isDev = useState((!process.env.NODE_ENV || process.env.NODE_ENV == "production"));
+    const isDev = useState((!process.env.NODE_ENV || process.env.NODE_ENV == "development"));
     const [debugBool, setDebug] = useState(false);
 
     function toggleDebug(option:number) {
@@ -102,6 +102,11 @@ function Record() {
     
 
     function handleForm(e:number) {
+
+        if (e == 1)console.log("BEFORE debugOption1", debugOption1);
+        if (e == 2)console.log("BEFORE debugOption2", debugOption2);
+        if (e == 3)console.log("BEFORE debugOption3", debugOption3);
+
         switch(e) {
             case 1:
                 setDebugOption1(!debugOption1);
