@@ -102,11 +102,6 @@ function Record() {
     
 
     function handleForm(e:number) {
-
-        if (e == 1)console.log("BEFORE debugOption1", debugOption1);
-        if (e == 2)console.log("BEFORE debugOption2", debugOption2);
-        if (e == 3)console.log("BEFORE debugOption3", debugOption3);
-
         switch(e) {
             case 1:
                 setDebugOption1(!debugOption1);
@@ -120,11 +115,6 @@ function Record() {
             default: 
                 break;
         }
-
-        if (e == 1)console.log("debugOption1", debugOption1);
-        if (e == 2)console.log("debugOption2", debugOption2);
-        if (e == 3)console.log("debugOption3", debugOption3);
-
     }
 
     return(
