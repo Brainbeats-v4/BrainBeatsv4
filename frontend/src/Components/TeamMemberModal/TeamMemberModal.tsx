@@ -41,9 +41,9 @@ const TeamMemberModal: React.FC<Props> = ({teamMember}) => {
               <h1 id='track-title-text'>{teamMember.name}</h1>
               <h6 id="track-author-text">{teamMember.position}</h6>
               <br/>
-              <h6>About Me</h6>
-              <p>{teamMember.bio}</p>
-              <br/>
+              {(teamMember.bio != '') && <h6>About Me</h6>}
+              {(teamMember.bio != '') && <p>{teamMember.bio}</p>}
+              {(teamMember.bio != '') && <br/>}
               <h6>Individual Contributions</h6>
               <div id='member-contributions-div'>
                 <p>{teamMember.contributions}</p>
