@@ -27,6 +27,7 @@ import { NoteHandler } from "./MusicGeneration/OriginalNoteGeneration";
 import { WebSerial } from "webserial-wrapper";
 
 import EventEmitter from "events";
+import { Random } from "unsplash-js/dist/methods/photos/types";
 
 /* So we can leave specific debug statements in 
  * which will only show in dev */
@@ -35,9 +36,19 @@ var debug = require('debug');
 // Device factory for separate connection methods. (This is because either ganglion will require
 // the old connection code, or we will need to create our own custom device.)
 export interface DeviceAbstractFactory {
+    createTestStream(): AbstractTestStream;
     createGanglionStream(): AbstractGanglionStream;
     createCytonStream(): AbstractCytonStream;
     setDebugOutput(): void;
+}
+
+// Used to send random data stream values
+export interface AbstractTestStream {
+    stopFlag:boolean;
+    settings:MusicSettings;
+    initializeConnection(): any; 
+    stopDevice(): string;
+    recordInputStream(data: any): void
 }
 
 export interface AbstractGanglionStream { 
@@ -46,7 +57,7 @@ export interface AbstractGanglionStream {
     settings:MusicSettings;
     initializeConnection(): any; //datastreams.dataDevice;
     stopDevice(): string;
-    recordInputStream(data: any): DataStream4Ch
+    recordInputStream(data: any): void
 }
 
 export interface AbstractCytonStream {
@@ -55,7 +66,75 @@ export interface AbstractCytonStream {
     settings:MusicSettings;
     initializeConnection(): any;
     stopDevice(): string;
-    recordInputStream(data:any): any;
+    recordInputStream(data:any): void
+}
+
+export class ConcreteTestStream implements AbstractTestStream {
+    public stopFlag:boolean;
+    public settings:MusicSettings;
+    public noteHandler;
+    private debugOutput:boolean;
+
+    // borrowed from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+    private getRandomInt(min:number, max:number){
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+    }
+
+    constructor(settings:MusicSettings) {
+
+        console.log("Constructed Test Stream");
+        
+        this.stopFlag = false;
+        this.settings = settings;
+        this.noteHandler = new NoteHandler(this.settings);
+
+        this.debugOutput = false;
+        this.noteHandler.setDebugOutput(true);
+    }
+
+    public async initializeConnection() { 
+        this.stopFlag = false; 
+        while (this.recordInputStream()) { 
+            this.recordInputStream()
+        }
+        
+    }
+
+    public recordInputStream() {
+        
+        // Check for flag to disconnect the device and return
+        if(this.stopFlag) {
+            console.log("stopping");
+            return false;
+        }
+    
+        let currentData:DataStream8Ch = {
+            channel00: this.getRandomInt(30000, 88000),
+            channel01: this.getRandomInt(30000, 88000),
+            channel02: this.getRandomInt(30000, 88000),
+            channel03: this.getRandomInt(30000, 88000),
+            channel04: this.getRandomInt(30000, 88000),
+            channel05: this.getRandomInt(30000, 88000),
+            channel06: this.getRandomInt(30000, 88000),
+            channel07: this.getRandomInt(30000, 88000),
+            timeStamp: Date.now(),
+        }
+
+        if (this.debugOutput) { console.log("DeviceStream:", currentData); }
+
+        this.noteHandler.originalNoteGeneration(currentData);
+    }
+
+    public stopDevice() {
+        this.stopFlag = true;
+        this.noteHandler.setStopFlag();
+        return this.noteHandler.returnMIDI();
+    }
+
+    public setDebugOutput(b:boolean) { this.debugOutput = b; }
+    
 }
 
 export class ConcreteCytonStream implements AbstractCytonStream {
@@ -72,21 +151,18 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         
         
         /* If in dev, and you click "toggle debug", it will cascade and set them all.
-        * (Planning to change to event system if time.)
-        * or, individually set this to true to enable music related output during recording.
-        * Ex: 
-        * Channel 1: At Rest 
-        * ... 
-        * Channel k: Playing G#  
-        */
+         * (Planning to change to event system if time.)
+         * or, individually set this to true to enable music related output during recording.
+         * Ex: 
+         * Channel 1: At Rest 
+         * ... 
+         * Channel k: Playing G#  
+         */
         this.debugOutput = false;
         this.noteHandler.setDebugOutput(false); 
     }
 
-    public setDebugOutput(b:boolean) {
-        this.debugOutput = b;
-        // if (b) this.noteHandler.setDebugOutput(true);
-    }
+    public setDebugOutput(b:boolean) { this.debugOutput = b;}
 
     /*  The initializeConnection function is where the magic happens here, it uses the device-decoder library
         from BrainsAtPlay (Big thanks to Josh Brew for a lot of help with hooking this up). The documentation
@@ -103,11 +179,14 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             }, 
             onconnect: (deviceInfo) => {
                 this.device = deviceInfo;
-                console.log(deviceInfo);
+                
+                if (this.debugOutput) console.log(deviceInfo);
+                
             }, 
-            ondisconnect: (deviceInfo) => console.log("on disconnect: ", deviceInfo),
+            ondisconnect: (deviceInfo) => {
+                if (this.debugOutput) console.log("on disconnect: ", deviceInfo)
+            }
         }).then((res) => {
-            console.log("device.then res: ", res);
             //this.device = res; // store the connected device's stream into the global variable
         }).catch((err)=> {
             console.error("Forcefully halted record!");
@@ -118,10 +197,14 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         is turning the DataStream into a note to be played back in real time and generates a MIDI file in the process.
         This is being called continuously as the data is input */
     public recordInputStream(data:any) {
+        
+        // Check for flag to disconnect the device and return
         if(this.stopFlag) {
-            console.log('heard');
             this.device.disconnect();
-        };
+            return;
+        }
+
+        // Package the data so it is easier to handle
         let currentData:DataStream8Ch = {
             channel00: data[0][0],
             channel01: data[1][0],
@@ -133,6 +216,9 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             channel07: data[7][0],
             timeStamp: data['timestamp'][0]
         }
+        
+        if (this.debugOutput) { console.log("DeviceStream:", currentData); }
+
         this.noteHandler.originalNoteGeneration(currentData);
     }
 
@@ -185,6 +271,12 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
     /* This function records input stream from the device and inputs it into
        the MIDIManager class which will return us a MIDI file upon request. */
     public recordInputStream(data:any) {
+        // Check for flag to disconnect the device and return
+        if(this.stopFlag) {
+            this.device.disconnect();
+            return;
+        }
+
         let currentData:DataStream4Ch = {
             channel00: data[0][0],
             channel01: data[1][0],
@@ -192,12 +284,8 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
             channel03: data[3][0],
             timeStamp: data['timestamp'][0]
        }
-    //    console.log(currentData);
 
-    //    this.noteHandler.originalNoteGeneration(currentData);
-       // This should be passed to the note manager
-        
-        return currentData;
+       this.noteHandler.originalNoteGeneration(currentData);
     }
 
     public stopDevice() {

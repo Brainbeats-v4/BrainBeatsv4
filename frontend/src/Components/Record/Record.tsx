@@ -1,4 +1,4 @@
-import { ConcreteCytonStream, ConcreteGanglionStream, AbstractGanglionStream, AbstractCytonStream } from '../../util/DeviceAbstractFactory';
+import { ConcreteCytonStream, ConcreteGanglionStream, AbstractGanglionStream, AbstractCytonStream, ConcreteTestStream } from '../../util/DeviceAbstractFactory';
 import { useAppSelector } from "../../Redux/hooks";
 import {useState, useEffect} from 'react';
 
@@ -8,12 +8,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormGroup, ToggleButton } from 'react-bootstrap';
 
 function Record() {
-    const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
+    const settings = useAppSelector(state => state.musicGenerationSettingsSlice);
+    const deviceName = useAppSelector(state => state.deviceSlice);
     const [MIDIUri, setMIDIURI] = useState('');
     const [isRecording, setRecording] = useState(false);
+    const [debugOption1, setDebugOption1] = useState(false);
+    const [debugOption2, setDebugOption2] = useState(false);
+    const [debugOption3, setDebugOption3] = useState(false);
+
     /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
     and import it. */
-    const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream>();
+    const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
 
     // Dev Debug button ----------------------------------
     const isDev = useState((!process.env.NODE_ENV || process.env.NODE_ENV == "production"));
@@ -46,12 +51,14 @@ function Record() {
         could define this earlier and pass it down to this function (in the case that you have different EEG device with the same
         number of channels) but we didn't see a need for it in our case. */
     async function doRecording() {
-        var deviceType:string;
         var dev:any;
 
-        if((Object.keys(settings.deviceSettings.instruments).length) === 8) deviceType = 'cyton';
-        else deviceType = 'ganglion'
-        switch (deviceType) {
+        console.log("device:", deviceName);
+
+        switch (deviceName) {
+            case "random data":
+                setDevice(new ConcreteTestStream(settings));
+                break;
             case "cyton":
                 setDevice(new ConcreteCytonStream(settings));
                 break;
@@ -91,6 +98,30 @@ function Record() {
         }
     }
 
+
+    
+
+    function handleForm(e:number) {
+        switch(e) {
+            case 1:
+                setDebugOption1(!debugOption1);
+                break;
+            case 2:
+                setDebugOption2(!debugOption2);
+                break;
+            case 3:
+                setDebugOption3(!debugOption3);
+                break;
+            default: 
+                break;
+        }
+
+        if (e == 1)console.log("debugOption1", debugOption1);
+        if (e == 2)console.log("debugOption2", debugOption2);
+        if (e == 3)console.log("debugOption3", debugOption3);
+
+    }
+
     return(
         <div className='container' id='record-container'>
             <h2 className='record-heading'>Recording Music</h2>
@@ -102,20 +133,21 @@ function Record() {
                     
                     {/* Debug checkboxes --------(from bootstrap)----------------- */}
                     {isDev && <div>
+                        <h2>Debug options</h2>
                         <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                            <input className="form-check-input" type="checkbox" value="1" id="flexCheckDefault" checked={debugOption1} onClick={() => handleForm(1)}/>
                             <label className="form-check-label" htmlFor="flexCheckDefault">
                                 device info & datastream <br/> (DeviceAbstractFactory)
                             </label>
                         </div>
                         <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                            <input className="form-check-input" type="checkbox" value="2" id="flexCheckDefault" checked={debugOption2} onClick={() => handleForm(2)}/>
                             <label className="form-check-label" htmlFor="flexCheckDefault">
                                 note generation stream <br/> (OriginalNoteGeneration)
                             </label>
                         </div>
                         <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
+                            <input className="form-check-input" type="checkbox" value="3" id="flexCheckDefault" checked={debugOption3} onClick={() => handleForm(3)}/>
                             <label className="form-check-label" htmlFor="flexCheckDefault">
                                 midi playback <br/> (MIDIManager)
                             </label>

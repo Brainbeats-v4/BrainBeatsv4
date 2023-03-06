@@ -204,6 +204,11 @@ export class MIDIManager {
     }
     
     public async realtimeGenerate(noteData:any[]) {
+
+        // console.log("playing white noise");
+        // this.playWhiteNoise(); 
+        // return;
+
         if(this.stopFlag) {
             this.audioContext.close();
             return;
