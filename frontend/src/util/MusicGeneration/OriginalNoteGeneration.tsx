@@ -27,7 +27,7 @@ export class NoteHandler {
 
     private midiGenerator;
 
-    private stopFlag:boolean;
+    private stopFlag:boolean = false;
 
     public setStopFlag() {
         this.stopFlag = true;
@@ -51,8 +51,8 @@ export class NoteHandler {
 
 
     constructor(settings:MusicSettings) {
-        console.log("Constructing originalNoteGeneration Class with the following settings: ");
-        console.log(settings);
+        // console.log("Constructing originalNoteGeneration Class with the following settings: ");
+        // console.log(settings);
 
         this.debugOutput = false;
         this.octaves = settings.octaves;        
@@ -62,7 +62,6 @@ export class NoteHandler {
         this.incrementArr = new Array(this.numNotes);        
         this.timeForEachNoteArray = this.setTimeForEachNoteArray(this.BPM);
         
-        
         this.keyGroup = KeyGroups[settings.keyGroup as keyof typeof KeyGroups];
         this.scale = Keys[settings.scale as keyof typeof Keys];
 
@@ -70,17 +69,22 @@ export class NoteHandler {
         this.instrumentNoteSettings = settings.deviceSettings;
 
         this.midiGenerator = new MIDIManager(settings, this.timeForEachNoteArray);
-
-        console.log("Completed construction");
         this.stopFlag = false;
+
+        /* Set this to true to enable real-time playback related output during recording.
+         * Ex: 
+         * Channel 1: At Rest 
+         * ... 
+         * Channel k: Playing G#  
+         */
+        this.midiGenerator.setDebugOutput(true); // debug
     }
 
     // Helper function for constructor. 
     // Gets Ms for each note type based on BPM.
     private setTimeForEachNoteArray(BPM:number) {
         
-        return new Array(
-
+        return [
             // sixteenth
             getMillisecondsFromBPM(BPM) / 4,
             // eighth
@@ -91,7 +95,7 @@ export class NoteHandler {
             getMillisecondsFromBPM(BPM) * 2,
             // whole
             getMillisecondsFromBPM(BPM) * 4
-        )
+        ]
     }
 
     // This creates the array in which different "increments" for notes are housed. 
@@ -151,7 +155,7 @@ export class NoteHandler {
 
     public returnMIDI() {
         let a = this.midiGenerator.returnMIDI();
-        console.log(a);
+        // console.log(a);
         return this.midiGenerator.returnMIDI();
     }
 
@@ -184,7 +188,11 @@ export class NoteHandler {
     // This is the function that handles all of the note generation. 
     // It has various supporting functions that it calls, but it all stems from here.
     public originalNoteGeneration = async (EEGdataObj:DataStream8Ch|DataStream4Ch, /*instrument:number, noteType:number, noteVolume:number, numNotes:number*/) => {
-        if (this.stopFlag) return;
+        if (this.stopFlag) {
+            console.log('stopped');
+            this.midiGenerator.setStopFlag();   
+            return;
+        }
 
         this.InitIncrementArr();
         
@@ -198,12 +206,9 @@ export class NoteHandler {
 
         var generatedArr:any[] = [];
         
-        var currentNoteData = {};
-
-        // Loop through each EEG channel
+        var currentNoteData = {};        // Loop through each EEG channel
         for (var i = 0; i < size; i++){
             var channelNum = i+1;
-            // console.log("Processing channel " + channelNum);
 
             // Data for the current index
             var curChannelData:number = dataArray[i];
@@ -228,13 +233,9 @@ export class NoteHandler {
             var noteFrequency;
 
             // If the generated note is not a rest
-            if (noteAndOctave.note != -1)
-            {
+            if (noteAndOctave.note != -1) {
                 noteOctaveString = noteAndOctave.note + (noteAndOctave.octave + floorOctave).toString();
-
                 noteFrequency = getFrequencyFromNoteOctaveString(noteOctaveString);
-
-                
             }
 
             let num = i+1;
@@ -244,15 +245,16 @@ export class NoteHandler {
             frequencyArray.fill(-1);
 
 
-            // If the generated note is not a rest
-            if (noteAndOctave.note != -1) {
+            // Debug -----------------------------------------
+            if (noteAndOctave.note != -1 && this.debugOutput) {
                 frequencyArray[i] = Number(noteAndOctave.note);
 
-                if (this.debugOutput) console.log("Channel " + num + ": Playing " + noteAndOctave.note);
+                console.log("Channel " + num + ": Playing " + noteAndOctave.note);
                 
             } else if(this.debugOutput) {
                 console.log("Channel " + num + ": At Rest");
             } else {}
+            // ------------------------------------- End Debug
 
             currentNoteData = {
                 player:{noteFrequency, timeForEachNoteArray: this.timeForEachNoteArray, amplitude: curChannelData},
@@ -266,8 +268,7 @@ export class NoteHandler {
         }
 
         this.midiGenerator.convertInput(generatedArr);
-        await this.midiGenerator.realtimeGenerate(generatedArr);
-        
+        await this.midiGenerator.realtimeGenerate(generatedArr);        
     };
 
     public prepNotesForMIDI(){

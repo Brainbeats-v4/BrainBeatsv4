@@ -1,14 +1,12 @@
-import { MusicSettings, DataStream4Ch, DataStream8Ch, CytonSettings, GanglionSettings } from "../Interfaces";
+import { MusicSettings } from "../Interfaces";
 // import { getNoteData } from './Playback'
-import {getMillisecondsFromBPM, findNumSamples, getIntFromNoteTypeString} from './MusicHelperFunctions';
+import {getMillisecondsFromBPM, findNumSamples} from './MusicHelperFunctions';
 import * as Enums from '../Enums';
 import * as Constants from '../Constants';
 import { instrumentList } from "./InstOvertoneDefinitions";
 
 
 import MidiWriter from 'midi-writer-js';
-import {encode, decode } from 'js-base64';
-import musicGenerationSettingsSlice from "../../Redux/slices/musicGenerationSettingsSlice";
 
 export class MIDIManager {
     // Settings
@@ -16,10 +14,24 @@ export class MIDIManager {
     public channel0:any;
     public settings:MusicSettings
     public MIDIURI:string;
+    private stopFlag;
+    
+    private debugOutput:boolean;
+
+
+    public setStopFlag() {
+        this.stopFlag = true;
+        // this.audioContext.close();
+    }
+
+    public setDebugOutput(b:boolean){
+        this.debugOutput = b;
+    }
     
     // Playback
     public audioQueue:any[] = [];
     private audioContext:AudioContext;
+    
     // private numContexts:number[] = [];
     private timeForEachNoteArray:Array<number>;
 
@@ -35,7 +47,7 @@ export class MIDIManager {
         /*  This block initializes 4 more channels to write MIDI to in the case that
             we are using the cyton board, it does this by looking at the number of channels
             in the instrument setting since it is specific to the device. */
-        console.log(Object.keys(settings.deviceSettings.instruments))
+        // console.log(Object.keys(settings.deviceSettings.instruments))
         if((Object.keys(settings.deviceSettings.instruments).length) === 8) {
             var channel4 = new MidiWriter.Track();
             var channel5 = new MidiWriter.Track();
@@ -45,6 +57,8 @@ export class MIDIManager {
         }
 
         this.settings = settings;
+        this.stopFlag = false;
+        this.debugOutput = false;
         this.initializeSettings(settings);
         this.timeForEachNoteArray = timeForEachNoteArray;
         this.audioContext = new AudioContext();
@@ -60,20 +74,18 @@ export class MIDIManager {
         } 
     }
 
-    private sliceIntoChunks(fileBuild:Uint8Array, chunkSize:number) {
-        const res = [];
-        for (let i = 0; i < fileBuild.length; i += chunkSize) {
-            const chunk = fileBuild.slice(i, i + chunkSize);
-            res.push(chunk);
-        }
-        return res;
-    }
-
-    
-
     public returnMIDI() {
         var write = new MidiWriter.Writer(this.MIDIChannels);
-        var base64String = write.base64();
+        var base64String;
+
+        try {
+            base64String = write.base64();
+        }
+        catch {
+            base64String = "";
+            console.error("Base64 conversion of MIDI FAILED!");
+        }
+
         var prefix = "data:audio/midi;base64,"
         prefix = prefix.concat(base64String);
         return prefix;
@@ -175,7 +187,7 @@ export class MIDIManager {
             // audio needs to be in [-1.0; 1.0]
             var arr = [-.2, -.7, 0, .4, .9];
 
-            nowBuffering[i] = Math.random();
+            nowBuffering[i] = Math.random() * 2 - 1;
           }
         }
         
@@ -183,18 +195,26 @@ export class MIDIManager {
         // This is the AudioNode to use when we want to play an AudioBuffer
         const source = audioCtx.createBufferSource();
         // set the buffer in the AudioBufferSourceNode
-        source.buffer = myArrayBuffer;
+        source.buffer = myArrayBuffer; 
         // connect the AudioBufferSourceNode to the
         // destination so we can hear the sound
         source.connect(audioCtx.destination);
         // start the source playing
         source.start();
     }
-
+    
     public async realtimeGenerate(noteData:any[]) {
-        // this.playWhiteNoise();
+
+        // console.log("playing white noise");
+        // this.playWhiteNoise(); 
         // return;
 
+        if(this.stopFlag) {
+            this.audioContext.close();
+            return;
+        }
+        console.log("playing sounds");
+        
         var BPM = this.settings.bpm;
         var instruments = this.settings.deviceSettings.instruments;
         var instrumentsArr = [];
@@ -211,10 +231,11 @@ export class MIDIManager {
         let dur: keyof typeof durations;
         for (dur in durations) {
           durationsArr.push(durations[dur]);
-        }
+        }        
+
+        this.audioContext = new AudioContext();
 
         // Loop through each note and process the sound
-        
         for (var i = 0; i < noteData.length; i++) {         
 
             var playerInfo = noteData[i].player;
@@ -223,40 +244,15 @@ export class MIDIManager {
             var soundType = instrumentsArr[i];
             var duration = durationsArr[i];
             var amplitude = noteData[i].player.amplitude;
+            var frequency = noteData[i].player.noteFrequency;
 
-            this.audioContext = new AudioContext();
-            var buf = this.audioContext.createBuffer( 
-                2,
-                Constants.sampleRate * this.timeForEachNoteArray[i]/1000,
-                Constants.sampleRate
-              );
-
-            for (let channel = 0; channel < buf.numberOfChannels; channel++) {
-            // This gives us the actual ArrayBuffer that contains the data
-            const nowBuffering = buf.getChannelData(channel);
-            
-            
-                for (let i = 0; i < buf.length; i++) {
-                    // Math.random() is in [0; 1.0]
-                    // audio needs to be in [-1.0; 1.0]
-                    // var arr = [-.2, -.7, 0, .4, .9];
-        
-                    nowBuffering[i] = playerInfo.noteFrequency;
-                }
+            // Debug -----------------------------------------
+            if (this.debugOutput) {
+                var num = i+1;
+                console.log("channel #", num,  ": playing amp(", amplitude, ") freq(", frequency !== undefined ? frequency : 0, ")");
             }
-            // Get an AudioBufferSourceNode.
-            // This is the AudioNode to use when we want to play an AudioBuffer
-            const source = this.audioContext.createBufferSource();
-            // set the buffer in the AudioBufferSourceNode
-            source.buffer = buf;
-            // connect the AudioBufferSourceNode to the
-            // destination so we can hear the sound
-            source.connect(this.audioContext.destination);
-            // start the source playing
-            source.start();
-            
-            continue;
-        
+            // ------------------------------------- End Debug            
+
             this.audioQueue.push({
                 freq: playerInfo.noteFrequency,
                 playing: false,
@@ -266,28 +262,32 @@ export class MIDIManager {
                 gain: this.audioContext.createGain(),
                 needToClose: false,
             })
+            var queueLength:number = this.audioQueue.length - 1
 
-            if(this.audioQueue[i].playing) {
+            if(this.audioQueue[queueLength].playing) {
                 console.log("we are continuing");
                 continue;
             }
             
-            this.audioQueue[i].node.buffer = this.audioQueue[i].buffer;
+            this.audioQueue[queueLength].node.buffer = this.audioQueue[queueLength].buffer;
+            // this.audioQueue[queueLength].gain.value = .3;
 
-            this.audioQueue[i].node.connect(this.audioQueue[i].gain);
-            this.audioQueue[i].gain.connect(this.audioQueue[i].ctx.destination);
-            this.audioQueue[i].gain.gain.value = amplitude;
+            this.audioQueue[queueLength].node.connect(this.audioQueue[queueLength].gain);
+            this.audioQueue[queueLength].gain.connect(this.audioQueue[queueLength].ctx.destination);
+            this.audioQueue[queueLength].gain.gain.value = amplitude;
             
-            this.audioQueue[i].node.loop = false;
+            this.audioQueue[queueLength].node.loop = false;
             
             //URGENT : THe commented line ONLY MAKES QUARTER NOTES (THANKS V3 <3)
-            // var qtr = getMillisecondsFromBPM(BPM) / 1000;
+            var qtr = getMillisecondsFromBPM(BPM) / 1000;
+            var allLen = this.timeForEachNoteArray[i] / 1000;
+            this.audioQueue[queueLength].node.start(0, 0, this.timeForEachNoteArray[duration] / 1000);
 
-            this.audioQueue[i].node.start(0, 0, this.timeForEachNoteArray[i] / 1000);
             this.audioQueue[i].node.disconnect();
-            this.audioContext.close();
+            this.audioQueue[i].gain.disconnect();
         }
-        
+
+        this.audioContext.close();
         return true;
     }
 
@@ -439,6 +439,7 @@ export class MIDIManager {
     }
 
     private generateInstrumentWave(numSamples:number, frequency:number, ctx:any, soundType:number) {    
+
         // Get the instrument specs.
         let inst = this.getOvertoneFrequencies(soundType, frequency);
     
@@ -479,7 +480,6 @@ export class MIDIManager {
     private getOvertoneFrequencies(instrumentIndex:number, frequency:number) {
         // Get the list of note amplitude values for this instrument.
         let list = instrumentList[instrumentIndex];
-    
         // We will start with a default value.
         let index = 0;
         //console.log("frequency : " + frequency, ", list: " + list + ", instrumentIndex: " + instrumentIndex);
