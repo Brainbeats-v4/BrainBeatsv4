@@ -111,14 +111,14 @@ export class ConcreteTestStream implements AbstractTestStream {
         }
     
         let currentData:DataStream8Ch = {
-            channel00: this.getRandomInt(30000, 88000),
-            channel01: this.getRandomInt(30000, 88000),
-            channel02: this.getRandomInt(30000, 88000),
-            channel03: this.getRandomInt(30000, 88000),
-            channel04: this.getRandomInt(30000, 88000),
-            channel05: this.getRandomInt(30000, 88000),
-            channel06: this.getRandomInt(30000, 88000),
-            channel07: this.getRandomInt(30000, 88000),
+            channel00: 500000, // this.getRandomInt(30000, 88000),
+            channel01: 0, // this.getRandomInt(30000, 88000),
+            channel02: 20000, // this.getRandomInt(30000, 88000),
+            channel03: 150000, // this.getRandomInt(30000, 88000),
+            channel04: 120000, // this.getRandomInt(30000, 88000),
+            channel05: 100000, // this.getRandomInt(30000, 88000),
+            channel06: 85000, // this.getRandomInt(30000, 88000),
+            channel07: 57000, // this.getRandomInt(30000, 88000),
             timeStamp: Date.now(),
         }
 
