@@ -68,7 +68,7 @@ const NoteSettings = memo(() => {
 
 const TrackSettings = () => {
 
-    const isDev = useState((!process.env.NODE_ENV || process.env.NODE_ENV == "production"));
+    const isDev = useState((!process.env.NODE_ENV || process.env.NODE_ENV == "development"));
 
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
     const [generationType, setGenerationType] = react.useState('slowAndMelodic');
