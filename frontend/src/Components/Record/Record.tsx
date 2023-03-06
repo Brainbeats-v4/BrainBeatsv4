@@ -22,8 +22,6 @@ function Record() {
     const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
 
     // Dev Debug button ----------------------------------
-
-    const isDev = useState((!process.env.NODE_ENV || process.env.NODE_ENV == "development"));
     const [debugBool, setDebug] = useState(false);
 
     function toggleDebug(option:number) {
