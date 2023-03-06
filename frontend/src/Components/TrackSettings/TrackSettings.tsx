@@ -7,6 +7,7 @@ import * as rand from '../../util/MusicGeneration/MusicHelperFunctions'
 
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../Redux/hooks';
+import isDev from '../../util/isDev';
 
 // Redux state to hold settings for specificed board
 import { set as setSettingsState } from '../../Redux/slices/musicGenerationSettingsSlice';
@@ -67,8 +68,6 @@ const NoteSettings = memo(() => {
 });
 
 const TrackSettings = () => {
-
-    const isDev = useState((!process.env.NODE_ENV || process.env.NODE_ENV == "production"));
 
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice)
     const [generationType, setGenerationType] = react.useState('slowAndMelodic');
@@ -222,7 +221,7 @@ const TrackSettings = () => {
                         <select className="dropdowns" id='board-dropdown' name="board-options" onChange={(e) => setDevice(e.target.value)}>
                             <option value="cyton">Cyton Board</option>
                             <option value="ganglion">Ganglion Board</option>
-                            {isDev && <option value="random data">Random Data</option>}
+                            {isDev() && <option value="random data">Random Data</option>}
                         </select>
                     </div>
                     <br></br>

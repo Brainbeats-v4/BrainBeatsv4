@@ -6,6 +6,7 @@ import './Record.css'
 import RecordCards from '../ScriptContainer/Scripts/Cards/RecordCards';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormGroup, ToggleButton } from 'react-bootstrap';
+import isDev from '../../util/isDev';
 
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice);
@@ -21,6 +22,7 @@ function Record() {
     const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
 
     // Dev Debug button ----------------------------------
+
     const isDev = useState((!process.env.NODE_ENV || process.env.NODE_ENV == "development"));
     const [debugBool, setDebug] = useState(false);
 
@@ -137,7 +139,7 @@ function Record() {
                 <div id='record-btns-div'>
                     
                     {/* Debug checkboxes --------(from bootstrap)----------------- */}
-                    {isDev && <div>
+                    {isDev() && <div>
                         <h2>Debug options</h2>
                         <div className="form-check">
                             <input className="form-check-input" type="checkbox" value="1" id="flexCheckDefault" checked={debugOption1} onClick={() => handleForm(1)}/>
