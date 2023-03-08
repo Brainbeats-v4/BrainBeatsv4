@@ -206,10 +206,17 @@ export class MIDIManager {
     private closeContext() {
         setTimeout(() => {
             console.log('closing context...');
+            
             this.audioQueue[0].node.disconnect();
             this.audioQueue.shift();
         }, 1000);
     }
+
+    private async sleep1(ms:number) {
+        await new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    private sleep2 = (m:any) => new Promise(r => setTimeout(r, m))
 
     public async realtimeGenerate(noteData:any[]) {
 
@@ -241,32 +248,46 @@ export class MIDIManager {
           durationsArr.push(durations[dur]);
         }        
 
-        this.audioContext = new AudioContext();
+        if (this.audioContext.state !== "running")
+            console.error("State:", this.audioContext.state);
+
+        setTimeout(() => {
+            this.audioContext = new AudioContext();
+        }, 3000);
+        
         this.audioContext.addEventListener('ended', this.closeContext);
 
         // Loop through each note and process the sound
-        for (var i = 0; i < noteData.length; i++) {         
+        for (var i = 0; i < noteData.length; i++) {    
+            
+            // await this.sleep1(10000)
+            
+            // await this.sleep2(10000).then(() => {
+                
+            // })
+            
+            
             this.closeContext();
             var playerInfo = noteData[i].player;
 
             // Setup for their vars
             var soundType = instrumentsArr[i];
             var duration = durationsArr[i];
-            var amplitude = noteData[i].player.amplitude;
-            var frequency = noteData[i].player.noteFrequency;
+            var amplitude = playerInfo.amplitude;
+            var frequency = playerInfo.noteFrequency;
 
             // Debug -----------------------------------------
             if (this.debugOutput) {
                 var num = i+1;
-                // console.log("channel #", num,  ": playing amp(", amplitude, ") freq(", frequency !== undefined ? frequency : 0, ")");
+                console.log("channel #", num,  ": playing amp(", amplitude, ") freq(", frequency !== undefined ? frequency : 0, ")");
             }
-            // ------------------------------------- End Debug            
+            // ------------------------------------- End Debug      
 
             this.audioQueue.push({
-                freq: playerInfo.noteFrequency,
+                freq: frequency,
                 playing: false,
                 ctx: this.audioContext,
-                buffer: this.getNoteData(soundType, playerInfo.noteFrequency, amplitude, this.audioContext, duration),
+                buffer: this.getNoteData(soundType, frequency, amplitude, this.audioContext, duration),
                 node: this.audioContext.createBufferSource(),
                 gain: this.audioContext.createGain(),
                 needToClose: false,
@@ -289,6 +310,7 @@ export class MIDIManager {
             //     console.log('entered stop');
             //     // this.audioQueue[queueLength].gain.disconnect();
             // })
+
             this.audioQueue[queueLength].node.connect(this.audioQueue[queueLength].gain);
             this.audioQueue[queueLength].gain.connect(this.audioQueue[queueLength].ctx.destination);
             
@@ -296,15 +318,15 @@ export class MIDIManager {
             
             this.audioQueue[queueLength].node.loop = false;
             
-            //URGENT : THe commented line ONLY MAKES QUARTER NOTES (THANKS V3 <3)
             var qtr = getMillisecondsFromBPM(BPM) / 1000;
-            var allLen = this.timeForEachNoteArray[i] / 1000;
-            this.audioQueue[queueLength].node.start(0, 0, this.timeForEachNoteArray[duration] / 1000);
+            var allLen = this.timeForEachNoteArray[duration] / 1000;
+            
+            this.audioQueue[queueLength].node.start(0, 0, 1);
             // this.audioQueue[queueLength].node.disconnect();
             // this.audioQueue[queueLength].gain.disconnect();
         }
 
-        this.audioContext.close();
+        setTimeout(() => this.audioContext.close(), 3000);
         return true;
     }
 
