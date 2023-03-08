@@ -62,7 +62,6 @@ export class NoteHandler {
         this.incrementArr = new Array(this.numNotes);        
         this.timeForEachNoteArray = this.setTimeForEachNoteArray(this.BPM);
         
-        
         this.keyGroup = KeyGroups[settings.keyGroup as keyof typeof KeyGroups];
         this.scale = Keys[settings.scale as keyof typeof Keys];
 
@@ -70,9 +69,15 @@ export class NoteHandler {
         this.instrumentNoteSettings = settings.deviceSettings;
 
         this.midiGenerator = new MIDIManager(settings, this.timeForEachNoteArray);
-
-        // console.log("Completed construction");
         this.stopFlag = false;
+
+        /* Set this to true to enable real-time playback related output during recording.
+         * Ex: 
+         * Channel 1: At Rest 
+         * ... 
+         * Channel k: Playing G#  
+         */
+        this.midiGenerator.setDebugOutput(true); // debug
     }
 
     // Helper function for constructor. 
@@ -110,7 +115,14 @@ export class NoteHandler {
         for (var i = 1; i < this.numNotes - 1; i++) {
             this.incrementArr[i] = incrementAmount * i + Constants.AMPLITUDE_OFFSET;
         }
-        
+
+        // Debug
+        if (this.debugOutput) {
+            for (var i = 0; i < this.numNotes; i++) {
+                console.error(i, ": ", this.incrementArr[i]);
+            }
+        }
+
     }
 
     // Takes in a raw value from the headset and assigns a note.
@@ -118,17 +130,18 @@ export class NoteHandler {
         let ampValue2 = 0;
         
         // Applies the offset to the headset's raw data
-        // console.log('ampValue: ' + ampValue);
+        console.log('ampValue: ', ampValue);
 
         // Our rounding logic
         ampValue2 = ampValue / Math.pow(10, 8);
-
+        
         // There rounding logic: This function contains the following: 
         // Math.round(`${data[0]}` * 10000000) / 10000000
         // ampValue2 = roundTo7Decimal(ampValue);
-
+        // console.log('old rounding: ', ampValue2);
         ampValue2 = (ampValue2 - -Constants.AMPLITUDE_OFFSET); 
-        
+
+        if (this.debugOutput) console.log("ampval:", ampValue2);
 
         // For every possible note, check to see if ampValue falls between two array positions. 
         // If so, return that position. If not, it will be treated as a rest (returning -1).
@@ -148,11 +161,7 @@ export class NoteHandler {
         return -1;
     }
 
-    public returnMIDI() {
-        let a = this.midiGenerator.returnMIDI();
-        // console.log(a);
-        return this.midiGenerator.returnMIDI();
-    }
+    public returnMIDI() { return this.midiGenerator.returnMIDI(); }
 
     // Gets the actual note from `the previously-obtained note INCREMENT (see NoteDeclarationRaw())
     // WRT stands for "with respect to", so this is "get note with respect to key"
@@ -204,7 +213,6 @@ export class NoteHandler {
         var currentNoteData = {};        // Loop through each EEG channel
         for (var i = 0; i < size; i++){
             var channelNum = i+1;
-            // console.log("Processing channel " + channelNum);
 
             // Data for the current index
             var curChannelData:number = dataArray[i];
@@ -229,13 +237,9 @@ export class NoteHandler {
             var noteFrequency;
 
             // If the generated note is not a rest
-            if (noteAndOctave.note != -1)
-            {
+            if (noteAndOctave.note != -1) {
                 noteOctaveString = noteAndOctave.note + (noteAndOctave.octave + floorOctave).toString();
-
                 noteFrequency = getFrequencyFromNoteOctaveString(noteOctaveString);
-
-                
             }
 
             let num = i+1;
@@ -245,15 +249,16 @@ export class NoteHandler {
             frequencyArray.fill(-1);
 
 
-            // If the generated note is not a rest
-            if (noteAndOctave.note != -1) {
+            // Debug -----------------------------------------
+            if (noteAndOctave.note != -1 && this.debugOutput) {
                 frequencyArray[i] = Number(noteAndOctave.note);
 
-                if (this.debugOutput) console.log("Channel " + num + ": Playing " + noteAndOctave.note);
+                console.log("Channel " + num + ": Playing " + noteAndOctave.note);
                 
             } else if(this.debugOutput) {
                 console.log("Channel " + num + ": At Rest");
             } else {}
+            // ------------------------------------- End Debug
 
             currentNoteData = {
                 player:{noteFrequency, timeForEachNoteArray: this.timeForEachNoteArray, amplitude: curChannelData},

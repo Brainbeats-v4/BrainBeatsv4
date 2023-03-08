@@ -79,11 +79,11 @@ const Team3 = () => {
         contributions: "• Researched music generation and algorithms" + "\n• Assisted in creating music generation model" + 
         "\n• Helped in data transmission between browser and EEG device" + "\n• Assisted with frontend functionality"},
 
-        {name: "Sami Eskirjeh", position: "EEG Connection • Backend Developer", image: defaultImage, bio: "Hello World Empty Text",
+        {name: "Sami Eskirjeh", position: "EEG Connection • Backend Developer", image: defaultImage, bio: "",
         contributions: "• Researched backend technologies" + "\n• Developed API functionality with OpenBCI headset" + 
         "\n• Worked in data transmission between browser and EEG device" + "\n• Assisted with frontend functionality"},
 
-        {name: "Quanminh Nguyen", position: "Frontend Developer • Visual Designer", image: quanminhNguen, bio: "Hello World Empty Text",
+        {name: "Quanminh Nguyen", position: "Frontend Developer • Visual Designer", image: quanminhNguen, bio: "",
         contributions: "• Researched frontend technologies" + "\n• Designed and implemented UI/UX for web application" + 
         "\n• Developed functional frontend components" + "\n• Assisted in developing a music generation model"},
     ];

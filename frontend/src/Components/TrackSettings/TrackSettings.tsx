@@ -1,4 +1,4 @@
-import react, { memo, useState } from 'react';
+import react, { memo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InstrumentTypes, KeyGroups, NoteDurations, Keys } from '../../util/Enums';
 import { KEY_SIGNATURES } from '../../util/Constants';
@@ -7,12 +7,15 @@ import * as rand from '../../util/MusicGeneration/MusicHelperFunctions'
 
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../Redux/hooks';
+import isDev from '../../util/isDev';
 
 // Redux state to hold settings for specificed board
-import { set } from '../../Redux/slices/musicGenerationSettingsSlice';
+import { set as setSettingsState } from '../../Redux/slices/musicGenerationSettingsSlice';
+import { set as setDeviceState } from '../../Redux/slices/deviceSlice';
+
 
 import './TrackSettings.css';
-
+import { env } from 'process';
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
@@ -63,11 +66,6 @@ const NoteSettings = memo(() => {
         </>
     )    
 });
-
-
-
-
-
 
 const TrackSettings = () => {
 
@@ -138,19 +136,20 @@ const TrackSettings = () => {
     }
 
 
-    function applySettingsEvent() {        
+    function applySettingsEvent() {       
+
         setNumNotes(octaves*7);
         var generationSettings:MusicSettings;
         
         var deviceSettings;
 
-        if(device === 'cyton') {
+        if(device === 'cyton' || device === "random data") {
             deviceSettings = {
                 instruments: {
-                    _00: instrument00, // FP1 Node
-                    _01: instrument01, // FP2 Node
-                    _02: instrument02, // C3 Node
-                    _03: instrument03, // C4 Node
+                    _00: instrument00, 
+                    _01: instrument01, 
+                    _02: instrument02, 
+                    _03: instrument03, 
                     _04: instrument04,
                     _05: instrument05,
                     _06: instrument06,
@@ -158,10 +157,10 @@ const TrackSettings = () => {
                 },
                 // Used to store the duration of each note a given node should be used to output
                 durations: {
-                    _00: duration00, // FP1 Node
-                    _01: duration01, // FP2 Node
-                    _02: duration02, // C3 Node
-                    _03: duration03, // C4 Node
+                    _00: duration00, 
+                    _01: duration01, 
+                    _02: duration02, 
+                    _03: duration03, 
                     _04: duration04,
                     _05: duration05,
                     _06: duration06,
@@ -197,10 +196,18 @@ const TrackSettings = () => {
         }
 
         // Apply settings to redux
-        dispatch(set(generationSettings));
+        dispatch(setSettingsState(generationSettings));
+        dispatch(setDeviceState(device));
+
+        console.log(device);
         navigate("/script-settings")
     
     }
+
+    // useEffect(() => {
+    //     setDeviceState(device)
+    //     console.log(device);
+    // }, [device]);
 
     return (
         <div className='container' id='main-container'>
@@ -214,6 +221,7 @@ const TrackSettings = () => {
                         <select className="dropdowns" id='board-dropdown' name="board-options" onChange={(e) => setDevice(e.target.value)}>
                             <option value="cyton">Cyton Board</option>
                             <option value="ganglion">Ganglion Board</option>
+                            {isDev() && <option value="random data">Random Data</option>}
                         </select>
                     </div>
                     <br></br>
@@ -315,7 +323,7 @@ const TrackSettings = () => {
                             </select>
                         </div>
                         {/* This conditional here will render the advanced settings to have more electrode options */}
-                        {(device === 'cyton') && 
+                        {(device === 'cyton' || device == 'random data') && 
                             <>
                             <div className='col instrument-box'>
                             <label htmlFor="instrument5">Instrument 5:</label>
