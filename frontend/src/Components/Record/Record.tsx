@@ -1,4 +1,4 @@
-import { ConcreteCytonStream, ConcreteGanglionStream, AbstractGanglionStream, AbstractCytonStream, ConcreteTestStream } from '../../util/DeviceAbstractFactory';
+import { ConcreteCytonStream, ConcreteGanglionStream, ConcreteTestStream } from '../../util/DeviceAbstractFactory';
 import { useAppSelector } from "../../Redux/hooks";
 import {useState, useEffect} from 'react';
 
@@ -89,7 +89,7 @@ function Record() {
         setDevice(undefined);
         setRecording(false);
 
-        if (midiUriRes == undefined || midiUriRes == "") {
+        if (midiUriRes === undefined || midiUriRes === "") {
             console.error("Failed to create Midi file!"); 
         }
         else {

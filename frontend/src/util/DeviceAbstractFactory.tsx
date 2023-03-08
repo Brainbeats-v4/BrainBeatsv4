@@ -69,6 +69,10 @@ export interface AbstractCytonStream {
     recordInputStream(data:any): void
 }
 
+
+/*  The test stream is one that is only used in development, it provides us a way to test out implementations to
+    the MIDI production without having to set up a device connection, this is primarily for our
+    own sanity, if you're running into playback issues/MIDI generation this is incredibly useful. */
 export class ConcreteTestStream implements AbstractTestStream {
     public stopFlag:boolean;
     public settings:MusicSettings;
@@ -91,7 +95,7 @@ export class ConcreteTestStream implements AbstractTestStream {
         this.noteHandler = new NoteHandler(this.settings);
 
         this.debugOutput = false;
-        this.noteHandler.setDebugOutput(true);
+        this.noteHandler.setDebugOutput(false);
     }
 
     public async initializeConnection() { 
@@ -99,17 +103,14 @@ export class ConcreteTestStream implements AbstractTestStream {
         while (this.recordInputStream()) { 
             this.recordInputStream()
         }
-        
     }
 
     public recordInputStream() {
-        
         // Check for flag to disconnect the device and return
         if(this.stopFlag) {
             console.log("stopping");
             return false;
         }
-    
         let currentData:DataStream8Ch = {
             channel00: 500000, // this.getRandomInt(30000, 88000),
             channel01: 0, // this.getRandomInt(30000, 88000),
@@ -125,6 +126,7 @@ export class ConcreteTestStream implements AbstractTestStream {
         if (this.debugOutput) { console.log("DeviceStream:", currentData); }
 
         this.noteHandler.originalNoteGeneration(currentData);
+        return true;
     }
 
     public stopDevice() {

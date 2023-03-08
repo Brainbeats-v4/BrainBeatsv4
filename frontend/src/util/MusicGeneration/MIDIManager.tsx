@@ -203,7 +203,14 @@ export class MIDIManager {
         source.start();
     }
     
-    
+    private closeContext() {
+        setTimeout(() => {
+            console.log('closing context...');
+            this.audioQueue[0].node.disconnect();
+            this.audioQueue.shift();
+        }, 1000);
+    }
+
     public async realtimeGenerate(noteData:any[]) {
 
         // console.log("playing white noise");
@@ -214,7 +221,7 @@ export class MIDIManager {
             this.audioContext.close();
             return;
         }
-        console.log("playing sounds");
+        // console.log("playing sounds");
         
         var BPM = this.settings.bpm;
         var instruments = this.settings.deviceSettings.instruments;
@@ -235,10 +242,11 @@ export class MIDIManager {
         }        
 
         this.audioContext = new AudioContext();
+        this.audioContext.addEventListener('ended', this.closeContext);
 
         // Loop through each note and process the sound
         for (var i = 0; i < noteData.length; i++) {         
-
+            this.closeContext();
             var playerInfo = noteData[i].player;
 
             // Setup for their vars
@@ -250,7 +258,7 @@ export class MIDIManager {
             // Debug -----------------------------------------
             if (this.debugOutput) {
                 var num = i+1;
-                console.log("channel #", num,  ": playing amp(", amplitude, ") freq(", frequency !== undefined ? frequency : 0, ")");
+                // console.log("channel #", num,  ": playing amp(", amplitude, ") freq(", frequency !== undefined ? frequency : 0, ")");
             }
             // ------------------------------------- End Debug            
 
@@ -269,12 +277,21 @@ export class MIDIManager {
                 console.log("we are continuing");
                 continue;
             }
-            
+            this.audioQueue[queueLength].playing = true;
             this.audioQueue[queueLength].node.buffer = this.audioQueue[queueLength].buffer;
             // this.audioQueue[queueLength].gain.value = .3;
 
+            // this.audioQueue[queueLength].node.addEventListener('ended', () => {
+            //     console.log('entered stop');
+            //     // this.audioQueue[queueLength].node.disconnect();
+            // })
+            // this.audioQueue[queueLength].gain.addEventListener('ended', () => {
+            //     console.log('entered stop');
+            //     // this.audioQueue[queueLength].gain.disconnect();
+            // })
             this.audioQueue[queueLength].node.connect(this.audioQueue[queueLength].gain);
             this.audioQueue[queueLength].gain.connect(this.audioQueue[queueLength].ctx.destination);
+            
             this.audioQueue[queueLength].gain.gain.value = amplitude;
             
             this.audioQueue[queueLength].node.loop = false;
@@ -283,9 +300,8 @@ export class MIDIManager {
             var qtr = getMillisecondsFromBPM(BPM) / 1000;
             var allLen = this.timeForEachNoteArray[i] / 1000;
             this.audioQueue[queueLength].node.start(0, 0, this.timeForEachNoteArray[duration] / 1000);
-
-            this.audioQueue[i].node.disconnect();
-            this.audioQueue[i].gain.disconnect();
+            // this.audioQueue[queueLength].node.disconnect();
+            // this.audioQueue[queueLength].gain.disconnect();
         }
 
         this.audioContext.close();

@@ -130,7 +130,7 @@ export class NoteHandler {
         let ampValue2 = 0;
         
         // Applies the offset to the headset's raw data
-        console.log('ampValue: ', ampValue);
+        // console.log('ampValue: ', ampValue);
 
         // Our rounding logic
         ampValue2 = ampValue / Math.pow(10, 8);
