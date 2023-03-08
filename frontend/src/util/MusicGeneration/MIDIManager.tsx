@@ -196,6 +196,7 @@ export class MIDIManager {
         source.start();
     }
     
+    
     public async realtimeGenerate(noteData:any[]) {
         if(this.stopFlag) {
             this.audioContext.close();
