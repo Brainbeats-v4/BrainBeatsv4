@@ -36,9 +36,12 @@ function Record() {
     useEffect(() => {
         // set
         if (device) {
+            setTimeout(() => {
+                setRecording(true); // Used for the record button in the HTML.
+                device.setDebugOutput(debugBool);
+            }, 3000);
+
             device.initializeConnection();
-            setRecording(true); // Used for the record button in the HTML.
-            device.setDebugOutput(debugBool);
         }
         // unset 
         else {
