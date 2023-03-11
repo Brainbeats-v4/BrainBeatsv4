@@ -78,6 +78,7 @@ export class ConcreteTestStream implements AbstractTestStream {
     public settings:MusicSettings;
     public noteHandler;
     private debugOutput:boolean;
+    private counter:number;
 
     // borrowed from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
     private getRandomInt(min:number, max:number){
@@ -96,12 +97,14 @@ export class ConcreteTestStream implements AbstractTestStream {
 
         this.debugOutput = false;
         this.noteHandler.setDebugOutput(false);
+        this.counter = 0;
     }
 
     public async initializeConnection() { 
         this.stopFlag = false; 
-        while (this.recordInputStream()) { 
+        while (this.counter < 1000) { 
             this.recordInputStream()
+            this.counter++;
         }
     }
 
