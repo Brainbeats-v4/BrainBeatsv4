@@ -70,6 +70,7 @@ export class NoteHandler {
 
         this.midiGenerator = new MIDIManager(settings, this.timeForEachNoteArray);
         this.stopFlag = false;
+        
 
         /* Set this to true to enable real-time playback related output during recording.
          * Ex: 
@@ -272,7 +273,7 @@ export class NoteHandler {
         }
 
         this.midiGenerator.convertInput(generatedArr);
-        await this.midiGenerator.realtimeGenerate(generatedArr);        
+        await this.midiGenerator.faketimeGenerate(generatedArr);        
     };
 
     public prepNotesForMIDI(){

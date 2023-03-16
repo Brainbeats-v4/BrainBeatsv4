@@ -4,6 +4,7 @@ import {getMillisecondsFromBPM, findNumSamples} from './MusicHelperFunctions';
 import * as Enums from '../Enums';
 import * as Constants from '../Constants';
 import { instrumentList } from "./InstOvertoneDefinitions";
+import * as Tone from 'tone'
 
 
 import MidiWriter from 'midi-writer-js';
@@ -15,6 +16,7 @@ export class MIDIManager {
     public settings:MusicSettings
     public MIDIURI:string;
     private stopFlag;
+    private synth;
     
     private debugOutput:boolean;
 
@@ -62,6 +64,8 @@ export class MIDIManager {
         this.initializeSettings(settings);
         this.timeForEachNoteArray = timeForEachNoteArray;
         this.audioContext = new AudioContext();
+
+        this.synth = new Tone.Synth().toDestination();
     }
     
     public initializeSettings(settings:MusicSettings) {
@@ -203,33 +207,91 @@ export class MIDIManager {
         source.start();
     }
     
-    private closeContext() {
-        setTimeout(() => {
-            console.log('closing context...');
-            
-            this.audioQueue[0].node.disconnect();
-            this.audioQueue.shift();
-        }, 1000);
+    private closeContext() {            
+        console.log('closing context');
+        this.audioQueue[0].node.disconnect();
+        this.audioQueue.shift();
     }
 
-    private async sleep1(ms:number) {
-        await new Promise(resolve => setTimeout(resolve, ms));
+    /*  The playNextBuffer function grabs the next buffer source in the queue which has its
+        buffer created in the realtimeGenerate function. It does this until the queue is empty. */
+    public playNextBuffer(duration:number) {
+        if(this.audioQueue.length > 0) {
+            let bufferHolder = this.audioQueue.shift();
+            let source = bufferHolder.node;
+            source.connect(this.audioContext.destination);
+            source.connect(this.audioContext);
+            source.onended = function () {
+                source.disconnect();
+                this.playNextBuffer();
+            }
+            console.log(this.timeForEachNoteArray[duration] / 1000)
+            source.start(0, 0, this.timeForEachNoteArray[duration] / 1000);
+        }
     }
 
-    private sleep2 = (m:any) => new Promise(r => setTimeout(r, m))
+    public async faketimeGenerate(noteData:any[]) {
+       var instruments = this.settings.deviceSettings.instruments;
+       var instrumentsArr = [];
+
+       var durations = this.settings.deviceSettings.durations;
+       var durationsArr = [];
+
+       // Convert instruments to array
+       let inst: keyof typeof instruments;
+       for (inst in instruments) {
+         instrumentsArr.push(instruments[inst]);
+       }
+
+       let dur: keyof typeof durations;
+       for (dur in durations) {
+         durationsArr.push(durations[dur]);
+       }
+       console.log(durations);
+       for(let i = 0; i < noteData.length; i++) {
+        var playerInfo = noteData[i].player;
+
+        // Setup for their vars
+        var soundType = instrumentsArr[i];
+        var duration = durationsArr[i];
+        var amplitude = playerInfo.amplitude;
+        var frequency = playerInfo.noteFrequency;
+        if(frequency === undefined) continue;
+            console.log('soundType: ', soundType);
+            console.log('duration: ', duration);
+            console.log('amplitude: ', amplitude);
+            console.log('frequency: ', frequency);
+
+            switch(duration) {
+                case 0: // WHOLE
+                    // this.synth.triggerAttackRelease("C4", "1n")        
+                    break;
+                case 1: // HALF
+                    this.synth.triggerAttackRelease("C4", "2n")        
+                    break;
+                case 2: // QUARTER
+                    this.synth.triggerAttackRelease("C4", "4n")        
+                    break;
+                case 3: // EIGHTH
+                    this.synth.triggerAttackRelease("C4", "8n")        
+                    break;
+                case 4: // SIXTEENTH
+                    this.synth.triggerAttackRelease("C4", "16n")        
+                    break;
+                default:
+                    break;
+            }
+       }
+       
+
+    }
 
     public async realtimeGenerate(noteData:any[]) {
-
-        // console.log("playing white noise");
-        // this.playWhiteNoise(); 
-        // return;
-
         if(this.stopFlag) {
             this.audioContext.close();
             return;
         }
-        // console.log("playing sounds");
-        
+
         var BPM = this.settings.bpm;
         var instruments = this.settings.deviceSettings.instruments;
         var instrumentsArr = [];
@@ -246,28 +308,13 @@ export class MIDIManager {
         let dur: keyof typeof durations;
         for (dur in durations) {
           durationsArr.push(durations[dur]);
-        }        
+        }
 
         if (this.audioContext.state !== "running")
             console.error("State:", this.audioContext.state);
-
-        setTimeout(() => {
-            this.audioContext = new AudioContext();
-        }, 3000);
-        
-        this.audioContext.addEventListener('ended', this.closeContext);
-
+    
         // Loop through each note and process the sound
-        for (var i = 0; i < noteData.length; i++) {    
-            
-            // await this.sleep1(10000)
-            
-            // await this.sleep2(10000).then(() => {
-                
-            // })
-            
-            
-            this.closeContext();
+        for (var i = 0; i < noteData.length; i++) {                  
             var playerInfo = noteData[i].player;
 
             // Setup for their vars
@@ -277,10 +324,10 @@ export class MIDIManager {
             var frequency = playerInfo.noteFrequency;
 
             // Debug -----------------------------------------
-            if (this.debugOutput) {
-                var num = i+1;
-                console.log("channel #", num,  ": playing amp(", amplitude, ") freq(", frequency !== undefined ? frequency : 0, ")");
-            }
+            // if (this.debugOutput) {
+            //     var num = i+1;
+            //     console.log("channel #", num,  ": playing amp(", amplitude, ") freq(", frequency !== undefined ? frequency : 0, ")");
+            // }
             // ------------------------------------- End Debug      
 
             this.audioQueue.push({
@@ -292,14 +339,13 @@ export class MIDIManager {
                 gain: this.audioContext.createGain(),
                 needToClose: false,
             })
-            var queueLength:number = this.audioQueue.length - 1
+            var queueLength:number = this.audioQueue.length - 1;
 
-            if(this.audioQueue[queueLength].playing) {
-                console.log("we are continuing");
-                continue;
-            }
+            if(this.audioQueue[queueLength].playing) continue;
+    
             this.audioQueue[queueLength].playing = true;
             this.audioQueue[queueLength].node.buffer = this.audioQueue[queueLength].buffer;
+
             // this.audioQueue[queueLength].gain.value = .3;
 
             // this.audioQueue[queueLength].node.addEventListener('ended', () => {
@@ -318,15 +364,15 @@ export class MIDIManager {
             
             this.audioQueue[queueLength].node.loop = false;
             
-            var qtr = getMillisecondsFromBPM(BPM) / 1000;
-            var allLen = this.timeForEachNoteArray[duration] / 1000;
+            // var qtr = getMillisecondsFromBPM(BPM) / 1000;
+            // var allLen = this.timeForEachNoteArray[duration] / 1000;
             
-            this.audioQueue[queueLength].node.start(0, 0, 1);
+            this.playNextBuffer(duration);
+            // this.audioQueue[queueLength].node.start(0, 0, 3);
             // this.audioQueue[queueLength].node.disconnect();
             // this.audioQueue[queueLength].gain.disconnect();
         }
 
-        setTimeout(() => this.audioContext.close(), 3000);
         return true;
     }
 

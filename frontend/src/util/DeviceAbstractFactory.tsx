@@ -105,9 +105,8 @@ export class ConcreteTestStream implements AbstractTestStream {
 
         do {
             this.recordInputStream()
-            console.log(this.stopFlag);
         }
-        while (this.stopFlag)
+        while(!this.stopFlag)
     }
 
     public recordInputStream() {
