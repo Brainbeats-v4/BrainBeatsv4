@@ -236,9 +236,9 @@ const TrackModal: React.FC<Props> = ({track}) => {
     <>
       <div>
         <div className='modal-background'>
-          <Modal.Header className='modal-container0' closeButton>
+          <Modal.Header className='modal-container-header' closeButton>
           </Modal.Header>
-          <Modal.Body className='modal-container1'>
+          <Modal.Body className='modal-container-body'>
             <div id='modal-track-cover-div'>
               {editing && <div id='edit-track-cover-div'>
                 <label id="track-cover-upload-label" htmlFor="trackInputTag">
@@ -271,8 +271,8 @@ const TrackModal: React.FC<Props> = ({track}) => {
               </h5>
             </div>
           </Modal.Body>
-          <Modal.Footer className='modal-container2'>
-            <div id='modal-container-20'>
+          <Modal.Footer className='modal-container-footer'>
+            <div id='modal-container-footer-1'>
               {editing && <button className='btn btn-secondary modal-btn-public' onClick={() => setVisibilityButton()}>
                 {visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye"]} id="visibilityButton" />}
                 {!visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye-slash"]} id="visibilityButton" />}
@@ -283,7 +283,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 Delete Track
               </button>}
             </div>
-            <div id='modal-container-21'>
+            <div id='modal-container-footer-2'>
               {!favorited && <button className='btn btn-secondary modal-btn' id='like-track-btn' value={track.likeCount} onClick={() => {addLike(); setFavorited(true)}}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["far", "heart"]} />
                 Favorite

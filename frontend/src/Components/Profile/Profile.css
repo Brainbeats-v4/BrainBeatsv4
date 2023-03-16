@@ -291,3 +291,60 @@
     margin-top: 2%;
     border-radius: 10px;
 }
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 700px) {
+    #profile-container{
+        width: 95%;
+    }
+
+    #count-all-div {
+        justify-content: space-between;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+
+    #tracks-btn, #playlists-btn{
+        width: 50%;
+    }
+
+    #profile-name, #user-name{
+        width: 100%;
+    }
+
+    #select-profile-image-div{
+        /* background-color: orange; */
+        width: 100%;
+        padding-left: 50%;
+        padding-right: 50%;
+        margin-top: 13%;
+        height: 30vh;
+    }
+
+    #profile-image-div {
+        width: 45vw;
+        height: 45vw;
+    }
+
+    #profile-top-name-div {
+        height: fit-content;
+    }
+
+    #user-profile-name-div {
+        width: 100%;
+    }
+
+    #user-info-div{
+        /* background-color: red; */
+        margin-top: 60%;
+        margin-left: 0px;
+        padding-left: 5%;
+        padding-bottom: 2%;
+        width: 100%;
+    }
+
+    #user-firstName, #user-lastName{
+        width: 48%;
+    }
+
+}

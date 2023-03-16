@@ -24,8 +24,7 @@
     justify-content: center;
 }
 #main-signup-container {
-    max-width: 35%;
-    /* height: 100vh; */
+    max-width: fit-content;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -88,4 +87,20 @@
 }
 #login-link:hover {
     text-decoration: underline;
+}
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 400px) {
+    #main-signup-container {
+        max-width: 100%;
+    }
+
+    #signup-container {
+        padding: 20px;
+    }
+
+    #signup-title {
+        font-size: 25px;
+        padding-top: 1%;
+    }
 }

@@ -4,10 +4,8 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { userJWT, userModeState } from "../../JWT";
 
 import './Navbar.css'
-import '../Sidebar/Sidebar.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
-import Sidebar from '../Sidebar/Sidebar';
 
 // This component stores both the Navbar and Sidebar.
 const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {  
@@ -108,7 +106,7 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
             </ul>}
             {user && <ul className="navbar-nav ml-auto nav-btns-div">
                 <form className="form-inline nav-btns" id="formID">
-                    <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doLogout()} type="button" id="signUpBtn">
+                    <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doLogout()} type="button" id="signOutBtn">
                       <FontAwesomeIcon id='profile-icon' icon={["fas", "right-from-bracket"]} />
                       Sign Out
                     </button>
@@ -124,7 +122,7 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
     
     {/* Sidebar Component */}
     <div className="sidebar-container" id='sidebar-ID'>
-      <div style={{width: isOpen? "200px" : "60px"}} className="sidebar">
+      <div style={{width: isOpen? "200px" : "60px"}} className={`sidebar ${isOpen? "sidebar-open": "sidebar-closed"}`}>
         {
           menuItem.map((item, index)=>(
             <NavLink  to={item.path} key={index} className="link" end>

@@ -82,3 +82,18 @@
     border-color: #e33051;
     text-decoration: underline;
 }
+
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 500px) {
+
+    #record-track-info-div{
+        width: 100%;
+    }
+
+    #record-track-container{
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+    }
+}

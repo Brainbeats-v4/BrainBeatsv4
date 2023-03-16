@@ -179,7 +179,7 @@
     overflow-x: hidden;
 }
 
-.instruments-div{
+.instruments-div, .instruments-other-div{
     height: 100%;
     padding: 10px 20px 10px 20px;
     display: flex;
@@ -233,4 +233,70 @@
     border-color: #9e9e9e;
     color: white;
     text-decoration: underline;
+}
+
+#random-btn-adv {
+    margin: 3%;
+    float: inline-end;
+    border-radius: 0px;
+    padding: 7px 20px 7px 20px;
+    width: 200px;
+    background-color: #6f6f6f;
+    border-color: #6f6f6f;
+    float: right;
+    color: white
+}
+#random-btn-adv:hover {
+    background-color: #404040;
+    background-color: #404040;
+    color: white;
+    text-decoration: underline;
+}
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 1020px) {
+
+    .heading{
+        text-align: center;
+    }
+
+    #settings-container1, #settings-container2 {
+        min-width: 70%;
+        width: 100%;
+    }
+
+    #settings-container2{
+        margin-bottom: 5%;
+    }
+
+    #settings-options-div{
+        width: 100%;
+        flex-direction: column;
+        align-items: start;
+        padding-left: 5%;
+    }
+
+    /* Advanced Settings */
+    .adv-settings-container{
+        margin: 0px;
+        max-width: 90%;
+    }
+
+    #random-btn-adv {
+        float: none;
+        margin: 0px;
+        width: 100%;
+    }
+
+    .instrument-box{
+        max-width: fit-content;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .instruments-other-div
+    {
+        flex-direction: column;
+        justify-content: left;
+    }   
 }

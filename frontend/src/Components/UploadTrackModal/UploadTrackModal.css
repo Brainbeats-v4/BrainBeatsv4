@@ -1,12 +1,20 @@
-#upload-track-btn{
+.upload-track-btn{
     background-color: #F8607C;
     border-color: #F8607C;
     width: 30%;
     min-width: fit-content;
 }
 
-#upload-track-btn:hover{
+.upload-track-btn:hover{
     background-color:#e33051;
     border-color: #e33051;
     text-decoration: underline;
+}
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 400px) {
+
+    .upload-track-btn{
+        width: 100%;
+    }
 }

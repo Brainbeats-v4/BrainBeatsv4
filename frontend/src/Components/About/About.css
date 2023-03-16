@@ -5,10 +5,8 @@ p{
 #about-container{
     display: flex;
     flex-direction: column;
-    /* background-color:rgb(198, 198, 198); */
     max-width: 100%;
     height: fit-content;
-    /* padding: 40px 40px 0px 40px; */
     margin: 0;
 }
 
@@ -19,8 +17,6 @@ p{
     flex-direction: column;
     align-items: center;
     height: 22vh;
-    /* margin-bottom: 0%; */
-
 }
 
 #about-header-title{
@@ -46,7 +42,6 @@ p{
     font-weight: 350;
     color: rgb(255, 255, 255);
     font-size: large;
-    /* text-decoration: none; */
 }
 .about-link:hover{
     cursor: pointer;
@@ -64,14 +59,13 @@ p{
 }
 
 #about-body-div{
-    /* background-color: red; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-left: auto;
     margin-right: auto;
     height: fit-content;
-    width: 90%;
+    width: 100%;
 }
 
 .about-body-titles{
@@ -80,12 +74,10 @@ p{
     margin-left: 3%;
 }
 
-#about-brainbeats{
+#about-brainbeats, #about-tech{
     background: linear-gradient(270deg, #40BBCE 0%, #008BA0 100%);
     display: flex;
     flex-direction: row;
-    /* align-items: center; */
-    /* column-gap: 5%; */
     padding-left: 3%;
     padding-right: 3%;
     color: black;
@@ -134,7 +126,6 @@ p{
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* column-gap: 5%; */
     color: black;
     width: 100%;
     height: fit-content;
@@ -164,7 +155,6 @@ p{
     background-color: #007183 !important;
     font-weight: 650;
     border-radius: 0px 0px 17px 17px;
-    /* text-decoration: underline; */
 }
 
 .about-team-btn-subtitle{
@@ -172,13 +162,11 @@ p{
 }
 
 .about-teams-body{
-    /* background-color: red; */
     display: flex;
     flex-direction: row;
     justify-content: center;
     column-gap: 2%;
     width: 100%;
-    /* padding: 2%; */
     padding-left: 2%;
     padding-right: 2%;
 }
@@ -193,7 +181,6 @@ p{
 }
 
 .about-team-members{
-    /* background-color: lightgray; */
     min-width: 49%;
     padding: 2%;
     height: fit-content;
@@ -225,21 +212,6 @@ p{
     font-weight: 600;
 }
 
-#about-tech{
-    background: linear-gradient(270deg, #40BBCE 0%, #008BA0 100%);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    /* column-gap: 5%; */
-    padding-left: 3%;
-    padding-right: 3%;
-    color: black;
-    width: 100%;
-    height: fit-content;
-    margin-top: 1%;
-    border-radius: 10px;
-}
-
 #about-tech-image{
     margin: 2%;
     background-color: rgb(182, 182, 182);
@@ -269,4 +241,26 @@ p{
     padding-top: 3%;
     padding-bottom: 2%;
     font-weight: 600;
+}
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 400px) {
+
+    #about-header-div{
+        background-color: #575757;
+        color:white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 15vh;
+    }
+
+    .about-link {
+        font-size: 14px;
+    }
+
+    #about-brainbeats, #about-tech, .about-teams-body{
+        flex-direction: column;
+        font-size: small;
+    }
 }

@@ -37,7 +37,7 @@ const Login = () => {
         <div className='container' id='main-login-container'>
             <div className='container' id='login-container'>
                 <div className="bbLogo"></div>
-                <h1 className="login-text text-center fw-semibold">Log in to BrainBeats</h1>
+                <h1 className="login-text text-center fw-semibold" id='login-title'>Log in to BrainBeats</h1>
                 <div className="mt-3">
                     <label className="form-label form-text login-text">Email</label>
                     <input type="text" className="form-control formGroupExampleInput" placeholder="something@example.com" onChange={event => setEmail(event.target.value)}/>

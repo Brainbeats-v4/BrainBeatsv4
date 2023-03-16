@@ -40,3 +40,19 @@
     cursor: pointer;
     background-color: #F8607C;
 }
+
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 400px) {
+
+    .modal-dialog{
+        padding-top: 0px;
+    }
+   .modal-content{
+        height: fit-content;
+   }
+
+   .search-image{
+        width: 30%;
+   }
+}

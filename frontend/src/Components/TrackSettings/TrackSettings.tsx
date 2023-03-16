@@ -276,7 +276,7 @@ const TrackSettings = () => {
                 <h1 className='heading'>Advanced Music Settings</h1>
                 <form className='justify-content-center adv-settings-container'>
                     <h2 className='settings-text'>Instruments</h2>
-                    <button type="button" className="btn btn-secondary" id='back-btn-adv' onClick={getRandomMusicSettings}>Randomize!</button>
+                    <button type="button" className="btn btn-secondary" id='random-btn-adv' onClick={getRandomMusicSettings}>Randomize!</button>
                     <div className='row instruments-div'>
                         <div className='col instrument-box'>
                             <label htmlFor="instrument1">Instrument 1:</label>
@@ -379,7 +379,7 @@ const TrackSettings = () => {
                 <br></br>
                 <form className='justify-content-center adv-settings-container'>
                     <h2 className='settings-text'>Other</h2>
-                    <div className='row instruments-div'>
+                    <div className='row instruments-other-div'>
                         <div className='col instrument-box-other'>
                             <label htmlFor="octave">Number of Octaves:</label>
                             <select className="dropdowns2" name="octave" id="octave-option" value={octaves} defaultValue={octaves} onChange={(e) => setOctaves(Number(e.target.value))}>
