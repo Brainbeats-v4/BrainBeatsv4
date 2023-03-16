@@ -69,11 +69,16 @@ export interface AbstractCytonStream {
     recordInputStream(data:any): void
 }
 
+
+/*  The test stream is one that is only used in development, it provides us a way to test out implementations to
+    the MIDI production without having to set up a device connection, this is primarily for our
+    own sanity, if you're running into playback issues/MIDI generation this is incredibly useful. */
 export class ConcreteTestStream implements AbstractTestStream {
     public stopFlag:boolean;
     public settings:MusicSettings;
     public noteHandler;
     private debugOutput:boolean;
+    private counter:number;
 
     // borrowed from: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
     private getRandomInt(min:number, max:number){
@@ -91,40 +96,41 @@ export class ConcreteTestStream implements AbstractTestStream {
         this.noteHandler = new NoteHandler(this.settings);
 
         this.debugOutput = false;
-        this.noteHandler.setDebugOutput(true);
+        this.noteHandler.setDebugOutput(false);
+        this.counter = 0;
     }
 
     public async initializeConnection() { 
         this.stopFlag = false; 
-        while (this.recordInputStream()) { 
+
+        do {
             this.recordInputStream()
         }
-        
+        while(!this.stopFlag)
     }
 
     public recordInputStream() {
-        
         // Check for flag to disconnect the device and return
         if(this.stopFlag) {
             console.log("stopping");
             return false;
         }
-    
         let currentData:DataStream8Ch = {
-            channel00: this.getRandomInt(30000, 88000),
-            channel01: this.getRandomInt(30000, 88000),
-            channel02: this.getRandomInt(30000, 88000),
-            channel03: this.getRandomInt(30000, 88000),
-            channel04: this.getRandomInt(30000, 88000),
-            channel05: this.getRandomInt(30000, 88000),
-            channel06: this.getRandomInt(30000, 88000),
-            channel07: this.getRandomInt(30000, 88000),
+            channel00: this.getRandomInt(20000, 120000),
+            channel01: this.getRandomInt(20000, 120000),
+            channel02: this.getRandomInt(20000, 120000),
+            channel03: this.getRandomInt(20000, 120000),
+            channel04: this.getRandomInt(20000, 120000),
+            channel05: this.getRandomInt(20000, 120000),
+            channel06: this.getRandomInt(20000, 120000),
+            channel07: this.getRandomInt(20000, 120000),
             timeStamp: Date.now(),
         }
 
         if (this.debugOutput) { console.log("DeviceStream:", currentData); }
 
         this.noteHandler.originalNoteGeneration(currentData);
+        return true;
     }
 
     public stopDevice() {
