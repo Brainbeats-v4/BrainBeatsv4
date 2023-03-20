@@ -41,7 +41,7 @@ p{
 .about-link{
     font-weight: 350;
     color: rgb(255, 255, 255);
-    font-size: large;
+    font-size: larger;
 }
 .about-link:hover{
     cursor: pointer;
