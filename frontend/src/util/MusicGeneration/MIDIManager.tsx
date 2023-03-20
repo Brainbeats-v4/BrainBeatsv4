@@ -8,39 +8,21 @@ import * as Tone from 'tone'
 
 
 import MidiWriter from 'midi-writer-js';
+import { time } from "console";
 
 export class MIDIManager {
     // Settings
+    private synthArr:Array<Tone.PolySynth<Tone.Synth<Tone.SynthOptions>>> = [];
     public MIDIChannels:MidiWriter.Track[] = [];
-    public channel0:any;
+    private timeForEachNoteArray:Array<number>;
     public settings:MusicSettings
+    private debugOutput:boolean;
     public MIDIURI:string;
     private stopFlag;
-    private synth;
     
-    private debugOutput:boolean;
-
-
-    public setStopFlag() {
-        this.stopFlag = true;
-        // this.audioContext.close();
-    }
-
-    public setDebugOutput(b:boolean){
-        this.debugOutput = b;
-    }
-    
-    // Playback
-    public audioQueue:any[] = [];
-    private audioContext:AudioContext;
-    
-    // private numContexts:number[] = [];
-    private timeForEachNoteArray:Array<number>;
-
     constructor(settings:MusicSettings, timeForEachNoteArray:Array<number>) {
         this.MIDIURI = "";
         var channel0 = new MidiWriter.Track();
-        this.channel0 = channel0;
         var channel1 = new MidiWriter.Track();
         var channel2 = new MidiWriter.Track();
         var channel3 = new MidiWriter.Track();
@@ -63,9 +45,16 @@ export class MIDIManager {
         this.debugOutput = false;
         this.initializeSettings(settings);
         this.timeForEachNoteArray = timeForEachNoteArray;
-        this.audioContext = new AudioContext();
+        this.initializeSynth();
+    }
+    
+    private initializeSynth() {
+        Tone.getTransport().bpm.value = this.settings.bpm;
 
-        this.synth = new Tone.Synth().toDestination();
+        for (var i = 0; i < 8; i++) {
+            var res:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth(Tone.Synth).toDestination();            
+            this.synthArr.push(res);
+        }
     }
     
     public initializeSettings(settings:MusicSettings) {
@@ -85,9 +74,9 @@ export class MIDIManager {
         try {
             base64String = write.base64();
         }
-        catch {
+        catch(err) {
             base64String = "";
-            console.error("Base64 conversion of MIDI FAILED!");
+            console.error("Base64 conversion of MIDI FAILED!", err);
         }
 
         var prefix = "data:audio/midi;base64,"
@@ -169,73 +158,13 @@ export class MIDIManager {
         }
     }
 
-    private async playWhiteNoise() {
-        const audioCtx = new window.AudioContext;
-
-        // Create an empty three-second stereo buffer at the sample rate of the AudioContext
-        const myArrayBuffer = audioCtx.createBuffer(
-          2,
-          audioCtx.sampleRate * 3,
-          audioCtx.sampleRate
-        );
-        
-        // Fill the buffer with white noise;
-        //just random values between -1.0 and 1.0
-        for (let channel = 0; channel < myArrayBuffer.numberOfChannels; channel++) {
-          // This gives us the actual ArrayBuffer that contains the data
-          const nowBuffering = myArrayBuffer.getChannelData(channel);
-          
-          
-          for (let i = 0; i < myArrayBuffer.length; i++) {
-            // Math.random() is in [0; 1.0]
-            // audio needs to be in [-1.0; 1.0]
-            var arr = [-.2, -.7, 0, .4, .9];
-
-            nowBuffering[i] = Math.random() * 2 - 1;
-          }
-        }
-        
-        // Get an AudioBufferSourceNode.
-        // This is the AudioNode to use when we want to play an AudioBuffer
-        const source = audioCtx.createBufferSource();
-        // set the buffer in the AudioBufferSourceNode
-        source.buffer = myArrayBuffer; 
-        // connect the AudioBufferSourceNode to the
-        // destination so we can hear the sound
-        source.connect(audioCtx.destination);
-        // start the source playing
-        source.start();
-    }
     
-    private closeContext() {            
-        console.log('closing context');
-        this.audioQueue[0].node.disconnect();
-        this.audioQueue.shift();
-    }
-
-    /*  The playNextBuffer function grabs the next buffer source in the queue which has its
-        buffer created in the realtimeGenerate function. It does this until the queue is empty. */
-    public playNextBuffer(duration:number) {
-        if(this.audioQueue.length > 0) {
-            let bufferHolder = this.audioQueue.shift();
-            let source = bufferHolder.node;
-            source.connect(this.audioContext.destination);
-            source.connect(this.audioContext);
-            source.onended = function () {
-                source.disconnect();
-                this.playNextBuffer();
-            }
-            console.log(this.timeForEachNoteArray[duration] / 1000)
-            source.start(0, 0, this.timeForEachNoteArray[duration] / 1000);
-        }
-    }
-
-    public async faketimeGenerate(noteData:any[]) {
+    public async realtimeGenerate(noteData:any[]) {
        var instruments = this.settings.deviceSettings.instruments;
        var instrumentsArr = [];
 
        var durations = this.settings.deviceSettings.durations;
-       var durationsArr = [];
+       var durationsArr:Array<number> = [];
 
        // Convert instruments to array
        let inst: keyof typeof instruments;
@@ -247,74 +176,15 @@ export class MIDIManager {
        for (dur in durations) {
          durationsArr.push(durations[dur]);
        }
-       console.log(durations);
-       for(let i = 0; i < noteData.length; i++) {
-        var playerInfo = noteData[i].player;
-
-        // Setup for their vars
-        var soundType = instrumentsArr[i];
-        var duration = durationsArr[i];
-        var amplitude = playerInfo.amplitude;
-        var frequency = playerInfo.noteFrequency;
-        if(frequency === undefined) continue;
-            console.log('soundType: ', soundType);
-            console.log('duration: ', duration);
-            console.log('amplitude: ', amplitude);
-            console.log('frequency: ', frequency);
-
-            switch(duration) {
-                case 0: // WHOLE
-                    // this.synth.triggerAttackRelease("C4", "1n")        
-                    break;
-                case 1: // HALF
-                    this.synth.triggerAttackRelease("C4", "2n")        
-                    break;
-                case 2: // QUARTER
-                    this.synth.triggerAttackRelease("C4", "4n")        
-                    break;
-                case 3: // EIGHTH
-                    this.synth.triggerAttackRelease("C4", "8n")        
-                    break;
-                case 4: // SIXTEENTH
-                    this.synth.triggerAttackRelease("C4", "16n")        
-                    break;
-                default:
-                    break;
-            }
-       }
-       
-
-    }
-
-    public async realtimeGenerate(noteData:any[]) {
-        if(this.stopFlag) {
-            this.audioContext.close();
-            return;
-        }
-
-        var BPM = this.settings.bpm;
-        var instruments = this.settings.deviceSettings.instruments;
-        var instrumentsArr = [];
-
-        var durations = this.settings.deviceSettings.durations;
-        var durationsArr = [];
-
-        // Convert instruments to array
-        let inst: keyof typeof instruments;
-        for (inst in instruments) {
-          instrumentsArr.push(instruments[inst]);
-        }
-
-        let dur: keyof typeof durations;
-        for (dur in durations) {
-          durationsArr.push(durations[dur]);
-        }
-
-        if (this.audioContext.state !== "running")
-            console.error("State:", this.audioContext.state);
-    
-        // Loop through each note and process the sound
-        for (var i = 0; i < noteData.length; i++) {                  
+        
+        /*  This for loop is where feedback is actually sent to the speakers of the computer, we're using Tone.js to send
+            a synth as output. The way this is done is through an array of tones for each channel, this is so that we can make
+            sure no channel is going to be overlapped by a new input. This essentially works by checking to see if the channel is
+            playing a sound through the activeVoices value, if it's equal to 1 then it's playing a sound so we only fire the call
+            when it's 0. The triggerAttackRelease function takes in the values of notes, duration, and time. Hence the switch case
+            the frequency we provide it is the note value. */
+            
+        for(let i = 0; i < noteData.length; i++) {
             var playerInfo = noteData[i].player;
 
             // Setup for their vars
@@ -323,57 +193,45 @@ export class MIDIManager {
             var amplitude = playerInfo.amplitude;
             var frequency = playerInfo.noteFrequency;
 
-            // Debug -----------------------------------------
-            // if (this.debugOutput) {
-            //     var num = i+1;
-            //     console.log("channel #", num,  ": playing amp(", amplitude, ") freq(", frequency !== undefined ? frequency : 0, ")");
-            // }
-            // ------------------------------------- End Debug      
+            if(frequency === undefined) continue;
 
-            this.audioQueue.push({
-                freq: frequency,
-                playing: false,
-                ctx: this.audioContext,
-                buffer: this.getNoteData(soundType, frequency, amplitude, this.audioContext, duration),
-                node: this.audioContext.createBufferSource(),
-                gain: this.audioContext.createGain(),
-                needToClose: false,
-            })
-            var queueLength:number = this.audioQueue.length - 1;
+            /*
+                * The duration lengths are defined in https://github.com/Tonejs/Tone.js/blob/641ada9/Tone/core/type/Units.ts#L53.
+                * To add more values in the future just reference the above link and add to the enums in '../Enums.tsx'.
+                * If you want to add frequencies, you can define them either in basic terms like 'B3' or use a numeric value,
+                * because we want a more specific sound we are using numerics.
+                * We also attempt to offset the following note by the ms equivalient of the current note len.
+            */
 
-            if(this.audioQueue[queueLength].playing) continue;
-    
-            this.audioQueue[queueLength].playing = true;
-            this.audioQueue[queueLength].node.buffer = this.audioQueue[queueLength].buffer;
+            switch(duration) {
+                case Enums.NoteDurations.WHOLE:
 
-            // this.audioQueue[queueLength].gain.value = .3;
+                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "1n", this.synthArr[i].now())        
+                    break;
+                case Enums.NoteDurations.HALF:
 
-            // this.audioQueue[queueLength].node.addEventListener('ended', () => {
-            //     console.log('entered stop');
-            //     // this.audioQueue[queueLength].node.disconnect();
-            // })
-            // this.audioQueue[queueLength].gain.addEventListener('ended', () => {
-            //     console.log('entered stop');
-            //     // this.audioQueue[queueLength].gain.disconnect();
-            // })
+                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "2n", this.synthArr[i].now())        
+                    break;
+                case Enums.NoteDurations.QUARTER:
 
-            this.audioQueue[queueLength].node.connect(this.audioQueue[queueLength].gain);
-            this.audioQueue[queueLength].gain.connect(this.audioQueue[queueLength].ctx.destination);
+                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "4n", this.synthArr[i].now())        
+                    break;
+                case Enums.NoteDurations.EIGHTH:
+
+                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "8n", this.synthArr[i].now())        
+                    break;
+                case Enums.NoteDurations.SIXTEENTH:
+
+                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "16n", this.synthArr[i].now())        
+                    break;
+                default:
+                    break;
+                }
+                console.log("num Voices for ", i, ": ", this.synthArr[i].activeVoices);
             
-            this.audioQueue[queueLength].gain.gain.value = amplitude;
-            
-            this.audioQueue[queueLength].node.loop = false;
-            
-            // var qtr = getMillisecondsFromBPM(BPM) / 1000;
-            // var allLen = this.timeForEachNoteArray[duration] / 1000;
-            
-            this.playNextBuffer(duration);
-            // this.audioQueue[queueLength].node.start(0, 0, 3);
-            // this.audioQueue[queueLength].node.disconnect();
-            // this.audioQueue[queueLength].gain.disconnect();
-        }
+       }
+       
 
-        return true;
     }
 
     private getNoteData(soundType:number, freq:number, amplitude:number, ctx:any, noteLength:number) {
@@ -590,6 +448,14 @@ export class MIDIManager {
         }
     
         return retList;
+    }
+
+    public setStopFlag() {
+        this.stopFlag = true;
+    }
+
+    public setDebugOutput(b:boolean){
+        this.debugOutput = b;
     }
 
 }
