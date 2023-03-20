@@ -273,7 +273,8 @@ export class NoteHandler {
         }
 
         this.midiGenerator.convertInput(generatedArr);
-        await this.midiGenerator.faketimeGenerate(generatedArr);        
+        // await this.midiGenerator.realtimeGenerate(generatedArr);        
+        await this.midiGenerator.realtimeGenerate(generatedArr);        
     };
 
     public prepNotesForMIDI(){
