@@ -6,6 +6,7 @@ import { userJWT, userModeState } from "../../JWT";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import buildPath from '../../util/ImagePath';
+import { resizeMe } from '../../util/ImageHelperFunctions';
 
 
 // Import CSS
@@ -81,6 +82,9 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
     if (jwt == null || user == null) navigate("/login");
 
+    // check if picture is of valid size before moving on
+    // i.e.: <= 2mb
+
     let updatedTrack = {
       id: track.id,
       title: newTrackName,
@@ -94,6 +98,9 @@ const TrackModal: React.FC<Props> = ({track}) => {
     sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
       if (res.status == 200) {
         setErrMsg(trackName);
+      }
+      else if (res.status = 413) {
+        setErrMsg("Image must be < 3mb")
       }
       else {
         setErrMsg("Could not save post.");
@@ -117,11 +124,51 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
   if(displayThumbnail !== undefined) {
     if ((displayThumbnail as string).split('/')[0] === 'data:text') {
-      console.log(displayThumbnail);
       var encodedThumbnailPic = (displayThumbnail as string).split(',')[1];
       var decodedThumbnailPic = Buffer.from(encodedThumbnailPic, 'base64').toString('ascii');
       setDisplayThumbnail(buildPath(decodedThumbnailPic));
     } 
+
+
+  }
+
+  // Returns the compressed Base64 image
+  // Borrowed from: https://github.com/josefrichter/resize/blob/master/public/preprocess.js
+  function compressImage(file:File) { 
+    const fr = new FileReader();
+
+    fr.readAsArrayBuffer(file);
+    fr.onload = function (ev: ProgressEvent<FileReader>) {
+      
+      var res = ev.target?.result
+      if (!res) {
+        console.error("Error resizing image");
+        return;
+      }
+
+      // blob stuff
+      var blob = new Blob([res]); // create blob...
+      window.URL = window.URL || window.webkitURL;
+      var blobURL:string = window.URL.createObjectURL(blob); // and get it's URL
+      
+      // helper Image object
+      var image:HTMLImageElement = new Image();
+      image.src = blobURL;
+
+      image.onload = function() {
+        
+        // have to wait till it's loaded
+        var resized = resizeMe(image); // send it to canvas
+        
+        if (!resized) {
+          console.error("Error resizing image");
+        }
+        else {
+          console.log("resized image", resized);
+          return resized;
+        }
+      }
+    };
   }
 
   function convertToBase64(file:File) {
@@ -155,8 +202,16 @@ const TrackModal: React.FC<Props> = ({track}) => {
   //Function updating display thumbail picture in modal
   async function updateDisplayThumbnail(file: File){
     var base64result:any;
+
+    /* This is returning a compressed base 64 image of <= 1024 x 1024
+    * However it will not correctly display when I attempt to attach it to the model
+    * 
+    * var compressedBase64:any = compressImage(file); 
+    */
+
     await convertToBase64(file).then(res => {
         base64result = res;
+        console.log("base64", base64result);
     })
 
     var updatedPost = {
