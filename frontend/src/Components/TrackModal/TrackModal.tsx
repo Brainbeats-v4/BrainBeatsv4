@@ -7,7 +7,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import buildPath from '../../util/ImagePath';
 import { resizeMe } from '../../util/ImageHelperFunctions';
-
+import React from 'react';
 
 // Import CSS
 import './TrackModal.css';
@@ -225,6 +225,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
   // ============================= Functions for Like System =============================
   // Checks for user like
   function checkLike() {
+    console.log("Entering checkLike()");
 
     let newLike = {
       userID: user.userId,
@@ -234,6 +235,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
     
     var check = false;
     sendAPI("get", "/likes/getUserLike", newLike).then((res) => {
+      console.log("API call getUserLike");
       if (res.status == 200) {
         setFavorited(true);
         check = true;
@@ -243,7 +245,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
         setFavorited(false);
         check = false;
       }
-    })
+    }).then(() => {console.log("check is: " + check)})
   }
 
   function incrementLike() {
