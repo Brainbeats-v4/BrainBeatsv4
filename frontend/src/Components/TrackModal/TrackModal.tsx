@@ -50,7 +50,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
   // Initializes favorited variable
   useEffect(() => {
-    setFavorited(checkLike());
+    checkLike(); // need to debug. not calling checklike when opening/editing unliked track.
   }, []);
 
   // ============================= Functions for Track Updating System =============================
@@ -105,6 +105,8 @@ const TrackModal: React.FC<Props> = ({track}) => {
     track.title = newTrackName;
     track.public = newVisibility;
     track.likeCount = likes;
+
+    console.log("updating track");
   }
 
 
@@ -146,7 +148,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
   async function updateThumbnail(track: Track) {
     if (displayThumbnail != null)
     {
-      console.log("updating thumbnail");
       track.thumbnail = displayThumbnail;
     }
   };
@@ -176,60 +177,135 @@ const TrackModal: React.FC<Props> = ({track}) => {
       token: jwt,
     }
     
+    var check = false;
     sendAPI("get", "/likes/getUserLike", newLike).then((res) => {
-      setFavorited(res.status == 200);
-    }) 
+      if (res.status == 200) {
+        setFavorited(true);
+        check = true;
+      }
+      else{
+        console.log("no like");
+        setFavorited(false);
+        check = false;
+      }
+    })
+  }
 
-    return favorited;
+  function incrementLike() {
+
+    return new Promise((resolve, reject) => {
+      var didSucceed = true;
+
+      var newLikes:number = likeCount + 1;
+      setLikeCount(newLikes);
+      setFavorited(true);
+
+      didSucceed? resolve(newLikes): reject('Error');
+    })
   }
 
   // Creates a new like
   function addLike() {
 
-    let newLike = {
-      userID: user.userId,
-      postID: track.id,
-      token: jwt,
-    }
-    
-    sendAPI("post", "/likes/createUserLike", newLike).then((res) => {
-      if (res.status == 201) {
-        setErrMsg(track.title);
+      let newLike = {
+        userID: user.userId,
+        postID: track.id,
+        token: jwt,
+      }
+      
+      sendAPI("post", "/likes/createUserLike", newLike).then((res) => {
+        if (res.status == 201) {
+          setErrMsg(track.title);
+  
+          // Increments local likeCount
+          // setLikeCount(likeCount + 1);
+          // incrementLike().then(() => updateLikes(likeCount));
 
-        // Increments local likeCount
-        setLikeCount(likeCount + 1);
+          incrementLike().then(() => incrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
+          setFavorited(true);
+
+        }
+        else {
+          setErrMsg("Could not like post.");
+          setSuccessMsg("");
+        }
+      }) 
+  }
+
+  function decrementLike() {
+
+    return new Promise((resolve, reject) => {
+      if(likeCount > 0){
+        var didSucceed = (likeCount > 0);
+
+        var newLikes:number = likeCount - 1;
+        setLikeCount(newLikes);
+        setFavorited(false);
+
+        didSucceed? resolve(newLikes): reject('Error');
       }
-      else {
-        setErrMsg("Could not like post.");
-        setSuccessMsg("");
-      }
-    }) 
+    })
   }
 
   // Removes a new like
   function removeLike() {
 
-    let newLike = {
-      userID: user.userId,
-      postID: track.id,
+
+      let newLike = {
+        userID: user.userId,
+        postID: track.id,
+        token: jwt,
+      }
+        
+      sendAPI("delete", "/likes/removeUserLike", newLike).then((res) => {
+        if (res.status == 200) {
+          setErrMsg(track.title);
+          setSuccessMsg(JSON.stringify(res.data));
+          
+          // Decrements local likeCount
+          // decrementLike().then(() => updateLikes(likeCount));
+          decrementLike().then(newLikes => decrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
+          setFavorited(false);
+        }
+        else {
+          setErrMsg("Could not like post.");
+          setSuccessMsg("");
+        }
+      })
+
+    // console.log("like count: " + likeCount);
+    // updateLikes(likeCount);
+    
+
+
+  }
+
+  // Function updating track likes
+  function updateLikes(likes:any) {
+
+    if (jwt == null || user == null) navigate("/login");
+
+    let updatedTrack = {
+      id: track.id,
+      title: track.title,
+      midi: track.midi,
+      thumbnail: track.thumbnail,
+      likeCount: likes,
+      public: track.public,
       token: jwt,
     }
     
-    sendAPI("delete", "/likes/removeUserLike", newLike).then((res) => {
+    sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
       if (res.status == 200) {
-        setErrMsg(track.title);
-        setSuccessMsg(JSON.stringify(res.data));
-        
-        // Decrements local likeCount
-        if(likeCount > 0) 
-          setLikeCount(likeCount - 1);
-              
+        setErrMsg(trackName);
       }
       else {
-        setErrMsg("Could not like post.");
+        setErrMsg("Could not save post.");
         setSuccessMsg("");
       }
     })
+
+    track.likeCount = likes;
   }
 
   return (
@@ -284,14 +360,18 @@ const TrackModal: React.FC<Props> = ({track}) => {
               </button>}
             </div>
             <div id='modal-container-footer-2'>
-              {!favorited && <button className='btn btn-secondary modal-btn' id='like-track-btn' value={track.likeCount} onClick={() => {addLike(); setFavorited(true)}}>
+
+
+              {!favorited && <button className='btn btn-secondary modal-btn' id='like-track-btn' onClick={() => {addLike()}}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["far", "heart"]} />
                 Favorite
               </button>}
-              {favorited && <button className='btn btn-secondary modal-btn' id='dislike-track-btn' onClick={() => {removeLike(); setFavorited(false)}}>
+              {favorited && <button className='btn btn-secondary modal-btn' id='dislike-track-btn' onClick={() => {removeLike()}}>
                 <FontAwesomeIcon className='modal-track-icons' id='favorited-heart' icon={faHeart} />
                 Favorited
               </button>}
+
+              
               <button className='btn btn-secondary modal-btn'>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "plus"]} />
                 Add to Playlist

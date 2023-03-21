@@ -35,8 +35,8 @@ const Carousel = () => {
         <Caro autoPlay={true} showThumbs={false} infiniteLoop={true} 
             dynamicHeight={false} interval={10000}
         > 
-        {images.map((image) => (
-            <div id="cards-container">{parse(image)}</div>
+        {images.map((image, index) => (
+            <div id="cards-container" key={index}>{parse(image)}</div>
         ))}
 
         </Caro>
