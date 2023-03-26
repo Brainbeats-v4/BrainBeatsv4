@@ -43,6 +43,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
   
   const [trackName, setTrackName] = useState(track.title);
   const [visibility, setVisibility] = useState(track.public);
+  const [editVisibility, setEditVisibility] = useState(false);
   const [buttonText, setButtonText] = useState(visibility ? "Make Private" : "Make Public");
   const [thumbnail, setThumbnail] = useState(track.thumbnail);
 
@@ -52,7 +53,19 @@ const TrackModal: React.FC<Props> = ({track}) => {
   // Initializes favorited variable
   useEffect(() => {
     checkLike(); // need to debug. not calling checklike when opening/editing unliked track.
+    checkTrackOwner();
   }, []);
+
+  // ============================= Functions for User Track =============================
+  function checkTrackOwner() {
+    
+    if (user != null) {
+      if (user.userId == track.userID) {
+        setEditVisibility(true);
+      }
+    }
+  }
+
 
   // ============================= Functions for Track Updating System =============================
   function doDelete() {
@@ -227,25 +240,30 @@ const TrackModal: React.FC<Props> = ({track}) => {
   function checkLike() {
     console.log("Entering checkLike()");
 
-    let newLike = {
-      userID: user.userId,
-      postID: track.id,
-      token: jwt,
+    if (user != null) {
+      let newLike = {
+        userID: user.userId,
+        postID: track.id,
+        token: jwt,
+      }
+      
+      var check = false;
+      sendAPI("get", "/likes/getUserLike", newLike).then((res) => {
+        console.log("API call getUserLike");
+        if (res.status == 200) {
+          setFavorited(true);
+          check = true;
+        }
+        else{
+          console.log("no like");
+          setFavorited(false);
+          check = false;
+        }
+      }).then(() => {console.log("check is: " + check)})
     }
-    
-    var check = false;
-    sendAPI("get", "/likes/getUserLike", newLike).then((res) => {
-      console.log("API call getUserLike");
-      if (res.status == 200) {
-        setFavorited(true);
-        check = true;
-      }
-      else{
-        console.log("no like");
-        setFavorited(false);
-        check = false;
-      }
-    }).then(() => {console.log("check is: " + check)})
+    else {
+      console.log("not checkLike");
+    }
   }
 
   function incrementLike() {
@@ -264,6 +282,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
   // Creates a new like
   function addLike() {
 
+    if (user != null) {
       let newLike = {
         userID: user.userId,
         postID: track.id,
@@ -286,7 +305,11 @@ const TrackModal: React.FC<Props> = ({track}) => {
           setErrMsg("Could not like post.");
           setSuccessMsg("");
         }
-      }) 
+      })
+    }
+    else {
+      navigate("/login");
+    }
   }
 
   function decrementLike() {
@@ -437,7 +460,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "edit"]} />
                 Save
               </button>}
-              {!editing && <button className='btn btn-secondary modal-btn' onClick={() => setEditing(!editing)}>
+              {editVisibility && !editing && <button className='btn btn-secondary modal-btn' onClick={() => setEditing(!editing)}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "edit"]} />
                 Edit
               </button>}
