@@ -32,6 +32,13 @@ interface Track {
   fullname: string;
 }
 
+interface Like {
+  postID: string; 
+  userID: string;
+  createdAt: string;
+
+}
+
 const TrackModal: React.FC<Props> = ({track}) => {
   const navigate = useNavigate();
   const jwt = useRecoilValue(userJWT);
@@ -48,11 +55,12 @@ const TrackModal: React.FC<Props> = ({track}) => {
   const [thumbnail, setThumbnail] = useState(track.thumbnail);
 
   const [likeCount, setLikeCount] = useState(track.likeCount);
-  const [favorited, setFavorited] = useState (false); // change this later
+  const [userLikeArr, setUserLikeArr] = useState(user.like);
+  const [favorited, setFavorited] = useState(checkLike()); // change this later
 
   // Initializes favorited variable
   useEffect(() => {
-    checkLike(); // need to debug. not calling checklike when opening/editing unliked track.
+    // setFavorited(checkLike()); // need to debug. not calling checklike when opening/editing unliked track.
     checkTrackOwner();
   }, []);
 
@@ -238,32 +246,47 @@ const TrackModal: React.FC<Props> = ({track}) => {
   // ============================= Functions for Like System =============================
   // Checks for user like
   function checkLike() {
-    console.log("Entering checkLike()");
 
-    if (user != null) {
-      let newLike = {
-        userID: user.userId,
-        postID: track.id,
-        token: jwt,
+    let favorited:boolean = false;
+    
+    let i = 0;
+    for (i = 0; i < user.like.length; i++)
+    {
+      if (user.like[i].postID == track.id) {
+        favorited = true;
+        // console.log("track '" + track.title + "' is liked.");
       }
+    }
+    
+
+
+    // if (user != null) {
+    //   let newLike = {
+    //     userID: user.userId,
+    //     postID: track.id,
+    //     token: jwt,
+    //   }
+
+    //   console.log("checkLike(): marker newLike ");
       
-      var check = false;
-      sendAPI("get", "/likes/getUserLike", newLike).then((res) => {
-        console.log("API call getUserLike");
-        if (res.status == 200) {
-          setFavorited(true);
-          check = true;
-        }
-        else{
-          console.log("no like");
-          setFavorited(false);
-          check = false;
-        }
-      }).then(() => {console.log("check is: " + check)})
-    }
-    else {
-      console.log("not checkLike");
-    }
+    //   sendAPI("get", "/likes/getUserLike", newLike).then((res) => {
+    //     console.log("API call getUserLike");
+    //     if (res.status == 200) {
+    //       console.log("like")
+    //       favorited = true;
+    //     }
+    //     else{
+    //       console.log("no like");
+    //       favorited = false;
+    //     }
+    //   }).then(() => {setFavorited(favorited)})
+    // }
+    // else {
+    //   console.log("User is null");
+    // }
+
+    //  setFavorited(favorited);
+    return favorited;
   }
 
   function incrementLike() {
@@ -273,7 +296,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
       var newLikes:number = likeCount + 1;
       setLikeCount(newLikes);
-      setFavorited(true);
 
       didSucceed? resolve(newLikes): reject('Error');
     })
@@ -283,22 +305,42 @@ const TrackModal: React.FC<Props> = ({track}) => {
   function addLike() {
 
     if (user != null) {
+
       let newLike = {
         userID: user.userId,
         postID: track.id,
         token: jwt,
       }
-      
-      sendAPI("post", "/likes/createUserLike", newLike).then((res) => {
+
+      console.log(user.like);
+      let newLikeArr: Like[] = userLikeArr;
+      newLikeArr = newLikeArr.concat({userID: user.userId, postID: track.id, createdAt: ""});
+
+      console.log("userLikeArr: " + userLikeArr.length);
+      console.log("newLikeArr: " + newLikeArr.length);
+      setUserLikeArr(newLikeArr);
+      console.log("new UserLikeArr length: " + userLikeArr.length);
+
+      let newUserLike = {
+        userID: user.userId,
+        postID: track.id,
+        likeArray: newLikeArr,
+        token: jwt,
+      }
+
+      setFavorited(true);
+
+      sendAPI("post", "/likes/createUserLike", newUserLike).then((res) => {
         if (res.status == 201) {
           setErrMsg(track.title);
+          setSuccessMsg(JSON.stringify(res.data))
   
           // Increments local likeCount
           // setLikeCount(likeCount + 1);
           // incrementLike().then(() => updateLikes(likeCount));
 
-          incrementLike().then(() => incrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
-          setFavorited(true);
+          incrementLike().then(newlikes => incrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
+          
 
         }
         else {
@@ -306,6 +348,39 @@ const TrackModal: React.FC<Props> = ({track}) => {
           setSuccessMsg("");
         }
       })
+
+
+      // // Updating user like array to have new liked track
+      // var updatedUser = {
+      //   id: user.userId,
+      //   firstName: user.firstName,
+      //   lastName: user.lastName,
+      //   email: user.email,
+      //   bio: user.bio,
+      //   token: jwt,
+      //   profilePicture: user.profilePicture,
+      //   like: userLikeArr,
+      // };
+
+      // sendAPI('put', '/users/updateUser', updatedUser)
+      //       .then(res => {
+      //           console.log(res);
+      //           var updatedUser = {
+      //               userId: res.data.id,
+      //               firstName: res.data.firstName,
+      //               lastName: res.data.lastName,
+      //               email: res.data.email,
+      //               bio: res.data.bio,
+      //               profilePicture: res.data.profilePicture,
+      //               username: user.username,
+      //               like: res.data.like,
+      //           }
+      //           setUser(updatedUser);
+      //           console.log(updatedUser);
+
+      //       }).catch(err => {
+      //           console.log(err);
+      //       })
     }
     else {
       navigate("/login");
@@ -320,7 +395,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
         var newLikes:number = likeCount - 1;
         setLikeCount(newLikes);
-        setFavorited(false);
 
         didSucceed? resolve(newLikes): reject('Error');
       }
@@ -330,12 +404,16 @@ const TrackModal: React.FC<Props> = ({track}) => {
   // Removes a new like
   function removeLike() {
 
-
+    if(user != null) {
       let newLike = {
         userID: user.userId,
         postID: track.id,
         token: jwt,
       }
+
+      // let newLikeArr: Like[] = user.like.filter((like: Like) => like.postID != track.id);  
+      // user.like = newLikeArr;
+      setFavorited(false);
         
       sendAPI("delete", "/likes/removeUserLike", newLike).then((res) => {
         if (res.status == 200) {
@@ -344,17 +422,19 @@ const TrackModal: React.FC<Props> = ({track}) => {
           
           // Decrements local likeCount
           // decrementLike().then(() => updateLikes(likeCount));
-          decrementLike().then(newLikes => decrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
-          setFavorited(false);
+          decrementLike().then(newLikes => decrementLike()).then(newLikes => { updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
+          
         }
         else {
           setErrMsg("Could not like post.");
           setSuccessMsg("");
         }
       })
+    }
+    else {
+      navigate('/login');
+    }
 
-    // console.log("like count: " + likeCount);
-    // updateLikes(likeCount);
     
 
 

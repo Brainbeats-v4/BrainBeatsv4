@@ -10,7 +10,7 @@ const { getUserExists, getPostExists, getLikeExists } = require("../../utils/dat
 // Create a user like
 router.post('/createUserLike', async (req, res) => {
     try {
-        const { userID, postID, token } = req.body;
+        const { userID, postID, likeArray, token } = req.body;
 
         const decoded = verifyJWT(token);
 
@@ -53,6 +53,14 @@ router.post('/createUserLike', async (req, res) => {
                 }
             });
 
+            // console.log(likeArray);
+
+            // const newUser = await prisma.User.update({
+            //     where: { id: userID },
+            //     data: {
+            //         like: likeArray
+            //     }
+            // });
             res.status(201).json(newLike);
         }
     } catch (err) {
@@ -130,8 +138,11 @@ router.get('/getUserLike', async (req, res) => {
             }
         });
         
-        if (likeStatus == undefined) res.status(400);
-        else res.status(200).json(likeStatus);
+        if (likeStatus == null) res.status(400);
+        else res.status(200);
+
+        // console.log("Like Status: " + likeStatus);
+        // console.log("Status Code: " + res.statusCode);
     } catch (err) {
         console.error(err);
         res.status(500).send(err);
