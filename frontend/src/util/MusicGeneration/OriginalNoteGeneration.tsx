@@ -162,7 +162,12 @@ export class NoteHandler {
         return -1;
     }
 
-    public returnMIDI() { return this.midiGenerator.returnMIDI(); }
+    /* This function is simply calling the MIDI Generator's function to return MIDI,
+        it gets called here since the NoteGeneration class is responsible for passing values
+        to MIDI and therefore the MIDI Generator is */
+    public returnMIDI() { 
+        return this.midiGenerator.returnMIDI();
+    }
 
     // Gets the actual note from `the previously-obtained note INCREMENT (see NoteDeclarationRaw())
     // WRT stands for "with respect to", so this is "get note with respect to key"
@@ -274,7 +279,6 @@ export class NoteHandler {
         }
 
         this.midiGenerator.convertInput(generatedArr);
-        // await this.midiGenerator.realtimeGenerate(generatedArr);        
         await this.midiGenerator.realtimeGenerate(generatedArr);        
     };
 

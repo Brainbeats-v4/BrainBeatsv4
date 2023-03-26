@@ -47,7 +47,7 @@ export interface AbstractTestStream {
     stopFlag:boolean;
     settings:MusicSettings;
     initializeConnection(): any; 
-    stopDevice(): string;
+    stopDevice(): Promise<string>;
     recordInputStream(data: any): void
 }
 
@@ -56,7 +56,7 @@ export interface AbstractGanglionStream {
     stopFlag:boolean;
     settings:MusicSettings;
     initializeConnection(): any; //datastreams.dataDevice;
-    stopDevice(): string;
+    stopDevice(): Promise<string>;
     recordInputStream(data: any): void
 }
 
@@ -65,7 +65,7 @@ export interface AbstractCytonStream {
     stopFlag:boolean;
     settings:MusicSettings;
     initializeConnection(): any;
-    stopDevice(): string;
+    stopDevice(): Promise<string>;
     recordInputStream(data:any): void
 }
 
@@ -133,10 +133,11 @@ export class ConcreteTestStream implements AbstractTestStream {
         return true;
     }
 
-    public stopDevice() {
+    public async stopDevice() {
         this.stopFlag = true;
         this.noteHandler.setStopFlag();
-        return this.noteHandler.returnMIDI();
+
+        return await this.noteHandler.returnMIDI();
     }
 
     public setDebugOutput(b:boolean) { this.debugOutput = b; }
@@ -234,10 +235,26 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         is continuously decoding, we have to check in there to see if we're wanting to stop. Once we let the other
         instances know we're no longer needing them, we return the MIDI, the noteHandler.returnMIDI is further expanded
         upon in the MIDIManager.tsx file. */
-    public stopDevice() {
+    public async stopDevice() {
         this.stopFlag = true;
         this.noteHandler.setStopFlag();
-        return this.noteHandler.returnMIDI();
+
+        var res:string;
+
+        try {
+            var res = await this.noteHandler.returnMIDI();
+            return res;
+        }
+        catch {
+            console.error("Error returning midi");
+            return "Error";
+        }
+
+        return res;
+        // res.then((res:string) => {return res}).catch((e:any) => {return "Faled to generate midi: " + e})
+
+        // console.log(res);
+        // return "";
     }
 }
 
@@ -294,10 +311,11 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
        this.noteHandler.originalNoteGeneration(currentData);
     }
 
-    public stopDevice() {
+    public async stopDevice() {
         this.stopFlag = true;
         this.device.disconnect();
-        return this.noteHandler.returnMIDI();
+        
+        return await this.noteHandler.returnMIDI();
     }
 }
 
