@@ -77,3 +77,19 @@
 #download-midi-btn:hover{
     color: #c4c4c4;
 }
+
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 500px) {
+
+    #record-container-body{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #script-div{
+        width: 100%;
+    }
+
+}

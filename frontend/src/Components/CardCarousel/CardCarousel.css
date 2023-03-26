@@ -33,3 +33,16 @@
     word-wrap: break-word;
 
 }
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 500px) {
+
+    #cardCarousel-container{
+        width: 100%;
+    }
+
+    #cardCarousel-container .carousel.carousel-slider {
+        width: 80vw!important;
+        margin-bottom: 10px;
+    }
+}

@@ -1,7 +1,5 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../../Redux/hooks';
 import CardCarousel from '../../../CardCarousel/CardCarousel';
 import UploadTrackModal from '../../../UploadTrackModal/UploadTrackModal';
@@ -10,7 +8,7 @@ import UploadTrackModal from '../../../UploadTrackModal/UploadTrackModal';
 import './RecordCards.css'
 
 const RecordCards = () => {
-
+    
     // Toggles Record and Stop button when recording
     const [recordVisibility, setRecordVisibility] = useState(true);
     const [show, setShow] = useState(false);

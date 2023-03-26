@@ -20,7 +20,7 @@ type Props = {
 const UploadTrackModal: React.FC<Props> = ({track}) => {
     const navigate = useNavigate();
     const jwt = useRecoilValue(userJWT);
-    const user = useRecoilState(userModeState);
+    const user = useRecoilValue(userModeState);
 
     const [editing, setEditing] = useState(true);
     const [errMsg, setErrMsg] = useState('');
@@ -79,14 +79,14 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
         <>
         <div>
             <div className='modal-background'>
-                <Modal.Header className='modal-container0' closeButton onClick={verifyCancelRecording}>
+                <Modal.Header className='modal-container-header' closeButton onClick={verifyCancelRecording}>
                 {/* <CloseButton onClick={verifyCancelRecording}></CloseButton> */}
                 {/* <button className='btn btn-secondary modal-btn-public' id='upload-track-btn' onClick={verifyCancelRecording}>
                     <FontAwesomeIcon className='modal-track-icons' icon={["fas", "download"]} />
                     Download
                 </button> */}
                 </Modal.Header>
-                <Modal.Body className='modal-container1'>
+                <Modal.Body className='modal-container-body'>
                     <div id='modal-track-cover-div'>
                         <img src={track.thumbnail} className="card-img-top modal-track-cover" id="card-img-ID" alt="..."/>
                     </div>
@@ -108,25 +108,25 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
                             </div> }
                             <div className='mt-3'>
                                 <label className="form-label form-text login-text">Author:</label>
-                                <h6 id="track-author-text">{track.userID}</h6>
+                                <h6 id="track-author-text">{user.username}</h6>
                             </div>
                         </div>         
                     </div>
                 </Modal.Body>
-                <Modal.Footer className='modal-container2'>
-                    <div id='modal-container-20'>
+                <Modal.Footer className='modal-container-footer'>
+                    <div id='modal-container-footer-1'>
                         {editing && <button className='btn btn-secondary modal-btn-public' onClick={() => setVisibilityButton()}>
                             {visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye"]} id="visibilityButton" />}
                             {!visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye-slash"]} id="visibilityButton" />}
                             {!visibility ? "Make Private" : "Make Public"}
                         </button>}
                     </div>
-                    <div id='modal-container-21'>
-                        {editing && <button className='btn btn-secondary modal-btn-public' id='upload-track-btn' /*onClick={() => updateTrack()}*/>
+                    <div id='modal-container-footer-2'>
+                        {editing && <button className='btn btn-secondary modal-btn-public upload-track-btn' /*onClick={() => updateTrack()}*/>
                             <FontAwesomeIcon className='modal-track-icons' icon={["fas", "download"]} />
                             Download
                         </button>}
-                        {editing && <button className='btn btn-secondary modal-btn-public' id='upload-track-btn'/*onClick={() => updateTrack()}*/>
+                        {editing && <button className='btn btn-secondary modal-btn-public upload-track-btn'/*onClick={() => updateTrack()}*/>
                             <FontAwesomeIcon className='modal-track-icons' icon={["fas", "arrow-up-from-bracket"]} />
                             Upload
                         </button>}

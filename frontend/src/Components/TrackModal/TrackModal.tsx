@@ -6,6 +6,7 @@ import { userJWT, userModeState } from "../../JWT";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import buildPath from '../../util/ImagePath';
+import { resizeMe } from '../../util/ImageHelperFunctions';
 
 
 // Import CSS
@@ -50,7 +51,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
   // Initializes favorited variable
   useEffect(() => {
-    setFavorited(checkLike());
+    checkLike(); // need to debug. not calling checklike when opening/editing unliked track.
   }, []);
 
   // ============================= Functions for Track Updating System =============================
@@ -81,6 +82,9 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
     if (jwt == null || user == null) navigate("/login");
 
+    // check if picture is of valid size before moving on
+    // i.e.: <= 2mb
+
     let updatedTrack = {
       id: track.id,
       title: newTrackName,
@@ -95,6 +99,9 @@ const TrackModal: React.FC<Props> = ({track}) => {
       if (res.status == 200) {
         setErrMsg(trackName);
       }
+      else if (res.status = 413) {
+        setErrMsg("Image must be < 3mb")
+      }
       else {
         setErrMsg("Could not save post.");
         setSuccessMsg("");
@@ -105,6 +112,8 @@ const TrackModal: React.FC<Props> = ({track}) => {
     track.title = newTrackName;
     track.public = newVisibility;
     track.likeCount = likes;
+
+    console.log("updating track");
   }
 
 
@@ -115,11 +124,51 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
   if(displayThumbnail !== undefined) {
     if ((displayThumbnail as string).split('/')[0] === 'data:text') {
-      console.log(displayThumbnail);
       var encodedThumbnailPic = (displayThumbnail as string).split(',')[1];
       var decodedThumbnailPic = Buffer.from(encodedThumbnailPic, 'base64').toString('ascii');
       setDisplayThumbnail(buildPath(decodedThumbnailPic));
     } 
+
+
+  }
+
+  // Returns the compressed Base64 image
+  // Borrowed from: https://github.com/josefrichter/resize/blob/master/public/preprocess.js
+  function compressImage(file:File) { 
+    const fr = new FileReader();
+
+    fr.readAsArrayBuffer(file);
+    fr.onload = function (ev: ProgressEvent<FileReader>) {
+      
+      var res = ev.target?.result
+      if (!res) {
+        console.error("Error resizing image");
+        return;
+      }
+
+      // blob stuff
+      var blob = new Blob([res]); // create blob...
+      window.URL = window.URL || window.webkitURL;
+      var blobURL:string = window.URL.createObjectURL(blob); // and get it's URL
+      
+      // helper Image object
+      var image:HTMLImageElement = new Image();
+      image.src = blobURL;
+
+      image.onload = function() {
+        
+        // have to wait till it's loaded
+        var resized = resizeMe(image); // send it to canvas
+        
+        if (!resized) {
+          console.error("Error resizing image");
+        }
+        else {
+          console.log("resized image", resized);
+          return resized;
+        }
+      }
+    };
   }
 
   function convertToBase64(file:File) {
@@ -146,7 +195,6 @@ const TrackModal: React.FC<Props> = ({track}) => {
   async function updateThumbnail(track: Track) {
     if (displayThumbnail != null)
     {
-      console.log("updating thumbnail");
       track.thumbnail = displayThumbnail;
     }
   };
@@ -154,8 +202,16 @@ const TrackModal: React.FC<Props> = ({track}) => {
   //Function updating display thumbail picture in modal
   async function updateDisplayThumbnail(file: File){
     var base64result:any;
+
+    /* This is returning a compressed base 64 image of <= 1024 x 1024
+    * However it will not correctly display when I attempt to attach it to the model
+    * 
+    * var compressedBase64:any = compressImage(file); 
+    */
+
     await convertToBase64(file).then(res => {
         base64result = res;
+        console.log("base64", base64result);
     })
 
     var updatedPost = {
@@ -176,69 +232,144 @@ const TrackModal: React.FC<Props> = ({track}) => {
       token: jwt,
     }
     
+    var check = false;
     sendAPI("get", "/likes/getUserLike", newLike).then((res) => {
-      setFavorited(res.status == 200);
-    }) 
+      if (res.status == 200) {
+        setFavorited(true);
+        check = true;
+      }
+      else{
+        console.log("no like");
+        setFavorited(false);
+        check = false;
+      }
+    })
+  }
 
-    return favorited;
+  function incrementLike() {
+
+    return new Promise((resolve, reject) => {
+      var didSucceed = true;
+
+      var newLikes:number = likeCount + 1;
+      setLikeCount(newLikes);
+      setFavorited(true);
+
+      didSucceed? resolve(newLikes): reject('Error');
+    })
   }
 
   // Creates a new like
   function addLike() {
 
-    let newLike = {
-      userID: user.userId,
-      postID: track.id,
-      token: jwt,
-    }
-    
-    sendAPI("post", "/likes/createUserLike", newLike).then((res) => {
-      if (res.status == 201) {
-        setErrMsg(track.title);
+      let newLike = {
+        userID: user.userId,
+        postID: track.id,
+        token: jwt,
+      }
+      
+      sendAPI("post", "/likes/createUserLike", newLike).then((res) => {
+        if (res.status == 201) {
+          setErrMsg(track.title);
+  
+          // Increments local likeCount
+          // setLikeCount(likeCount + 1);
+          // incrementLike().then(() => updateLikes(likeCount));
 
-        // Increments local likeCount
-        setLikeCount(likeCount + 1);
+          incrementLike().then(() => incrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
+          setFavorited(true);
+
+        }
+        else {
+          setErrMsg("Could not like post.");
+          setSuccessMsg("");
+        }
+      }) 
+  }
+
+  function decrementLike() {
+
+    return new Promise((resolve, reject) => {
+      if(likeCount > 0){
+        var didSucceed = (likeCount > 0);
+
+        var newLikes:number = likeCount - 1;
+        setLikeCount(newLikes);
+        setFavorited(false);
+
+        didSucceed? resolve(newLikes): reject('Error');
       }
-      else {
-        setErrMsg("Could not like post.");
-        setSuccessMsg("");
-      }
-    }) 
+    })
   }
 
   // Removes a new like
   function removeLike() {
 
-    let newLike = {
-      userID: user.userId,
-      postID: track.id,
+
+      let newLike = {
+        userID: user.userId,
+        postID: track.id,
+        token: jwt,
+      }
+        
+      sendAPI("delete", "/likes/removeUserLike", newLike).then((res) => {
+        if (res.status == 200) {
+          setErrMsg(track.title);
+          setSuccessMsg(JSON.stringify(res.data));
+          
+          // Decrements local likeCount
+          // decrementLike().then(() => updateLikes(likeCount));
+          decrementLike().then(newLikes => decrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
+          setFavorited(false);
+        }
+        else {
+          setErrMsg("Could not like post.");
+          setSuccessMsg("");
+        }
+      })
+
+    // console.log("like count: " + likeCount);
+    // updateLikes(likeCount);
+    
+
+
+  }
+
+  // Function updating track likes
+  function updateLikes(likes:any) {
+
+    if (jwt == null || user == null) navigate("/login");
+
+    let updatedTrack = {
+      id: track.id,
+      title: track.title,
+      midi: track.midi,
+      thumbnail: track.thumbnail,
+      likeCount: likes,
+      public: track.public,
       token: jwt,
     }
     
-    sendAPI("delete", "/likes/removeUserLike", newLike).then((res) => {
+    sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
       if (res.status == 200) {
-        setErrMsg(track.title);
-        setSuccessMsg(JSON.stringify(res.data));
-        
-        // Decrements local likeCount
-        if(likeCount > 0) 
-          setLikeCount(likeCount - 1);
-              
+        setErrMsg(trackName);
       }
       else {
-        setErrMsg("Could not like post.");
+        setErrMsg("Could not save post.");
         setSuccessMsg("");
       }
     })
+
+    track.likeCount = likes;
   }
 
   return (
     <>
       <div>
         <div className='modal-background'>
-          <Modal.Header className='modal-container0' closeButton>
+          <Modal.Header className='modal-container-header' closeButton>
           </Modal.Header>
-          <Modal.Body className='modal-container1'>
+          <Modal.Body className='modal-container-body'>
             <div id='modal-track-cover-div'>
               {editing && <div id='edit-track-cover-div'>
                 <label id="track-cover-upload-label" htmlFor="trackInputTag">
@@ -271,8 +402,8 @@ const TrackModal: React.FC<Props> = ({track}) => {
               </h5>
             </div>
           </Modal.Body>
-          <Modal.Footer className='modal-container2'>
-            <div id='modal-container-20'>
+          <Modal.Footer className='modal-container-footer'>
+            <div id='modal-container-footer-1'>
               {editing && <button className='btn btn-secondary modal-btn-public' onClick={() => setVisibilityButton()}>
                 {visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye"]} id="visibilityButton" />}
                 {!visibility && <FontAwesomeIcon className='modal-track-icons' icon={["fas", "eye-slash"]} id="visibilityButton" />}
@@ -283,15 +414,19 @@ const TrackModal: React.FC<Props> = ({track}) => {
                 Delete Track
               </button>}
             </div>
-            <div id='modal-container-21'>
-              {!favorited && <button className='btn btn-secondary modal-btn' id='like-track-btn' value={track.likeCount} onClick={() => {addLike(); setFavorited(true)}}>
+            <div id='modal-container-footer-2'>
+
+
+              {!favorited && <button className='btn btn-secondary modal-btn' id='like-track-btn' onClick={() => {addLike()}}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["far", "heart"]} />
                 Favorite
               </button>}
-              {favorited && <button className='btn btn-secondary modal-btn' id='dislike-track-btn' onClick={() => {removeLike(); setFavorited(false)}}>
+              {favorited && <button className='btn btn-secondary modal-btn' id='dislike-track-btn' onClick={() => {removeLike()}}>
                 <FontAwesomeIcon className='modal-track-icons' id='favorited-heart' icon={faHeart} />
                 Favorited
               </button>}
+
+              
               <button className='btn btn-secondary modal-btn'>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "plus"]} />
                 Add to Playlist

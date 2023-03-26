@@ -17,10 +17,11 @@
 }
 
 .bbLogo {
-    height: 100px;
-    width: 100px;
+    height: 110px;
+    width: 110px;
     background-image: url("../../images/bbmascot1.png");
     background-size: 100px 100px;
+    background-repeat: no-repeat;
     margin-left: auto;
     margin-right: auto;
 }
@@ -30,7 +31,8 @@
 }
 
 #main-login-container {
-    max-width: 100%;
+    max-width: 30%;
+    min-width: fit-content;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -40,7 +42,8 @@
 }
 
 #login-container {
-    width: 30%;
+    width: 100%;
+    min-width: fit-content;
     height: fit-content;
     display: flex;
     flex-direction: column;
@@ -79,7 +82,8 @@
 }
 
 #create-account-container {
-    width: 30%;
+    width: 100%;
+    min-width: fit-content;
     height: 7%;
     display: flex;
     justify-content: center;
@@ -105,4 +109,21 @@
 }
 #sign-up-link:hover {
     text-decoration: underline;
+}
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 500px) {
+    #login-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    #login-title{
+        margin-top: 2%;
+    }
+
+    #create-account-container {
+        width: 100%;
+        margin-top: 3%;
+    }
 }

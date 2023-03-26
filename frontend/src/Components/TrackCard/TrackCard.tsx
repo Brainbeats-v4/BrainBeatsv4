@@ -40,7 +40,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
-    const [trackList, setTrackList] = useState<Track[]>([])
+    const [trackList, setTrackList] = useState<Track[]>([]);
     const [tracksPulled, setTracksPulled] = useState(false);
     const [currentSearch, setCurrentSearch] = useState('');
 
@@ -154,6 +154,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                 gridArray.push(currentTrack);
             }
         }
+
         return gridArray;
     }
 
@@ -162,8 +163,36 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
        setShow(true);      
     }
 
-    var trackCards = PopulateTrackCards();
-    
+    let trackCards = PopulateTrackCards();
+
+    // const updateTrackCards = (index: number) => (e: { target: { name: any; value: any; }; }) => {        
+    //     const newTrackList = trackCards.map((item, i) => {
+    //         if (index === i) {
+    //           return { ...item, [e.target.name]: e.target.value };
+    //         } else {
+    //           return item;
+    //         }
+    //       });
+    //       trackCards = newTrackList;
+    //       console.log("updated track cards");
+    // }
+
+    // const [tracksDisplayed, setTracksDisplayed] = useState<Track[]>(trackCards);
+    // console.log(tracksDisplayed);
+
+
+    // const updateTracksDisplayed = (index: number) => (e: { target: { name: any; value: any; }; }) => {        
+    //     const newTrackList = tracksDisplayed.map((item, i) => {
+    //       if (index === i) {
+    //         return { ...item, [e.target.name]: e.target.value };
+    //       } else {
+    //         return item;
+    //       }
+    //     });
+    //     setTracksDisplayed(newTrackList);
+    //   };
+
+
     return (
         <div className='container text-center'>
             <div className='row track-row'>
@@ -177,7 +206,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                                     <p id='card-author'>{trackCard.fullname}</p>
                                     <div id='card-likes'>
                                         <FontAwesomeIcon className='modal-track-icons' icon={faHeart} />
-                                        {trackCard.likeCount} 
+                                        {trackCard.likeCount}
                                     </div>
                                 </div>
                                 

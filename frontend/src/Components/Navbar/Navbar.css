@@ -1,3 +1,21 @@
+/* CSS for Navigation Page*/
+*{
+  margin: 0;
+  padding-left: 0;
+  text-decoration: none;
+}
+  
+.container{
+  height: fit-content;
+  margin: auto;
+  width: 100%
+}
+
+main{
+  align-content: center;
+  width: 100%;
+}
+
 /* CSS for Navbar */
 .header {
     background-color: rgb(11, 11, 11);
@@ -35,7 +53,7 @@
   /* background-color: purple; */
 }
 
-#signUpBtn, #loginBtn, #profileBtn {
+#signUpBtn, #signOutBtn, #loginBtn, #profileBtn {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -45,44 +63,90 @@
   min-width: fit-content;
 }
 
-/* #username {
-  float: left;
-} */
-
-#signUpBtn {
+#signUpBtn, #signOutBtn {
     background-color: #5B5B5B;
     border-color: #5B5B5B;
     color: white;
 }
 
-#signUpBtn:hover {
+#signUpBtn:hover, #signOutBtn:hover {
     background-color: #323232;
     border-color: #323232;
     text-decoration: underline;
 }
 
-#loginBtn {
+#loginBtn, #profileBtn {
     background-color: #F8607C;
     border-color: #F8607C;
     color: white;
 }
 
-#loginBtn:hover {
+#loginBtn:hover, #profileBtn:hover {
     background-color:#e33051;
     border-color: #e33051;
     text-decoration: underline;
 }
 
-#profileBtn {
-  background-color: #F8607C;
-  border-color: #F8607C;
-  color: white;
-}
-#profileBtn:hover {
-  background-color:#e33051;
-  border-color: #e33051;
-  text-decoration: underline;
-}
 #profile-icon {
   margin-right: 8%;
+}
+
+/* CSS for Sidebar */
+
+.sidebar-container{
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  min-height: 100vh;
+}
+
+.sidebar{
+  background: #000000;
+  color:white;
+  width: 300px;
+  transition: all 0.5s;
+  z-index: 2;
+  /* height: 100vh; */
+}
+
+.link{
+  display: flex;
+  color: white;
+  padding: 10px 15px;
+  gap: 15px;
+  transition: all 0.5s;
+  text-decoration: none;
+}
+.link:hover{
+  background: #B9B9B7;
+  color:black;
+  transition: all 0.5s;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.active{
+  background-color: #F8607C;
+  color: black;
+}
+
+.icon, .link_text{
+  font-size: 20px;
+} 
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 400px) {
+  .sidebar-open{
+    display: block;
+  }
+
+  .sidebar-closed{
+    display: none;
+  }
+
+  #signUpBtn, #signOutBtn, #loginBtn, #profileBtn {
+    min-width: 100%;
+  }
 }

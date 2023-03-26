@@ -206,6 +206,7 @@ export class NoteHandler {
         
         // Grab values as arrays for easy looping
         var dataArray = Object.values(EEGdataObj);
+        
         var instruments = Object.values(this.instrumentNoteSettings.instruments);
         var durations = Object.values(this.instrumentNoteSettings.durations);
 
@@ -273,7 +274,8 @@ export class NoteHandler {
         }
 
         this.midiGenerator.convertInput(generatedArr);
-        await this.midiGenerator.faketimeGenerate(generatedArr);        
+        // await this.midiGenerator.realtimeGenerate(generatedArr);        
+        await this.midiGenerator.realtimeGenerate(generatedArr);        
     };
 
     public prepNotesForMIDI(){

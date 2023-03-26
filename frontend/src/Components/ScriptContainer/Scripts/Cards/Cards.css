@@ -209,3 +209,30 @@
     border-color: #e33051;
     text-decoration: underline;
 }
+
+/* CSS for Mobile View */
+@media only screen and (max-width: 500px) {
+
+    .cards-body-div{
+        flex-direction: column;
+        align-items: center;
+        height: fit-content;
+    }
+
+    #display-card-div{
+        width: 100%;
+        height: 30vh;
+        margin-top: 10%;
+        margin-bottom: 2%;
+    }
+
+    #card-display {
+        width: 90%;
+        height: 100%;
+    }
+
+    .record-heading, .record-heading2{
+        color:white;
+        align-self: center;
+    }
+}

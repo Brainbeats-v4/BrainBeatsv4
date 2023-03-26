@@ -6,6 +6,7 @@
     max-height: 100%;
     /* height: 100vh; */
     display: block;
+    padding: 0px;
 }
 
 #carousel-container {
@@ -14,6 +15,7 @@
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+    padding: 0px;
 }
 
 #carousel-container .carousel.carousel-slider {
@@ -29,7 +31,8 @@
 #featured-tracks-heading { 
     color: #ffffff;
     text-decoration: none !important;
-    margin-top: 1%;
+    margin-top: 2%;
+    padding-left: 2%;
 }
 
 #track-card-container {

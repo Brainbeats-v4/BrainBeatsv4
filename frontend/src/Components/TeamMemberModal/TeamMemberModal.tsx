@@ -31,9 +31,9 @@ const TeamMemberModal: React.FC<Props> = ({teamMember}) => {
     <>
       <div>
         <div className='modal-background'>
-          <Modal.Header className='modal-container0' closeButton>
+          <Modal.Header className='modal-container-header' closeButton>
           </Modal.Header>
-          <Modal.Body className='modal-container1'>
+          <Modal.Body className='modal-container-body'>
             <div id='modal-track-cover-div'>
               <img src={teamMember.image} className="card-img-top modal-track-cover" id="card-img-ID" alt="track image" onClick={() => {}}/>
             </div>
@@ -50,7 +50,7 @@ const TeamMemberModal: React.FC<Props> = ({teamMember}) => {
               </div>
             </div>
           </Modal.Body>
-          <Modal.Footer className='modal-container2'>
+          <Modal.Footer className='modal-container-footer'>
             
           </Modal.Footer>
         </div>
