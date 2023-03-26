@@ -257,10 +257,7 @@ export class MIDIManager {
         var amplitude = playerInfo.amplitude;
         var frequency = playerInfo.noteFrequency;
         if(frequency === undefined) continue;
-            console.log('soundType: ', soundType);
-            console.log('duration: ', duration);
-            console.log('amplitude: ', amplitude);
-            console.log('frequency: ', frequency);
+            console.log('settings: ', this.settings);
 
             switch(duration) {
                 case 0: // WHOLE
@@ -322,6 +319,8 @@ export class MIDIManager {
             var duration = durationsArr[i];
             var amplitude = playerInfo.amplitude;
             var frequency = playerInfo.noteFrequency;
+
+
 
             // Debug -----------------------------------------
             // if (this.debugOutput) {
