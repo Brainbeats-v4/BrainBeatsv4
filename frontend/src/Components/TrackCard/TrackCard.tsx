@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './TrackCard.css';
 import { Modal } from 'react-bootstrap';
 import TrackModal from '../TrackModal/TrackModal';
@@ -41,6 +41,30 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     const handleClose = () => setShow(false);
     const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
     const [trackList, setTrackList] = useState<Track[]>([]);
+    const [newTrackList, setNewTrackList] = useState<any[]>([]);
+
+
+    // For refresing track list component on page
+    const [seed, setSeed] = useState(1);
+    const resetTrackComponent = () => {
+        console.log("resetTrackComponent()");
+        setSeed(Math.random());
+        setNewTrackList(PopulateTrackCards()); // need to debug. not calling checklike when opening/editing unliked track.
+        // console.log("resetting seed");
+    }
+
+    // Initializes newTrackList
+    useEffect(() => {
+        setNewTrackList(PopulateTrackCards()); // need to debug. not calling checklike when opening/editing unliked track.
+        // console.log("use effect: " + newTrackList);
+    }, []);
+
+    // const reload=()=>window.location.reload();
+    // const handleClose2 = () => {
+    //     console.log("handle close 2");
+    //     setNewTrackList(PopulateTrackCards());
+    //   };
+
     const [tracksPulled, setTracksPulled] = useState(false);
     const [currentSearch, setCurrentSearch] = useState('');
 
@@ -146,6 +170,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
             for(let j = 0; j < MAX_COLS; j++) {
                 let currentTrack = trackList[currentTrackCounter++];
                 if(currentTrack == null) break;
+                if(!currentTrack.public && cardType!= 'Profile') continue;
                 currentTrack.thumbnail = currentTrack.thumbnail === "" ? defaultImage : currentTrack.thumbnail;
                 //let trackLink = JSON.stringify(currentTrack.trackLink);
                 let title = currentTrack.title;
@@ -155,6 +180,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
             }
         }
 
+        console.log("PopulateTrackCards()");
         return gridArray;
     }
 
@@ -215,8 +241,8 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                     </div>
                 ))}
             </div>
-            <Modal id='pop-up' show={show} onHide={handleClose}>
-                <TrackModal track={currentTrack}/>
+            <Modal id='pop-up' show={show} onHide={handleClose} onExit={resetTrackComponent}>
+                <TrackModal key={seed} track={currentTrack}/>
             </Modal>
         </div>
     )
