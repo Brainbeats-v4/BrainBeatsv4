@@ -6,7 +6,6 @@ import * as Constants from '../Constants';
 import { instrumentList } from "./InstOvertoneDefinitions";
 import * as Tone from 'tone'
 
-
 import MidiWriter from 'midi-writer-js';
 import { time } from "console";
 
@@ -19,7 +18,7 @@ export class MIDIManager {
     private debugOutput:boolean;
     public MIDIURI:string;
     private stopFlag;
-    
+     
     constructor(settings:MusicSettings, timeForEachNoteArray:Array<number>) {
         this.MIDIURI = "";
         var channel0 = new MidiWriter.Track();
@@ -39,20 +38,21 @@ export class MIDIManager {
             var channel7 = new MidiWriter.Track();
             this.MIDIChannels.push(channel4, channel5, channel6, channel7)
         }
-
         this.settings = settings;
         this.stopFlag = false;
         this.debugOutput = false;
         this.initializeSettings(settings);
         this.timeForEachNoteArray = timeForEachNoteArray;
+        
         this.initializeSynth();
     }
     
     private initializeSynth() {
         Tone.getTransport().bpm.value = this.settings.bpm;
 
-        for (var i = 0; i < 8; i++) {
-            var res:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth(Tone.Synth).toDestination();            
+
+        for (var i = 0; i < 8; i++) {            
+            var res:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth(Tone.Synth).toDestination();//.connect(this.recorder);            
             this.synthArr.push(res);
         }
     }
@@ -62,26 +62,51 @@ export class MIDIManager {
         /* This is just a start, we're going to work on a condition here
            where the number of tempos get set by the type of settings */
         for(var i = 0; i < this.MIDIChannels.length; i++) {
-            this.MIDIChannels[i].setTempo(settings.bpm, 0);
+            this.MIDIChannels[i].setTempo(settings.bpm, .1);
             this.MIDIChannels[i].setTimeSignature(4, 4);
         } 
     }
 
-    public returnMIDI() {
+    private sliceIntoChunks(arr:Uint8Array, chunkSize:number) {
+        const res = [];
+        for (let i = 0; i < arr.length; i += chunkSize) {
+          const chunk = arr.slice(i, i + chunkSize);
+          res.push(chunk);
+        }
+        return res;
+      };
+
+      private convertToBase64(file:Uint8Array): Promise<string> {
+        return new Promise((resolve, reject) => {
+          var fileBlob = new Blob([file], {
+            type: 'audio/midi'
+          });
+          const fileReader = new FileReader();
+      
+          fileReader.readAsDataURL(fileBlob);
+          fileReader.onload = () => {
+            resolve(fileReader.result as string);
+          };
+          fileReader.onerror = (error) => {
+            reject(error);
+          }
+        })
+      }
+
+    public async returnMIDI() {
+      
+        // Handles midi file generation for download
         var write = new MidiWriter.Writer(this.MIDIChannels);
-        var base64String;
+        var midiBuildFile = write.buildFile();
 
-        try {
-            base64String = write.base64();
-        }
-        catch(err) {
-            base64String = "";
-            console.error("Base64 conversion of MIDI FAILED!", err);
-        }
-
-        var prefix = "data:audio/midi;base64,"
-        prefix = prefix.concat(base64String);
-        return prefix;
+        const midiFileChunks = this.sliceIntoChunks(midiBuildFile, 5000);
+        const fileString = new Uint8Array(midiFileChunks.reduce((acc:any[], midiFileChunk) => {
+            return [...acc, ...Array.from(midiFileChunk)];
+        }, []));
+    
+        const base64String = await this.convertToBase64(fileString);
+        console.log(base64String);
+        return base64String
     }
 
     /* This function is a helper in order to return the proper type to assign to the
@@ -136,14 +161,14 @@ export class MIDIManager {
     public convertInput(noteData:any[]) {
         for(var i = 0; i < noteData.length; i++) {
             var noteDuration:MidiWriter.Duration = '1';
-
+            console.log(noteData[i].writer.noteLengthName);
             /* This code block sets the data from the note manager into usable data for
                the midi-writer-js API. */
-            if (noteData[i].writer.noteLength === "sixteenth") noteDuration = '16';
-            else if (noteData[i].writer.noteLength === "eigth") noteDuration = '8';
-            else if (noteData[i].writer.noteLength === "quarter") noteDuration ='4';
-            else if (noteData[i].writer.noteLength === "half") noteDuration = '2';
-            else if (noteData[i].writer.noteLength === "whole") noteDuration = '1';
+            if (noteData[i].writer.noteLengthName === "sixteenth") noteDuration = '16';
+            else if (noteData[i].writer.noteLengthName === "eigth") noteDuration = '8';
+            else if (noteData[i].writer.noteLengthName === "quarter") noteDuration ='4';
+            else if (noteData[i].writer.noteLengthName === "half") noteDuration = '2';
+            else if (noteData[i].writer.noteLengthName === "whole") noteDuration = '1';
             var generatedNote;
             var pitch:MidiWriter.Pitch = this.definePitch(noteData[i].writer.note, noteData[i].writer.octave);
 
@@ -227,7 +252,7 @@ export class MIDIManager {
                 default:
                     break;
                 }
-                console.log("num Voices for ", i, ": ", this.synthArr[i].activeVoices);
+                // console.log("num Voices for ", i, ": ", this.synthArr[i].activeVoices);
             
        }
        

@@ -24,7 +24,7 @@ function Record() {
     // Dev Debug button ----------------------------------
     const [debugBool, setDebug] = useState(false);
 
-    function toggleDebug(option:number) {
+    function toggleDebug(soption:number) {
         setDebug(!debugBool);
         console.log("debug: ", debugBool);
         device?.setDebugOutput(debugBool);
@@ -87,22 +87,19 @@ function Record() {
             This will check for sucessful return of a MIDI base64 string to be stored 
             in the database and make it easily downloadable. */
 
-        var midiUriRes:string|undefined = device?.stopDevice();
+        
+        device?.stopDevice()?.then(
+            (url:string) => {
+                console.log(url);
+                setMIDIURI(url);
+            }
+        ).catch(err => {
+            console.error('Unable to stop device: ', err);
+        })
 
         setDevice(undefined);
         setRecording(false);
-
-        if (midiUriRes === undefined || midiUriRes === "") {
-            console.error("Failed to create Midi file!"); 
-        }
-        else {
-            setMIDIURI(midiUriRes); 
-            console.log("generated midi: ", midiUriRes);
-        }
     }
-
-
-    
 
     function handleForm(e:number) {
         switch(e) {
