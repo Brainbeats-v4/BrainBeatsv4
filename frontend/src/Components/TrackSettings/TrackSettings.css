@@ -131,8 +131,13 @@
     margin-bottom: 2%;
 }
 
+#track-settings-container{
+    min-width: fit-content;
+    display: flex;
+    justify-content: center;
+}
 #settings-container1, #settings-container2 {
-    min-width: 70%;
+    min-width: 100%;
     width: fit-content;
     padding: 10px 10px 20px 10px;
     margin: auto;
@@ -147,10 +152,12 @@
 
 #settings1{
     display:block;
+    min-width: 70%;
 }
 
 #settings2{
     display: none;
+    min-width: 70%;
 }
 
 #select-device-div{

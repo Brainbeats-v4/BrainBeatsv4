@@ -212,216 +212,218 @@ const TrackSettings = () => {
     return (
         <div className='container' id='main-container'>
             {/* Displays on Basic Settings */}
-            <div id="settings1" style={{display: advSettingsOpen? "none" : "block"}}>
-                <h1 className='heading'>Music Settings</h1>
-                <form className='justify-content-center' id='settings-container1'>
-                    <h2 className='settings-text'>Basic Settings</h2>
-                    <div id='select-device-div'>
-                        <h6 id='settings-text'>Please select your input device:</h6>                    
-                        <select className="dropdowns" id='board-dropdown' name="board-options" onChange={(e) => setDevice(e.target.value)}>
-                            <option value="cyton">Cyton Board</option>
-                            <option value="ganglion">Ganglion Board</option>
-                            {isDev() && <option value="random data">Random Data</option>}
-                        </select>
-                    </div>
-                    <br></br>
-                    <div id='checkbox-div'>
-                    <p className='settings-text2'>Please select one of the following music generation options:</p>                    
-                        <div id="settings-options-div">
-                            <div className="form-check">
-                                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="slowAndMelodic" onClick={() => setGenerationType('slowAndMelodic')} defaultChecked/>
-                                <label className="form-check-label" htmlFor="inlineRadio1"><span>Slow and Melodic</span></label>
-                            </div>
-                            <div className="form-check">
-                                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="moderateAndTimely" onClick={() => setGenerationType('moderateAndTimely')}/>
-                                <label className="form-check-label" htmlFor="inlineRadio2"><span>Moderate and Timely</span></label>
-                            </div>
-                            <div className="form-check">
-                                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="quickAndLively" onClick={() => setGenerationType('quickAndLively')}/>
-                                <label className="form-check-label" htmlFor="inlineRadio3"><span>Quick and Lively</span></label>
-                            </div>
-                            <div className="form-check">
-                                <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="fastAndFrenzied" onClick={() => setGenerationType('fastAndFrenzied')}/>
-                                <label className="form-check-label" htmlFor="inlineRadio4"><span>Fast and Frenzied</span></label>
+            <h1 className='heading'>Music Settings</h1>
+            <div id='track-settings-container'>
+                <div id="settings1" style={{display: advSettingsOpen? "none" : "block"}}>
+                    <form className='justify-content-center' id='settings-container1'>
+                        <h2 className='settings-text'>Basic Settings</h2>
+                        <div id='select-device-div'>
+                            <h6 id='settings-text'>Please select your input device:</h6>                    
+                            <select className="dropdowns" id='board-dropdown' name="board-options" onChange={(e) => setDevice(e.target.value)}>
+                                <option value="cyton">Cyton Board</option>
+                                <option value="ganglion">Ganglion Board</option>
+                                {isDev() && <option value="random data">Random Data</option>}
+                            </select>
+                        </div>
+                        <br></br>
+                        <div id='checkbox-div'>
+                        <p className='settings-text2'>Please select one of the following music generation options:</p>                    
+                            <div id="settings-options-div">
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="slowAndMelodic" onClick={() => setGenerationType('slowAndMelodic')} defaultChecked/>
+                                    <label className="form-check-label" htmlFor="inlineRadio1"><span>Slow and Melodic</span></label>
+                                </div>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="moderateAndTimely" onClick={() => setGenerationType('moderateAndTimely')}/>
+                                    <label className="form-check-label" htmlFor="inlineRadio2"><span>Moderate and Timely</span></label>
+                                </div>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="quickAndLively" onClick={() => setGenerationType('quickAndLively')}/>
+                                    <label className="form-check-label" htmlFor="inlineRadio3"><span>Quick and Lively</span></label>
+                                </div>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="fastAndFrenzied" onClick={() => setGenerationType('fastAndFrenzied')}/>
+                                    <label className="form-check-label" htmlFor="inlineRadio4"><span>Fast and Frenzied</span></label>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                        <div className='form-group row justify-content-center'>
+                            <div className="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Next</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <br />
+                    <h2 id='OR'>OR</h2>
+                    <br />
+
+                    <form className='justify-content-center' id='settings-container2'>
+                        <h2 className='settings-text'>Advanced Settings</h2>
+                        <p className='settings-text'>Press the button below to go to advanced music generation settings:</p>
+
+                        <div className='form-group row justify-content-center'>
+                            <div className="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" className="btn btn-primary" id='adv-btn' onClick={toggle}>Advanced Settings</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                {/* Displays on Advanced Settings */}
+                <div id="settings2" style={{display: advSettingsOpen? "block" : "none"}}>
+                    <h1 className='heading'>Advanced Music Settings</h1>
+                    <form className='justify-content-center adv-settings-container'>
+                        <h2 className='settings-text'>Instruments</h2>
+                        <button type="button" className="btn btn-secondary" id='random-btn-adv' onClick={getRandomMusicSettings}>Randomize!</button>
+                        <div className='row instruments-div'>
+                            <div className='col instrument-box'>
+                                <label htmlFor="instrument1">Instrument 1:</label>
+                                <select className="dropdowns" name="instrument1" id="instrument1-options" value={instrument00} defaultValue={instrument00} onChange={(e => {setInstrument00(Number(e.target.value))})}>         
+                                <InstrumentSettings />
+                                </select>
+                                <br></br>
+                                <label htmlFor="instrument1-note">Instrument 1 Note Type:</label>
+                                <select className="dropdowns" name="instrument1-note" id="instrument1-notes" value={duration00} defaultValue={duration00} onChange={(e => {setDuration00(Number(e.target.value))})}>
+                                    <NoteSettings />
+                                </select>
+                            </div>
+                            <div className='col instrument-box'>
+                                <label htmlFor="instrument2">Instrument 2:</label>
+                                <select className="dropdowns" name="instrument2" id="instrument2-options" value={instrument01} defaultValue={instrument01} onChange={(e => {setInstrument01(Number(e.target.value))})}>
+                                    <InstrumentSettings />
+                                </select>
+                                <br></br>
+                                <label htmlFor="instrument2-note">Instrument 2 Note Type:</label>
+                                <select className="dropdowns" name="instrument2-note" id="instrument2-notes" value={duration01} defaultValue={duration01} onChange={(e => {setDuration01(Number(e.target.value))})}>
+                                    <NoteSettings />
+                                </select>
+                            </div>
+                            <div className='col instrument-box'>
+                                <label htmlFor="instrument3">Instrument 3:</label>
+                                <select className="dropdowns" name="instrument3" id="instrument3-options" value={instrument02} defaultValue={instrument02} onChange={(e => {setInstrument02(Number(e.target.value))})}>
+                                    <InstrumentSettings />
+                                </select>
+                                <br></br>
+                                <label htmlFor="instrument3-note">Instrument 3 Note Type:</label>
+                                <select className="dropdowns" name="instrument3-note" id="instrument3-notes" value={duration02} defaultValue={duration02} onChange={(e => {setDuration02(Number(e.target.value))})}>
+                                    <NoteSettings />
+                                </select>
+                            </div>
+                            <div className='col instrument-box'>
+                                <label htmlFor="instrument4">Instrument 4:</label>
+                                <select className="dropdowns" name="instrument4" id="instrument4-options" value={instrument03} defaultValue={instrument03} onChange={(e => {setInstrument03(Number(e.target.value))})}>
+                                    <InstrumentSettings />
+                                </select>
+                                <br></br>
+                                <label htmlFor="instrument4-note">Instrument 4 Note Type:</label>
+                                <select className="dropdowns" name="instrument4-note" id="instrument4-notes" value={duration03} defaultValue={duration03} onChange={(e => {setDuration03(Number(e.target.value))})}>
+                                <NoteSettings />
+                                </select>
+                            </div>
+                            {/* This conditional here will render the advanced settings to have more electrode options */}
+                            {(device === 'cyton' || device == 'random data') && 
+                                <>
+                                <div className='col instrument-box'>
+                                <label htmlFor="instrument5">Instrument 5:</label>
+                                <select className="dropdowns" name="instrument5" id="instrument5-options" value={instrument04} defaultValue={instrument04} onChange={(e => {setInstrument04(Number(e.target.value))})}>
+                                    <InstrumentSettings />
+                                </select>
+                                <br></br>
+                                <label htmlFor="instrument5-note">Instrument 5 Note Type:</label>
+                                <select className="dropdowns" name="instrument5-note" id="instrument5-notes" value={duration04} defaultValue={duration04} onChange={(e => {setDuration04(Number(e.target.value))})}>
+                                <NoteSettings />
+                                </select>
+                            </div>
+                            <div className='col instrument-box'>
+                                <label htmlFor="instrument6">Instrument 6:</label>
+                                <select className="dropdowns" name="instrument6" id="instrument6-options" value={instrument05} defaultValue={instrument05} onChange={(e => {setInstrument05(Number(e.target.value))})}>
+                                    <InstrumentSettings />
+                                </select>
+                                <br></br>
+                                <label htmlFor="instrument6-note">Instrument 6 Note Type:</label>
+                                <select className="dropdowns" name="instrument6-note" id="instrument6-notes" value={duration05} defaultValue={duration05} onChange={(e => {setDuration05(Number(e.target.value))})}>
+                                <NoteSettings />
+                                </select>
+                            </div>
+                            <div className='col instrument-box'>
+                                <label htmlFor="instrument7">Instrument 7:</label>
+                                <select className="dropdowns" name="instrument7" id="instrument7-options" value={instrument06} defaultValue={instrument06} onChange={(e => {setInstrument06(Number(e.target.value))})}>
+                                    <InstrumentSettings />
+            
+                                </select>
+                                <br></br>
+                                <label htmlFor="instrument7-note">Instrument 7 Note Type:</label>
+                                <select className="dropdowns" name="instrument7-note" id="instrument7-notes" value={duration06} defaultValue={duration06} onChange={(e => {setDuration06(Number(e.target.value))})}>
+                                <NoteSettings />
+                                </select>
+                            </div>
+                            <div className='col instrument-box'>
+                                <label htmlFor="instrument8">Instrument 8:</label>
+                                <select className="dropdowns" name="instrument8" id="instrument8-options" value={instrument07} defaultValue={instrument07} onChange={(e => {setInstrument07(Number(e.target.value))})}>
+                                <InstrumentSettings />
+
+                                </select>
+                                <br></br>
+                                <label htmlFor="instrumeny8-note">Instrument 8 Note Type:</label>
+                                <select className="dropdowns" name="instrument8-note" id="instrument8-notes" value={duration07} defaultValue={duration07} onChange={(e => {setDuration07(Number(e.target.value))})}>
+                                <NoteSettings />
+                                </select>
+                            </div>
+                            </>
+                            }
+                            
+                        </div>
+                    </form>
+                    <br></br>
+                    <form className='justify-content-center adv-settings-container'>
+                        <h2 className='settings-text'>Other</h2>
+                        <div className='row instruments-other-div'>
+                            <div className='col instrument-box-other'>
+                                <label htmlFor="octave">Number of Octaves:</label>
+                                <select className="dropdowns2" name="octave" id="octave-option" value={octaves} defaultValue={octaves} onChange={(e) => setOctaves(Number(e.target.value))}>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                            <div className='col instrument-box-other'>
+                                <label htmlFor="tempo">Set Bpm:</label>
+                                <select className="dropdowns2" name="tempo" id="tempo-option" value={bpm} defaultValue={bpm} onChange={(e) => setBpm(Number(e.target.value))}>
+                                    <option value="100">100</option>
+                                    <option value="120">120</option>
+                                    <option value="140">140</option>
+                                    <option value="160">160</option>
+
+                                </select>
+                            </div>
+                            <div className='col instrument-box-other'>
+                                <label htmlFor="key-signature">Key Signature:</label>
+                                <select className="dropdowns2" name="key-signature" id="key-signature-option" value={keyGroup} defaultValue={keyGroup} onChange={(e) => setKeyGroup(e.target.value)}>
+                                    <option value={"Major"}>Major</option>
+                                    <option value={"Minor"}>Minor</option>
+                                </select>
+                            </div>
+                            <div className='col instrument-box-other'>
+                                <label htmlFor="scale">Scale:</label>
+                                <select className="dropdowns2" name="scale" id="scale-option" value={scale} defaultValue={scale} onChange={(e) => setScale(e.target.value)}>
+                                    <KeySetting />
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <br></br>
                     <div className='form-group row justify-content-center'>
                         <div className="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" className="btn btn-secondary" id='back-btn-adv' onClick={toggle}>Back</button>
+                            <br />
                             <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Next</button>
                         </div>
                     </div>
-                </form>
-
-                <br />
-                <h2 id='OR'>OR</h2>
-                <br />
-
-                <form className='justify-content-center' id='settings-container2'>
-                    <h2 className='settings-text'>Advanced Settings</h2>
-                    <p className='settings-text'>Press the button below to go to advanced music generation settings:</p>
-
-                    <div className='form-group row justify-content-center'>
-                        <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className="btn btn-primary" id='adv-btn' onClick={toggle}>Advanced Settings</button>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-
-            {/* Displays on Advanced Settings */}
-            <div id="settings2" style={{display: advSettingsOpen? "block" : "none"}}>
-                <h1 className='heading'>Advanced Music Settings</h1>
-                <form className='justify-content-center adv-settings-container'>
-                    <h2 className='settings-text'>Instruments</h2>
-                    <button type="button" className="btn btn-secondary" id='random-btn-adv' onClick={getRandomMusicSettings}>Randomize!</button>
-                    <div className='row instruments-div'>
-                        <div className='col instrument-box'>
-                            <label htmlFor="instrument1">Instrument 1:</label>
-                            <select className="dropdowns" name="instrument1" id="instrument1-options" value={instrument00} defaultValue={instrument00} onChange={(e => {setInstrument00(Number(e.target.value))})}>         
-                               <InstrumentSettings />
-                            </select>
-                            <br></br>
-                            <label htmlFor="instrument1-note">Instrument 1 Note Type:</label>
-                            <select className="dropdowns" name="instrument1-note" id="instrument1-notes" value={duration00} defaultValue={duration00} onChange={(e => {setDuration00(Number(e.target.value))})}>
-                                <NoteSettings />
-                            </select>
-                        </div>
-                        <div className='col instrument-box'>
-                            <label htmlFor="instrument2">Instrument 2:</label>
-                            <select className="dropdowns" name="instrument2" id="instrument2-options" value={instrument01} defaultValue={instrument01} onChange={(e => {setInstrument01(Number(e.target.value))})}>
-                                <InstrumentSettings />
-                            </select>
-                            <br></br>
-                            <label htmlFor="instrument2-note">Instrument 2 Note Type:</label>
-                            <select className="dropdowns" name="instrument2-note" id="instrument2-notes" value={duration01} defaultValue={duration01} onChange={(e => {setDuration01(Number(e.target.value))})}>
-                                <NoteSettings />
-                            </select>
-                        </div>
-                        <div className='col instrument-box'>
-                            <label htmlFor="instrument3">Instrument 3:</label>
-                            <select className="dropdowns" name="instrument3" id="instrument3-options" value={instrument02} defaultValue={instrument02} onChange={(e => {setInstrument02(Number(e.target.value))})}>
-                                <InstrumentSettings />
-                            </select>
-                            <br></br>
-                            <label htmlFor="instrument3-note">Instrument 3 Note Type:</label>
-                            <select className="dropdowns" name="instrument3-note" id="instrument3-notes" value={duration02} defaultValue={duration02} onChange={(e => {setDuration02(Number(e.target.value))})}>
-                                <NoteSettings />
-                            </select>
-                        </div>
-                        <div className='col instrument-box'>
-                            <label htmlFor="instrument4">Instrument 4:</label>
-                            <select className="dropdowns" name="instrument4" id="instrument4-options" value={instrument03} defaultValue={instrument03} onChange={(e => {setInstrument03(Number(e.target.value))})}>
-                                <InstrumentSettings />
-                            </select>
-                            <br></br>
-                            <label htmlFor="instrument4-note">Instrument 4 Note Type:</label>
-                            <select className="dropdowns" name="instrument4-note" id="instrument4-notes" value={duration03} defaultValue={duration03} onChange={(e => {setDuration03(Number(e.target.value))})}>
-                               <NoteSettings />
-                            </select>
-                        </div>
-                        {/* This conditional here will render the advanced settings to have more electrode options */}
-                        {(device === 'cyton' || device == 'random data') && 
-                            <>
-                            <div className='col instrument-box'>
-                            <label htmlFor="instrument5">Instrument 5:</label>
-                            <select className="dropdowns" name="instrument5" id="instrument5-options" value={instrument04} defaultValue={instrument04} onChange={(e => {setInstrument04(Number(e.target.value))})}>
-                                <InstrumentSettings />
-                            </select>
-                            <br></br>
-                            <label htmlFor="instrument5-note">Instrument 5 Note Type:</label>
-                            <select className="dropdowns" name="instrument5-note" id="instrument5-notes" value={duration04} defaultValue={duration04} onChange={(e => {setDuration04(Number(e.target.value))})}>
-                               <NoteSettings />
-                            </select>
-                        </div>
-                        <div className='col instrument-box'>
-                            <label htmlFor="instrument6">Instrument 6:</label>
-                            <select className="dropdowns" name="instrument6" id="instrument6-options" value={instrument05} defaultValue={instrument05} onChange={(e => {setInstrument05(Number(e.target.value))})}>
-                                <InstrumentSettings />
-                            </select>
-                            <br></br>
-                            <label htmlFor="instrument6-note">Instrument 6 Note Type:</label>
-                            <select className="dropdowns" name="instrument6-note" id="instrument6-notes" value={duration05} defaultValue={duration05} onChange={(e => {setDuration05(Number(e.target.value))})}>
-                               <NoteSettings />
-                            </select>
-                        </div>
-                        <div className='col instrument-box'>
-                            <label htmlFor="instrument7">Instrument 7:</label>
-                            <select className="dropdowns" name="instrument7" id="instrument7-options" value={instrument06} defaultValue={instrument06} onChange={(e => {setInstrument06(Number(e.target.value))})}>
-                                <InstrumentSettings />
-          
-                            </select>
-                            <br></br>
-                            <label htmlFor="instrument7-note">Instrument 7 Note Type:</label>
-                            <select className="dropdowns" name="instrument7-note" id="instrument7-notes" value={duration06} defaultValue={duration06} onChange={(e => {setDuration06(Number(e.target.value))})}>
-                               <NoteSettings />
-                            </select>
-                        </div>
-                        <div className='col instrument-box'>
-                            <label htmlFor="instrument8">Instrument 8:</label>
-                            <select className="dropdowns" name="instrument8" id="instrument8-options" value={instrument07} defaultValue={instrument07} onChange={(e => {setInstrument07(Number(e.target.value))})}>
-                            <InstrumentSettings />
-
-                            </select>
-                            <br></br>
-                            <label htmlFor="instrumeny8-note">Instrument 8 Note Type:</label>
-                            <select className="dropdowns" name="instrument8-note" id="instrument8-notes" value={duration07} defaultValue={duration07} onChange={(e => {setDuration07(Number(e.target.value))})}>
-                               <NoteSettings />
-                            </select>
-                        </div>
-                        </>
-                        }
-                        
-                    </div>
-                </form>
-                <br></br>
-                <form className='justify-content-center adv-settings-container'>
-                    <h2 className='settings-text'>Other</h2>
-                    <div className='row instruments-other-div'>
-                        <div className='col instrument-box-other'>
-                            <label htmlFor="octave">Number of Octaves:</label>
-                            <select className="dropdowns2" name="octave" id="octave-option" value={octaves} defaultValue={octaves} onChange={(e) => setOctaves(Number(e.target.value))}>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                            </select>
-                        </div>
-                        <div className='col instrument-box-other'>
-                            <label htmlFor="tempo">Set Bpm:</label>
-                            <select className="dropdowns2" name="tempo" id="tempo-option" value={bpm} defaultValue={bpm} onChange={(e) => setBpm(Number(e.target.value))}>
-                                <option value="100">100</option>
-                                <option value="120">120</option>
-                                <option value="140">140</option>
-                                <option value="160">160</option>
-
-                            </select>
-                        </div>
-                        <div className='col instrument-box-other'>
-                            <label htmlFor="key-signature">Key Signature:</label>
-                            <select className="dropdowns2" name="key-signature" id="key-signature-option" value={keyGroup} defaultValue={keyGroup} onChange={(e) => setKeyGroup(e.target.value)}>
-                                <option value={"Major"}>Major</option>
-                                <option value={"Minor"}>Minor</option>
-                            </select>
-                        </div>
-                        <div className='col instrument-box-other'>
-                            <label htmlFor="scale">Scale:</label>
-                            <select className="dropdowns2" name="scale" id="scale-option" value={scale} defaultValue={scale} onChange={(e) => setScale(e.target.value)}>
-                                <KeySetting />
-                            </select>
-                        </div>
-                    </div>
-                </form>
-                <br></br>
-                <div className='form-group row justify-content-center'>
-                    <div className="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" className="btn btn-secondary" id='back-btn-adv' onClick={toggle}>Back</button>
-                        <br />
-                        <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Next</button>
-                    </div>
                 </div>
-             </div>
+            </div>
         </div>
         
         );
