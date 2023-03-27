@@ -36,10 +36,7 @@ router.post('/createUser', async (req, res) => {
                     email,
                     username,
                     password: encryptedPassword,
-                    profilePicture,
-                    posts: [],
-                    playlists: [],
-                    like: []
+                    profilePicture
                 }
             });
             // Create JWT
@@ -169,17 +166,25 @@ router.get('/getUserByUsername', async (req, res) => {
 // Get user by user ID
 router.get('/getUserByID', async (req, res) => {
     try {
-        const userExists = await getUserExists(req.query.id, "id");
+        const userID = req.query.userID;
+        const userExists = await getUserExists(userID, "id");
 
         if (!userExists) {
             return res.status(400).json({
                 msg: "User does not exist"
             });
         }
-        res.json(userExists);
+        else {
+            const getUser = await prisma.user.findUnique({
+                where: {
+                  id: userID,
+                },
+            });
+            return res.status(200).json(getUser);
+        } 
     } catch (err) {
         console.log(err);
-        res.status(500).send({ msg: err });
+        res.status(500).send({msg:err});
     }
 });
 

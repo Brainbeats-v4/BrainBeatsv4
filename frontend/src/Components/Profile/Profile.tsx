@@ -27,12 +27,12 @@ const Profile = () => {
 
     // user contains "userID" instead of "id"
     var id = user?.id;
-    console.log("User", user);
+    // console.log("User", user);
 
     const navigate = useNavigate();
 
     function kickNonUser() {
-        console.log(user);
+        // console.log(user);
         if (!user) {
             navigate('/login');
             return;
@@ -54,7 +54,7 @@ const Profile = () => {
         // setDisplayPicture(imageString);
 
         if ((displayPicture as string).split('/')[0] === 'data:text') {
-            console.log(displayPicture);
+            // console.log(displayPicture);
             var encodedProfilePic = (displayPicture as string).split(',')[1];
             var decodedProfilePic = Buffer.from(encodedProfilePic, 'base64').toString('ascii');
             setDisplayPicture(buildPath(decodedProfilePic));

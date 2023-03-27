@@ -23,7 +23,9 @@ async function getUserExists(searchVal, searchType) {
                     bio: true,
                     profilePicture: true,
                     id: true,
-                    like: true
+                    likes: true,
+                    playlists: true,
+                    tracks: true,
                 }
             });
             break;

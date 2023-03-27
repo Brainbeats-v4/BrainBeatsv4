@@ -70,7 +70,10 @@ const SignUp = () => {
             "password": password,
             "firstName": firstName,
             "lastName": lastName,
-            "profilePicture": base64result
+            "profilePicture": base64result,
+            "posts": [],
+            "playlists": [],
+            "likes": [],
         };
 
         if(validateFields()) {
