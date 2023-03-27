@@ -23,9 +23,9 @@ model User {
   createdAt DateTime  @default(now())
   resetPasswordToken String? @unique @db.VarChar(255) // @db.LongText
   resetPasswordExpires DateTime? @db.DateTime
-  posts Track[]
+  tracks Track[]
   playlists Playlist[]
-  like Like[]
+  likes Like[]
 }
 
 model Track {
@@ -41,10 +41,10 @@ model Track {
   user   User         @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID String // relation scalar field  (used in the `@relation` attribute above)
   createdAt DateTime  @default(now())
-  playlistPosts PlaylistPost[]
+  playlistTracks PlaylistTrack[]
   // playlists Playlist[]     // Simpler alternative to playlists
   public Boolean
-  like Like[]
+  likes Like[]
 }
 
 model Playlist {
@@ -53,26 +53,26 @@ model Playlist {
   thumbnail String?   @db.LongText // Store file path in database instead of the actual image
   user User           @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID String
-  // posts Track[]     // Simpler alternative to playlists   
-  playlistPosts PlaylistPost[]
+  // tracks Track[]     // Simpler alternative to playlists   
+  playlistTracks PlaylistTrack[]
 }
 
-model PlaylistPost {
-  postID String
-  track Track           @relation(fields: [postID], references: [id], onDelete: Cascade)
+model PlaylistTrack {
+  trackID String
+  track Track           @relation(fields: [trackID], references: [id], onDelete: Cascade)
   playlistID String
   playlist Playlist   @relation(fields: [playlistID], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
   
-  @@id([postID, playlistID])
+  @@id([trackID, playlistID])
 }
 
 model Like {
-  postID String         
-  track Track          @relation(fields: [postID], references: [id], onDelete: Cascade)
+  trackID String         
+  track Track          @relation(fields: [trackID], references: [id], onDelete: Cascade)
   userID String
   user User          @relation(fields: [userID], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
-  @@id([postID, userID])
+  @@id([trackID, userID])
 }

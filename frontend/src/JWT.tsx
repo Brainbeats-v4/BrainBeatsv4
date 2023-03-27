@@ -4,7 +4,7 @@ import { User } from "./util/Interfaces";
 
 const { persistAtom } = recoilPersist()
 
-export const userModeState = atom/*<User | null>*/({
+export const userModeState = atom<User | null>({
     key: 'userModeState',
     default: {} as User,
     effects_UNSTABLE: [persistAtom],

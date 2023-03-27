@@ -5,36 +5,16 @@ import TrackModal from '../TrackModal/TrackModal';
 import sendAPI from '../../SendAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { Track } from '../../util/Interfaces';
+import { emptyTrack } from '../../util/Constants';
 
 type Props = {
     cardType:string;
-    input: any;
+    input: string; // was :any
 }
 
-const TrackCard: React.FC<Props> = ({cardType, input}) => {
-    interface Track {
-        createdAt: string;
-        id: string;
-        likeCount: number;
-        midi: string;
-        public: boolean;
-        thumbnail: string;
-        title: string;
-        userID: string;
-        fullname: string;
-    }
 
-    const emptyTrack:Track = {
-        "createdAt": "",
-        "id": "",
-        "likeCount": -1,
-        "midi": "",
-        "public": false,
-        "thumbnail": "",
-        "title": "",
-        "userID": "",
-        "fullname": ""
-    }
+const TrackCard: React.FC<Props> = ({cardType, input}) => {
 
     // For displaying Modal
     const [show, setShow] = useState(false);
@@ -42,7 +22,6 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
     const [trackList, setTrackList] = useState<Track[]>([]);
     const [newTrackList, setNewTrackList] = useState<any[]>([]);
-
 
 
     // For refresing track list component on page
@@ -60,34 +39,55 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         // console.log("use effect: " + newTrackList);
     }, []);
 
-    // const reload=()=>window.location.reload();
-    // const handleClose2 = () => {
-    //     console.log("handle close 2");
-    //     setNewTrackList(PopulateTrackCards());
-    //   };
-
     const [tracksPulled, setTracksPulled] = useState(false);
     const [currentSearch, setCurrentSearch] = useState('');
 
+
+    // ! Possibly not needed
+    // We do this a lot, so this returns an objArray containing our tracks
+    // from the api call
+    // function populateObjectArrayFromTracks(data:Array<Track>, numTracks:number = data.length) {
+    //     var objArray:Track[] = [];
+
+    //     for(var i = 0; i < data.length; i++) {
+    //         if(i > numTracks) break;
+
+    //     }
+    //     return 
+    // }
+
     async function getPopularTracks(numTracks:number) {
+
         // hit api for 'numTracks' tracks
         var objArray:Track[] = [];
         await sendAPI('get', '/posts/getPublicPopularPosts')
-        .then(res => {
+        .then((res) => {
                 for(var i = 0; i < res.data.length; i++) {
                     if(i > numTracks) break;
-                    var currentTrack:Track = {
-                        createdAt: res.data[i].createdAt,
-                        id: res.data[i].id,
-                        likeCount: res.data[i].likeCount,
-                        midi: res.data[i].midi,
-                        public: res.data[i].public,
-                        thumbnail: res.data[i].thumbnail,
-                        title: res.data[i].title,
-                        userID: res.data[i].userID,
-                        fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
-                    }
+
+                    // Here the track is unchanged so just push it
+                    // No need to do for each entry
+                    var currentTrack:Track = res.data[i];
                     objArray.push(currentTrack);
+
+                    // var currentTrack:Track = {
+                    //     id: res.data[i].id,
+                    //     title: res.data[i].title,
+                    //     bpm: res.data[i].bpm,
+                    //     key: res.data[i].key,
+                    //     instruments: res.data[i].instruments,
+                    //     noteTypes: res.data[i].noteTypes,
+                    //     likeCount: res.data[i].likeCount,
+                    //     midi: res.data[i].midi,
+                    //     thumbnail: res.data[i].thumbnail,
+                    //     user: res.data[i].user,
+                    //     userID: res.data[i].userID,
+                    //     createdAt: res.data[i].createdAt,
+                    //     playlistTracks: res.data[i].playlistTracks,
+                    //     public: res.data[i].public,
+                    //     like: res.data[i].like,
+                    //     fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
+                    // }
                 }
                 setTrackList(objArray);
                 setTracksPulled(true)
@@ -107,17 +107,25 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         .then((res) => {
             console.log(res);
                 for(var i = 0; i < res.data.length; i++) {
-                    var currentTrack:Track = {
-                        createdAt: res.data[i].createdAt,
-                        id: res.data[i].id,
-                        likeCount: res.data[i].likeCount,
-                        midi: res.data[i].midi,
-                        public: res.data[i].public,
-                        thumbnail: res.data[i].thumbnail,
-                        title: res.data[i].title,
-                        userID: res.data[i].userID,
-                        fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
-                    }
+
+                    var currentTrack:Track = res.data[i];
+
+                    var fullname:string =  res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
+
+                    // Copy over the track from res, "append" the fullname key-value to it
+                    currentTrack = Object.assign({fullname: fullname}, currentTrack);
+
+                    // var currentTrack:Track = {
+                    //     createdAt: res.data[i].createdAt,
+                    //     id: res.data[i].id,
+                    //     likeCount: res.data[i].likeCount,
+                    //     midi: res.data[i].midi,
+                    //     public: res.data[i].public,
+                    //     thumbnail: res.data[i].thumbnail,
+                    //     title: res.data[i].title,
+                    //     userID: res.data[i].userID,
+                    //     fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
+                    // }
                     objArray.push(currentTrack);
                 }
                 setTrackList(objArray);
@@ -132,31 +140,35 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     async function getProfileTracks() {
         var objArray:Track[] = [];
         console.log(input);
-        var newUser = {userID: input};
-        await sendAPI('get', '/posts/getUserPostsByID', newUser)
+        var user = {userID: input};
+
+        console.log({user});
+        await sendAPI('get', '/posts/getUserPostsByID', user)
         .then(res => {
-            if (res.status == 200) {
-                for(var i = 0; i < res.data.length; i++) {
-                    var currentTrack:Track = {
-                        createdAt: res.data[i].createdAt,
-                        id: res.data[i].id,
-                        likeCount: res.data[i].likeCount,
-                        midi: res.data[i].midi,
-                        public: res.data[i].public,
-                        thumbnail: res.data[i].thumbnail,
-                        title: res.data[i].title,
-                        userID: res.data[i].userID,
-                        fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName,
-                    }
-                    objArray.push(currentTrack);
-                }
-                setTrackList(objArray);
-                setTracksPulled(true)
+            for(var i = 0; i < res.data.length; i++) {
+                
+                var currentTrack:Track = res.data[i];
+                var fullname:string =  res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
+                currentTrack = Object.assign({fullname: fullname}, currentTrack);
+
+                // var currentTrack:Track = {
+                //     createdAt: res.data[i].createdAt,
+                //     id: res.data[i].id,
+                //     likeCount: res.data[i].likeCount,
+                //     midi: res.data[i].midi,
+                //     public: res.data[i].public,
+                //     thumbnail: res.data[i].thumbnail,
+                //     title: res.data[i].title,
+                //     userID: res.data[i].userID,
+                //     fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName,
+                // }
+
+                objArray.push(currentTrack);
             }
-            else {
-                setTrackList(objArray);
-                setTracksPulled(true);
-            }
+            setTrackList(objArray);
+            setTracksPulled(true)
+        }).catch(e => {
+            console.error("Failed to pull profile tracks: ", e);
         })
     }
     
@@ -166,16 +178,19 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         var gridArray:any[] = [];
         var currentTrackCounter:number = 0;
         const defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
+        
         //cardType Search goes outside of the conditional because there is the case where searching has already happened
-        if (cardType === 'Search')
-            if(currentSearch !== input) getSearchTracks(input);
+        if (cardType === 'Search' && currentSearch !== input) 
+            getSearchTracks(input);
         if(!tracksPulled) {
             if(cardType === 'Profile') getProfileTracks();
             else if(cardType === 'Popular') getPopularTracks(MAX_COLS * MAX_ROWS);
         }
+
         for(let i = 0; i < MAX_ROWS; i++){
             for(let j = 0; j < MAX_COLS; j++) {
                 let currentTrack = trackList[currentTrackCounter++];
+                
                 if(currentTrack == null) break;
                 if(!currentTrack.public && cardType!= 'Profile') continue;
                 currentTrack.thumbnail = currentTrack.thumbnail === "" ? defaultImage : currentTrack.thumbnail;
