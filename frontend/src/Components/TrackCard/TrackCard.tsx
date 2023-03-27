@@ -283,7 +283,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                 ))}
             </div>
             <Modal id='pop-up' show={show} onHide={handleClose} onExit={resetTrackComponent}>
-                <TrackModal key={seed} track={currentTrack}/>
+                <TrackModal key={seed} track={currentTrack} closeModal={setShow}/>
             </Modal>
         </div>
     )

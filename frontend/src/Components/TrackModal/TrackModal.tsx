@@ -22,12 +22,13 @@ import * as Interfaces from '../../util/Interfaces';
 
 type Props = {
   track:Interfaces.Track; 
+  closeModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const emptyLikeArr: Interfaces.Like[] = [];
 
 
-const TrackModal: React.FC<Props> = ({track}) => {
+const TrackModal: React.FC<Props> = ({track, closeModal}) => {
   const navigate = useNavigate();
   const jwt:any = useRecoilValue(userJWT);
   const [user, setUser] = useRecoilState(userModeState);
@@ -73,21 +74,37 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
 
   // ============================= Functions for Track Updating System =============================
+  
+  function verifyDeleteRecording() {
+    let erase = window.confirm("Want to delete track '" + track.title+ "'? \nPress ok to delete this track.");
+
+    if(erase) {
+      closeModal(false);
+    }
+    // window.alert("Once you close this track, the track will be deleted.");
+
+    return erase;
+  }
+
   function doDelete() {
     let data = { id:track.id, token:jwt }
 
-    sendAPI("delete", "/posts/deletePost", data).then((res) => {
-      if (res.status != 200) {
-        setErrMsg("Failed To Delete");
-        setSuccessMsg("");
-      }
-      else {
-        // Close the modal, refresh the posts showed on current page
-        setErrMsg("");
-        setSuccessMsg("");
-        
-      }
-    })
+    let deleteConfirmed = verifyDeleteRecording();
+
+    if (deleteConfirmed){
+      sendAPI("delete", "/posts/deletePost", data).then((res) => {
+        if (res.status != 200) {
+          setErrMsg("Failed To Delete");
+          setSuccessMsg("");
+        }
+        else {
+          // Close the modal, refresh the posts showed on current page
+          setErrMsg("");
+          setSuccessMsg("");
+        }
+      })
+    }
+
   }
 
   function setVisibilityButton() {
