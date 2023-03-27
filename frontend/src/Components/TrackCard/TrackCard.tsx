@@ -15,7 +15,6 @@ type Props = {
     input: string; // was :any
 }
 
-
 const TrackCard: React.FC<Props> = ({cardType, input}) => {
 
     // For displaying Modal
@@ -24,8 +23,6 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
     const [trackList, setTrackList] = useState<Track[]>([]);
     const [newTrackList, setNewTrackList] = useState<any[]>([]);
-
-
 
     // For refresing track list component on page
     const [seed, setSeed] = useState(1);

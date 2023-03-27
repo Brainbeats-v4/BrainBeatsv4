@@ -12,7 +12,7 @@ import buildPath from '../../util/ImagePath';
 import { encode, resize } from '../../util/ImageHelperFunctions';
 import { useNavigate } from 'react-router-dom';
 
-import { User } from '../../util/Interfaces';
+import { Track, User } from '../../util/Interfaces';
 
 
 
@@ -23,6 +23,8 @@ const Profile = () => {
     const [playlist, setPlaylist] = useState([]); 
     const [posts, setPosts] = useState([])
     const [msg, setMsg] = useState('');
+
+    const [tracksTotal, setTracksTotal] = (useState(0));
 
 
     // user contains "userID" instead of "id"
@@ -41,7 +43,9 @@ const Profile = () => {
 
     useEffect(() => {
         kickNonUser();
-        // console.log("USER: ", user);
+        if (user != null){
+            getProfileTracks();
+        }
     }, [])
 
 
@@ -216,6 +220,19 @@ const Profile = () => {
             console.log(user.firstName);
     };
 
+    // Gets User Track count
+    async function getProfileTracks() {
+
+        var currentUser = {userID: user?.id};
+        await sendAPI('get', '/posts/getUserPostsByID', currentUser)
+            .then(res => {
+                // console.log(res.data.length);
+                setTracksTotal(res.data.length);
+            }).catch(e => {
+                console.error("Failed to count profile tracks: ", e);
+        })
+    }
+
     return(
         <div className="user-profile" id='profile-container'>
             <div id='profile-top-container'>
@@ -255,16 +272,16 @@ const Profile = () => {
                 <div id='profile-top-follower-div'>
                     <div id='count-all-div'>
                         <div className='count-div' id='playlist-count-div'>
-                            <h5>0</h5>
-                            <h6>Playlists</h6>
+                            <h5>{tracksTotal}</h5>
+                            <h6>Tracks</h6>
                         </div>
                         <div className='count-div' id='following-count-div'>
                             <h5>0</h5>
-                            <h6>Following</h6>
+                            <h6>Playlists</h6>
                         </div>
                         <div className='count-div' id='follower-count-div'>
                             <h5>0</h5>
-                            <h6>Follower</h6>
+                            <h6>Followers</h6>
                         </div>
                     </div>
                 </div>
