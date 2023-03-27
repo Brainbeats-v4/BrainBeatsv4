@@ -5,12 +5,14 @@ import * as Enums from '../Enums';
 import * as Constants from '../Constants';
 import { instrumentList } from "./InstOvertoneDefinitions";
 import * as Tone from 'tone'
+import * as Samplers from '../Samplers';
 
 import MidiWriter from 'midi-writer-js';
 import { time } from "console";
 
 export class MIDIManager {
     // Settings
+    private samplerArr:Array<Tone.Sampler> = [];
     private synthArr:Array<Tone.PolySynth<Tone.Synth<Tone.SynthOptions>>> = [];
     public MIDIChannels:MidiWriter.Track[] = [];
     private timeForEachNoteArray:Array<number>;
@@ -46,13 +48,22 @@ export class MIDIManager {
         
         this.initializeSynth();
     }
-    
+
+
+    /*  There are two playback objects that are working in our program, this is basically a way to manage the enormous amount of calls to this
+        function since we are receiving tons of input from the EEG board every second. We are using the PolySynth to see if the array is playing
+        back a note on the current channel right now since it is one of the only Tone.js players that contains a method to check for a playing note.
+        If it isn't, we then fire a note from the PolySynth that is the same length as the Sampler's current note with no volume (hence the 
+        volume.value = -100). To use the sampler, to add new instruments, you need to use a baseUrl that stores all the audio you want, and then
+        provide all of the urls to each file that plays a note. If you want to see our samplers, we have a list of them in the utils folder under
+        Samplers.tsx  */
     private initializeSynth() {
         Tone.getTransport().bpm.value = this.settings.bpm;
-
-
-        for (var i = 0; i < 8; i++) {            
-            var res:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth(Tone.Synth).toDestination();//.connect(this.recorder);            
+        for (var i = 0; i < 8; i++) {
+            var sampler = Samplers.Piano.toDestination();
+            this.samplerArr.push(sampler);
+            var res:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();//.connect(this.recorder);  
+            res.volume.value = -100;
             this.synthArr.push(res);
         }
     }
@@ -230,24 +241,34 @@ export class MIDIManager {
 
             switch(duration) {
                 case Enums.NoteDurations.WHOLE:
-
-                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "1n", this.synthArr[i].now())        
+                    if (this.synthArr[i].activeVoices < 1) { 
+                        this.synthArr[i].triggerAttackRelease(frequency, "1n", this.synthArr[i].now())  
+                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "1n")
+                    }
                     break;
                 case Enums.NoteDurations.HALF:
-
-                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "2n", this.synthArr[i].now())        
+                    if (this.synthArr[i].activeVoices < 1) {
+                        this.synthArr[i].triggerAttackRelease(frequency, "2n", this.synthArr[i].now())  
+                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "2n")
+                    }
                     break;
                 case Enums.NoteDurations.QUARTER:
-
-                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "4n", this.synthArr[i].now())        
+                    if (this.synthArr[i].activeVoices < 1) {
+                        this.synthArr[i].triggerAttackRelease(frequency, "4n", this.synthArr[i].now()) 
+                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "4n")        
+                    } 
                     break;
                 case Enums.NoteDurations.EIGHTH:
-
-                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "8n", this.synthArr[i].now())        
+                    if (this.synthArr[i].activeVoices < 1) {
+                        this.synthArr[i].triggerAttackRelease(frequency, "8n", this.synthArr[i].now())
+                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "8n")             
+                    }
                     break;
                 case Enums.NoteDurations.SIXTEENTH:
-
-                    if (this.synthArr[i].activeVoices < 1) this.synthArr[i].triggerAttackRelease(frequency, "16n", this.synthArr[i].now())        
+                    if (this.synthArr[i].activeVoices < 1) {
+                        this.synthArr[i].triggerAttackRelease(frequency, "16n", this.synthArr[i].now()) 
+                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "16n")
+                    }         
                     break;
                 default:
                     break;
