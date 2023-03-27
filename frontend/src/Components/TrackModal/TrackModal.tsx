@@ -27,7 +27,6 @@ type Props = {
 
 const emptyLikeArr: Interfaces.Like[] = [];
 
-
 const TrackModal: React.FC<Props> = ({track, closeModal}) => {
   const navigate = useNavigate();
   const jwt:any = useRecoilValue(userJWT);
@@ -78,9 +77,9 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
   function verifyDeleteRecording() {
     let erase = window.confirm("Want to delete track '" + track.title+ "'? \nPress ok to delete this track.");
 
-    if(erase) {
-      closeModal(false);
-    }
+    // if(erase) {
+    //   closeModal(false);
+    // }
     // window.alert("Once you close this track, the track will be deleted.");
 
     return erase;
@@ -101,6 +100,8 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
           // Close the modal, refresh the posts showed on current page
           setErrMsg("");
           setSuccessMsg("");
+          closeModal(false);
+          window.location.reload();
         }
       })
     }
