@@ -39,6 +39,8 @@ interface Like {
 
 }
 
+const emptyLikeArr: Like[] = [];
+
 const TrackModal: React.FC<Props> = ({track}) => {
   const navigate = useNavigate();
   const jwt = useRecoilValue(userJWT);
@@ -55,13 +57,14 @@ const TrackModal: React.FC<Props> = ({track}) => {
   const [thumbnail, setThumbnail] = useState(track.thumbnail);
 
   const [likeCount, setLikeCount] = useState(track.likeCount);
-  const [userLikeArr, setUserLikeArr] = useState(user.like);
+  const [userLikeArr, setUserLikeArr] = useState(emptyLikeArr);
   const [favorited, setFavorited] = useState(checkLike()); // change this later
 
   // Initializes favorited variable
   useEffect(() => {
     // setFavorited(checkLike()); // need to debug. not calling checklike when opening/editing unliked track.
     checkTrackOwner();
+    setFavorited(checkLike());
   }, []);
 
   // ============================= Functions for User Track =============================
@@ -70,6 +73,10 @@ const TrackModal: React.FC<Props> = ({track}) => {
     if (user != null) {
       if (user.userId == track.userID) {
         setEditVisibility(true);
+      }
+      
+      if(user.like != undefined){
+        setUserLikeArr(user.like);
       }
     }
   }
@@ -250,13 +257,17 @@ const TrackModal: React.FC<Props> = ({track}) => {
     let favorited:boolean = false;
     
     let i = 0;
-    for (i = 0; i < user.like.length; i++)
-    {
-      if (user.like[i].postID == track.id) {
-        favorited = true;
-        // console.log("track '" + track.title + "' is liked.");
+
+    if (user != null) {
+      for (i = 0; i < user.like.length; i++)
+      {
+        if (user.like[i].postID == track.id) {
+          favorited = true;
+          // console.log("track '" + track.title + "' is liked.");
+        }
       }
     }
+   
     
 
 
