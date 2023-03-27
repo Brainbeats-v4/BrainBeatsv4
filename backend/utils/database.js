@@ -61,7 +61,7 @@ async function getPostExists(searchVal, searchType) {
     let result;
     switch (searchType) {
         case 'id':
-            result = await prisma.Post.findUnique({
+            result = await prisma.Track.findUnique({
                 where: { id: searchVal }
             });
 
