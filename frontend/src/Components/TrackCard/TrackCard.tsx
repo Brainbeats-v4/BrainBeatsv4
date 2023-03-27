@@ -148,20 +148,21 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         var currentUser = {userID: input};
         // console.log({currentUser});
 
-        var userTracks: any[] = [];
-        await sendAPI('get', '/users/getUserByID', currentUser)
-        .then(res => {
-            userTracks = res.data.tracks;
-            // console.log("userTracks: " + userTracks);
-        })
+        // Calling getUserByID to check if user has tracks
+        // var userTracks: any[] = [];
+        // await sendAPI('get', '/users/getUserByID', currentUser)
+        // .then(res => {
+        //     userTracks = res.data.tracks;
+        //     console.log("userTracks: " + res.data.tracks);
+        // })
 
-        if (userTracks != undefined){
+        // if (userTracks == undefined){
             await sendAPI('get', '/posts/getUserPostsByID', currentUser)
                 .then(res => {
                     for(var i = 0; i < res.data.length; i++) {
                         
                         var currentTrack:Track = res.data[i];
-                        var fullname:string =  res.data[i].currentUser.firstName + ' ' + res.data[i].currentUser.lastName;
+                        var fullname:string =  res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
                         currentTrack = Object.assign({fullname: fullname}, currentTrack);
 
                         // var currentTrack:Track = {
@@ -183,11 +184,11 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                 }).catch(e => {
                     console.error("Failed to pull profile tracks: ", e);
             })
-        }
-        else {
-            setTrackList(objArray);
-            setTracksPulled(true)
-        }
+        // }
+        // else {
+        //     setTrackList(objArray);
+        //     setTracksPulled(true)
+        // }
     }
     
     function PopulateTrackCards() {

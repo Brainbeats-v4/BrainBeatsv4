@@ -41,6 +41,7 @@ const Profile = () => {
 
     useEffect(() => {
         kickNonUser();
+        // console.log("USER: ", user);
     }, [])
 
 
