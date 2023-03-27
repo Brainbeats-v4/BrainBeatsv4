@@ -44,6 +44,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     const [newTrackList, setNewTrackList] = useState<any[]>([]);
 
 
+
     // For refresing track list component on page
     const [seed, setSeed] = useState(1);
     const resetTrackComponent = () => {
@@ -131,25 +132,31 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     async function getProfileTracks() {
         var objArray:Track[] = [];
         console.log(input);
-        var user = {userID: input};
-        await sendAPI('get', '/posts/getUserPostsByID', user)
+        var newUser = {userID: input};
+        await sendAPI('get', '/posts/getUserPostsByID', newUser)
         .then(res => {
-            for(var i = 0; i < res.data.length; i++) {
-                var currentTrack:Track = {
-                    createdAt: res.data[i].createdAt,
-                    id: res.data[i].id,
-                    likeCount: res.data[i].likeCount,
-                    midi: res.data[i].midi,
-                    public: res.data[i].public,
-                    thumbnail: res.data[i].thumbnail,
-                    title: res.data[i].title,
-                    userID: res.data[i].userID,
-                    fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName,
+            if (res.status == 200) {
+                for(var i = 0; i < res.data.length; i++) {
+                    var currentTrack:Track = {
+                        createdAt: res.data[i].createdAt,
+                        id: res.data[i].id,
+                        likeCount: res.data[i].likeCount,
+                        midi: res.data[i].midi,
+                        public: res.data[i].public,
+                        thumbnail: res.data[i].thumbnail,
+                        title: res.data[i].title,
+                        userID: res.data[i].userID,
+                        fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName,
+                    }
+                    objArray.push(currentTrack);
                 }
-                objArray.push(currentTrack);
+                setTrackList(objArray);
+                setTracksPulled(true)
             }
-            setTrackList(objArray);
-            setTracksPulled(true)
+            else {
+                setTrackList(objArray);
+                setTracksPulled(true);
+            }
         })
     }
     

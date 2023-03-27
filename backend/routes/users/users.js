@@ -36,7 +36,10 @@ router.post('/createUser', async (req, res) => {
                     email,
                     username,
                     password: encryptedPassword,
-                    profilePicture
+                    profilePicture,
+                    posts: [],
+                    playlists: [],
+                    like: []
                 }
             });
             // Create JWT
@@ -105,6 +108,8 @@ router.post('/loginUser', async (req, res) => {
                     bio: userExists.bio,
                     profilePicture: userExists.profilePicture,
                     userId: userExists.id,
+                    posts: userExists.posts,
+                    playlists: userExists.playlist,
                     like: userExists.like
                 },
                 token: token
