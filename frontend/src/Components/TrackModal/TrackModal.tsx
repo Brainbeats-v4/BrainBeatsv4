@@ -21,7 +21,14 @@ type Props = {
   track:Interfaces.Track; 
 }
 
-const emptyLikeArr: Like[] = [];
+
+interface Like {
+  postID: string; 
+  userID: string;
+  createdAt: string;
+
+}
+const emptyLikeArr: Interfaces.Like[] = [];
 
 const TrackModal: React.FC<Props> = ({track}) => {
   const navigate = useNavigate();
