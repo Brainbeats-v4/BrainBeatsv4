@@ -16,6 +16,9 @@ import { set as setDeviceState } from '../../Redux/slices/deviceSlice';
 
 import './TrackSettings.css';
 import { env } from 'process';
+import sendAPI from '../../SendAPI';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userModeState, userJWT } from '../../JWT';
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
@@ -208,6 +211,40 @@ const TrackSettings = () => {
     //     setDeviceState(device)
     //     console.log(device);
     // }, [device]);
+
+
+    const [postTitle, setPostTitle] = useState('');
+    const [thumbnail, setThumbnail] = useState('');
+    const [likes, setLikes] = useState(0);
+    const [user, setUser] = useRecoilState(userModeState);
+    const jwt = useRecoilValue(userJWT);
+
+  
+    // Shortcut for uploading posts
+    function uploadPost() {
+        console.log(likes);
+
+        if (user != null) {
+            const info = {
+                userID: user.id,
+                title: postTitle,
+                bpm: 0,
+                key: '',
+                midi: '',
+                instruments: {},
+                noteTypes: {},
+                token: jwt,
+                thumbnail: thumbnail,
+                likeCount: likes
+            }
+            sendAPI('post', '/posts/createPost', info)
+                .then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+        }
+    }
 
     return (
         <div className='container' id='main-container'>
@@ -424,8 +461,25 @@ const TrackSettings = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Shortcut for uloading posts */}
+            <div>
+                <div>
+                    <label className="form-label signup-text">Title</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setPostTitle(event.target.value)}/>
+                </div>
+                <div>
+                    <label className="form-label signup-text">Thumbnail</label>
+                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setThumbnail(event.target.value)}/>
+                </div>
+                <div>
+                    <label className="form-label signup-text">Likes</label>
+                    <input type="number" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setLikes(event.target.valueAsNumber)}/>
+                </div>
+                <button onClick={() => uploadPost()}>Click me</button>
+            </div>
         </div>
-        
+    
         );
 }
 

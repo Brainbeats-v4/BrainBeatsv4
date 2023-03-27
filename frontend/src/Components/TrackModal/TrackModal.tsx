@@ -229,7 +229,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
     await convertToBase64(file).then(res => {
         base64result = res;
-        console.log("base64", base64result);
+        // console.log("base64", base64result);
     })
 
     var updatedPost = {

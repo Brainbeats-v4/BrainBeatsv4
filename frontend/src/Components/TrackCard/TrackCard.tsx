@@ -72,6 +72,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                     // Here the track is unchanged so just push it
                     // No need to do for each entry
                     var currentTrack:Track = res.data[i];
+                    currentTrack.fullname = res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
                     objArray.push(currentTrack);
 
                     // var currentTrack:Track = {
