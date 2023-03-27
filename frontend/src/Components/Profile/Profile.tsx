@@ -275,13 +275,13 @@ const Profile = () => {
                             <h5>{tracksTotal}</h5>
                             <h6>Tracks</h6>
                         </div>
-                        <div className='count-div' id='following-count-div'>
-                            <h5>0</h5>
-                            <h6>Playlists</h6>
-                        </div>
                         <div className='count-div' id='follower-count-div'>
                             <h5>0</h5>
                             <h6>Followers</h6>
+                        </div>
+                        <div className='count-div' id='following-count-div'>
+                            <h5>0</h5>
+                            <h6>Playlists</h6>
                         </div>
                     </div>
                 </div>
