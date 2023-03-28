@@ -261,7 +261,7 @@ const Profile = () => {
                             <FontAwesomeIcon icon={["fas", "edit"]} />
                             Edit Profile
                         </button>}
-                        {editProfile && <div>
+                        {editProfile && <div id='save-cancel-profile-div'>
                             <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={() => {toggleEdit(); updateProfileName(profileFirstName, profileLastName);}}> 
                                 <FontAwesomeIcon icon={["fas", "floppy-disk"]} />
                                 Save Profile

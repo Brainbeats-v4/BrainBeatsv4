@@ -111,6 +111,13 @@
     justify-content: end;
 }
 
+#save-cancel-profile-div{
+    /* background-color: red; */
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
+}
+
 #edit-profile-btn{
     background-color: white;
     width: fit-content;
