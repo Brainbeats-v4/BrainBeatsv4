@@ -197,7 +197,7 @@ const Profile = () => {
             firstName: newFName,
             lastName: newLName,
             email: user.email,
-            username: user.email,
+            username: user.username,
             bio: user.bio,
             profilePicture: user.profilePicture,
             tracks: user.tracks,
