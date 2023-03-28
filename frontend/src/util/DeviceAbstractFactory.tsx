@@ -176,11 +176,13 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         for this library can be found here: https://github.com/brainsatplay/device-decoder/. */
     public async initializeConnection() {
         this.stopFlag = false;
+        
         /* Devices['USB']['cyton] from BrainsAtPlay stores all the information needed to setup a connection using USB,
             if you are looking to init */
 
         await initDevice(Devices['USB']['cyton'],
-        {   // this pushes the data from the headband as it is received from the board into the channels array
+        {   
+            // this pushes the data from the headband as it is received from the board into the channels array
             ondecoded: (data) => {
                 this.recordInputStream(data);
             }, 
@@ -194,7 +196,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
                 if (this.debugOutput) console.log("on disconnect: ", deviceInfo)
             }
         }).then((res) => {
-            //this.device = res; // store the connected device's stream into the global variable
+            //this.device = res; 
         }).catch((err)=> {
             console.error("Forcefully halted record!");
         })
@@ -249,12 +251,6 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             console.error("Error returning midi");
             return "Error";
         }
-
-        return res;
-        // res.then((res:string) => {return res}).catch((e:any) => {return "Faled to generate midi: " + e})
-
-        // console.log(res);
-        // return "";
     }
 }
 

@@ -6,7 +6,7 @@ interface Playlist{
 };
 
 type Props = {
-    track:Track;
+    track:Track
 }
 
 export const PlaylistModal: React.FC<Props> = ({track}) => {
