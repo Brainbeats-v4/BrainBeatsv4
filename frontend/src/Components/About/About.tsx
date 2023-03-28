@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 // Importing CSS
 import './About.css'
 import bbmascot1 from '../../images/bbmascot1.png'
+import cytonBoard from '../../images/Cyton.jpg';
+
 
 // Importing Team Segments
 import Team4 from '../TeamInfo/Team4/Team4'
@@ -87,13 +89,15 @@ const About = () => {
           <h1 className='about-body-titles'>Tech Used In Production</h1>
           <div id='about-tech'>
             <div id='about-tech-image'>
-              <img id='mascot' src={bbmascot1} />
+              <img id='mascot' src={cytonBoard} />
+              <p>OpenBCI Cyton Board</p>
             </div>
             <div id='about-tech-text'>
-              <h1 className='about-tech-subtitle'>Electroencephalogram (EEG)</h1>
-              <p>BrainBeats is a Senior Design project for computer science students at the University of Central Florida. The project is sponsored by Dr. Leinecker, and has been ongoing since 2019. The premise of BrainBeats is to take the electrical waves in your brain (using an EEG device) and utilize them to generate "music".</p>
-              <h1 className='about-tech-subtitle'>How It Works</h1>
-              <p>The functionality of this platform allows you to create a script for your recording session, record your song with an EEG headset utilizing your own unique musical settings, posting your recorded songs, downloading the MIDI equivalent of your song, and creating playlists with music you enjoy. The platform allows you to connect with other users creating music with their own EEG headset, and to interact with their posts.</p>
+              <h1 className='about-tech-subtitle'>Using Electroencephalogram (EEG)</h1>
+              <p>An electroencephalogram (EEG) test measures electrical activity in the brain through electrodes consisting of small metal discs with thin wires pasted onto the scalp. The electrodes attached to the scalp detect tiny electrical charges resulting from brain cell activity. BrainBeats uses the electrical activity read from an EEG test alongside different music settings provided by the user to convert this information into music.</p>
+              <h1 className='about-tech-subtitle'>Resources Used</h1>
+              <p>Version 4 of BrainBeats took advantage of OpenBCI, an open-source brain-computer interface platform that can be used to measure and record electrical activity produced by the brain. Version 4 of BrainBeats created and tested our application throughout production using OpenBCI's Cyton board, an Arduino-compatible, 8-channel neural interface with a 32-bit processor.</p>
+              <p>More information on the OpenBCI platform and the Cyton board may be found here: <a href="https://docs.openbci.com/Cyton/CytonLanding/">https://docs.openbci.com/Cyton/CytonLanding/</a>.</p>
               <br />
             </div>
           </div>
