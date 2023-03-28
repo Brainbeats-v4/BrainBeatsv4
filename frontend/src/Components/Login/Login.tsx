@@ -40,7 +40,7 @@ const Login = () => {
                 <h1 className="login-text text-center fw-semibold" id='login-title'>Log in to BrainBeats</h1>
                 <div className="mt-3">
                     <label className="form-label form-text login-text">Email</label>
-                    <input type="text" className="form-control formGroupExampleInput" placeholder="something@example.com" onChange={event => setEmail(event.target.value)}/>
+                    <input type="text" className="form-control formGroupExampleInput" placeholder="Email@example.com" onChange={event => setEmail(event.target.value)}/>
                 </div>
                 <div className="mt-3">
                     <label className="form-label form-text login-text">Password</label>
