@@ -26,7 +26,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     // For refresing track list component on page
     const [seed, setSeed] = useState(1);
     const resetTrackComponent = () => {
-        console.log("resetTrackComponent()");
+        // console.log("resetTrackComponent()");
         setSeed(Math.random());
         setNewTrackList(PopulateTrackCards()); // need to debug. not calling checklike when opening/editing unliked track.
         // console.log("resetting seed");
@@ -201,7 +201,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
             }
         }
 
-        console.log("PopulateTrackCards()");
+        // console.log("PopulateTrackCards()");
         return gridArray;
     }
 

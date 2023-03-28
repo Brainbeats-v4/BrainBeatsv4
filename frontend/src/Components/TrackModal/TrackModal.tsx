@@ -18,10 +18,14 @@ import TrackCard from '../TrackCard/TrackCard';
 import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { time } from 'console';
+import * as Interfaces from '../../util/Interfaces';
 
 type Props = {
-  track: Track; 
+  track:Interfaces.Track; 
 }
+
+const emptyLikeArr: Interfaces.Like[] = [];
+
 
 const TrackModal: React.FC<Props> = ({track}) => {
   const navigate = useNavigate();
@@ -39,13 +43,17 @@ const TrackModal: React.FC<Props> = ({track}) => {
   const [thumbnail, setThumbnail] = useState(track.thumbnail);
 
   const [likeCount, setLikeCount] = useState(track.likeCount);
-  const [userLikeArr, setUserLikeArr] = useState(user?.like || []);
+
+  // The ternary just sets the like array to the user like array if it exists, else the empty
+  const [userLikeArr, setUserLikeArr] = useState(user ? user.like ? user.like : emptyLikeArr : emptyLikeArr);
+
   const [favorited, setFavorited] = useState(checkLike()); // change this later
 
   // Initializes favorited variable
   useEffect(() => {
     // setFavorited(checkLike()); // need to debug. not calling checklike when opening/editing unliked track.
     checkTrackOwner();
+    setFavorited(checkLike());
   }, []);
 
   // ============================= Functions for User Track =============================
@@ -54,6 +62,10 @@ const TrackModal: React.FC<Props> = ({track}) => {
     if (user != null) {
       if (user?.id == track.userID) {
         setEditVisibility(true);
+      }
+      
+      if(user.like != undefined){
+        setUserLikeArr(user.like);
       }
     }
 
@@ -198,7 +210,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
   }
 
   // Function updating thumbnail picture
-  async function updateThumbnail(track: Track) {
+  async function updateThumbnail(track:Interfaces.Track) {
     if (displayThumbnail != null)
     {
       track.thumbnail = displayThumbnail;
@@ -206,7 +218,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
   };
 
   //Function updating display thumbail picture in modal
-  async function updateDisplayThumbnail(file: File){
+  async function updateDisplayThumbnail(file:File){
     var base64result:any;
 
     /* This is returning a compressed base 64 image of <= 1024 x 1024
@@ -234,12 +246,11 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
     let favorited:boolean = false;
     
-    
+    // If no user or no user likes, they havent liked this.
     if (!user || !user.like) {
-      
-      return;
+      return false;
     }
-    
+
     // We're linearly searching here, we should try to do a lookup 
     // TODO: user.like.includes(track); // <-- expected arg: "Like"
 
@@ -301,36 +312,27 @@ const TrackModal: React.FC<Props> = ({track}) => {
       return;
     }
 
-    var newLike:Like = {
-      trackID: track.id,
-      track,
-      userID: user.id,
-      user,
-      jwt,
-    }
-
-    var currentUserLike = user.like;
-    console.log( {currentUserLike} );
-
-    // var newLikeArr: Like[] = userLikeArr;
-    // newLikeArr = newLikeArr.concat({userID: user.userId, postID: track.id, createdAt: ""});
-
-    
-    console.log("Before liking: ", {userLikeArr} );
-  
-    // We can just directly push the new like to the usersLikeArr
-    userLikeArr.push(newLike);    
-  
-    console.log("After liking: ", {userLikeArr} );
+    let newLikeArr: Array<Interfaces.Like> = userLikeArr;
+    newLikeArr.push({userID: user.id, trackID: track.id, user: user, track: track});
 
     // console.log("userLikeArr: " + userLikeArr.length);
     // console.log("newLikeArr: " + newLikeArr.length);
-    // setUserLikeArr(newLikeArr);
+    setUserLikeArr(newLikeArr);
     // console.log("new UserLikeArr length: " + userLikeArr.length);
+
+    // Payload
+    let newUserLike:Like = {
+      userID: user.id,
+      trackID: track.id,
+      track,
+      user,
+      // likeArray: newLikeArr,
+      token: jwt
+    }
 
     setFavorited(true);
 
-    sendAPI("post", "/likes/createUserLike", newLike).then((res) => {
+    sendAPI("post", "/likes/createUserLike", newUserLike).then((res) => {
       if (res.status == 201) {
         setErrMsg(track.title);
         setSuccessMsg(JSON.stringify(res.data))
@@ -341,46 +343,56 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
         incrementLike().then(newlikes => incrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
         
-
       }
       else {
         setErrMsg("Could not like post.");
         setSuccessMsg("");
       }
+    }).catch(e => {
+      console.error("Could not like post:", e);
     })
 
 
-    // // Updating user like array to have new liked track
-    // var updatedUser = {
-    //   id: user.userId,
-    //   firstName: user.firstName,
-    //   lastName: user.lastName,
-    //   email: user.email,
-    //   bio: user.bio,
-    //   token: jwt,
-    //   profilePicture: user.profilePicture,
-    //   like: userLikeArr,
-    // };
+    // Payload: Updating user like array to have new liked track
+    var updatedUser:Interfaces.User = {
+      // unchanged
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      bio: user.bio,
+      profilePicture: user.profilePicture,
+      username: user.username, 
+      tracks: user.tracks,
+      playlists: user.playlists,
+      
+      token: jwt,
+      like: userLikeArr,
+    };
 
-    // sendAPI('put', '/users/updateUser', updatedUser)
-    //       .then(res => {
-    //           console.log(res);
-    //           var updatedUser = {
-    //               userId: res.data.id,
-    //               firstName: res.data.firstName,
-    //               lastName: res.data.lastName,
-    //               email: res.data.email,
-    //               bio: res.data.bio,
-    //               profilePicture: res.data.profilePicture,
-    //               username: user.username,
-    //               like: res.data.like,
-    //           }
-    //           setUser(updatedUser);
-    //           console.log(updatedUser);
+    sendAPI('put', '/users/updateUser', updatedUser)
+          .then(res => {
+              console.log(res);
+              var updatedUser:Interfaces.User = res.data;
 
-    //       }).catch(err => {
-    //           console.log(err);
-    //       })
+              // var updatedUser:Interfaces.User = {
+              //     id: res.data.id,
+              //     firstName: res.data.firstName,
+              //     lastName: res.data.lastName,
+              //     email: res.data.email,
+              //     bio: res.data.bio,
+              //     profilePicture: res.data.profilePicture,
+              //     username: user.username,
+              //     like: res.data.like,
+              // }
+
+              setUser(updatedUser);
+              console.log(updatedUser);
+
+          }).catch(err => {
+              console.log(err);
+          })
+  
   }
 
   function decrementLike() {
@@ -406,7 +418,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
         track,
         userID: user.id,
         user,
-        jwt,
+        token: jwt,
       }
 
       // let newLikeArr: Like[] = user.like.filter((like: Like) => like.postID != track.id);  

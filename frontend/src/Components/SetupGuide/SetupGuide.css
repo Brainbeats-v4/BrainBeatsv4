@@ -1,0 +1,49 @@
+.setup {
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    /* background-color: black; */
+    height: fit-content;
+    min-width: 70vw;
+}
+
+.setupDiv {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(18, 18, 18);
+    height: 100%;
+    width: 90%;
+    flex-wrap: wrap;
+}
+
+.img {
+    height: 40vh;
+}
+
+.setupHeader {
+    width: 100%;
+}
+
+.acceptBtn{
+    width: 50%;
+    background-color: #43ABBB;
+    border-color: #43ABBB;
+    border-radius: 0px;
+    color: white;
+    height: 5vh;
+}
+.acceptBtn:hover{
+    background-color: #107888;
+    border-color: #107888;
+}
+
+.links {
+    text-decoration: none;
+    color: #43ABBB;
+}
+
+.links:hover {
+    text-decoration: underline;
+    color: #107888;
+}

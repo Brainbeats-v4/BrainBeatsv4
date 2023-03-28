@@ -154,7 +154,7 @@ export interface Like {
     
     // optional
     createdAt?: Date,
-    jwt?: any    // If we're sending this like to the backend
+    token?: any    // If we're sending this like to the backend
 }
 
 export interface User {
@@ -177,5 +177,5 @@ export interface User {
     createdAt?: string,
     resetPasswordToken?: string,
     resetPasswordExpires?: string,
-    jwt?: any,
+    token?: any,
 }
