@@ -11,20 +11,36 @@
 .setupDiv {
     display: flex;
     justify-content: center;
+    text-align: left;
     background-color: rgb(18, 18, 18);
     height: 100%;
     width: 90%;
     flex-wrap: wrap;
+    padding: 5%;
 }
 
+.positionsList{
+    padding: 2%;
+}
 .img {
-    height: 40vh;
+    height: 45vh;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 2%;
 }
 
 .setupHeader {
     width: 100%;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 2%;
 }
 
+.cyton-heading{
+    width: 100%;
+    justify-content: left;
+    text-align: left;
+}
 .acceptBtn{
     width: 50%;
     background-color: #43ABBB;
