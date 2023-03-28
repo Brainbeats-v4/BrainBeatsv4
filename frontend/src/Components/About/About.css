@@ -89,7 +89,7 @@ p{
 
 #about-bb-image{
     margin: 2%;
-    background-color: rgb(182, 182, 182);
+    /* background-color: rgb(182, 182, 182); */
     border-radius: 50%;
     padding: 10px;
     display: flex;
