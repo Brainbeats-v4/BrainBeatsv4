@@ -15,28 +15,10 @@ import '../TrackCard/TrackCard.css';
 import TrackCard from '../TrackCard/TrackCard';
 import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import * as Interfaces from '../../util/Interfaces';
 
 type Props = {
-  track: Track; 
-}
-
-interface Track {
-  createdAt: string;
-  id: string;
-  likeCount: number;
-  midi: string;
-  public: boolean;
-  thumbnail: string;
-  title: string;
-  userID: string;
-  fullname: string;
-}
-
-interface Like {
-  postID: string; 
-  userID: string;
-  createdAt: string;
-
+  track:Interfaces.Track; 
 }
 
 const TrackModal: React.FC<Props> = ({track}) => {
@@ -213,7 +195,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
   }
 
   // Function updating thumbnail picture
-  async function updateThumbnail(track: Track) {
+  async function updateThumbnail(track:Interfaces.Track) {
     if (displayThumbnail != null)
     {
       track.thumbnail = displayThumbnail;
@@ -221,7 +203,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
   };
 
   //Function updating display thumbail picture in modal
-  async function updateDisplayThumbnail(file: File){
+  async function updateDisplayThumbnail(file:File){
     var base64result:any;
 
     /* This is returning a compressed base 64 image of <= 1024 x 1024
@@ -311,10 +293,9 @@ const TrackModal: React.FC<Props> = ({track}) => {
         postID: track.id,
         token: jwt,
       }
-
       console.log(user.like);
-      let newLikeArr: Like[] = userLikeArr;
-      newLikeArr = newLikeArr.concat({userID: user.userId, postID: track.id, createdAt: ""});
+      let newLikeArr: Array<Interfaces.Like> = userLikeArr;
+      newLikeArr.push({userID: user.userId, trackID: track.id, createdAt: "", user: user, track: track});
 
       console.log("userLikeArr: " + userLikeArr.length);
       console.log("newLikeArr: " + newLikeArr.length);
@@ -351,36 +332,36 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
 
       // // Updating user like array to have new liked track
-      // var updatedUser = {
-      //   id: user.userId,
-      //   firstName: user.firstName,
-      //   lastName: user.lastName,
-      //   email: user.email,
-      //   bio: user.bio,
-      //   token: jwt,
-      //   profilePicture: user.profilePicture,
-      //   like: userLikeArr,
-      // };
+      var updatedUser = {
+        id: user.userId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        bio: user.bio,
+        token: jwt,
+        profilePicture: user.profilePicture,
+        like: userLikeArr,
+      };
 
-      // sendAPI('put', '/users/updateUser', updatedUser)
-      //       .then(res => {
-      //           console.log(res);
-      //           var updatedUser = {
-      //               userId: res.data.id,
-      //               firstName: res.data.firstName,
-      //               lastName: res.data.lastName,
-      //               email: res.data.email,
-      //               bio: res.data.bio,
-      //               profilePicture: res.data.profilePicture,
-      //               username: user.username,
-      //               like: res.data.like,
-      //           }
-      //           setUser(updatedUser);
-      //           console.log(updatedUser);
+      sendAPI('put', '/users/updateUser', updatedUser)
+            .then(res => {
+                console.log(res);
+                var updatedUser = {
+                    userId: res.data.id,
+                    firstName: res.data.firstName,
+                    lastName: res.data.lastName,
+                    email: res.data.email,
+                    bio: res.data.bio,
+                    profilePicture: res.data.profilePicture,
+                    username: user.username,
+                    like: res.data.like,
+                }
+                setUser(updatedUser);
+                console.log(updatedUser);
 
-      //       }).catch(err => {
-      //           console.log(err);
-      //       })
+            }).catch(err => {
+                console.log(err);
+            })
     }
     else {
       navigate("/login");

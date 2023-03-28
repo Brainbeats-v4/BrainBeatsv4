@@ -20,6 +20,15 @@
     width: fit-content;
 }
 
+.devBox {
+    color: white;
+}
+
+.setupGuide {
+    color: white;
+    text-align: center;
+}
+
 #record-btns-div{
     background-color:#0000004f;
     border-radius: 10px;

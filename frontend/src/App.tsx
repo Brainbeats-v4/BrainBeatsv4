@@ -13,6 +13,8 @@ import ResetPassword from './Pages/ResetPassword'
 import Verify from './Pages/Verify';
 import Script from './Pages/Script';
 import RecordTrack from './Pages/RecordTrack';
+import Setup from './Pages/Setup';
+
 // import SliceProvider from './Redux/SliceProvider';
 import { userJWT } from './JWT'
 import { useEffect, useState } from 'react';
@@ -55,6 +57,7 @@ function App() {
             <Route path='/verify' element={<Verify />} />
             <Route path='/reset-password' element={<ResetPassword />} />
             <Route path='/record' element={<RecordTrack />} />
+            <Route path='/setup' element={<Setup />} />
             {/* { */}
               {/* // isLoggedIn?  */}
               <Route path='/profile' element={<Profile />} />

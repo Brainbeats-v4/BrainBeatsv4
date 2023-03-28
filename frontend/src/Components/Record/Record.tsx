@@ -7,6 +7,7 @@ import RecordCards from '../ScriptContainer/Scripts/Cards/RecordCards';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormGroup, ToggleButton } from 'react-bootstrap';
 import isDev from '../../util/isDev';
+import { Link } from 'react-router-dom';
 
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice);
@@ -16,7 +17,7 @@ function Record() {
     const [debugOption1, setDebugOption1] = useState(false);
     const [debugOption2, setDebugOption2] = useState(false);
     const [debugOption3, setDebugOption3] = useState(false);
-
+    const [setup, setSetup] = useState(false);
     /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
     and import it. */
     const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
@@ -117,6 +118,10 @@ function Record() {
         }
     }
 
+    function showSetup() {
+        setSetup(true);
+    }
+
     return(
         <div className='container' id='record-container'>
             <h2 className='record-heading'>Recording Music</h2>
@@ -127,7 +132,7 @@ function Record() {
                 <div id='record-btns-div'>
                     
                     {/* Debug checkboxes --------(from bootstrap)----------------- */}
-                    {isDev() && <div>
+                    {isDev() && <div className="devBox">
                         <h2>Debug options</h2>
                         <div className="form-check">
                             <input className="form-check-input" type="checkbox" value="1" id="flexCheckDefault" checked={debugOption1} onClick={() => handleForm(1)}/>
@@ -148,8 +153,14 @@ function Record() {
                             </label>
                         </div>
                     </div>}
+   
                     {/* ------------------------------------- End Debug checkboxes */}
+                    <div className="setupGuide">
+                            <h2>New to BrainBeats?</h2>
+                            <p onClick={showSetup}>If you need to understand how to get started, view our setup guide <Link to="/setup" target="_blank">here.</Link><br />
+                            Otherwise, continue by hitting the record button below:</p>
 
+                    </div>
                    {!isRecording && <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={doRecording}>
                         <FontAwesomeIcon icon={["fas", "circle"]} />
                         Record
