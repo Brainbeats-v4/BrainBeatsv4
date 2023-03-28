@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Importing Team Member Images
 import brandonMrgich from '../../../images/Version4Photos/BrandonMrgich.png';
+import aribelRuiz from '../../../images/Version4Photos/AribelRuiz.jpg';
+
 const Team4 = () => {
 
     // =============================  Enter values for TEAM info here ============================== 
@@ -83,7 +85,7 @@ const Team4 = () => {
         contributions: "• Developed a rework of the original backend system" + "\n• Extended the backend as needed to ensure compatibility" +
         "\n• Assisted in creating functional components" + "\n• Assisted with modularizing/refactoring the codebase"},
 
-        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "", 
+        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: aribelRuiz, bio: "", 
         contributions: "• Developed a rework of the original frontend system" + "\n• Converted JavaScript to TypeScript" +
        "\n• Developed and implemented UI and UX designs" + "\n• Created functional components for frontend development"}
     ];
