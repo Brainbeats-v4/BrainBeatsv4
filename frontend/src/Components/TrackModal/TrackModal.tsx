@@ -312,30 +312,28 @@ const TrackModal: React.FC<Props> = ({track}) => {
       return;
     }
 
-    let newLikeArr: Array<Interfaces.Like> = userLikeArr;
-    newLikeArr.push({userID: user.id, trackID: track.id, user: user, track: track});
-
-    // console.log("userLikeArr: " + userLikeArr.length);
-    // console.log("newLikeArr: " + newLikeArr.length);
-    setUserLikeArr(newLikeArr);
-    // console.log("new UserLikeArr length: " + userLikeArr.length);
-
-    // Payload
+    // Create the new like
     let newUserLike:Like = {
       userID: user.id,
       trackID: track.id,
-      track,
-      user,
-      // likeArray: newLikeArr,
-      token: jwt
     }
 
-    setFavorited(true);
-
+    // add it to the end of the current like array, and set the state
+    let newLikeArr: Array<Interfaces.Like> = [...userLikeArr, newUserLike];    
+    setUserLikeArr(newLikeArr);
+    
+    // add jwt to newUserLike for the payload
+    newUserLike = Object.assign({token: jwt}, newUserLike);
+    
     sendAPI("post", "/likes/createUserLike", newUserLike).then((res) => {
+      
+      console.log("res: ", res.data);    
+      
+      // If success
       if (res.status == 201) {
         setErrMsg(track.title);
         setSuccessMsg(JSON.stringify(res.data))
+        setFavorited(true);
 
         // Increments local likeCount
         // setLikeCount(likeCount + 1);
@@ -347,13 +345,17 @@ const TrackModal: React.FC<Props> = ({track}) => {
       else {
         setErrMsg("Could not like post.");
         setSuccessMsg("");
+        setFavorited(false);
       }
     }).catch(e => {
       console.error("Could not like post:", e);
+      setFavorited(false);
     })
 
+    console.log("like created, updating user with new like array:");
 
-    // Payload: Updating user like array to have new liked track
+
+    // Like created, now update the user with the new like array
     var updatedUser:Interfaces.User = {
       // unchanged
       id: user.id,
@@ -372,6 +374,10 @@ const TrackModal: React.FC<Props> = ({track}) => {
 
     sendAPI('put', '/users/updateUser', updatedUser)
           .then(res => {
+            if (res.status == 201) {
+              console.error(res.statusText);
+              return;
+            }
               console.log(res);
               var updatedUser:Interfaces.User = res.data;
 
@@ -389,8 +395,8 @@ const TrackModal: React.FC<Props> = ({track}) => {
               setUser(updatedUser);
               console.log(updatedUser);
 
-          }).catch(err => {
-              console.log(err);
+          }).catch(e => {
+              console.error(e);
           })
   
   }

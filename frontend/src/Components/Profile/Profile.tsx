@@ -27,8 +27,7 @@ const Profile = () => {
 
     // user contains "userID" instead of "id"
     var id = user?.id;
-    console.log({id});
-    console.log({user})
+    console.log("User", user);
 
     const navigate = useNavigate();
 

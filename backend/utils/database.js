@@ -6,6 +6,9 @@ const bcrypt = require('bcryptjs');
 
 // Gets whether a user exists or not based on the field leading the query.
 async function getUserExists(searchVal, searchType) {
+    if (!searchType) return false;
+    if (!searchVal) return false;
+
     let result;
     switch (searchType) {
         case 'email':

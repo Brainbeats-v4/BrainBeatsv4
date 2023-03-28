@@ -106,7 +106,7 @@ export type Card = {
 }
 
 export interface Track {
-    id: string,        // Auo generated
+    id: string,        // Auto generated
     title: string,
     bpm: number,
     key: string,
@@ -116,9 +116,11 @@ export interface Track {
     likeCount: number,
     midi: string,
     thumbnail: string,
-    user: User | null,
     userID: string,
     public: boolean,
+    
+    // optional, assigned by mysql reference
+    user?: User | null,
     
     // optional
     like?: Like | null,
@@ -131,27 +133,35 @@ export interface Playlist {
     id: string,
     name: string,
     thumbnail: string,
-    user: User | undefined,
     userID: string,
-    playlistPosts: Array<PlaylistTracks> | undefined,
+    
+    // array of tables
+    playlistPosts: Array<PlaylistTracks> | null,
+    
+    // assigned by mysql reference
+    user?: User | null,
 }
 
 export interface PlaylistTracks {
     trackID: string,
-    track: Track | undefined,
     playlistID: string,
-    playlist: Playlist | undefined,
     
+    // optional, assigned by mysql reference
+    playlist: Playlist | null,
+    track: Track | null,
+
     // optional
     createdAt?: Date,
 }
 
 export interface Like {
     trackID: string,
-    track: Track,
     userID: string,
-    user: User,
     
+    // optional, assigned by mysql reference
+    user?: User | null,
+    track?: Track | null,
+
     // optional
     createdAt?: Date,
     token?: any    // If we're sending this like to the backend
@@ -166,7 +176,7 @@ export interface User {
     bio: string,
     profilePicture: string,
     
-    // references
+    // arrays of tables
     tracks: Array<Track> | null,
     playlists: Array<Playlist> | null,
     like: Array<Like> | null,
