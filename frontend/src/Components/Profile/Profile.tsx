@@ -199,7 +199,7 @@ const Profile = () => {
             tracks: user.tracks,
             playlists: user.playlists,
             like: user.like,
-            jwt,
+            token: jwt
         };
         
         console.log(updatedUser);
