@@ -30,6 +30,7 @@ library.add(faEye, faEyeSlash, faEdit, faPlay, faPause, faUser, faMusic, faList,
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <RecoilRoot>

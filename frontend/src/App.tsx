@@ -18,6 +18,7 @@ import Setup from './Pages/Setup';
 // import SliceProvider from './Redux/SliceProvider';
 import { userJWT } from './JWT'
 import { useEffect, useState } from 'react';
+import { redirect } from "react-router-dom";
 
 function App() {
   
@@ -29,24 +30,23 @@ function App() {
     const userToken = userJWT;
 	  if (userToken == undefined) {
 		  setIsLoggedIn(false);
+      return false;
 	  }
 		setIsLoggedIn(true);
+    return true;
   }
 
   useEffect(() => {
 	  let res = checkUserToken();
   }, [isLoggedIn]);
   
-  
-
-
   return (
     <div className='bg'>
       
       <Router>
         {/* <Sidebar> */}
           <Routes>
-            <Route path='/' element={<Home />} />
+            <Route path='/' element={<Home />}  />
             <Route path='/about' element={<About />} />
             <Route path='/search' element={<Search />} />
             <Route path='/track-settings' element={<Settings />} />
@@ -58,22 +58,23 @@ function App() {
             <Route path='/reset-password' element={<ResetPassword />} />
             <Route path='/record' element={<RecordTrack />} />
             <Route path='/setup' element={<Setup />} />
-            {/* { */}
-              {/* // isLoggedIn?  */}
-              <Route path='/profile' element={<Profile />} />
-              {/* // : */}
-              {/* // <Route path='/profile' element={<Navigate to='/login'/>} /> */}
-            {/* // } */}
-            {/* <Route path='/Login' element={user ? <Navigate to='/' /> : <Login />}/>
-            <Route path='/Signup' element={user ? <Home /> :<Signup />} /> */}
 
-            {/* <Route path='/Profile' element={user ? <Profile /> : <Navigate to='/Login' />} /> */}
+            <Route path='/profile' element={<Profile />} 
+              loader={() => {
+                console.error("token: ", checkUserToken);
+                // if (!checkUserToken()) {
 
-            {/* <Route path='/Record' element={<Record />} /> */}
-            {/* <Route path='/Search' element={<Search />} />
-            <Route path='/Playlist' element={<Playlists />} />
-            <Route path='/Playlist/:pid' element={<Playlist />} /> */}
-            {/* <Route path='/Forgot' element={<Forgot />} />
+                //   return redirect('/home');
+                // }
+              }} 
+              errorElement={<Home />}
+            />
+
+            
+   
+            {/*<Route path='/Playlist' element={<Playlists />} />
+            <Route path='/Playlist/:pid' element={<Playlist />} /> 
+            <Route path='/Forgot' element={<Forgot />} />
             <Route path='/Test' element={<Test />} />
             <Route path='/About' element={<AboutUs />} /> */}
           </Routes>

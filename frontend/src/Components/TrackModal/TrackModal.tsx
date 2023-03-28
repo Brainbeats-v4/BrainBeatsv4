@@ -50,7 +50,7 @@ const TrackModal: React.FC<Props> = ({track}) => {
   function checkTrackOwner() {
     
     if (user != null) {
-      if (user.userId == track.userID) {
+      if (user?.id || "" == track.userID) {
         setEditVisibility(true);
       }
     }

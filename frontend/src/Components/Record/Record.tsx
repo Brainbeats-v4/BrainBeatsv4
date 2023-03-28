@@ -91,7 +91,7 @@ function Record() {
         
         device?.stopDevice()?.then(
             (url:string) => {
-                console.log(url);
+                console.log("Midi URL from Record.tsx: ", url);
                 setMIDIURI(url);
             }
         ).catch(err => {

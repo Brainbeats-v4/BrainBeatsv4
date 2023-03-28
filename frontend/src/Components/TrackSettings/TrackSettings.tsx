@@ -222,7 +222,7 @@ const TrackSettings = () => {
                             <select className="dropdowns" id='board-dropdown' name="board-options" onChange={(e) => setDevice(e.target.value)}>
                                 <option value="cyton">Cyton Board</option>
                                 <option value="ganglion">Ganglion Board</option>
-                                {isDev() && <option value="random data">Random Data</option>}
+                                {isDev() && <option value="random data">(Dev) Random Data</option>}
                             </select>
                         </div>
                         <br></br>
