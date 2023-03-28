@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Importing Team Member Images
 import martinMcCarthy from '../../../images/Version4Photos/MartinMcCarthy.jpg';
 import brandonMrgich from '../../../images/Version4Photos/BrandonMrgich.png';
+import aidanFleming from '../../../images/Version4Photos/AidanFleming.jpg';
 import aribelRuiz from '../../../images/Version4Photos/AribelRuiz.jpg';
 
 const Team4 = () => {
@@ -82,7 +83,7 @@ const Team4 = () => {
         contributions: "• Researched neurology, music generation, and EEG" + "\n• Restructured the API" + 
         "\n• Restructured previous implementation of music generation" + "\n• Assisted with frontend functions and logic"},
 
-        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: defaultImage, bio: "", 
+        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: aidanFleming, bio: "", 
         contributions: "• Developed a rework of the original backend system" + "\n• Extended the backend as needed to ensure compatibility" +
         "\n• Assisted in creating functional components" + "\n• Assisted with modularizing/refactoring the codebase"},
 
