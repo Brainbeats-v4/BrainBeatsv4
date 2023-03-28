@@ -37,6 +37,9 @@ export const Piano = new Tone.Sampler({
     baseUrl: "https://tonejs.github.io/audio/salamander/"
 })
 
+export const NULL = new Tone.Sampler({
+    release: 10
+});
 // export const Flute = new Tone.Sampler({
 //     urls: {
 //         'A6': 'A6.mp3',

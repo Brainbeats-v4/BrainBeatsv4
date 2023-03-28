@@ -134,9 +134,9 @@ function getRandomArbitrary(min:number, max:number) {
     return Math.floor(Math.random() * (max - min) + min);
   }
   
-// First to last, -3 (Sinewave) 7(Tuba)
+// First to last, -3 (Sinewave) 8(Piano)
 export function getRandomInstrument() {
-    return getRandomArbitrary(-3, 8);
+    return getRandomArbitrary(-3, 9);
 }
 
 // Frist to last, 0 (Whole) 4 (Sixteenth)

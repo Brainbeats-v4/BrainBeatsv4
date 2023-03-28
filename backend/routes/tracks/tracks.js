@@ -243,24 +243,27 @@ router.put('/updateTrack', async (req, res) => {
         const trackExists = await getTrackExists(id, "id");
         console.log("tracksExists: " + trackExists);
 
+        // No track, return
         if (!trackExists) {
             return res.status(404).json({
                 msg: "Track not found"
             });
-        } else {
-            const updateTrack = await prisma.Track.update({
-                where: { id },
-                data: {
-                    title: title,
-                    likeCount: likeCount,
-                    midi: midi,
-                    public: public,
-                    thumbnail: thumbnail
-                }
-            });
+        } 
 
-            return res.status(200).json(updateTrack);
-      }
+        // Get the updated track
+        const updateTrack = await prisma.Track.update({
+            where: { id },
+            data: {
+                title: title,
+                likeCount: likeCount,
+                midi: midi,
+                public: public,
+                thumbnail: thumbnail
+            }
+        });
+
+        return res.status(200).json(updateTrack);
+      
     } catch (err) {
         console.log(err);
         return res.status(500).send({msg: err});

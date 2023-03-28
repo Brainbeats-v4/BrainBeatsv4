@@ -10,6 +10,8 @@ import { resizeMe } from '../../util/ImageHelperFunctions';
 import React from 'react';
 import isDev from '../../util/isDev';
 
+import trackPlayback from './trackPlayback';
+
 import { Track, Like } from '../../util/Interfaces';
 
 // Import CSS
@@ -529,6 +531,8 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
       setTrackIsPlaying(false);
     } else {
 
+      //midiBlob:Blob = 
+      trackPlayback(track.midi)
       setTrackIsPlaying(true);
     }
 
@@ -536,6 +540,8 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
 
   function stopTrack() {
     try {
+
+      setTrackIsPlaying(false);
 
     } catch (e) {
       console.error("Failed to stop midi playback: ", e);
@@ -561,13 +567,17 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
         // console.log("base64", base64result);
     })
 
-    var payload:Track = track;
     track.midi = base64result;
+    var payload = track;
+
+    payload = Object.assign({token: jwt}, payload);
+
+
 
     console.log({track});
-    return;
+    // return;
 
-    sendAPI('put', '/track/updateTrack', payload).then((res) => {
+    sendAPI('put', '/tracks/updateTrack', payload).then((res) => {
       console.log(res);
 
     }).catch(e => {

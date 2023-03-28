@@ -26,7 +26,7 @@ import { userModeState, userJWT } from '../../JWT';
     code cleaner, it starts at -3 since it is the initial value described in the Enum, adding the NULL value at the end */
 const InstrumentSettings = memo(() => {
     var instrumentArray:any[] = [];
-    for(var i = -3; i <= 7; i++) {
+    for(var i = -3; i <= 8; i++) {
         let instrument = { value: i, name: InstrumentTypes[i] }
         instrumentArray.push(instrument);
     }
@@ -379,7 +379,7 @@ const TrackSettings = () => {
                                 <br></br>
                                 <label htmlFor="instrument5-note">Instrument 5 Note Type:</label>
                                 <select className="dropdowns" name="instrument5-note" id="instrument5-notes" value={duration04} defaultValue={duration04} onChange={(e => {setDuration04(Number(e.target.value))})}>
-                                <NoteSettings />
+                                    <NoteSettings />
                                 </select>
                             </div>
                             <div className='col instrument-box'>
@@ -389,32 +389,34 @@ const TrackSettings = () => {
                                 </select>
                                 <br></br>
                                 <label htmlFor="instrument6-note">Instrument 6 Note Type:</label>
+                                
                                 <select className="dropdowns" name="instrument6-note" id="instrument6-notes" value={duration05} defaultValue={duration05} onChange={(e => {setDuration05(Number(e.target.value))})}>
-                                <NoteSettings />
+                                    <NoteSettings />
                                 </select>
                             </div>
                             <div className='col instrument-box'>
                                 <label htmlFor="instrument7">Instrument 7:</label>
+                                
                                 <select className="dropdowns" name="instrument7" id="instrument7-options" value={instrument06} defaultValue={instrument06} onChange={(e => {setInstrument06(Number(e.target.value))})}>
-                                    <InstrumentSettings />
-            
+                                    <InstrumentSettings />            
                                 </select>
+
                                 <br></br>
                                 <label htmlFor="instrument7-note">Instrument 7 Note Type:</label>
+                                
                                 <select className="dropdowns" name="instrument7-note" id="instrument7-notes" value={duration06} defaultValue={duration06} onChange={(e => {setDuration06(Number(e.target.value))})}>
-                                <NoteSettings />
+                                    <NoteSettings />
                                 </select>
                             </div>
                             <div className='col instrument-box'>
                                 <label htmlFor="instrument8">Instrument 8:</label>
                                 <select className="dropdowns" name="instrument8" id="instrument8-options" value={instrument07} defaultValue={instrument07} onChange={(e => {setInstrument07(Number(e.target.value))})}>
-                                <InstrumentSettings />
-
+                                    <InstrumentSettings />
                                 </select>
                                 <br></br>
                                 <label htmlFor="instrumeny8-note">Instrument 8 Note Type:</label>
                                 <select className="dropdowns" name="instrument8-note" id="instrument8-notes" value={duration07} defaultValue={duration07} onChange={(e => {setDuration07(Number(e.target.value))})}>
-                                <NoteSettings />
+                                    <NoteSettings />
                                 </select>
                             </div>
                             </>

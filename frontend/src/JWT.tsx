@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import {recoilPersist} from 'recoil-persist';
-import { User } from "./util/Interfaces";
+import { User, BasicUser } from "./util/Interfaces";
 
 const { persistAtom } = recoilPersist()
 
