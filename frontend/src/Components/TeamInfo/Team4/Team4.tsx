@@ -8,6 +8,7 @@ import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Importing Team Member Images
+import martinMcCarthy from '../../../images/Version4Photos/MartinMcCarthy.jpg';
 import brandonMrgich from '../../../images/Version4Photos/BrandonMrgich.png';
 import aribelRuiz from '../../../images/Version4Photos/AribelRuiz.jpg';
 
@@ -73,7 +74,7 @@ const Team4 = () => {
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: defaultImage, bio: "", 
+        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: martinMcCarthy, bio: "", 
         contributions:"• Planned meetings and accessed time management" + "\n• Ensured target goals were reached" +
         "\n• Developed a machine learning model" + "\n • Provided assistance to frontend and backend development"},
 
