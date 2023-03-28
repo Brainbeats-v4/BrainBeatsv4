@@ -23,8 +23,8 @@ export interface MusicSettings {
     octaves: number;
     numNotes: number;
     bpm: number;
-    keyGroup: string;
-    scale: string;
+    keyGroup: string; // major, minor, chromatic, etc
+    scale: string; // G, A, D, etc
     deviceSettings:CytonSettings|GanglionSettings;
 }
 
@@ -106,27 +106,25 @@ export type Card = {
 }
 
 export interface Track {
-    createdAt: string;
-    id: string;
-    likeCount: number;
-    midi: string;
-    public: boolean;
-    thumbnail: string;
-    title: string;
-    userID: string;
-    fullname: string;
-}
-
-export interface UserReduced {
-    id: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    username: string,
-    password: string,
-    bio: string,
-    verified: boolean,
-    profilePicture: string,
+    id: string,        // Auo generated
+    title: string,
+    bpm: number,
+    key: string,
+    scale: string,
+    instruments: Object | null,
+    noteTypes: Object | null,
+    likeCount: number,
+    midi: string,
+    thumbnail: string,
+    user: User | null,
+    userID: string,
+    public: boolean,
+    
+    // optional
+    like?: Like | null,
+    playlistTracks?: Array<PlaylistTracks> | null,
+    createdAt?: Date,
+    fullname?: string // Used to display a users name above a track
 }
 
 export interface Playlist {
@@ -135,15 +133,17 @@ export interface Playlist {
     thumbnail: string,
     user: User | undefined,
     userID: string,
-    playlistPosts: Array<PlaylistTrack> | undefined,
+    playlistPosts: Array<PlaylistTracks> | undefined,
 }
 
-export interface PlaylistTrack {
+export interface PlaylistTracks {
     trackID: string,
     track: Track | undefined,
     playlistID: string,
     playlist: Playlist | undefined,
-    createdAt: Date,
+    
+    // optional
+    createdAt?: Date,
 }
 
 export interface Like {
@@ -151,7 +151,10 @@ export interface Like {
     track: Track,
     userID: string,
     user: User,
-    createdAt: string,
+    
+    // optional
+    createdAt?: Date,
+    jwt?: any    // If we're sending this like to the backend
 }
 
 export interface User {
@@ -160,14 +163,19 @@ export interface User {
     lastName: string,
     email: string,
     username: string,
-    password: string,
     bio: string,
-    verified: boolean,
     profilePicture: string,
-    createdAt: string,
-    resetPasswordToken: string,
-    resetPasswordExpires: string,
-    posts: Array<Track> | undefined,
-    playlists: Array<Playlist> | undefined,
-    like: Array<Like> | undefined,
+    
+    // references
+    tracks: Array<Track> | null,
+    playlists: Array<Playlist> | null,
+    like: Array<Like> | null,
+    
+    // optional
+    verified?: boolean,
+    password?: string,
+    createdAt?: string,
+    resetPasswordToken?: string,
+    resetPasswordExpires?: string,
+    jwt?: any,
 }

@@ -4,12 +4,15 @@ import profileImage from '../../../images/blankProfile.png'
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userJWT, userModeState } from "../../JWT";
 import sendAPI from '../../SendAPI';
-import react, { useState } from 'react';
+import react, { useEffect, useState } from 'react';
 import TrackCard from '../TrackCard/TrackCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Buffer } from 'buffer';
 import buildPath from '../../util/ImagePath';
 import { encode, resize } from '../../util/ImageHelperFunctions';
+import { useNavigate } from 'react-router-dom';
+
+import { User } from '../../util/Interfaces';
 
 
 
@@ -21,8 +24,29 @@ const Profile = () => {
     const [posts, setPosts] = useState([])
     const [msg, setMsg] = useState('');
 
+
+    // user contains "userID" instead of "id"
+    var id = user?.id;
+    console.log({id});
+    console.log({user})
+
+    const navigate = useNavigate();
+
+    function kickNonUser() {
+        console.log(user);
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+    }
+
+    useEffect(() => {
+        kickNonUser();
+    }, [])
+
+
     // For displaying profile picture
-    const [displayPicture, setDisplayPicture] = useState(user!==null ? user.profilePicture: undefined);
+    const [displayPicture, setDisplayPicture] = useState(user?.profilePicture);
     if(displayPicture !== undefined) {
 
         // Logic for display image from Uint8Array 
@@ -42,8 +66,8 @@ const Profile = () => {
     const[editProfile, updateEditProfile] = react.useState(false);
     const toggleEdit = () => updateEditProfile(!editProfile);
 
-    const [profileFirstName, setProfileFirstName] = useState(user.firstName);
-    const [profileLastName, setProfileLastName] = useState(user.lastName);
+    const [profileFirstName, setProfileFirstName] = useState(user?.firstName || "");
+    const [profileLastName, setProfileLastName] = useState(user?.lastName || "");
 
     // Toggle My Tracks and Playlists display
     const[playlistsOpen, updatePlaylistsOpen] = react.useState(false);
@@ -92,6 +116,11 @@ const Profile = () => {
     // Function updating profile picture
     async function updateProfilePic(file:File) {
 
+        if (!user) {
+            console.error("You must be signed in to change your profile picture.");
+            return;
+        }
+
         var base64result:any;
         
         // Resize code
@@ -119,7 +148,7 @@ const Profile = () => {
         console.log(blobResult);
 
         var updatedUser = {
-            id: user.userId,
+            id: user?.id,
             token: jwt,
             profilePicture: base64result
         };
@@ -128,12 +157,20 @@ const Profile = () => {
             .then(res => {
                 setDisplayPicture(base64result);
                 console.log(res);
-                var updatedUser = {
-                    userId: res.data.updateUser.id,
-                    bio: res.data.updateUser.bio,
+                var updatedUser:User = {
+                    id: res.data.updateUser.id,
                     firstName: res.data.updateUser.firstName,
                     lastName: res.data.updateUser.lastName,
-                    profilePicture: res.data.updateUser.profilePicture
+                    email: res.data.updateUser.email,
+                    bio: res.data.updateUser.bio,
+                    profilePicture: res.data.updateUser.profilePicture,
+                    
+                    // Unchanged
+                    tracks: user.tracks,
+                    username: user.username,
+                    playlists: user.playlists,
+                    like: user.like,
+
                 }
                 setUser(updatedUser);
             }).catch(err => {
@@ -142,32 +179,33 @@ const Profile = () => {
     };
 
     //  // Function updating profile picture
-    async function updateProfileName(newFName: String, newLName: String) {
+    async function updateProfileName(newFName: string, newLName: string) {
 
-        console.log(user.userId);
+        if (!user) {
+            console.error("You must be signed in to change your profile picture.");
+            return;
+        }
 
-        var updatedUser = {
-            id: user.userId,
+        console.log(user.id);
+
+        var updatedUser:User = {
+            id: user.id,
             firstName: newFName,
             lastName: newLName,
             email: user.email,
+            username: user.email,
             bio: user.bio,
-            token: jwt,
-            profilePicture: user.profilePicture
+            profilePicture: user.profilePicture,
+            tracks: user.tracks,
+            playlists: user.playlists,
+            like: user.like,
+            jwt,
         };
+        
         console.log(updatedUser);
         sendAPI('put', '/users/updateUser', updatedUser)
             .then(res => {
                 console.log(res);
-                var updatedUser = {
-                    userId: res.data.id,
-                    firstName: res.data.firstName,
-                    lastName: res.data.lastName,
-                    email: res.data.email,
-                    bio: res.data.bio,
-                    profilePicture: res.data.profilePicture,
-                    username: user.username
-                }
                 setUser(updatedUser);
                 console.log(updatedUser);
 
@@ -206,11 +244,11 @@ const Profile = () => {
                     </div>
                     <div id='user-info-div'>
                         <div id='user-profile-name-div'>
-                            {!editProfile && <h1 id='profile-name'>{user.firstName} {user.lastName}</h1>}
-                            {editProfile && <input type="text" id='user-firstName' defaultValue={user.firstName} onChange={(e) => setProfileFirstName(e.target.value)}></input>}
-                            {editProfile && <input type="text" id='user-lastName' defaultValue={user.lastName} onChange={(e) => setProfileLastName(e.target.value)}></input>}
+                            {!editProfile && <h1 id='profile-name'>{user?.firstName} {user?.lastName}</h1>}
+                            {editProfile && <input type="text" id='user-firstName' defaultValue={user?.firstName} onChange={(e) => setProfileFirstName(e.target.value)}></input>}
+                            {editProfile && <input type="text" id='user-lastName' defaultValue={user?.lastName} onChange={(e) => setProfileLastName(e.target.value)}></input>}
                         </div>
-                        <h5 id='user-name'>@ {user.username}</h5>
+                        <h5 id='user-name'>@ {user?.username}</h5>
                     </div>
                 </div>
 
@@ -256,7 +294,7 @@ const Profile = () => {
             <div id='profile-bottom-container' style={{display: playlistsOpen? "none" : "block"}}>
                 <h1>My Tracks</h1>
                 <hr></hr>
-                <TrackCard cardType={'Profile'} input={user.userId} />
+                {user && <TrackCard cardType={'Profile'} input={user.id} />}
                 {/* <div>
                     <ul>
                         {
@@ -275,7 +313,7 @@ const Profile = () => {
             <div id='profile-bottom-container' style={{display: playlistsOpen? "block" : "none"}}>
                 <h1>My Playlist</h1>
                 <hr></hr>
-                {/* <TrackCard cardType={'Profile'} input={user.userId} /> */}
+                {/* <TrackCard cardType={'Profile'} input={user?.userId} /> */}
                 {/* <div>
                     <ul>
                         {

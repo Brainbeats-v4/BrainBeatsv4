@@ -10,7 +10,7 @@ const { getUserExists, getPostExists, getLikeExists } = require("../../utils/dat
 // Create a user like
 router.post('/createUserLike', async (req, res) => {
     try {
-        const { userID, postID, likeArray, token } = req.body;
+        const { trackID, track, userID, user, token } = req.body;
 
         const decoded = verifyJWT(token);
 

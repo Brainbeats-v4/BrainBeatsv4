@@ -104,7 +104,7 @@ router.post('/loginUser', async (req, res) => {
                     username: userExists.username,
                     bio: userExists.bio,
                     profilePicture: userExists.profilePicture,
-                    userId: userExists.id,
+                    id: userExists.id,
                     like: userExists.like
                 },
                 token: token
