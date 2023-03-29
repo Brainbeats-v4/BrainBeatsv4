@@ -95,7 +95,7 @@ router.get('/getPlaylistsByPostID', async (req, res) => {
     try {
         const postID = req.query.postID;
 
-        const playlists = await prisma.PlaylistPost.findMany({
+        const playlists = await prisma.PlaylistTrack.findMany({
             where: { postID: postID },
             select: { playlistID: true },
             distinct: ['playlistID']
@@ -125,7 +125,7 @@ router.get('/getPostsByPlaylistID', async (req, res) => {
                 msg: "Playlist does not exist."
             });
         } else {
-            const posts = await prisma.PlaylistPost.findMany({
+            const posts = await prisma.PlaylistTrack.findMany({
                 where: { playlistID: req.query.id },
                 select: { post: true }
             });
@@ -190,7 +190,7 @@ router.post('/addPostToPlaylist', async (req, res) => {
                 msg: "Post does not exist."
             });
         } else {
-            const newPost = await prisma.PlaylistPost.create({
+            const newPost = await prisma.PlaylistTrack.create({
                 data: {
                     postID: postID,
                     playlistID: playlistID
@@ -218,7 +218,7 @@ router.delete('/removePostFromPlaylist', async (req, res) => {
             });
         }
 
-        const removePost = await prisma.PlaylistPost.delete({
+        const removePost = await prisma.PlaylistTrack.delete({
             where: {
                 postID_playlistID: {
                     postID: postID, 

@@ -104,8 +104,10 @@ router.post('/loginUser', async (req, res) => {
                     username: userExists.username,
                     bio: userExists.bio,
                     profilePicture: userExists.profilePicture,
+                    tracks: userExists.tracks,
+                    playlists: userExists.playlists,
                     id: userExists.id,
-                    like: userExists.like
+                    likes: userExists.likes
                 },
                 token: token
             }
@@ -164,17 +166,26 @@ router.get('/getUserByUsername', async (req, res) => {
 // Get user by user ID
 router.get('/getUserByID', async (req, res) => {
     try {
-        const userExists = await getUserExists(req.query.id, "id");
+        const userID = req.query.userID;
+        const userExists = await getUserExists(userID, "id");
 
         if (!userExists) {
             return res.status(400).json({
                 msg: "User does not exist"
             });
         }
-        res.json(userExists);
+        else {
+            const getUser = await prisma.User.findUnique({
+                where: {
+                  id: userID,
+                },
+            });
+            console.log("userExists", userExists);
+            return res.status(200).json(userExists);
+        } 
     } catch (err) {
         console.log(err);
-        res.status(500).send({ msg: err });
+        res.status(500).send({msg:err});
     }
 });
 
@@ -231,7 +242,7 @@ router.put('/updateUser', async (req, res) => {
                     email: email,
                     bio: bio,
                     tracks: tracks,
-                    like: like
+                    likes: like
                 }
             });
             res.status(200).send(updateUser);

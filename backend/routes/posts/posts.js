@@ -26,7 +26,7 @@ router.post('/createPost', async (req, res) => {
             });
         } else {
             // Create a single record
-            const newPost = await prisma.Post.create({
+            const newPost = await prisma.Track.create({
                 data: {
                     user: {
                         connect: {
@@ -58,7 +58,7 @@ router.get('/getUserPostsByUsername', async (req, res) => {
     try {
         const username = req.query.username;
         if (username === "") {
-            const allPosts = await prisma.Post.findMany({
+            const allPosts = await prisma.Track.findMany({
                 include: {user : true}
             });
 
@@ -74,7 +74,7 @@ router.get('/getUserPostsByUsername', async (req, res) => {
             });
         } else {
             // Find the records
-            const userPosts = await prisma.Post.findMany({
+            const userPosts = await prisma.Track.findMany({
                 where: { userID: userExists.id },
                 include: {user: true}
             });
@@ -98,7 +98,7 @@ router.get('/getPostsByTitle', async (req, res) => {
     try {
         const title = req.query.title;
         if (title === "") {
-            const allPosts = await prisma.Post.findMany({
+            const allPosts = await prisma.Track.findMany({
                 include: {user : true}
             });
 
@@ -107,7 +107,7 @@ router.get('/getPostsByTitle', async (req, res) => {
         }
         
         // Find the records
-        const posts = await prisma.Post.findMany({
+        const posts = await prisma.Track.findMany({
             where: { title: 
                 {
                     contains: title 
@@ -142,7 +142,7 @@ router.get('/getUserPostsByID', async (req, res) => {
                 msg: "User not found"
             });
         } else {
-            const userPosts = await prisma.Post.findMany({
+            const userPosts = await prisma.Track.findMany({
                 where: { userID: req.query.userID },
                 include: {user: true}
             });
@@ -164,7 +164,7 @@ router.get('/getUserPostsByID', async (req, res) => {
 // Get all posts
 router.get('/getAllPosts', async (req, res) => {
     try {
-        const posts = await prisma.Post.findMany({
+        const posts = await prisma.Track.findMany({
             include: {user: true}
         });
 
@@ -187,7 +187,7 @@ router.delete('/deletePost', async (req, res) => {
                 });
         }
 
-        await prisma.Post.delete({
+        await prisma.Track.delete({
             where: { id: req.body.id }
         });
 
@@ -200,7 +200,7 @@ router.delete('/deletePost', async (req, res) => {
 
 router.get('/getPublicPopularPosts', async(req, res) => {
     try {
-        const posts = await prisma.Post.findMany({
+        const posts = await prisma.Track.findMany({
             where: {
             likeCount: {
                 gte: 10,
@@ -241,13 +241,14 @@ router.put('/updatePost', async (req, res) => {
 
         // Check if the id already exists in db
         const postExists = await getPostExists(id, "id");
+        console.log("postsExists: " + postExists);
 
         if (!postExists) {
             return res.status(404).json({
                 msg: "Post not found"
             });
         } else {
-            const updatePost = await prisma.Post.update({
+            const updatePost = await prisma.Track.update({
                 where: { id },
                 data: {
                     title: title,

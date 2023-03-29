@@ -23,7 +23,9 @@ async function getUserExists(searchVal, searchType) {
                     bio: true,
                     profilePicture: true,
                     id: true,
-                    like: true
+                    likes: true,
+                    playlists: true,
+                    tracks: true,
                 }
             });
             break;
@@ -59,7 +61,7 @@ async function getPostExists(searchVal, searchType) {
     let result;
     switch (searchType) {
         case 'id':
-            result = await prisma.Post.findUnique({
+            result = await prisma.Track.findUnique({
                 where: { id: searchVal }
             });
 

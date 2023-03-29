@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { Track } from '../../util/Interfaces';
 import { emptyTrack } from '../../util/Constants';
+import { useRecoilState } from 'recoil';
+import { userModeState } from '../../JWT';
 
 type Props = {
     cardType:string;
@@ -22,6 +24,8 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
     const [trackList, setTrackList] = useState<Track[]>([]);
     const [newTrackList, setNewTrackList] = useState<any[]>([]);
+
+
 
     // For refresing track list component on page
     const [seed, setSeed] = useState(1);
@@ -59,6 +63,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
 
         // hit api for 'numTracks' tracks
         var objArray:Track[] = [];
+
         await sendAPI('get', '/posts/getPublicPopularPosts')
         .then((res) => {
                 for(var i = 0; i < res.data.length; i++) {
@@ -67,6 +72,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                     // Here the track is unchanged so just push it
                     // No need to do for each entry
                     var currentTrack:Track = res.data[i];
+                    currentTrack.fullname = res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
                     objArray.push(currentTrack);
 
                     // var currentTrack:Track = {
@@ -138,37 +144,51 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
 
     async function getProfileTracks() {
         var objArray:Track[] = [];
-        console.log(input);
-        var user = {userID: input};
 
-        console.log({user});
-        await sendAPI('get', '/posts/getUserPostsByID', user)
-        .then(res => {
-            for(var i = 0; i < res.data.length; i++) {
-                
-                var currentTrack:Track = res.data[i];
-                var fullname:string =  res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
-                currentTrack = Object.assign({fullname: fullname}, currentTrack);
+        var currentUser = {userID: input};
+        // console.log({currentUser});
 
-                // var currentTrack:Track = {
-                //     createdAt: res.data[i].createdAt,
-                //     id: res.data[i].id,
-                //     likeCount: res.data[i].likeCount,
-                //     midi: res.data[i].midi,
-                //     public: res.data[i].public,
-                //     thumbnail: res.data[i].thumbnail,
-                //     title: res.data[i].title,
-                //     userID: res.data[i].userID,
-                //     fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName,
-                // }
+        // Calling getUserByID to check if user has tracks
+        // var userTracks: any[] = [];
+        // await sendAPI('get', '/users/getUserByID', currentUser)
+        // .then(res => {
+        //     userTracks = res.data.tracks;
+        //     console.log("userTracks: " + res.data.tracks);
+        // })
 
-                objArray.push(currentTrack);
-            }
-            setTrackList(objArray);
-            setTracksPulled(true)
-        }).catch(e => {
-            console.error("Failed to pull profile tracks: ", e);
-        })
+        // if (userTracks == undefined){
+            await sendAPI('get', '/posts/getUserPostsByID', currentUser)
+                .then(res => {
+                    for(var i = 0; i < res.data.length; i++) {
+                        
+                        var currentTrack:Track = res.data[i];
+                        var fullname:string =  res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
+                        currentTrack = Object.assign({fullname: fullname}, currentTrack);
+
+                        // var currentTrack:Track = {
+                        //     createdAt: res.data[i].createdAt,
+                        //     id: res.data[i].id,
+                        //     likeCount: res.data[i].likeCount,
+                        //     midi: res.data[i].midi,
+                        //     public: res.data[i].public,
+                        //     thumbnail: res.data[i].thumbnail,
+                        //     title: res.data[i].title,
+                        //     userID: res.data[i].userID,
+                        //     fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName,
+                        // }
+
+                        objArray.push(currentTrack);
+                    }
+                    setTrackList(objArray);
+                    setTracksPulled(true)
+                }).catch(e => {
+                    console.error("Failed to pull profile tracks: ", e);
+            })
+        // }
+        // else {
+        //     setTrackList(objArray);
+        //     setTracksPulled(true)
+        // }
     }
     
     function PopulateTrackCards() {
