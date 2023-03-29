@@ -21,7 +21,7 @@ import { Card, Modal, Dropdown, Button } from "react-bootstrap";
 import "./Search.css";
 import { useRecoilValue } from "recoil";
 
-import { userJWT, userModeState } from "../context/GlobalState";
+import { userJWT, userModeState } from "../../JWT";
 import sendAPI from "../../SendAPI";
 import TrackCard from "../TrackCard/TrackCard";
 import { render } from "@testing-library/react";
@@ -108,15 +108,17 @@ function searchFuntion() {
   }
 
   function createPlaylist() {
-    const dataBody = {
-      name: playListTitle,
-      userID: user.id,
-      token: jwt,
-      thumbnail: thumbnail,
-    };
-    sendAPI("post", "/playlists/createPlaylist", dataBody).then((res) => {
-      setMessage("Playlist Created");
-    });
+      if(user) {
+        const dataBody = {
+        name: playListTitle,
+        userID: user.id,
+        token: jwt,
+        thumbnail: thumbnail,
+      };
+      sendAPI("post", "/playlists/createPlaylist", dataBody).then((res) => {
+        setMessage("Playlist Created");
+      });
+    }
   }
 
   function addToPlaylist(prop: any) {
@@ -155,34 +157,38 @@ function searchFuntion() {
   };
   
   const onLike = useCallback((post: any) => {
-    let bodyData = {
+    if(user) {
+      let bodyData = {
         userID: user.id,
         postID: post,
         token: jwt,
+      }
+      sendAPI('post', '/likes/createUserLike', bodyData)
+      .then((res) => {
+          setLiked((l: any[]) => [... l,res.data])
+      })
+      .catch((err) => {
+          console.log(err.data)
+      })
     }
-    sendAPI('post', '/likes/createUserLike', bodyData)
-    .then((res) => {
-        setLiked((l: any[]) => [... l,res.data])
-    })
-    .catch((err) => {
-        console.log(err.data)
-    })
   },[])
 
 
 
   const onRemove = useCallback((post: any) => {
-      let bodyData = {
+      if(user) {
+        let bodyData = {
           userID: user.id,
           postID: post,
           token: jwt,
+        }
+        sendAPI('delete', '/likes/removeUserLike', bodyData)
+        .then((res) => {
+            setLiked((l: any[]) => l.filter((p) => p.postID !== post))})
+        .catch((err) => {
+            console.log(err.data)
+        })
       }
-      sendAPI('delete', '/likes/removeUserLike', bodyData)
-      .then((res) => {
-          setLiked((l: any[]) => l.filter((p) => p.postID !== post))})
-      .catch((err) => {
-          console.log(err.data)
-      })
 
   },[])
 
