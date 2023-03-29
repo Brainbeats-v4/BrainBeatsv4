@@ -17,6 +17,30 @@
     height: 100%
 }
 
+.searchbar-div{
+    color: white;
+}
+#image-modal-title{
+    color: white;
+}
+
+#searchTitle{
+    color: white
+}
+
+#search-image-btn{
+    background-color: #43ABBB;
+    border-color: #43ABBB;
+    border-radius: 5px;
+}
+
+#search-image-btn:hover{
+    background-color: #00a1bac1;
+    border-color: #318a97;
+    text-decoration: underline;
+}
+
+
 .search-image-list{
     display: flex;
     flex-direction: row;

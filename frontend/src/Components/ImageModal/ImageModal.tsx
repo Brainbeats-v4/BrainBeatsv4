@@ -73,7 +73,7 @@ const ImageModal:React.FC = (/*setImageURL:(imageURL: string) => void*/) => {
                 aria-label="Search"
                 onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button type="button" className="btn btn-secondary" onClick={()=>search()}>Search</button>
+                <button type="button" className="btn btn-secondary" id='search-image-btn' onClick={()=>search()}>Search</button>
               </div>
             </div>            
           </Modal.Body>
