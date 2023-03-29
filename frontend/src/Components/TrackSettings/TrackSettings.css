@@ -135,6 +135,7 @@
     min-width: fit-content;
     display: flex;
     justify-content: center;
+    padding-bottom: 4.5%;
 }
 #settings-container1, #settings-container2 {
     min-width: 100%;
