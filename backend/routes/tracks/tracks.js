@@ -135,9 +135,8 @@ router.get('/getTracksByTitle', async (req, res) => {
 router.get('/getUserTracksByID', async (req, res) => {
     try {
         const userID = req.query.userID;
-
-        console.log("Requested id: ", userID);
         const userExists = await getUserExists(userID, "id");
+        
         if (!userExists) {
             return res.status(404).json({
                 msg: "User not found"

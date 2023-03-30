@@ -254,10 +254,16 @@ const Profile = () => {
                             <FontAwesomeIcon icon={["fas", "edit"]} />
                             Edit Profile
                         </button>}
-                        {editProfile && <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={() => {toggleEdit(); updateProfileName(profileFirstName, profileLastName);}}> 
-                            <FontAwesomeIcon icon={["fas", "floppy-disk"]} />
-                            Save Profile
-                        </button>}
+                        {editProfile && <div>
+                            <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={() => {toggleEdit(); updateProfileName(profileFirstName, profileLastName);}}> 
+                                <FontAwesomeIcon icon={["fas", "floppy-disk"]} />
+                                Save Profile
+                            </button>
+                            <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={() => {toggleEdit();}}> 
+                                <FontAwesomeIcon icon={["fas", "floppy-disk"]} />
+                                Cancel
+                            </button>
+                        </div>}
                     </div>
                     <div id='user-info-div'>
                         <div id='user-profile-name-div'>
