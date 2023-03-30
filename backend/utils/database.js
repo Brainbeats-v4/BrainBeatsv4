@@ -88,11 +88,11 @@ async function getPlaylistExists(searchVal, searchType) {
     return result;
 }
 
-async function getLikeExists(postID, userID) {
+async function getLikeExists(trackID, userID) {
     let result = await prisma.Like.findUnique({
         where: {
-            postID_userID:{
-                postID: postID,
+            trackID_userID:{
+                trackID: trackID,
                 userID: userID
             }
         }

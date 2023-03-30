@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const { user, post } = new PrismaClient();
 // const { JSON } = require("express");
 const { getJWT, verifyJWT } = require("../../utils/jwt");
-const { getUserExists, getPostExists, getLikeExists } = require("../../utils/database");
+const { getUserExists, getTrackExists, getLikeExists } = require("../../utils/database");
 
 // Create a user like
 router.post('/createUserLike', async (req, res) => {
@@ -22,18 +22,18 @@ router.post('/createUserLike', async (req, res) => {
 
         const userExists = await getUserExists(userID, "id");
 
-        const postExists = await getPostExists(trackID, "id");
+        const trackExists = await getTrackExists(trackID, "id");
 
         if (!userExists) {
             return res.status(404).json({
                 msg: "User not found"
             });
-        } else if (!postExists) { 
+        } else if (!trackExists) { 
             return res.status(404).json({
                 msg: "Post not found"
             });
         } else {
-            const likeExists = await getLikeExists(postID, userID);
+            const likeExists = await getLikeExists(trackID, userID);
 
             if (likeExists) {
                 return res.status(409).json({
@@ -43,13 +43,13 @@ router.post('/createUserLike', async (req, res) => {
 
             // Create a like
             const newLike = await prisma.Like.create({
-                data: { userID, postID }
+                data: { userID, trackID }
             });
 
-            const updatePost = await prisma.Post.update({
-                where: { id: postID },
+            const updatePost = await prisma.Track.update({
+                where: { id: trackID },
                 data: {
-                    likeCount: postExists.likeCount + 1
+                    likeCount: trackExists.likeCount + 1
                 }
             });
 
@@ -73,7 +73,7 @@ router.post('/createUserLike', async (req, res) => {
 router.delete('/removeUserLike', async (req, res) => { 
     try {
 
-        const { userID, postID, token } = req.body;
+        const { userID, trackID, token } = req.body;
 
         const decoded = verifyJWT(token);
 
@@ -85,21 +85,21 @@ router.delete('/removeUserLike', async (req, res) => {
 
         const userExists = await getUserExists(userID, "id");
 
-        const postExists = await getPostExists(postID, "id");
+        const trackExists = await getTrackExists(trackID, "id");
 
         if (!userExists) {
             return res.status(404).json({
                 msg: "User not found"
             });
-        } else if (!postExists) { 
+        } else if (!trackExists) { 
             return res.status(404).json({
                 msg: "Post not found"
             });
         } else {
             const deleteLike = await prisma.Like.delete({
                 where: { 
-                    postID_userID: {
-                        postID: postID,
+                    trackID_userID: {
+                        trackID: trackID,
                         userID: userID,
                     },
                 }
@@ -111,10 +111,10 @@ router.delete('/removeUserLike', async (req, res) => {
                 });
             }
     
-            const updatePost = await prisma.Post.update({
-                where: { id: postID },
+            const updatePost = await prisma.Track.update({
+                where: { id: trackID },
                 data: {
-                    likeCount: postExists.likeCount - 1
+                    likeCount: trackExists.likeCount - 1
                 }
             });
     
@@ -131,8 +131,8 @@ router.get('/getUserLike', async (req, res) => {
     try {
         const likeStatus = await prisma.Like.findUnique({
             where: {
-                postID_userID: {
-                    postID: req.query.postID,
+                trackID_userID: {
+                    trackID: req.query.trackID,
                     userID: req.query.userID,
                 },
             }
