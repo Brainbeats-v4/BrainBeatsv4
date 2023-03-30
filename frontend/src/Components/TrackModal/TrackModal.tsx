@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import buildPath from '../../util/ImagePath';
 import { resizeMe } from '../../util/ImageHelperFunctions';
 import React from 'react';
+import isDev from '../../util/isDev';
 
 import { Track, Like } from '../../util/Interfaces';
 
@@ -31,11 +32,12 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
   const navigate = useNavigate();
   const jwt:any = useRecoilValue(userJWT);
   const [user, setUser] = useRecoilState(userModeState);
-
+  
   const [editing, setEditing] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   
+  const [trackIsPlaying, setTrackIsPlaying] = useState(false);
   const [trackName, setTrackName] = useState(track.title);
   const [visibility, setVisibility] = useState(track.public);
   const [editVisibility, setEditVisibility] = useState(false);
@@ -164,8 +166,6 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
       var decodedThumbnailPic = Buffer.from(encodedThumbnailPic, 'base64').toString('ascii');
       setDisplayThumbnail(buildPath(decodedThumbnailPic));
     } 
-
-
   }
 
   // Returns the compressed Base64 image
@@ -502,6 +502,79 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     track.likeCount = likes;
   }
 
+  useEffect(() => { 
+    if (trackIsPlaying) {
+      
+      // If we set the boolean, meaning we're gauranteed to have a base64 string,
+      // await the event to play the midi
+      // We must pass it the musicGenerationSettings for this current track
+      // await () {
+
+      // }
+
+    }
+
+  }, [trackIsPlaying]);
+
+  function playTrack() {
+    
+    var midiToPlay:string = track.midi;
+    var msg:string;
+
+    if (midiToPlay === "") {
+      msg = track.title + " contains no midi!";
+      
+      console.error(msg);
+      setErrMsg(msg);
+      setTrackIsPlaying(false);
+    } else {
+
+      setTrackIsPlaying(true);
+    }
+
+  }
+
+  function stopTrack() {
+    try {
+
+    } catch (e) {
+      console.error("Failed to stop midi playback: ", e);
+      
+      // Temporary solution, just to refresh the page which *should* halt the midi playback
+      navigate('home');
+    }
+  }
+
+
+  // ! Just for testing playback, will be removed !
+  async function uploadMidi(file:File){
+    var base64result:any;
+
+    /* This is returning a compressed base 64 image of <= 1024 x 1024
+    * However it will not correctly display when I attempt to attach it to the model
+    * 
+    * var compressedBase64:any = compressImage(file); 
+    */
+
+    await convertToBase64(file).then(res => {
+        base64result = res;
+        // console.log("base64", base64result);
+    })
+
+    var payload:Track = track;
+    track.midi = base64result;
+
+    console.log({track});
+    return;
+
+    sendAPI('put', '/track/updateTrack', payload).then((res) => {
+      console.log(res);
+
+    }).catch(e => {
+      console.log(e);
+    })
+  }
+
   return (
     <>
       <div>
@@ -531,10 +604,20 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
               {editing && <input type="text" id='track-title-text' defaultValue={trackName} onChange={(e) => setTrackName(e.target.value)}></input>}
               
               <h6 id="track-author-text">By {track.fullname} </h6>
-              <button type="button" className="btn btn-primary" id='play-btn'>
+
+              {!trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={playTrack}>
                 <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "play"]} />
                 <h3>Play</h3>
-              </button>
+              </button>}
+              {trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={stopTrack}>
+                <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "play"]} />
+                <h3>Stop</h3>
+              </button>}
+
+              {isDev() && <h5>Upload midi<input id="track-cover-upload"  onChange={event=> {if(!event.target.files) {return} else {uploadMidi(event.target.files[0])}}} name="midi" type="file" accept='.MID, .MIDI'/></h5>}
+
+              <h5>{errMsg}</h5>
+
               <h5 id='favorites-text'>
                 <FontAwesomeIcon className='modal-track-icons' icon={faHeart} />
                 {likeCount} Favorites
@@ -578,8 +661,6 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "edit"]} />
                 Edit
               </button>}
-              {/* {successMsg}
-              {errMsg} */}
             </div>
           </Modal.Footer>
         </div>

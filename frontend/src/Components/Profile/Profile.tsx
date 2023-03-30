@@ -182,7 +182,7 @@ const Profile = () => {
             })
     };
 
-    //  // Function updating profile picture
+
     async function updateProfileName(newFName: string, newLName: string) {
 
         if (!user) {
@@ -190,14 +190,13 @@ const Profile = () => {
             return;
         }
 
-        console.log(user.id);
-
+        // To set recoil user value
         var updatedUser:User = {
             id: user.id,
             firstName: newFName,
             lastName: newLName,
             email: user.email,
-            username: user.email,
+            username: user.username,
             bio: user.bio,
             profilePicture: user.profilePicture,
             tracks: user.tracks,
@@ -205,13 +204,21 @@ const Profile = () => {
             like: user.like,
             token: jwt
         };
+
+        // We're only changing these
+        var payload = {
+            id: user.id,
+            firstName: newFName,
+            lastName: newLName,
+            token: jwt
+        }
         
-        console.log(updatedUser);
-        sendAPI('put', '/users/updateUser', updatedUser)
-            .then(res => {
-                console.log(res);
+        sendAPI('put', '/users/updateUser', payload)
+            .then(({status}) => {
+                console.log(status);
+                
                 setUser(updatedUser);
-                console.log(updatedUser);
+                console.log(user);
 
             }).catch(err => {
                 console.log(err);

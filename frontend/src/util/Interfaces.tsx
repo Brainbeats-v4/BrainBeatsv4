@@ -177,10 +177,10 @@ export interface User {
     bio: string,
     profilePicture: string,
     
-    // arrays of tables
-    tracks: Array<Track> | null,
-    playlists: Array<Playlist> | null,
-    like: Array<Like> | null,
+    // arrays of tables, optional
+    tracks?: Array<Track> | null,
+    playlists?: Array<Playlist> | null,
+    like?: Array<Like> | null,
     
     // optional
     verified?: boolean,
