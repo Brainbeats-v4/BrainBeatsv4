@@ -168,6 +168,18 @@ export interface Like {
     token?: any    // If we're sending this like to the backend
 }
 
+
+export interface BasicUser {
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    username: string,
+    bio: string,
+    profilePicture: string,
+    token?: any,
+}
+
 export interface User {
     id: string,
     firstName: string,
