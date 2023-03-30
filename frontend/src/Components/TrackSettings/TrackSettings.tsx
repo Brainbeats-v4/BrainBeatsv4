@@ -2,7 +2,7 @@ import react, { memo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InstrumentTypes, KeyGroups, NoteDurations, Keys } from '../../util/Enums';
 import { KEY_SIGNATURES } from '../../util/Constants';
-import { MusicSettings } from '../../util/Interfaces';
+import { MusicSettings, Track } from '../../util/Interfaces';
 import * as rand from '../../util/MusicGeneration/MusicHelperFunctions'
 
 import { useDispatch } from 'react-redux';
@@ -224,26 +224,34 @@ const TrackSettings = () => {
     function uploadPost() {
         console.log(likes);
 
-        if (user != null) {
-            const info = {
-                userID: user.id,
-                title: postTitle,
-                bpm: 0,
-                key: '',
-                midi: '',
-                instruments: {},
-                noteTypes: {},
-                token: jwt,
-                thumbnail: thumbnail,
-                likeCount: likes
-            }
-            sendAPI('post', '/posts/createPost', info)
-                .then(res => {
-                    console.log(res);
-                }).catch(err => {
-                    console.log(err);
-                })
+        if (!user) {
+            console.error("You must be logged in to create a post");
+            navigate('/login');
+            return;
         }
+
+        const info:Track = {
+            id: "",
+            userID: user.id,
+            title: postTitle,
+            bpm: 120,
+            key: "major",
+            scale: "A",
+            midi: "",
+            instruments: {},
+            noteTypes: {},
+            token: jwt,
+            thumbnail: thumbnail,
+            public: true,
+            likeCount: likes
+        }
+        sendAPI('post', '/posts/createPost', info)
+            .then(res => {
+                console.log(res);
+            }).catch(err => {
+                console.log(err);
+            })
+        
     }
 
     return (
@@ -463,7 +471,7 @@ const TrackSettings = () => {
             </div>
 
             {/* Shortcut for uloading posts */}
-            <div>
+           {isDev() && <div>
                 <div>
                     <label className="form-label signup-text">Title</label>
                     <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setPostTitle(event.target.value)}/>
@@ -477,7 +485,7 @@ const TrackSettings = () => {
                     <input type="number" className="form-control" id="formGroupExampleInput" placeholder="Title" onChange={event => setLikes(event.target.valueAsNumber)}/>
                 </div>
                 <button onClick={() => uploadPost()}>Click me</button>
-            </div>
+            </div>}
         </div>
     
         );

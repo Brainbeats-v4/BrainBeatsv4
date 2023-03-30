@@ -190,13 +190,13 @@ paths:
 
 
 
-  # ***** User Posts ***** #
+  # ***** User Tracks ***** #
 
-  # Returns an array of all user posts
-    /api/posts/getAllPosts:
+  # Returns an array of all user tracks
+    /api/tracks/getAllTracks:
       get:
         tags:
-          - Posts
+          - Tracks
         summary: Returns a list of all users.
         responses:
           200:    # status code
@@ -211,39 +211,39 @@ paths:
                   name:
                     type: string
 
-  # Create user posts
-    /api/posts/createPost:
+  # Create user tracks
+    /api/tracks/createTrack:
       post:
         tags:
-          - Posts
-        summary: Create post at user profile
-        operationId: createPost
-        description: Create a post for a user by username
+          - Tracks
+        summary: Create track at user profile
+        operationId: createTrack
+        description: Create a track for a user by username
         consumes: 
         - application/json
         produces:
         - application/json
         parameters:
         - in: body
-          name: Create post
+          name: Create track
           required: true
-          description: User Post
+          description: User Track
           schema:
-            $ref: '#/definitions/createPost'
+            $ref: '#/definitions/createTrack'
         responses:
           200:
             description: OK
           404:
             description: URL Not Found
 
-  # Get user posts by username
-    /api/posts/getUserPostsByUsername/:
+  # Get user tracks by username
+    /api/tracks/getUserTracksByUsername/:
       get:
         tags:
-          - Posts
-        summary: Search a users posts by username
-        operationId: getUserPostsByUsername
-        description: Get posts from user profile
+          - Tracks
+        summary: Search a users tracks by username
+        operationId: getUserTracksByUsername
+        description: Get tracks from user profile
         consumes: 
         - application/json
         produces:
@@ -262,14 +262,14 @@ paths:
           404:
             description: URL Not Found
 
-  # Get user posts by author ID
-    /api/posts/getUsersPostsByID/:
+  # Get user tracks by author ID
+    /api/tracks/getUsersTracksByID/:
       post:
         tags:
-          - Posts
-        summary: Search a users posts by user ID
-        operationId: getUsersPostsByID
-        description: Get posts from user profile
+          - Tracks
+        summary: Search a users tracks by user ID
+        operationId: getUsersTracksByID
+        description: Get tracks from user profile
         consumes: 
         - application/json
         produces:
@@ -288,14 +288,14 @@ paths:
           404:
             description: URL Not Found
 
-  # Update user post information
-    /api/posts/updatePost:
+  # Update user track information
+    /api/tracks/updateTrack:
       put:
         tags:
-          - Posts
-        summary: Update user post
-        operationId: updatePost
-        description: Update user post information
+          - Tracks
+        summary: Update user track
+        operationId: updateTrack
+        description: Update user track information
         consumes: 
         - application/json
         produces:
@@ -306,20 +306,20 @@ paths:
           required: true
           description: Updated information
           schema:
-            $ref: '#/definitions/updatePost'
+            $ref: '#/definitions/updateTrack'
         responses:
           200:
             description: OK
           404:
             description: URL Not Found
 
-  # Delete a user post by ID
-    /api/posts/deletePost:
+  # Delete a user track by ID
+    /api/tracks/deleteTrack:
       delete:
         tags:
-          - Posts
+          - Tracks
         summary: Delete user by username
-        operationId: deletePost
+        operationId: deleteTrack
         description: Delete a user from the database
         consumes:
         - application/json
@@ -331,7 +331,7 @@ paths:
           required: true
           description: Delete
           schema:
-            $ref: '#/definitions/deletePost'
+            $ref: '#/definitions/deleteTrack'
         responses:
           200:
             description: OK
@@ -386,14 +386,14 @@ paths:
           404:
             description: URL Not Found
 
-  # Add a post to the playlist 
-    /api/playlists/addPostToPlaylist:
+  # Add a track to the playlist 
+    /api/playlists/addTrackToPlaylist:
       post:
         tags:
           - Playlists
-        summary: Add a post to the playlist
-        operationId: addPostToPlaylist
-        description: Add a post to the playlist
+        summary: Add a track to the playlist
+        operationId: addTrackToPlaylist
+        description: Add a track to the playlist
         consumes:
         - application/json
         produces:
@@ -402,23 +402,23 @@ paths:
         - in: body
           name: id
           required: true
-          description: Add a post to the playlist
+          description: Add a track to the playlist
           schema:
-            $ref: '#/definitions/addPostToPlaylist'
+            $ref: '#/definitions/addTrackToPlaylist'
         responses:
           200:
             description: OK
           404:
             description: URL Not Found
 
-  # Get user posts by author ID
+  # Get user tracks by author ID
     /api/playlists/getPlaylistByID/:
       get:
         tags:
           - Playlists
-        summary: Search a users posts by user ID
+        summary: Search a users tracks by user ID
         operationId: getPlaylistByID
-        description: Get posts from user profile
+        description: Get tracks from user profile
         consumes: 
         - application/json
         produces:
@@ -437,14 +437,14 @@ paths:
           404:
             description: URL Not Found
 
-  # Get user posts by author ID
-    /api/playlists/getPlaylistsByPostID/:
+  # Get user tracks by author ID
+    /api/playlists/getPlaylistsByTrackID/:
       get:
         tags:
           - Playlists
-        summary: Search a users posts by user ID
-        operationId: getPlaylistsByPostID
-        description: Get posts from user profile
+        summary: Search a users tracks by user ID
+        operationId: getPlaylistsByTrackID
+        description: Get tracks from user profile
         consumes: 
         - application/json
         produces:
@@ -463,13 +463,13 @@ paths:
           404:
             description: URL Not Found
 
-  # Get user posts by author ID
-    /api/playlists/getPostsByPlaylistID/:
+  # Get user tracks by author ID
+    /api/playlists/getTracksByPlaylistID/:
       get:
         tags:
           - Playlists
-        summary: Search a users posts by user ID
-        operationId: getPostsByPlaylistID
+        summary: Search a users tracks by user ID
+        operationId: getTracksByPlaylistID
         description: Get playlist from user profile
         consumes: 
         - application/json
@@ -661,8 +661,8 @@ definitions:
           type: string
           exmaple: 632961af-29ae-4c3a-8f3f-426763a4cf00
 
-  # ***** User Posts ***** #
-    updatePost:
+  # ***** User Tracks ***** #
+    updateTrack:
       required: 
       - id
       - firstName
@@ -675,7 +675,7 @@ definitions:
           example: 5
         title:
           type: string
-          example: New Post title
+          example: New Track title
         bpm:
           type: int
           example: 50
@@ -689,7 +689,7 @@ definitions:
         #   type: string
         #   example: https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwj_q7q_o_7jAhXDxVAKHWXxD-AQjRx6BAgBEAU&url=https%3A%2F%2Fwww.pexels.com%2Fphoto%2Fwoman-in-black-and-white-dressed-in-white-clothes-812093%2F&psig=AOvVaw0_X_X_X_X_X_X_X&ust=1560984100879087
 
-    deletePost:
+    deleteTrack:
       required:
       - id
       properties:
@@ -697,12 +697,14 @@ definitions:
           type: int
           exmaple: 5
 
-    createPost:
+  # key to represent Major, Minor, while scale to represent C#, E, D, etc
+    createTrack:
       required: 
       - userID
       - title
       - bpm
       - key
+      - scale
       - visibility
       properties:
         userID:
@@ -710,18 +712,21 @@ definitions:
           example: 227d4d04-927b-421e-8d95-6eb91f05af05
         title:
           type: string
-          example: Post title
+          example: Track title
         bpm:
           type: int
           example: 50
         key:
+          type: string
+          example: Major
+        scale:
           type: string
           example: C#
         visibility:
           type: boolean
           example: True
 
-    newPost:
+    newTrack:
       required: 
       - username
       - title
@@ -733,7 +738,7 @@ definitions:
           example: JohnDoe96
         title:
           type: string
-          example: New Post title
+          example: New Track title
         bpm:
           type: int
           example: 50
@@ -774,7 +779,7 @@ definitions:
           type: int
           example: 1
 
-    addPostToPlaylist:
+    addTrackToPlaylist:
       required: 
       - userID
       - name

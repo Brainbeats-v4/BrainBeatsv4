@@ -106,7 +106,7 @@ export type Card = {
 }
 
 export interface Track {
-    id: string,        // Auto generated
+    id: string,        
     title: string,
     bpm: number,
     key: string,
@@ -123,6 +123,7 @@ export interface Track {
     user?: User | null,
     
     // optional
+    token?: any
     like?: Like | null,
     playlistTracks?: Array<PlaylistTracks> | null,
     createdAt?: Date,
