@@ -61,7 +61,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         // hit api for 'numTracks' tracks
         var objArray:Track[] = [];
 
-        await sendAPI('get', '/posts/getPublicPopularPosts')
+        await sendAPI('get', '/tracks/getPublicPopularTracks')
         .then((res) => {
                 for(var i = 0; i < res.data.length; i++) {
                     if(i > numTracks) break;
@@ -105,7 +105,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         setCurrentSearch(title);
         console.log(title)
         let query = {title: title};
-        await sendAPI('get', '/posts/getPostsByTitle', query)
+        await sendAPI('get', '/tracks/getTracksByTitle', query)
         .then((res) => {
             console.log(res);
                 for(var i = 0; i < res.data.length; i++) {
@@ -154,7 +154,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         // })
 
         // if (userTracks == undefined){
-            await sendAPI('get', '/posts/getUserPostsByID', currentUser)
+            await sendAPI('get', '/tracks/getUserTracksByID', currentUser)
                 .then(res => {
                     for(var i = 0; i < res.data.length; i++) {
                         

@@ -698,6 +698,7 @@ definitions:
           exmaple: 5
 
   # key to represent Major, Minor, while scale to represent C#, E, D, etc
+  # sometimes key may be referenced as "keyGroup", like in the redux slice: musicGenerationSettingsSlice.tsx
     createTrack:
       required: 
       - userID

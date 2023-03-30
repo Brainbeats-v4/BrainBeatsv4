@@ -245,7 +245,7 @@ const TrackSettings = () => {
             public: true,
             likeCount: likes
         }
-        sendAPI('post', '/posts/createPost', info)
+        sendAPI('post', '/tracks/createTrack', info)
             .then(res => {
                 console.log(res);
             }).catch(err => {

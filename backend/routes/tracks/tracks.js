@@ -2,15 +2,15 @@ require("dotenv").config();
 const router = require("express").Router();
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { user, post } = new PrismaClient();
+const { user, track } = new PrismaClient();
 // const { JSON } = require("express");
 const { getJWT, verifyJWT} = require("../../utils/jwt");
-const { getUserExists, getPostExists } = require("../../utils/database");
+const { getUserExists, getTrackExists } = require("../../utils/database");
 
-// Create a post
-router.post('/createPost', async (req, res) => {
+// Create a track
+router.post('/createTrack', async (req, res) => {
     try {
-        const { userID, title, bpm, key, midi, instruments, noteTypes, token, thumbnail, likeCount} = req.body;
+        const { userID, title, bpm, key, scale, midi, instruments, noteTypes, token, thumbnail, likeCount} = req.body;
         const decoded = verifyJWT(token);
 
         if (!decoded) {
@@ -26,7 +26,7 @@ router.post('/createPost', async (req, res) => {
             });
         } else {
             // Create a single record
-            const newPost = await prisma.Track.create({
+            const newTrack = await prisma.Track.create({
                 data: {
                     user: {
                         connect: {
@@ -36,6 +36,7 @@ router.post('/createPost', async (req, res) => {
                     title: title,
                     bpm: bpm,
                     key: key,
+                    scale: scale,
                     instruments: instruments,
                     noteTypes: noteTypes,
                     thumbnail: thumbnail,
@@ -45,7 +46,7 @@ router.post('/createPost', async (req, res) => {
                 }
             });
 
-          return res.status(201).json(newPost);
+          return res.status(201).json(newTrack);
         }
     } catch (err) {
         console.log(err);
@@ -53,16 +54,16 @@ router.post('/createPost', async (req, res) => {
     }
 });
 
-// Get all posts based on a username
-router.get('/getUserPostsByUsername', async (req, res) => {
+// Get all tracks based on a username
+router.get('/getUserTracksByUsername', async (req, res) => {
     try {
         const username = req.query.username;
         if (username === "") {
-            const allPosts = await prisma.Track.findMany({
+            const allTracks = await prisma.Track.findMany({
                 include: {user : true}
             });
 
-            return res.json(allPosts);
+            return res.json(allTracks);
             return;
         }
 
@@ -74,18 +75,18 @@ router.get('/getUserPostsByUsername', async (req, res) => {
             });
         } else {
             // Find the records
-            const userPosts = await prisma.Track.findMany({
+            const userTracks = await prisma.Track.findMany({
                 where: { userID: userExists.id },
                 include: {user: true}
             });
 
-            if (!userPosts) {
+            if (!userTracks) {
                 return res.status(404).json({
-                    msg: "Posts not found"
+                    msg: "Tracks not found"
                 });
             }
             
-            return res.status(200).json(userPosts);
+            return res.status(200).json(userTracks);
         }
     } catch (err) {
         console.log(err);
@@ -93,21 +94,21 @@ router.get('/getUserPostsByUsername', async (req, res) => {
     }
 });
 
-// Get all posts based on a title
-router.get('/getPostsByTitle', async (req, res) => {
+// Get all tracks based on a title
+router.get('/getTracksByTitle', async (req, res) => {
     try {
         const title = req.query.title;
         if (title === "") {
-            const allPosts = await prisma.Track.findMany({
+            const allTracks = await prisma.Track.findMany({
                 include: {user : true}
             });
 
-            return res.json(allPosts);
+            return res.json(allTracks);
             return;
         }
         
         // Find the records
-        const posts = await prisma.Track.findMany({
+        const tracks = await prisma.Track.findMany({
             where: { title: 
                 {
                     contains: title 
@@ -116,13 +117,13 @@ router.get('/getPostsByTitle', async (req, res) => {
             include: {user: true}
         });
 
-        if (!posts) {
+        if (!tracks) {
             return res.status(404).json({
-                msg: "Posts not found"
+                msg: "Tracks not found"
             });
         }
 
-        return res.status(200).json(posts);
+        return res.status(200).json(tracks);
         
     } catch (err) {
         console.log(err);
@@ -130,8 +131,8 @@ router.get('/getPostsByTitle', async (req, res) => {
     }
 });
 
-// Get all posts based on a user ID
-router.get('/getUserPostsByID', async (req, res) => {
+// Get all tracks based on a user ID
+router.get('/getUserTracksByID', async (req, res) => {
     try {
         const userID = req.query.userID;
 
@@ -142,18 +143,18 @@ router.get('/getUserPostsByID', async (req, res) => {
                 msg: "User not found"
             });
         } else {
-            const userPosts = await prisma.Track.findMany({
+            const userTracks = await prisma.Track.findMany({
                 where: { userID: req.query.userID },
                 include: {user: true}
             });
 
-            if (!userPosts) {
+            if (!userTracks) {
                 return res.status(404).json({
                     msg: "User ID not found"
                 });
             }
 
-            return res.status(200).json(userPosts);
+            return res.status(200).json(userTracks);
         }
     } catch (err) {
         console.log(err);
@@ -161,22 +162,22 @@ router.get('/getUserPostsByID', async (req, res) => {
     }
 });
 
-// Get all posts
-router.get('/getAllPosts', async (req, res) => {
+// Get all tracks
+router.get('/getAllTracks', async (req, res) => {
     try {
-        const posts = await prisma.Track.findMany({
+        const tracks = await prisma.Track.findMany({
             include: {user: true}
         });
 
-        return res.status(200).json(posts);
+        return res.status(200).json(tracks);
     } catch (err) {
         console.log(err);
         return res.status(500).send({ msg: err });
     }
 });
 
-// Delete a post
-router.delete('/deletePost', async (req, res) => {
+// Delete a track
+router.delete('/deleteTrack', async (req, res) => {
     try {
         const decoded = verifyJWT(req.body.token);
         console.log("JWT: " + req.body.token);
@@ -191,16 +192,16 @@ router.delete('/deletePost', async (req, res) => {
             where: { id: req.body.id }
         });
 
-        return res.status(200).send({ msg: "Deleted a user post" });
+        return res.status(200).send({ msg: "Deleted a user track" });
     } catch (err) {
         console.log(err);
         return res.status(500).send(err);
     }
 });
 
-router.get('/getPublicPopularPosts', async(req, res) => {
+router.get('/getPublicPopularTracks', async(req, res) => {
     try {
-        const posts = await prisma.Track.findMany({
+        const tracks = await prisma.Track.findMany({
             where: {
             likeCount: {
                 gte: 10,
@@ -218,15 +219,15 @@ router.get('/getPublicPopularPosts', async(req, res) => {
                 }
             },
         })
-        return res.status(200).json(posts)
+        return res.status(200).json(tracks)
     } catch (err) {
         console.log(err);
         return res.status(500).send(err);
     }
 });
 
-// Update user post info 
-router.put('/updatePost', async (req, res) => {
+// Update user track info 
+router.put('/updateTrack', async (req, res) => {
 
     try {
         const { id, title, midi, thumbnail, likeCount, public, token} = req.body;
@@ -240,15 +241,15 @@ router.put('/updatePost', async (req, res) => {
         }
 
         // Check if the id already exists in db
-        const postExists = await getPostExists(id, "id");
-        console.log("postsExists: " + postExists);
+        const trackExists = await getTrackExists(id, "id");
+        console.log("tracksExists: " + trackExists);
 
-        if (!postExists) {
+        if (!trackExists) {
             return res.status(404).json({
-                msg: "Post not found"
+                msg: "Track not found"
             });
         } else {
-            const updatePost = await prisma.Track.update({
+            const updateTrack = await prisma.Track.update({
                 where: { id },
                 data: {
                     title: title,
@@ -259,7 +260,7 @@ router.put('/updatePost', async (req, res) => {
                 }
             });
 
-            return res.status(200).json(updatePost);
+            return res.status(200).json(updateTrack);
       }
     } catch (err) {
         console.log(err);

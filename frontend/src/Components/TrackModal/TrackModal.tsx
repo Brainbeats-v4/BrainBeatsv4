@@ -91,7 +91,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     let deleteConfirmed = verifyDeleteRecording();
 
     if (deleteConfirmed){
-      sendAPI("delete", "/posts/deletePost", data).then((res) => {
+      sendAPI("delete", "/tracks/deleteTrack", data).then((res) => {
         if (res.status != 200) {
           setErrMsg("Failed To Delete");
           setSuccessMsg("");
@@ -131,7 +131,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
       token: jwt,
     }
     
-    sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
+    sendAPI("put", "/tracks/updateTrack", updatedTrack).then((res) => {
       if (res.status == 200) {
         setErrMsg(trackName);
       }
@@ -489,7 +489,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
       token: jwt,
     }
     
-    sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
+    sendAPI("put", "/tracks/updateTrack", updatedTrack).then((res) => {
       if (res.status == 200) {
         setErrMsg(trackName);
       }

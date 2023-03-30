@@ -29,18 +29,19 @@ model User {
 }
 
 model Track {
-  id       String    @id @default(uuid())
-  title    String
-  bpm      Int        @db.Int
-  key      String     @db.VarChar(255)
+  id          String    @id @default(uuid())
+  title       String
+  bpm         Int        @db.Int
+  key         String     @db.VarChar(255) @default("C")
+  scale       String     @db.VarChar(255) @default("Major")
   instruments Json
-  noteTypes Json
-  likeCount Int
-  midi     String?    @db.LongText // Store file path in database instead of the actual midi
-  thumbnail String?   @db.LongText // Store file path in database instead of the actual image
-  user   User         @relation(fields: [userID], references: [id], onDelete: Cascade)
-  userID String // relation scalar field  (used in the `@relation` attribute above)
-  createdAt DateTime  @default(now())
+  noteTypes   Json
+  likeCount   Int
+  midi        String?    @db.LongText // Store file path in database instead of the actual midi
+  thumbnail   String?   @db.LongText // Store file path in database instead of the actual image
+  user        User         @relation(fields: [userID], references: [id], onDelete: Cascade)
+  userID      String // relation scalar field  (used in the `@relation` attribute above)
+  createdAt   DateTime  @default(now())
   playlistTracks PlaylistTrack[]
   // playlists Playlist[]     // Simpler alternative to playlists
   public Boolean

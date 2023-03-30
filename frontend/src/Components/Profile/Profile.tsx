@@ -224,7 +224,7 @@ const Profile = () => {
     async function getProfileTracks() {
 
         var currentUser = {userID: user?.id};
-        await sendAPI('get', '/posts/getUserPostsByID', currentUser)
+        await sendAPI('get', '/tracks/getUserTracksByID', currentUser)
             .then(res => {
                 // console.log(res.data.length);
                 setTracksTotal(res.data.length);
