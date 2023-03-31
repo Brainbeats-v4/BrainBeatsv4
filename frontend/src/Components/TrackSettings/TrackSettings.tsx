@@ -28,7 +28,7 @@ const InstrumentSettings = memo(() => {
     var instrumentArray:any[] = [];
     for(var i = -3; i <= 8; i++) {
         let instrument = { value: i, name: InstrumentTypes[i] }
-        instrumentArray.push(instrument);
+        if(i == -3 || i == 8) instrumentArray.push(instrument);
     }
     return( 
         <>

@@ -18,6 +18,7 @@ function Record() {
     const [debugOption2, setDebugOption2] = useState(false);
     const [debugOption3, setDebugOption3] = useState(false);
     const [setup, setSetup] = useState(false);
+    
     /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
     and import it. */
     const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
@@ -129,6 +130,7 @@ function Record() {
                 <div id='script-div'>
                     <RecordCards></RecordCards>
                 </div>
+
                 <div id='record-btns-div'>
                     
                     {/* Debug checkboxes --------(from bootstrap)----------------- */}
