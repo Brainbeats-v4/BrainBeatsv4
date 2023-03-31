@@ -95,18 +95,17 @@ router.post('/loginUser', async (req, res) => {
         if (userExists && await (bcrypt.compare(password, userExists.password))) {
             const token = createJWT(userExists.id, userExists.email);
             
-            
-            
             const data = {
                 user: {
+                    id: userExists.id,
                     firstName: userExists.firstName,
                     lastName: userExists.lastName,
+                    email: userExists.email,
                     username: userExists.username,
                     bio: userExists.bio,
                     profilePicture: userExists.profilePicture,
                     tracks: userExists.tracks,
                     playlists: userExists.playlists,
-                    id: userExists.id,
                     likes: userExists.likes
                 },
                 token: token
@@ -213,7 +212,7 @@ router.get('/getUserImages', async (req, res) => {
 // Update user info 
 router.put('/updateUser', async (req, res) => {
     try{
-        const { id, firstName, lastName, email, bio, token, tracks, playlists, like} = req.body;
+        const { id, firstName, lastName, email, username, bio, token, tracks, playlists, likes} = req.body;
         
         const decoded = verifyJWT(token);
 
@@ -230,23 +229,26 @@ router.put('/updateUser', async (req, res) => {
             return res.status(400).json({
                 msg: "User ID not found"
             });
-        } else {
-            //encryptedPassword = await bcrypt.hash(password, 10);
+        } 
 
-            const updateUser = await prisma.User.update({
-                where: { id },
-                data: {
-                    id: id,
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    bio: bio,
-                    tracks: tracks,
-                    likes: like
-                }
-            });
-            res.status(200).send(updateUser);
-        }
+        // If the only some data is passed, say firstName is not passed, 
+        // and we want it to be unchanged, we pass undefined as the value instead.
+        const updateUser = await prisma.User.update({
+            where: { id },
+            data: {
+                id: undefined,
+                firstName: firstName || undefined,
+                lastName: lastName || undefined,
+                email: email || undefined,
+                bio: bio || undefined,
+                username: username || undefined,
+                tracks: tracks || undefined,
+                playlists: playlists || undefined,
+                likes: likes || undefined
+            }
+        });
+        res.status(200).send({msg: "User updated"}); //.send(updateUser);
+        
     } catch (err) {
         console.log(err);
         res.status(500).send(err);

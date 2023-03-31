@@ -12,7 +12,7 @@ import buildPath from '../../util/ImagePath';
 import { encode, resize } from '../../util/ImageHelperFunctions';
 import { useNavigate } from 'react-router-dom';
 
-import { User } from '../../util/Interfaces';
+import { Track, User } from '../../util/Interfaces';
 
 
 
@@ -23,6 +23,8 @@ const Profile = () => {
     const [playlist, setPlaylist] = useState([]); 
     const [posts, setPosts] = useState([])
     const [msg, setMsg] = useState('');
+
+    const [tracksTotal, setTracksTotal] = (useState(0));
 
 
     // user contains "userID" instead of "id"
@@ -41,7 +43,9 @@ const Profile = () => {
 
     useEffect(() => {
         kickNonUser();
-        // console.log("USER: ", user);
+        if (user != null){
+            getProfileTracks();
+        }
     }, [])
 
 
@@ -178,7 +182,7 @@ const Profile = () => {
             })
     };
 
-    //  // Function updating profile picture
+
     async function updateProfileName(newFName: string, newLName: string) {
 
         if (!user) {
@@ -186,14 +190,13 @@ const Profile = () => {
             return;
         }
 
-        console.log(user.id);
-
+        // To set recoil user value
         var updatedUser:User = {
             id: user.id,
             firstName: newFName,
             lastName: newLName,
             email: user.email,
-            username: user.email,
+            username: user.username,
             bio: user.bio,
             profilePicture: user.profilePicture,
             tracks: user.tracks,
@@ -201,13 +204,21 @@ const Profile = () => {
             like: user.like,
             token: jwt
         };
+
+        // We're only changing these
+        var payload = {
+            id: user.id,
+            firstName: newFName,
+            lastName: newLName,
+            token: jwt
+        }
         
-        console.log(updatedUser);
-        sendAPI('put', '/users/updateUser', updatedUser)
-            .then(res => {
-                console.log(res);
+        sendAPI('put', '/users/updateUser', payload)
+            .then(({status}) => {
+                console.log(status);
+                
                 setUser(updatedUser);
-                console.log(updatedUser);
+                console.log(user);
 
             }).catch(err => {
                 console.log(err);
@@ -215,6 +226,19 @@ const Profile = () => {
 
             console.log(user.firstName);
     };
+
+    // Gets User Track count
+    async function getProfileTracks() {
+
+        var currentUser = {userID: user?.id};
+        await sendAPI('get', '/tracks/getUserTracksByID', currentUser)
+            .then(res => {
+                // console.log(res.data.length);
+                setTracksTotal(res.data.length);
+            }).catch(e => {
+                console.error("Failed to count profile tracks: ", e);
+        })
+    }
 
     return(
         <div className="user-profile" id='profile-container'>
@@ -237,10 +261,16 @@ const Profile = () => {
                             <FontAwesomeIcon icon={["fas", "edit"]} />
                             Edit Profile
                         </button>}
-                        {editProfile && <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={() => {toggleEdit(); updateProfileName(profileFirstName, profileLastName);}}> 
-                            <FontAwesomeIcon icon={["fas", "floppy-disk"]} />
-                            Save Profile
-                        </button>}
+                        {editProfile && <div id='save-cancel-profile-div'>
+                            <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={() => {toggleEdit(); updateProfileName(profileFirstName, profileLastName);}}> 
+                                <FontAwesomeIcon icon={["fas", "floppy-disk"]} />
+                                Save Profile
+                            </button>
+                            <button type="button" className="btn btn-secondary" id='edit-profile-btn' onClick={() => {toggleEdit();}}> 
+                                <FontAwesomeIcon icon={["fas", "floppy-disk"]} />
+                                Cancel
+                            </button>
+                        </div>}
                     </div>
                     <div id='user-info-div'>
                         <div id='user-profile-name-div'>
@@ -255,16 +285,16 @@ const Profile = () => {
                 <div id='profile-top-follower-div'>
                     <div id='count-all-div'>
                         <div className='count-div' id='playlist-count-div'>
-                            <h5>0</h5>
-                            <h6>Playlists</h6>
-                        </div>
-                        <div className='count-div' id='following-count-div'>
-                            <h5>0</h5>
-                            <h6>Following</h6>
+                            <h5>{tracksTotal}</h5>
+                            <h6>Tracks</h6>
                         </div>
                         <div className='count-div' id='follower-count-div'>
                             <h5>0</h5>
-                            <h6>Follower</h6>
+                            <h6>Followers</h6>
+                        </div>
+                        <div className='count-div' id='following-count-div'>
+                            <h5>0</h5>
+                            <h6>Playlists</h6>
                         </div>
                     </div>
                 </div>

@@ -15,7 +15,6 @@ type Props = {
     input: string; // was :any
 }
 
-
 const TrackCard: React.FC<Props> = ({cardType, input}) => {
 
     // For displaying Modal
@@ -24,8 +23,6 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
     const [trackList, setTrackList] = useState<Track[]>([]);
     const [newTrackList, setNewTrackList] = useState<any[]>([]);
-
-
 
     // For refresing track list component on page
     const [seed, setSeed] = useState(1);
@@ -64,7 +61,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         // hit api for 'numTracks' tracks
         var objArray:Track[] = [];
 
-        await sendAPI('get', '/posts/getPublicPopularPosts')
+        await sendAPI('get', '/tracks/getPublicPopularTracks')
         .then((res) => {
                 for(var i = 0; i < res.data.length; i++) {
                     if(i > numTracks) break;
@@ -108,7 +105,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         setCurrentSearch(title);
         console.log(title)
         let query = {title: title};
-        await sendAPI('get', '/posts/getPostsByTitle', query)
+        await sendAPI('get', '/tracks/getTracksByTitle', query)
         .then((res) => {
             console.log(res);
                 for(var i = 0; i < res.data.length; i++) {
@@ -157,7 +154,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         // })
 
         // if (userTracks == undefined){
-            await sendAPI('get', '/posts/getUserPostsByID', currentUser)
+            await sendAPI('get', '/tracks/getUserTracksByID', currentUser)
                 .then(res => {
                     for(var i = 0; i < res.data.length; i++) {
                         
@@ -283,7 +280,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                 ))}
             </div>
             <Modal id='pop-up' show={show} onHide={handleClose} onExit={resetTrackComponent}>
-                <TrackModal key={seed} track={currentTrack}/>
+                <TrackModal key={seed} track={currentTrack} closeModal={setShow}/>
             </Modal>
         </div>
     )

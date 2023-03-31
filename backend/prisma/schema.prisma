@@ -7,71 +7,95 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      =  env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String    @id @default(uuid())
-  firstName String    @db.VarChar(255)
-  lastName  String    @db.VarChar(255) 
-  email     String    @unique @db.VarChar(255)
-  username  String    @unique @db.VarChar(20)
-  password  String
-  bio       String?   @db.LongText
-  verified  Boolean   @default(false)
-  profilePicture String? @db.LongText // Store file path in database instead of the actual image
-  createdAt DateTime  @default(now())
-  resetPasswordToken String? @unique @db.VarChar(255) // @db.LongText
+  id                   String    @id @default(uuid())
+  firstName            String    @db.VarChar(255)
+  lastName             String    @db.VarChar(255)
+  email                String    @unique @db.VarChar(255)
+  username             String    @unique @db.VarChar(20)
+  password             String
+  bio                  String?   @db.LongText
+  verified             Boolean   @default(false)
+  profilePicture       String?   @db.LongText // Store file path in database instead of the actual image
+  createdAt            DateTime  @default(now())
+  resetPasswordToken   String?   @unique @db.VarChar(255) // @db.LongText
   resetPasswordExpires DateTime? @db.DateTime
+
   tracks Track[]
+
+  // Track array alternative
+  // tracks User_Track[]
+
   playlists Playlist[]
-  likes Like[]
+  likes     Like[]
 }
 
 model Track {
-  id       String    @id @default(uuid())
-  title    String
-  bpm      Int        @db.Int
-  key      String     @db.VarChar(255)
+  id          String  @id @default(uuid())
+  title       String
+  bpm         Int     @db.Int
+  key         String  @default("C") @db.VarChar(255)
+  scale       String  @default("Major") @db.VarChar(255)
   instruments Json
-  noteTypes Json
-  likeCount Int
-  midi     String?    @db.LongText // Store file path in database instead of the actual midi
-  thumbnail String?   @db.LongText // Store file path in database instead of the actual image
-  user   User         @relation(fields: [userID], references: [id], onDelete: Cascade)
-  userID String // relation scalar field  (used in the `@relation` attribute above)
-  createdAt DateTime  @default(now())
+  noteTypes   Json
+  likeCount   Int
+  midi        String? @db.LongText // Store file path in database instead of the actual midi
+  thumbnail   String? @db.LongText // Store file path in database instead of the actual image
+
+  user        User         @relation(fields: [userID], references: [id], onDelete: Cascade)
+
+  // Track array alternative
+  // User_Track     User_Track?
+
+
+  userID         String // relation scalar field  (used in the `@relation` attribute above)
+  createdAt      DateTime        @default(now())
   playlistTracks PlaylistTrack[]
   // playlists Playlist[]     // Simpler alternative to playlists
-  public Boolean
-  likes Like[]
+  public         Boolean
+  likes          Like[]
 }
 
+// Possibly needed because just having an array of tracks on a user will make the user massive
+// causing errors when updating the user among other things.
+
+// model User_Track {
+//   userID  String
+//   trackID String @unique
+//   track   Track  @relation(fields: [trackID], references: [id], onDelete: Cascade)
+//   user    User   @relation(fields: [userID], references: [id], onDelete: Cascade)
+
+//   @@id([userID, trackID])
+// }
+
 model Playlist {
-  id       String     @id @default(uuid())
-  name     String
-  thumbnail String?   @db.LongText // Store file path in database instead of the actual image
-  user User           @relation(fields: [userID], references: [id], onDelete: Cascade)
-  userID String
+  id             String          @id @default(uuid())
+  name           String
+  thumbnail      String?         @db.LongText // Store file path in database instead of the actual image
+  user           User            @relation(fields: [userID], references: [id], onDelete: Cascade)
+  userID         String
   // tracks Track[]     // Simpler alternative to playlists   
   playlistTracks PlaylistTrack[]
 }
 
 model PlaylistTrack {
-  trackID String
-  track Track           @relation(fields: [trackID], references: [id], onDelete: Cascade)
+  trackID    String
+  track      Track    @relation(fields: [trackID], references: [id], onDelete: Cascade)
   playlistID String
-  playlist Playlist   @relation(fields: [playlistID], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  
+  playlist   Playlist @relation(fields: [playlistID], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
   @@id([trackID, playlistID])
 }
 
 model Like {
-  trackID String         
-  track Track          @relation(fields: [trackID], references: [id], onDelete: Cascade)
-  userID String
-  user User          @relation(fields: [userID], references: [id], onDelete: Cascade)
+  trackID   String
+  track     Track    @relation(fields: [trackID], references: [id], onDelete: Cascade)
+  userID    String
+  user      User     @relation(fields: [userID], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@id([trackID, userID])

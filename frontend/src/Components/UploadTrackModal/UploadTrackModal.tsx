@@ -58,13 +58,13 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
             token: jwt,
         }
     
-        sendAPI("put", "/posts/updatePost", updatedTrack).then((res) => {
+        sendAPI("put", "/tracks/updateTrack", updatedTrack).then((res) => {
             if (res.status == 200) {
                 setErrMsg(trackName);
                 // setSuccessMsg(JSON.stringify(res.data));
             }
             else {
-                setErrMsg("Could not save post.");
+                setErrMsg("Could not save track.");
                 setSuccessMsg("");
             }
         })

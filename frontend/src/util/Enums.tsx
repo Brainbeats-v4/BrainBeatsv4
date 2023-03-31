@@ -11,6 +11,7 @@ export enum InstrumentTypes {
     FRENCHHORN = 5,
     TROMBONE = 6,
     TUBA = 7,
+    PIANO = 8
 }
 
 export enum NoteDurations {

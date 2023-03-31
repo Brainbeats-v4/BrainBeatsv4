@@ -21,7 +21,7 @@ function SetupGuide() {
                     setup for each of them.
                 </p>
             </div>
-            <h2>Cyton Board</h2>
+            <h2 className="cyton-heading">Cyton Board</h2>
             <p>The cyton board from OpenBCI supports 8 channels of input, if you are looking to see how to set up the wiring for the board,
                 reference the link to their website, which can be found <a className="links" href="https://docs.openbci.com/GettingStarted/Boards/CytonGS/" target="_blank">here.</a>
                 <br />To set the device up to your head, you can use any of the nodes you desire, but our recommended nodes are here: <br />

@@ -37,25 +37,22 @@ export const Piano = new Tone.Sampler({
     baseUrl: "https://tonejs.github.io/audio/salamander/"
 })
 
-export const Flute = new Tone.Sampler({
-    urls: {
-        'A6': 'A6.mp3',
-        'C4': 'C4.mp3',
-        'C5': 'C5.mp3',
-        'C6': 'C6.mp3',
-        'C7': 'C7.mp3',
-        'E4': 'E4.mp3',
-        'E5': 'E5.mp3',
-        'E6': 'E6.mp3',
-        'A4': 'A4.mp3',
-        'A5': 'A5.mp3'
-    },
-    release: 10,
-    baseUrl: 'https://raw.githubusercontent.com/nbrosowsky/tonejs-instruments/blob/master/samples/flute/'
-})
-
-export const Xylophone = new Tone.Sampler({
-    urls: {
-        'C3': 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_62907acad1.mp3?filename=xylophone-c3-87468.mp3',
-    }
-})
+export const NULL = new Tone.Sampler({
+    release: 10
+});
+// export const Flute = new Tone.Sampler({
+//     urls: {
+//         'A6': 'A6.mp3',
+//         'C4': 'C4.mp3',
+//         'C5': 'C5.mp3',
+//         'C6': 'C6.mp3',
+//         'C7': 'C7.mp3',
+//         'E4': 'E4.mp3',
+//         'E5': 'E5.mp3',
+//         'E6': 'E6.mp3',
+//         'A4': 'A4.mp3',
+//         'A5': 'A5.mp3'
+//     },
+//     release:
+    
+// })

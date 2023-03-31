@@ -106,7 +106,7 @@ export type Card = {
 }
 
 export interface Track {
-    id: string,        // Auto generated
+    id: string,        
     title: string,
     bpm: number,
     key: string,
@@ -123,6 +123,7 @@ export interface Track {
     user?: User | null,
     
     // optional
+    token?: any
     like?: Like | null,
     playlistTracks?: Array<PlaylistTracks> | null,
     createdAt?: Date,
@@ -167,6 +168,18 @@ export interface Like {
     token?: any    // If we're sending this like to the backend
 }
 
+
+export interface BasicUser {
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    username: string,
+    bio: string,
+    profilePicture: string,
+    token?: any,
+}
+
 export interface User {
     id: string,
     firstName: string,
@@ -176,10 +189,10 @@ export interface User {
     bio: string,
     profilePicture: string,
     
-    // arrays of tables
-    tracks: Array<Track> | null,
-    playlists: Array<Playlist> | null,
-    like: Array<Like> | null,
+    // arrays of tables, optional
+    tracks?: Array<Track> | null,
+    playlists?: Array<Playlist> | null,
+    like?: Array<Like> | null,
     
     // optional
     verified?: boolean,

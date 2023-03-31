@@ -101,23 +101,23 @@ const SignUp = () => {
                 <h1 className="text-center fw-semibold signup-text" id='signup-title'>Welcome to BrainBeats!</h1>
                 <div className="mt-3">
                     <label className="form-label signup-text">Email</label>
-                    <input type="text" className="form-control formGroupExampleInput" placeholder="email@example.com" onChange={event => setEmail(event.target.value)}/>
+                    <input type="text" className="form-control formGroupExampleInput" placeholder="Email@example.com" onChange={event => setEmail(event.target.value)}/>
                 </div>
                 <div className="mt-2">
                     <label className="form-label signup-text">Username</label>
-                    <input type="text" className="form-control formGroupExampleInput" placeholder="brainbeats407" onChange={event => setUsername(event.target.value)}/>
+                    <input type="text" className="form-control formGroupExampleInput" placeholder="Username" onChange={event => setUsername(event.target.value)}/>
                 </div>
                 <div className="mt-2">
                     <label className="form-label signup-text">Password</label>
-                    <input type="password" className="form-control formGroupExampleInput" placeholder="something secret" onChange={event => setPassword(event.target.value)}/>
+                    <input type="password" className="form-control formGroupExampleInput" placeholder="Password" onChange={event => setPassword(event.target.value)}/>
                 </div>
                 <div className="mt-2">
                     <label className="form-label signup-text">First Name</label>
-                    <input type="text" className="form-control formGroupExampleInput" placeholder="Rick" onChange={event => setFirstName(event.target.value)}/>
+                    <input type="text" className="form-control formGroupExampleInput" placeholder="First Name" onChange={event => setFirstName(event.target.value)}/>
                 </div>
                 <div className="mt-2">
                     <label className="form-label signup-text">Last Name</label>
-                    <input type="text" className="form-control formGroupExampleInput2" placeholder="Leinecker" onChange={event => setLastName(event.target.value)}/>
+                    <input type="text" className="form-control formGroupExampleInput2" placeholder="Last Name" onChange={event => setLastName(event.target.value)}/>
                 </div>
                 <div className='container' id='signup-btn-container'>
                     <button type="submit" className="btn btn-primary" id='signup-btn' onClick={() => doSignUp()}>Sign up</button>

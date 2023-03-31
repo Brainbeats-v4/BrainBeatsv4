@@ -61,7 +61,7 @@ const SearchPage = () => {
   useEffect(() => {
     console.log("request");
     if (!title) {
-      sendAPI("get", "/posts/getAllPosts").then((res) => {
+      sendAPI("get", "/tracks/getAllTracks").then((res) => {
         setPost(res.data);
       });
     }

@@ -8,7 +8,11 @@ import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Importing Team Member Images
+import martinMcCarthy from '../../../images/Version4Photos/MartinMcCarthy.jpg';
 import brandonMrgich from '../../../images/Version4Photos/BrandonMrgich.png';
+import aidanFleming from '../../../images/Version4Photos/AidanFleming.jpg';
+import aribelRuiz from '../../../images/Version4Photos/AribelRuiz.jpg';
+
 const Team4 = () => {
 
     // =============================  Enter values for TEAM info here ============================== 
@@ -71,7 +75,7 @@ const Team4 = () => {
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: defaultImage, bio: "", 
+        {name: "Martin McCarthy", position: "Project Manager • Machine Learning Developer", image: martinMcCarthy, bio: "", 
         contributions:"• Planned meetings and accessed time management" + "\n• Ensured target goals were reached" +
         "\n• Developed a machine learning model" + "\n • Provided assistance to frontend and backend development"},
 
@@ -79,11 +83,11 @@ const Team4 = () => {
         contributions: "• Researched neurology, music generation, and EEG" + "\n• Restructured the API" + 
         "\n• Restructured previous implementation of music generation" + "\n• Assisted with frontend functions and logic"},
 
-        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: defaultImage, bio: "", 
+        {name: "Aidan Fleming", position: "Database & API • Backend Developer  ", image: aidanFleming, bio: "", 
         contributions: "• Developed a rework of the original backend system" + "\n• Extended the backend as needed to ensure compatibility" +
         "\n• Assisted in creating functional components" + "\n• Assisted with modularizing/refactoring the codebase"},
 
-        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: defaultImage, bio: "", 
+        {name: "Aribel Ruiz", position: "Frontend Developer • Visual Designer", image: aribelRuiz, bio: "", 
         contributions: "• Developed a rework of the original frontend system" + "\n• Converted JavaScript to TypeScript" +
        "\n• Developed and implemented UI and UX designs" + "\n• Created functional components for frontend development"}
     ];

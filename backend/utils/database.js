@@ -57,7 +57,7 @@ async function getIsTokenExpired(searchVal) {
 }
 
 // Gets whether a post exists or not based on the field leading the query.
-async function getPostExists(searchVal, searchType) {
+async function getTrackExists(searchVal, searchType) {
     let result;
     switch (searchType) {
         case 'id':
@@ -88,11 +88,11 @@ async function getPlaylistExists(searchVal, searchType) {
     return result;
 }
 
-async function getLikeExists(postID, userID) {
+async function getLikeExists(trackID, userID) {
     let result = await prisma.Like.findUnique({
         where: {
-            postID_userID:{
-                postID: postID,
+            trackID_userID:{
+                trackID: trackID,
                 userID: userID
             }
         }
@@ -104,7 +104,7 @@ async function getLikeExists(postID, userID) {
 
 module.exports = {
     getUserExists: getUserExists,
-    getPostExists: getPostExists,
+    getTrackExists: getTrackExists,
     getPlaylistExists: getPlaylistExists,
     getLikeExists: getLikeExists,
     getIsTokenExpired: getIsTokenExpired

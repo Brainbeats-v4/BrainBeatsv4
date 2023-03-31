@@ -60,24 +60,48 @@ export class MIDIManager {
     private initializeSynth() {
         Tone.getTransport().bpm.value = this.settings.bpm;
         for (var i = 0; i < 8; i++) {
-            var sampler = Samplers.Piano.toDestination();
+
+            // console.log(this.settings.deviceSettings.instruments[i]);
+            var instArr = Object.values(this.settings.deviceSettings.instruments)            
+            /*  Here we are assigning a sampler and a polysynth to each channel based on the instruments array, we are passing a NULL to those 
+                that will never utilize the sampler to maintain the samplerArr having a strict typing definition of Sampler and also keep the 
+                channel size consistent. If it seems practical in the future to alter the samplers for consistency they can just simply be defined 
+                in the Samplers.tsx file. */
+            switch(instArr[i]) {
+                case Enums.InstrumentTypes.SINEWAVE:
+                    console.log('entered SINE')
+                    var sampler = Samplers.NULL.toDestination();
+                    var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();
+                    break;
+                case Enums.InstrumentTypes.PIANO:
+                    console.log('entered PIANO')
+                    var sampler = Samplers.Piano.toDestination();
+                    var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();  
+                    polySynthesizer.volume.value = -100;
+                    break;
+                default:
+                    console.log('entered NULL')
+                    var sampler = Samplers.NULL.toDestination();
+                    var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();
+                    break;
+            }
             this.samplerArr.push(sampler);
-            var res:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();//.connect(this.recorder);  
-            res.volume.value = -100;
-            this.synthArr.push(res);
+            this.synthArr.push(polySynthesizer);
         }
     }
     
     public initializeSettings(settings:MusicSettings) {
-        
         /* This is just a start, we're going to work on a condition here
            where the number of tempos get set by the type of settings */
         for(var i = 0; i < this.MIDIChannels.length; i++) {
             this.MIDIChannels[i].setTempo(settings.bpm, .1);
             this.MIDIChannels[i].setTimeSignature(4, 4);
-        } 
+        }
     }
 
+    /*  This function exists to help convert the MIDI file into base64, the reason why we're splitting it
+        into chunks is because the base64 string is very large, which overflows the buffer and causes
+        errors, this is a workaround to that. */
     private sliceIntoChunks(arr:Uint8Array, chunkSize:number) {
         const res = [];
         for (let i = 0; i < arr.length; i += chunkSize) {
@@ -194,7 +218,6 @@ export class MIDIManager {
         }
     }
 
-    
     public async realtimeGenerate(noteData:any[]) {
        var instruments = this.settings.deviceSettings.instruments;
        var instrumentsArr = [];
@@ -229,6 +252,8 @@ export class MIDIManager {
             var amplitude = playerInfo.amplitude;
             var frequency = playerInfo.noteFrequency;
 
+            var instArr = Object.values(this.settings.deviceSettings.instruments)            
+
             if(frequency === undefined) continue;
             console.log(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave));
 
@@ -240,40 +265,38 @@ export class MIDIManager {
                 * We also attempt to offset the following note by the ms equivalient of the current note len.
             */
 
+            var durationString:string;
+
             switch(duration) {
                 case Enums.NoteDurations.WHOLE:
-                    if (this.synthArr[i].activeVoices < 1) { 
-                        this.synthArr[i].triggerAttackRelease(frequency, "1n", this.synthArr[i].now())  
-                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "1n")
-                    }
+                    durationString = "1n"
                     break;
                 case Enums.NoteDurations.HALF:
-                    if (this.synthArr[i].activeVoices < 1) {
-                        this.synthArr[i].triggerAttackRelease(frequency, "2n", this.synthArr[i].now())  
-                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "2n")
-                    }
+                    durationString = "2n"
                     break;
                 case Enums.NoteDurations.QUARTER:
-                    if (this.synthArr[i].activeVoices < 1) {
-                        this.synthArr[i].triggerAttackRelease(frequency, "4n", this.synthArr[i].now()) 
-                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "4n")        
-                    } 
+                    durationString = "4n"
                     break;
                 case Enums.NoteDurations.EIGHTH:
-                    if (this.synthArr[i].activeVoices < 1) {
-                        this.synthArr[i].triggerAttackRelease(frequency, "8n", this.synthArr[i].now())
-                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "8n")             
-                    }
+                    durationString = "8n"
                     break;
                 case Enums.NoteDurations.SIXTEENTH:
-                    if (this.synthArr[i].activeVoices < 1) {
-                        this.synthArr[i].triggerAttackRelease(frequency, "16n", this.synthArr[i].now()) 
-                        this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), "16n")
-                    }         
+                    durationString = "16n"
                     break;
                 default:
+                    durationString = "2n"
                     break;
-                }
+            }
+            
+            // this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString)
+
+            if (this.synthArr[i].activeVoices < 1) {
+                this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now()) 
+                this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
+                console.log(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString);
+            }      
+            console.log(this.synthArr[i].activeVoices)
+
                 // console.log("num Voices for ", i, ": ", this.synthArr[i].activeVoices);
             
        }
@@ -282,20 +305,22 @@ export class MIDIManager {
     }
 
     private getNoteData(soundType:number, freq:number, amplitude:number, ctx:any, noteLength:number) {
+
         var buffer; // Local buffer variable.
+        var numSamples = findNumSamples(this.timeForEachNoteArray[noteLength]);
 
         // For each supported sound type we call the correct function.
         if (soundType === Enums.InstrumentTypes.SINEWAVE) {
-            buffer = this.generateSineWave(findNumSamples(this.timeForEachNoteArray[noteLength]), freq, amplitude, ctx);
+            buffer = this.generateSineWave(numSamples, freq, amplitude, ctx);
         }
         else if (soundType === Enums.InstrumentTypes.TRIANGLEWAVE) {
-            buffer = this.generateTriangleWave(findNumSamples(this.timeForEachNoteArray[noteLength]), freq, amplitude, ctx);
+            buffer = this.generateTriangleWave(numSamples, freq, amplitude, ctx);
         }
         else if (soundType === Enums.InstrumentTypes.SQUAREWAVE) {
-            buffer = this.generateSquareWave(findNumSamples(this.timeForEachNoteArray[noteLength]), freq, amplitude, ctx);
+            buffer = this.generateSquareWave(numSamples, freq, amplitude, ctx);
         }
         else {
-            buffer = this.generateInstrumentWave(findNumSamples(this.timeForEachNoteArray[noteLength]), freq, ctx, soundType);
+            buffer = this.generateInstrumentWave(numSamples, freq, ctx, soundType);
         }
 
         return buffer;
@@ -504,5 +529,4 @@ export class MIDIManager {
     public setDebugOutput(b:boolean){
         this.debugOutput = b;
     }
-
 }
