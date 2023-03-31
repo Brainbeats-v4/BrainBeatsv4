@@ -112,7 +112,7 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
                     </button>
                     <button className="btn btn-sm btn-outline-secondary mx-2" onClick={() => doNavigate("/Profile")} type="button" id="profileBtn">
                       <FontAwesomeIcon id='profile-icon' icon={["fas", "user"]} />
-                      {user.lastName}, {user.firstName}
+                      {user.firstName} {user.lastName}
                     </button>
                 </form>    
             </ul>}
