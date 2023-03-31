@@ -230,6 +230,7 @@ export class MIDIManager {
             var frequency = playerInfo.noteFrequency;
 
             if(frequency === undefined) continue;
+            console.log(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave));
 
             /*
                 * The duration lengths are defined in https://github.com/Tonejs/Tone.js/blob/641ada9/Tone/core/type/Units.ts#L53.
