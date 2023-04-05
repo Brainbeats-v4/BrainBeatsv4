@@ -20,7 +20,7 @@ import { userModeState } from '../../JWT';
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice);
     const deviceName = useAppSelector(state => state.deviceSlice);
-    const [MIDIUri, setMIDIURI] = useState('1');
+    const [MIDIUri, setMIDIURI] = useState('');
     const [isRecording, setRecording] = useState(false);
     const [debugOption1, setDebugOption1] = useState(false);
     const [debugOption2, setDebugOption2] = useState(false);
