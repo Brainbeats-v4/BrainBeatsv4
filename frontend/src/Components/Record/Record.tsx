@@ -26,6 +26,7 @@ function Record() {
     const [debugOption2, setDebugOption2] = useState(false);
     const [debugOption3, setDebugOption3] = useState(false);
     const [setup, setSetup] = useState(false);
+    
     /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
     and import it. */
     const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
@@ -216,6 +217,7 @@ function Record() {
                         <button type="button" className="btn btn-secondary" id='record-publish-btn' onClick={() => {showSaveModal()}}>Save</button>
                     </div>
                 </div>
+
                 <div id='record-btns-div'>
                     
                     {/* Debug checkboxes --------(from bootstrap)----------------- */}

@@ -69,13 +69,14 @@ export class MIDIManager {
                 in the Samplers.tsx file. */
             switch(instArr[i]) {
                 case Enums.InstrumentTypes.SINEWAVE:
-                    console.log('entered SINE')
                     var sampler = Samplers.NULL.toDestination();
                     var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();
+                    console.log('SINE VOLUME: ', polySynthesizer.volume.value);
+                    polySynthesizer.volume.value = -10;
                     break;
                 case Enums.InstrumentTypes.PIANO:
-                    console.log('entered PIANO')
                     var sampler = Samplers.Piano.toDestination();
+                    console.log('PIANO VOLUME: ', sampler.volume.value)
                     var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();  
                     polySynthesizer.volume.value = -100;
                     break;
@@ -83,6 +84,7 @@ export class MIDIManager {
                     console.log('entered NULL')
                     var sampler = Samplers.NULL.toDestination();
                     var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();
+                    polySynthesizer.volume.value = -10;
                     break;
             }
             this.samplerArr.push(sampler);
@@ -313,12 +315,12 @@ export class MIDIManager {
         if (soundType === Enums.InstrumentTypes.SINEWAVE) {
             buffer = this.generateSineWave(numSamples, freq, amplitude, ctx);
         }
-        else if (soundType === Enums.InstrumentTypes.TRIANGLEWAVE) {
-            buffer = this.generateTriangleWave(numSamples, freq, amplitude, ctx);
-        }
-        else if (soundType === Enums.InstrumentTypes.SQUAREWAVE) {
-            buffer = this.generateSquareWave(numSamples, freq, amplitude, ctx);
-        }
+        // else if (soundType === Enums.InstrumentTypes.TRIANGLEWAVE) {
+        //     buffer = this.generateTriangleWave(numSamples, freq, amplitude, ctx);
+        // }
+        // else if (soundType === Enums.InstrumentTypes.SQUAREWAVE) {
+        //     buffer = this.generateSquareWave(numSamples, freq, amplitude, ctx);
+        // }
         else {
             buffer = this.generateInstrumentWave(numSamples, freq, ctx, soundType);
         }

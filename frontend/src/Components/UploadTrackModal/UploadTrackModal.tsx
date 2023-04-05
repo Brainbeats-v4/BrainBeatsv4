@@ -70,6 +70,37 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
         })
     }
 
+
+    function saveTrack() {
+        if(user) {
+            let newTrack = {
+                id: track.id,
+                userID: user.id,
+                bpm: track.bpm,
+                key: track.key,
+                scale: track.scale,
+                instruments: {},
+                noteTypes: {},
+                title: trackName,
+                midi: track.midi,
+                thumbnail: '',
+                likeCount: track.likeCount,
+                token: jwt
+            }
+            sendAPI('post', '/tracks/createTrack', newTrack).then(res => {
+                if(res.status == 201) {
+                    console.log(res);
+                    navigate('/profile');
+                }
+                else {
+                    console.log(res);
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+    }
+
     function verifyCancelRecording() {
         // let erase = window.confirm("Exiting will erase the track you just recorded. You will not be able to recover this track later. \n\nPress ok to record a new track.");
         window.alert("Exiting will erase the track you just recorded. You will not be able to recover this track later.");
@@ -126,7 +157,7 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
                             <FontAwesomeIcon className='modal-track-icons' icon={["fas", "download"]} />
                             Download
                         </button>}
-                        {editing && <button className='btn btn-secondary modal-btn-public upload-track-btn'/*onClick={() => updateTrack()}*/>
+                        {editing && <button className='btn btn-secondary modal-btn-public upload-track-btn' onClick={() => saveTrack()}>
                             <FontAwesomeIcon className='modal-track-icons' icon={["fas", "arrow-up-from-bracket"]} />
                             Upload
                         </button>}
