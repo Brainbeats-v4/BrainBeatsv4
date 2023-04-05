@@ -2,7 +2,7 @@ import { CompactPicker } from 'react-color';
 import { useState, useEffect } from 'react';
 import './Cards.css';
 import { Modal } from 'react-bootstrap';
-import ImageModal from '../../../ImageModal/ImageModal';
+import ImageModal from '../../../Modals/ImageModal/ImageModal';
 import { useAppSelector } from '../../../../Redux/hooks';
 import { Card } from '../../../../util/Interfaces'
 import { useDispatch } from 'react-redux';

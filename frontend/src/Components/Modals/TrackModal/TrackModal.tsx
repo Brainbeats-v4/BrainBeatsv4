@@ -1,27 +1,27 @@
 import { useEffect, useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import sendAPI from '../../SendAPI';
-import { userJWT, userModeState } from "../../JWT";
+import sendAPI from '../../../SendAPI';
+import { userJWT, userModeState } from "../../../JWT";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import buildPath from '../../util/ImagePath';
-import { resizeMe } from '../../util/ImageHelperFunctions';
+import buildPath from '../../../util/ImagePath';
+import { resizeMe } from '../../../util/ImageHelperFunctions';
 import React from 'react';
-import isDev from '../../util/isDev';
+import isDev from '../../../util/isDev';
 
 import trackPlayback from './trackPlayback';
 
-import { Track, Like } from '../../util/Interfaces';
+import { Track, Like } from '../../../util/Interfaces';
 
 // Import CSS
 import './TrackModal.css';
-import '../TrackCard/TrackCard.css';
-import TrackCard from '../TrackCard/TrackCard';
+import '../../TrackCard/TrackCard.css';
+import TrackCard from '../../TrackCard/TrackCard';
 import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { time } from 'console';
-import * as Interfaces from '../../util/Interfaces';
+import * as Interfaces from '../../../util/Interfaces';
 
 type Props = {
   track:Interfaces.Track; 

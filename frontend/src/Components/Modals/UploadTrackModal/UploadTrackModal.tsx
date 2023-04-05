@@ -1,16 +1,16 @@
 import { useEffect, useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import sendAPI from '../../SendAPI';
-import { userJWT, userModeState } from "../../JWT";
+import sendAPI from '../../../SendAPI';
+import { userJWT, userModeState } from "../../../JWT";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { Track } from '../../util/Interfaces';
+import { Track } from '../../../util/Interfaces';
 
 // Import CSS
 import './UploadTrackModal.css';
 import '../TrackModal/TrackModal.css';
-import '../TrackCard/TrackCard.css';
+import '../../TrackCard/TrackCard.css';
 import { CloseButton } from 'react-bootstrap';
 import Playback from '../Playback/Playback';
 
@@ -140,7 +140,7 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
                             </div> }
                             <div className='mt-3'>
                                 <label className="form-label form-text login-text">Author:</label>
-                                <h6 id="track-author-text">{user?.username}</h6>
+                                <h6 id="track-author-text">{user?.firstName} {user?.lastName}</h6>
                             </div>
                             <div className ='mt-3'>
                                 <h6 id="track-author-text">Track:</h6>

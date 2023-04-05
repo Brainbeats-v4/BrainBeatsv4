@@ -4,7 +4,7 @@ import { useState } from 'react';
 import '../../About/About.css'
 import profileImage from '../../../images/blankProfile.png'
 import { Modal } from 'react-bootstrap';
-import TeamMemberModal from '../../TeamMemberModal/TeamMemberModal';
+import TeamMemberModal from '../../Modals/TeamMemberModal/TeamMemberModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Importing Team Member Images
