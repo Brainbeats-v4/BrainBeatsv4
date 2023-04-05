@@ -1,16 +1,8 @@
-import { useEffect, useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import sendAPI from '../../SendAPI';
-import { userJWT, userModeState } from "../../JWT";
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { useNavigate } from 'react-router-dom';
-import buildPath from '../../util/ImagePath';
-
 
 // Import CSS
 import '../TrackModal/TrackModal.css';
-import '../TrackCard/TrackCard.css';
+import '../../TrackCard/TrackCard.css';
 import './TeamMemberModal.css';
 
 type Props = {

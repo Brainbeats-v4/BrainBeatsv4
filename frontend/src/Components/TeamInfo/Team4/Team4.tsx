@@ -3,7 +3,7 @@ import { useState } from 'react';
 // Importing CSS
 import '../../About/About.css'
 import profileImage from '../../../images/blankProfile.png'
-import TeamMemberModal from '../../TeamMemberModal/TeamMemberModal';
+import TeamMemberModal from '../../Modals/TeamMemberModal/TeamMemberModal';
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 

@@ -1,16 +1,16 @@
 import { useEffect, useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import sendAPI from '../../SendAPI';
-import { userJWT, userModeState } from "../../JWT";
+import sendAPI from '../../../SendAPI';
+import { userJWT, userModeState } from "../../../JWT";
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { Track } from '../../util/Interfaces';
+import { Track } from '../../../util/Interfaces';
 
 // Import CSS
 import './UploadTrackModal.css';
 import '../TrackModal/TrackModal.css';
-import '../TrackCard/TrackCard.css';
+import '../../TrackCard/TrackCard.css';
 import { CloseButton } from 'react-bootstrap';
 
 type Props = {

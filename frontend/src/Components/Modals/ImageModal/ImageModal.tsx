@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { createApi } from 'unsplash-js';
 
 // Redux
-import * as Interfaces from '../../util/Interfaces'
+import * as Interfaces from '../../../util/Interfaces'
 import { useDispatch } from 'react-redux';
 // Redux state to hold settings for specificed board
-import { set } from '../../Redux/slices/imageSlice';
+import { set } from '../../../Redux/slices/imageSlice';
 
 // import {setImageURL} from "../ScriptContainer/Scripts/Cards/Cards"
 

@@ -1,6 +1,5 @@
 import React from "react"
-import { Track } from "../../util/Interfaces";
-
+import { Track } from "../../../util/Interfaces";
 interface Playlist{
 
 };

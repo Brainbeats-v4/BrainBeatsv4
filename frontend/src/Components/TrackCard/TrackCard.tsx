@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './TrackCard.css';
 import { Modal } from 'react-bootstrap';
-import TrackModal from '../TrackModal/TrackModal';
+import TrackModal from '../Modals/TrackModal/TrackModal';
 import sendAPI from '../../SendAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';

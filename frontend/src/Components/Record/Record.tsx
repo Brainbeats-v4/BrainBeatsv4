@@ -11,7 +11,7 @@ import isDev from '../../util/isDev';
 import { Link } from 'react-router-dom';
 
 // Imports for saving a track
-import UploadTrackModal from '../UploadTrackModal/UploadTrackModal';
+import UploadTrackModal from '../Modals/UploadTrackModal/UploadTrackModal';
 import { emptyTrack } from '../../util/Constants';
 import { Track } from '../../util/Interfaces';
 import { useRecoilState } from 'recoil';
@@ -20,7 +20,7 @@ import { userModeState } from '../../JWT';
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice);
     const deviceName = useAppSelector(state => state.deviceSlice);
-    const [MIDIUri, setMIDIURI] = useState('');
+    const [MIDIUri, setMIDIURI] = useState('1');
     const [isRecording, setRecording] = useState(false);
     const [debugOption1, setDebugOption1] = useState(false);
     const [debugOption2, setDebugOption2] = useState(false);
