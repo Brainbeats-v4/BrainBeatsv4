@@ -108,7 +108,7 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
                             </div> }
                             <div className='mt-3'>
                                 <label className="form-label form-text login-text">Author:</label>
-                                <h6 id="track-author-text">{user?.username}</h6>
+                                <h6 id="track-author-text">{user?.firstName} {user?.lastName}</h6>
                             </div>
                         </div>         
                     </div>

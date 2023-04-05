@@ -1,13 +1,21 @@
 import { ConcreteCytonStream, ConcreteGanglionStream, ConcreteTestStream } from '../../util/DeviceAbstractFactory';
 import { useAppSelector } from "../../Redux/hooks";
 import {useState, useEffect} from 'react';
+import { useNavigate } from "react-router-dom";
 
 import './Record.css'
 import RecordCards from '../ScriptContainer/Scripts/Cards/RecordCards';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormGroup, ToggleButton } from 'react-bootstrap';
+import { FormGroup, Modal, ToggleButton } from 'react-bootstrap';
 import isDev from '../../util/isDev';
 import { Link } from 'react-router-dom';
+
+// Imports for saving a track
+import UploadTrackModal from '../UploadTrackModal/UploadTrackModal';
+import { emptyTrack } from '../../util/Constants';
+import { Track } from '../../util/Interfaces';
+import { useRecoilState } from 'recoil';
+import { userModeState } from '../../JWT';
 
 function Record() {
     const settings = useAppSelector(state => state.musicGenerationSettingsSlice);
@@ -21,6 +29,7 @@ function Record() {
     /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
     and import it. */
     const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
+    const navigate = useNavigate();
 
     // Dev Debug button ----------------------------------
     const [debugBool, setDebug] = useState(false);
@@ -122,12 +131,90 @@ function Record() {
         setSetup(true);
     }
 
+    // ====================== Functions for saving a track ======================
+    const [user, setUser] = useRecoilState(userModeState);
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+
+    const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
+    const defaultThumbnail = "bbmascot-wBackground-eyes_open_smiling.png";
+
+    // Hanlde the model for the newly created Track
+    function showEditTrackInfo() {
+
+        console.log("user: ", user);
+
+        // User is logged in to post this track
+        if (user) {
+
+            // TODO: Grab the midi and place it in the track
+            var newTrack:Track = {
+                "id": "",
+                "title": "",
+                "bpm": settings.bpm,
+                "key": settings.keyGroup,
+                "scale": settings.scale,
+                'instruments': settings.deviceSettings.instruments,
+                "noteTypes": settings.deviceSettings.instruments,
+                "likeCount": 0,
+                "midi": MIDIUri,
+                "thumbnail": defaultThumbnail,
+                "user": user,
+                "userID": user.id,
+                "public": true,
+            }
+
+
+            setCurrentTrack(newTrack);
+        }
+        /* No user is logged in, they can download but can NOT save unless creating an account and logging in.
+         * We should ask the user to login and or make an account, and store the midi temporarily in redux.
+         * After the user has logged in / created account, if redux.midi is not empty, prompt user that they have 
+         * an unsaved midi track, (aka just pull the model up and allow the user to fill in the information for the track
+         * if they wish to post.)
+         */
+        else {
+            // prompt they need to login / create account
+
+            // easiest solution is to create a pop up model to do this so they never leave this page and
+            // then continue saving the Track
+
+            // Other solution is to save midi to redux like stated above, and once logged in trigger event to 
+            // tell user a midi is in redux and is unsaved, and they need to save
+        }
+
+        setShow(true);
+    }
+
+    function showRecordTrackAlert() {
+        alert("You can not save an empty recording. \nPlease record a track and then save.")
+    }
+
+    // Fucntion displays alert if midi file is empty, otherwise open save track modal
+    function showSaveModal() {
+        if (MIDIUri == '')
+            showRecordTrackAlert();
+        else 
+            showEditTrackInfo();
+    }
+
+    function goBackToCards() {
+        navigate("/script-settings");
+    }
+
     return(
         <div className='container' id='record-container'>
             <h2 className='record-heading'>Recording Music</h2>
             <div id='record-container-body'>
+                <Modal id='pop-up' show={show} onHide={handleClose}>
+                    <UploadTrackModal track={currentTrack}/>
+                </Modal>
                 <div id='script-div'>
                     <RecordCards></RecordCards>
+                    <div id='record-publish-buttons-div'>
+                        <button type="button" className="btn btn-secondary" id='record-cancel-btn' onClick={() => {goBackToCards()}}>Back</button>
+                        <button type="button" className="btn btn-secondary" id='record-publish-btn' onClick={() => {showSaveModal()}}>Save</button>
+                    </div>
                 </div>
                 <div id='record-btns-div'>
                     
