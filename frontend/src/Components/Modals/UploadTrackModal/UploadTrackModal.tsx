@@ -12,7 +12,7 @@ import './UploadTrackModal.css';
 import '../TrackModal/TrackModal.css';
 import '../../TrackCard/TrackCard.css';
 import { CloseButton } from 'react-bootstrap';
-import Playback from '../Playback/Playback';
+import Playback from '../../Playback/Playback';
 
 type Props = {
     track: Track; 
