@@ -26,7 +26,8 @@ router.post('/createTrack', async (req, res) => {
             });
         } else {
             // Create a single record
-            const newTrack = await prisma.Track.create({
+            console.log(req)
+            const newTrack = await prisma.track.create({
                 data: {
                     user: {
                         connect: {
