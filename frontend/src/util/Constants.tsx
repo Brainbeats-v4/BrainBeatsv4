@@ -1,4 +1,4 @@
-import { Track } from "./Interfaces";
+import { Track, User } from "./Interfaces";
 
 
 
@@ -97,4 +97,14 @@ export const emptyTrack:Track = {
     "playlistTracks": null,
     "public": false,
     "like": null
+}
+
+export const emptyUser:User = {
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    username: '',
+    bio: '',
+    profilePicture: '',
 }

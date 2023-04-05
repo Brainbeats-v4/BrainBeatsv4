@@ -47,7 +47,7 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
 
     function updateTrack (visibility = track.public, trackName = track.title, thumbnail = track.thumbnail) {
 
-        if (jwt == null || user == null) navigate("/login");
+        if (jwt == null) navigate("/login");
         console.log(track);
         let updatedTrack = {
             id: track.id,
@@ -59,16 +59,19 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
             token: jwt,
         }
     
-        sendAPI("put", "/tracks/updateTrack", updatedTrack).then((res) => {
-            if (res.status == 200) {
-                setErrMsg(trackName);
-                // setSuccessMsg(JSON.stringify(res.data));
-            }
-            else {
-                setErrMsg("Could not save track.");
-                setSuccessMsg("");
-            }
-        })
+        if (user){
+            sendAPI("put", "/tracks/updateTrack", updatedTrack).then((res) => {
+                if (res.status == 200) {
+                    setErrMsg(trackName);
+                    // setSuccessMsg(JSON.stringify(res.data));
+                }
+                else {
+                    setErrMsg("Could not save track.");
+                    setSuccessMsg("");
+                }
+            })
+        }
+    
     }
 
 
@@ -99,6 +102,10 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
             }).catch(err => {
                 console.log(err);
             })
+        }
+        else {
+            alert("You must create an account before uploading a track.");
+            window.open('./login');
         }
     }
 
@@ -159,9 +166,12 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
                     </div>
                     <div id='modal-container-footer-2'>
                         {editing && <button className='btn btn-secondary modal-btn-public upload-track-btn' /*onClick={() => updateTrack()}*/>
-                            <FontAwesomeIcon className='modal-track-icons' icon={["fas", "download"]} />
-                            Download
+                            <a style={{color: "white", textDecoration: "none"}} id='download-midi-btn' download={'myTrack.MID'} href={track.midi}>
+                                <FontAwesomeIcon className='modal-track-icons' icon={["fas", "download"]} />
+                                Download 
+                            </a>
                         </button>}
+
                         {editing && <button className='btn btn-secondary modal-btn-public upload-track-btn' onClick={() => saveTrack()}>
                             <FontAwesomeIcon className='modal-track-icons' icon={["fas", "arrow-up-from-bracket"]} />
                             Upload

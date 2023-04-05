@@ -1,6 +1,7 @@
 .upload-track-btn{
     background-color: #F8607C;
     border-color: #F8607C;
+    color: white;
     width: 30%;
     min-width: fit-content;
 }

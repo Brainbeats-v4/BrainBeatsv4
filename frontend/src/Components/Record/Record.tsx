@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 
 // Imports for saving a track
 import UploadTrackModal from '../Modals/UploadTrackModal/UploadTrackModal';
-import { emptyTrack } from '../../util/Constants';
+import { emptyTrack, emptyUser } from '../../util/Constants';
 import { Track } from '../../util/Interfaces';
 import { useRecoilState } from 'recoil';
 import { userModeState } from '../../JWT';
@@ -170,7 +170,24 @@ function Record() {
          * if they wish to post.)
          */
         else {
-            // prompt they need to login / create account
+             // Open modal with no user info. The user would not be able to upload the track, only download
+             var newTrack:Track = {
+                "id": "",
+                "title": "",
+                "bpm": settings.bpm,
+                "key": settings.keyGroup,
+                "scale": settings.scale,
+                'instruments': settings.deviceSettings.instruments,
+                "noteTypes": settings.deviceSettings.instruments,
+                "likeCount": 0,
+                "midi": MIDIUri,
+                "thumbnail": defaultThumbnail,
+                "user": emptyUser,
+                "userID": emptyUser.id,
+                "public": true,
+            }
+
+            setCurrentTrack(newTrack);
 
             // easiest solution is to create a pop up model to do this so they never leave this page and
             // then continue saving the Track
