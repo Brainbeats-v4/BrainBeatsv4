@@ -49,7 +49,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
   const [likeCount, setLikeCount] = useState(track.likeCount);
 
   // The ternary just sets the like array to the user like array if it exists, else the empty
-  const [userLikeArr, setUserLikeArr] = useState(user ? user.like ? user.like : emptyLikeArr : emptyLikeArr);
+  const [userLikeArr, setUserLikeArr] = useState(user ? user.likes ? user.likes : emptyLikeArr : emptyLikeArr);
 
   const [favorited, setFavorited] = useState(checkLike()); // change this later
 
@@ -57,6 +57,9 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
   useEffect(() => {
     // setFavorited(checkLike()); // need to debug. not calling checklike when opening/editing unliked track.
     checkTrackOwner();
+
+    console.log("userLikes: ", user?.likes);
+
     setFavorited(checkLike());
   }, []);
 
@@ -68,8 +71,8 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
         setEditVisibility(true);
       }
       
-      if(user.like != undefined){
-        setUserLikeArr(user.like);
+      if(user.likes != undefined){
+        setUserLikeArr(user.likes);
       }
     }
 
@@ -267,7 +270,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     let favorited:boolean = false;
     
     // If no user or no user likes, they havent liked this.
-    if (!user || !user.like) {
+    if (!user || !user?.likes) {
       return false;
     }
 
@@ -275,9 +278,9 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     // TODO: user.like.includes(track); // <-- expected arg: "Like"
 
     // Linearly searches for the like, break early if found
-    for (var i = 0; i < user.like.length; i++)
+    for (var i = 0; i < user.likes.length; i++)
     {
-      if (user.like[i].trackID == track.id) {
+      if (user.likes[i].trackID == track.id) {
         favorited = true;
         break;
         // console.log("track '" + track.title + "' is liked.");
@@ -332,10 +335,12 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
       return;
     }
 
+    const date = new Date();
     // Create the new like
     let newUserLike:Like = {
-      userID: user.id,
       trackID: track.id,
+      userID: user.id,
+      createdAt: date,
     }
 
     // add it to the end of the current like array, and set the state
@@ -347,7 +352,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     
     sendAPI("post", "/likes/createUserLike", newUserLike).then((res) => {
       
-      console.log("res: ", res.data);    
+      // console.log("res: ", res.data);    
       
       // If success
       if (res.status == 201) {
@@ -355,12 +360,8 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
         setSuccessMsg(JSON.stringify(res.data))
         setFavorited(true);
 
-        // Increments local likeCount
-        // setLikeCount(likeCount + 1);
-        // incrementLike().then(() => updateLikes(likeCount));
-
         incrementLike().then(newlikes => incrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
-        
+        updateUserLikesArray();
       }
       else {
         setErrMsg("Could not like post.");
@@ -371,54 +372,41 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
       console.error("Could not like post:", e);
       setFavorited(false);
     })
+  }
 
-    console.log("like created, updating user with new like array:");
-
-
-    // Like created, now update the user with the new like array
-    var updatedUser:Interfaces.User = {
-      // unchanged
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      bio: user.bio,
-      profilePicture: user.profilePicture,
-      username: user.username, 
-      tracks: user.tracks,
-      playlists: user.playlists,
-      
-      token: jwt,
-      like: userLikeArr,
-    };
-
-    sendAPI('put', '/users/updateUser', updatedUser)
-          .then(res => {
-            if (res.status == 201) {
-              console.error(res.statusText);
-              return;
-            }
-              console.log(res);
-              var updatedUser:Interfaces.User = res.data;
-
-              // var updatedUser:Interfaces.User = {
-              //     id: res.data.id,
-              //     firstName: res.data.firstName,
-              //     lastName: res.data.lastName,
-              //     email: res.data.email,
-              //     bio: res.data.bio,
-              //     profilePicture: res.data.profilePicture,
-              //     username: user.username,
-              //     like: res.data.like,
-              // }
-
-              setUser(updatedUser);
-              console.log(updatedUser);
-
-          }).catch(e => {
-              console.error(e);
-          })
+  function updateUserLikesArray(){
+    if(user) {
+      console.log("like created, updating user with new like array:");
+      // Like created, now update the user with the new like array
+      var updatedUser:Interfaces.User = {
+        // unchanged
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        bio: user.bio,
+        profilePicture: user.profilePicture,
+        username: user.username, 
+        token: jwt,
+        likes: userLikeArr,
+      };
   
+      sendAPI('put', '/users/updateUser', updatedUser)
+            .then(res => {
+              if (res.status == 201) {
+                console.error(res.statusText);
+                return;
+              }
+                console.log(res);
+                var updatedUser:Interfaces.User = res.data;
+  
+                setUser(updatedUser);
+                console.log(updatedUser);
+  
+            }).catch(e => {
+                console.error(e);
+            })
+    }
   }
 
   function decrementLike() {
@@ -438,20 +426,22 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
   // Removes a new like
   function removeLike() {
 
-    if(user != null) {
-      let newLike:Like = {
-        trackID: track.id,
-        track,
+    if((user != null) && (user.likes != null)) {
+      let removedLike:Like = {
         userID: user.id,
-        user,
+        trackID: track.id,
         token: jwt,
       }
+
+      console.log("removedLike: ", removedLike);
+      console.log("track: ", track);
+      console.log("trackID: ", track.id);
 
       // let newLikeArr: Like[] = user.like.filter((like: Like) => like.postID != track.id);  
       // user.like = newLikeArr;
       setFavorited(false);
-        
-      sendAPI("delete", "/likes/removeUserLike", newLike).then((res) => {
+
+      sendAPI("delete", "/likes/removeUserLike", removedLike).then((res) => {
         if (res.status == 200) {
           setErrMsg(track.title);
           setSuccessMsg(JSON.stringify(res.data));
@@ -460,6 +450,20 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
           // decrementLike().then(() => updateLikes(likeCount));
           decrementLike().then(newLikes => decrementLike()).then(newLikes => { updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
           
+          // Searching for unfavorited track to update user LikeArray
+          let newLikeArr: Array<Interfaces.Like> = userLikeArr; 
+          console.log("removeLike() userLikeArr: ", userLikeArr);   
+
+          if (user?.likes != null) {
+            for (var i = 0; i < user.likes.length; i++) {
+              if(user.likes[i].trackID == removedLike.trackID)
+                newLikeArr.splice(i, 1);
+            }
+  
+            // Set user like array to be array with removed like
+            console.log("removeLike() newLikeArr: ", newLikeArr);
+            setUserLikeArr(newLikeArr);
+          }
         }
         else {
           setErrMsg("Could not like post.");
@@ -470,10 +474,6 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     else {
       navigate('/login');
     }
-
-    
-
-
   }
 
   // Function updating track likes

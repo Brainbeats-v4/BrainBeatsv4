@@ -187,6 +187,28 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         //     setTracksPulled(true)
         // }
     }
+
+    async function getLikedTracks() {
+        var objArray:Track[] = [];
+
+        var currentUser = {userID: input};
+
+        await sendAPI('get', '/likes/getAllUserLikes', currentUser)
+            .then(res => {
+                // console.log('res getUserLikes: ', res);
+                for(var i = 0; i < res.data.length; i++) {
+                    
+                    var currentTrack:Track = res.data[i];
+                    // console.log("current Track: ", currentTrack);
+
+                    objArray.push(currentTrack);
+                }
+                setTrackList(objArray);
+                setTracksPulled(true)
+            }).catch(e => {
+                console.error("Failed to pull liked tracks: ", e);
+        })
+    }
     
     function PopulateTrackCards() {
         const MAX_COLS:number = 4;
@@ -201,6 +223,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         if(!tracksPulled) {
             if(cardType === 'Profile') getProfileTracks();
             else if(cardType === 'Popular') getPopularTracks(MAX_COLS * MAX_ROWS);
+            else if (cardType === 'Likes') getLikedTracks();
         }
 
         for(let i = 0; i < MAX_ROWS; i++){

@@ -25,6 +25,7 @@ const Profile = () => {
     const [msg, setMsg] = useState('');
 
     const [tracksTotal, setTracksTotal] = (useState(0));
+    const [userLikesTotal, setUserLikesTotal] = (useState(0));
 
 
     // user contains "userID" instead of "id"
@@ -45,6 +46,7 @@ const Profile = () => {
         kickNonUser();
         if (user != null){
             getProfileTracks();
+            getUserLikes();
         }
     }, [])
 
@@ -173,7 +175,7 @@ const Profile = () => {
                     tracks: user.tracks,
                     username: user.username,
                     playlists: user.playlists,
-                    like: user.like,
+                    likes: user.likes,
 
                 }
                 setUser(updatedUser);
@@ -201,7 +203,7 @@ const Profile = () => {
             profilePicture: user.profilePicture,
             tracks: user.tracks,
             playlists: user.playlists,
-            like: user.like,
+            likes: user.likes,
             token: jwt
         };
 
@@ -238,6 +240,13 @@ const Profile = () => {
             }).catch(e => {
                 console.error("Failed to count profile tracks: ", e);
         })
+    }
+
+    // Gets User Track count
+    async function getUserLikes() {
+        if(user && (user.likes != null)){
+            setUserLikesTotal(user.likes.length);
+        }
     }
 
     return(
@@ -293,8 +302,8 @@ const Profile = () => {
                             <h6>Followers</h6>
                         </div>
                         <div className='count-div' id='following-count-div'>
-                            <h5>0</h5>
-                            <h6>Playlists</h6>
+                            <h5>{userLikesTotal}</h5>
+                            <h6>Likes</h6>
                         </div>
                     </div>
                 </div>
@@ -313,7 +322,7 @@ const Profile = () => {
                     style={{backgroundColor: playlistsOpen? "rgb(83, 83, 83)": "rgba(100, 100, 100, 1)"}}>
                         <div id='playlists-btn-text'>
                             <FontAwesomeIcon icon={["fas", "list"]} />
-                            Playlists
+                            My Likes
                         </div>
                         <div id='playlists-btn-line' style={{display: playlistsOpen? "block" : "none"}}>
                         </div>
@@ -341,8 +350,10 @@ const Profile = () => {
 
             {/* Displays when Playlists tab selected */}
             <div id='profile-bottom-container' style={{display: playlistsOpen? "block" : "none"}}>
-                <h1>My Playlist</h1>
+                <h1>My Likes</h1>
                 <hr></hr>
+                {user && <TrackCard cardType={'Likes'} input={user.id} />}
+
                 {/* <TrackCard cardType={'Profile'} input={user?.userId} /> */}
                 {/* <div>
                     <ul>
