@@ -21,6 +21,8 @@ export class MIDIManager {
     public MIDIURI:string;
     private stopFlag;
      
+    /* The constructor for the MIDIManager requires you to input the settings from the user input
+        and the  */
     constructor(settings:MusicSettings, timeForEachNoteArray:Array<number>) {
         this.MIDIURI = "";
         var channel0 = new MidiWriter.Track();
@@ -60,30 +62,30 @@ export class MIDIManager {
     private initializeSynth() {
         Tone.getTransport().bpm.value = this.settings.bpm;
         for (var i = 0; i < 8; i++) {
-
-            // console.log(this.settings.deviceSettings.instruments[i]);
             var instArr = Object.values(this.settings.deviceSettings.instruments)            
             /*  Here we are assigning a sampler and a polysynth to each channel based on the instruments array, we are passing a NULL to those 
                 that will never utilize the sampler to maintain the samplerArr having a strict typing definition of Sampler and also keep the 
                 channel size consistent. If it seems practical in the future to alter the samplers for consistency they can just simply be defined 
                 in the Samplers.tsx file. */
+            var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>>;
+            var sampler:Tone.Sampler; 
             switch(instArr[i]) {
                 case Enums.InstrumentTypes.SINEWAVE:
-                    var sampler = Samplers.NULL.toDestination();
-                    var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();
+                    sampler = Samplers.NULL.toDestination();
+                    polySynthesizer = new Tone.PolySynth().toDestination();
                     console.log('SINE VOLUME: ', polySynthesizer.volume.value);
                     polySynthesizer.volume.value = -10;
                     break;
                 case Enums.InstrumentTypes.PIANO:
-                    var sampler = Samplers.Piano.toDestination();
+                    sampler = Samplers.Piano.toDestination();
                     console.log('PIANO VOLUME: ', sampler.volume.value)
-                    var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();  
+                    polySynthesizer = new Tone.PolySynth().toDestination();  
                     polySynthesizer.volume.value = -100;
                     break;
                 default:
                     console.log('entered NULL')
-                    var sampler = Samplers.NULL.toDestination();
-                    var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> = new Tone.PolySynth().toDestination();
+                    sampler = Samplers.NULL.toDestination();
+                    polySynthesizer = new Tone.PolySynth().toDestination();
                     polySynthesizer.volume.value = -10;
                     break;
             }
@@ -111,25 +113,30 @@ export class MIDIManager {
           res.push(chunk);
         }
         return res;
-      };
+    };
 
-      private convertToBase64(file:Uint8Array): Promise<string> {
+    /*  We hand the file over to this function as a Uint8Array and then
+        convert it into an audio file in base64 format. */
+    private convertToBase64(file:Uint8Array): Promise<string> {
         return new Promise((resolve, reject) => {
-          var fileBlob = new Blob([file], {
+            var fileBlob = new Blob([file], {
             type: 'audio/midi'
-          });
-          const fileReader = new FileReader();
-      
-          fileReader.readAsDataURL(fileBlob);
-          fileReader.onload = () => {
+            });
+            const fileReader = new FileReader();
+        
+            fileReader.readAsDataURL(fileBlob);
+            fileReader.onload = () => {
             resolve(fileReader.result as string);
-          };
-          fileReader.onerror = (error) => {
+            };
+            fileReader.onerror = (error) => {
             reject(error);
-          }
+            }
         })
-      }
-
+    }
+    
+    /* returnMIDI is simple, it takes the 8 channels of MIDI Writers and then
+        puts them all into a new MIDIWriter which builds them all into a base64
+        string. */
     public async returnMIDI() {
       
         // Handles midi file generation for download

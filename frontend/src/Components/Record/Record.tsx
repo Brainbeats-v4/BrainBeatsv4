@@ -17,7 +17,6 @@ function Record() {
     const [debugOption1, setDebugOption1] = useState(false);
     const [debugOption2, setDebugOption2] = useState(false);
     const [debugOption3, setDebugOption3] = useState(false);
-    const [setup, setSetup] = useState(false);
     
     /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
     and import it. */
@@ -119,10 +118,6 @@ function Record() {
         }
     }
 
-    function showSetup() {
-        setSetup(true);
-    }
-
     return(
         <div className='container' id='record-container'>
             <h2 className='record-heading'>Recording Music</h2>
@@ -159,9 +154,8 @@ function Record() {
                     {/* ------------------------------------- End Debug checkboxes */}
                     <div className="setupGuide">
                             <h2>New to BrainBeats?</h2>
-                            <p onClick={showSetup}>If you need to understand how to get started, view our setup guide <Link to="/setup" target="_blank">here.</Link><br />
+                            <p>If you need to understand how to get started, view our setup guide <Link to="/setup" target="_blank">here.</Link><br />
                             Otherwise, continue by hitting the record button below:</p>
-
                     </div>
                    {!isRecording && <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={doRecording}>
                         <FontAwesomeIcon icon={["fas", "circle"]} />

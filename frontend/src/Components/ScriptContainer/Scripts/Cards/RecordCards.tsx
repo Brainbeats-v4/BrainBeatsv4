@@ -15,7 +15,7 @@ import { emptyTrack } from '../../../../util/Constants';
 // Import CSS
 import './RecordCards.css'
 
-const RecordCards = () => {
+function RecordCards() {
     
     const [user, setUser] = useRecoilState(userModeState);
     const [userMode, setUserMode] = useRecoilState(userModeState);
@@ -79,12 +79,12 @@ const RecordCards = () => {
         }
 
         setShow(true);
-     }
+    }
 
     return (
         <div className='container' id='record-track-container'>
             <Modal id='pop-up' show={show} onHide={handleClose}>
-                <UploadTrackModal track={emptyTrack}/>
+                <UploadTrackModal track={currentTrack}/>
             </Modal>
             <div>
                 <div id='record-track-info-div'>
@@ -100,7 +100,8 @@ const RecordCards = () => {
                     <button type="button" className="btn btn-secondary" id='record-publish-btn' onClick={showEditTrackInfo}>Save</button>
                 </div>
             </div>          
-        </div>);
+        </div>
+    );
 }
 
 export default RecordCards;

@@ -12,6 +12,7 @@ import './UploadTrackModal.css';
 import '../TrackModal/TrackModal.css';
 import '../TrackCard/TrackCard.css';
 import { CloseButton } from 'react-bootstrap';
+import Playback from '../Playback/Playback';
 
 type Props = {
     track: Track; 
@@ -47,7 +48,7 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
     function updateTrack (visibility = track.public, trackName = track.title, thumbnail = track.thumbnail) {
 
         if (jwt == null || user == null) navigate("/login");
-
+        console.log(track);
         let updatedTrack = {
             id: track.id,
             title: trackName,
@@ -140,6 +141,10 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
                             <div className='mt-3'>
                                 <label className="form-label form-text login-text">Author:</label>
                                 <h6 id="track-author-text">{user?.username}</h6>
+                            </div>
+                            <div className ='mt-3'>
+                                <h6 id="track-author-text">Track:</h6>
+                                <Playback midiString={track.midi}/>
                             </div>
                         </div>         
                     </div>
