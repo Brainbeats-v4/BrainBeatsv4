@@ -64,8 +64,6 @@ function Record() {
         could define this earlier and pass it down to this function (in the case that you have different EEG device with the same
         number of channels) but we didn't see a need for it in our case. */
     async function doRecording() {
-        var dev:any;
-
         console.log("device:", deviceName);
 
         switch (deviceName) {
@@ -80,7 +78,6 @@ function Record() {
                 break;
             default: return;
         }
-
         /* ! Use Effect above will now be triggered */
         
         /*  Once we have defined the class we can initialize it. If you're to add another one of these it's important 
@@ -91,13 +88,10 @@ function Record() {
     
     function stopRecording() {
         console.log('Clicked Stop');
-        
         /* When the device is stopped it signals the call to return the MIDI since
             we are no longer recording input. 
             This will check for sucessful return of a MIDI base64 string to be stored 
             in the database and make it easily downloadable. */
-
-        
         device?.stopDevice()?.then(
             (url:string) => {
                 console.log("Midi URL from Record.tsx: ", url);
@@ -106,7 +100,6 @@ function Record() {
         ).catch(err => {
             console.error('Unable to stop device: ', err);
         })
-
         setDevice(undefined);
         setRecording(false);
     }
