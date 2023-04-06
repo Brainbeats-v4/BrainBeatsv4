@@ -161,26 +161,26 @@ router.get('/getUserTracksByID', async (req, res) => {
     }
 });
 
-router.get('/getTracksByID', async (req, res) => {
+router.get('/getTrackByID', async (req, res) => {
     try {
-        const decoded = verifyJWT(req.body.token);
+        // const decoded = verifyJWT(req.body.token);
 
-        if (!decoded) {
-            return res.status(401).json({
-                msg: "Invalid token"
-            });
-        }
+        // if (!decoded) {
+        //     return res.status(401).json({
+        //         msg: "Invalid token"
+        //     });
+        // }
 
-        const userTracks = await prisma.Track.find({
+        const track = await prisma.Track.findUnique({
             where: { id: req.query.id },
         });
-        if (!userTracks) {
+        if (!track) {
             return res.status(404).json({
-                msg: "User ID not found"
+                msg: "Track ID not found"
             });
         }
 
-        return res.status(200).json(userTracks);
+        return res.status(200).json(track);
     }
     catch (err) {
         console.log(err);
