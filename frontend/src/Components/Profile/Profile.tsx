@@ -27,7 +27,6 @@ const Profile = () => {
     const [tracksTotal, setTracksTotal] = (useState(0));
     const [userLikesTotal, setUserLikesTotal] = (useState(0));
 
-
     // user contains "userID" instead of "id"
     var id = user?.id;
     // console.log("User", user);
@@ -258,7 +257,6 @@ const Profile = () => {
         await sendAPI('get', '/users/getUserByID', currentUser)
             .then(res => {
                 if(res.status == 200) {
-                    console.log("res: ", res.data.likes);
                     var updatedUser:User = {
                         id: res.data.id,
                         firstName: res.data.firstName,
@@ -273,7 +271,6 @@ const Profile = () => {
     
                     }
                     setUser(updatedUser);
-                    console.log("UPDATED USER.LIKES: ", user?.likes);
                 }
             }).catch(e => {
                 console.error("Failed to count profile tracks: ", e);
