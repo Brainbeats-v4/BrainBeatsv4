@@ -117,16 +117,16 @@ export class MIDIManager {
     private convertToBase64(file:Uint8Array): Promise<string> {
         return new Promise((resolve, reject) => {
             var fileBlob = new Blob([file], {
-            type: 'audio/midi'
+                type: 'audio/midi'
             });
             const fileReader = new FileReader();
         
             fileReader.readAsDataURL(fileBlob);
             fileReader.onload = () => {
-            resolve(fileReader.result as string);
+                resolve(fileReader.result as string);
             };
             fileReader.onerror = (error) => {
-            reject(error);
+                reject(error);
             }
         })
     }
@@ -140,11 +140,13 @@ export class MIDIManager {
         var write = new MidiWriter.Writer(this.MIDIChannels);
         var midiBuildFile = write.buildFile();
 
+
         const midiFileChunks = this.sliceIntoChunks(midiBuildFile, 5000);
+        console.log(midiFileChunks);
         const fileString = new Uint8Array(midiFileChunks.reduce((acc:any[], midiFileChunk) => {
             return [...acc, ...Array.from(midiFileChunk)];
         }, []));
-    
+        console.log(fileString);
         const base64String = await this.convertToBase64(fileString);
         console.log(base64String);
         return base64String

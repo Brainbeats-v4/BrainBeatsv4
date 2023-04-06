@@ -4,9 +4,6 @@ import * as Tone from 'tone';
 import { Midi } from '@tonejs/midi';
 import { Buffer } from 'buffer';
 
-import { Player } from 'midi-player-ts';
-import MIDIFile from 'midi-file';
-
 type Props = {
     midiString:string;
 }
@@ -34,32 +31,32 @@ const Playback:React.FC<Props> = ({midiString}) => {
     }
 
     function handlePlayback() {
-        // setPlaying(!playing);
-        // console.log(playing);
-        // var synths:Array<Tone.PolySynth<Tone.Synth<Tone.SynthOptions>>> = [];
-        // if(playing) {
-        //     console.log(midiJSON);
-        //     midiJSON.tracks.forEach((track) => {
-        //         const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-        //         synths.push(synth);
-        //         track.notes.forEach((note) => {
-        //             console.log(note);
-        //             synth.triggerAttackRelease(
-        //                 note.name,
-        //                 note.duration,
-        //                 note.time + Tone.now(),
-        //                 note.velocity
-        //             );
-        //         });
-        //         console.log('played');
-        //     });
-        // }
-        // else {
-        //     while(synths.length) {
-        //         const synth = synths.shift();
-        //         synth?.disconnect();
-        //     }
-        // }
+        setPlaying(!playing);
+        console.log(playing);
+        var synths:Array<Tone.PolySynth<Tone.Synth<Tone.SynthOptions>>> = [];
+        if(playing) {
+            console.log(midiJSON);
+            midiJSON.tracks.forEach((track) => {
+                const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+                synths.push(synth);
+                track.notes.forEach((note) => {
+                    console.log(note);
+                    synth.triggerAttackRelease(
+                        note.name,
+                        note.duration,
+                        note.time + Tone.now(),
+                        note.velocity
+                    );
+                });
+                console.log('played');
+            });
+        }
+        else {
+            while(synths.length) {
+                const synth = synths.shift();
+                synth?.disconnect();
+            }
+        }
     } 
 
     
