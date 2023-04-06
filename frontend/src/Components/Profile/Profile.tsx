@@ -329,13 +329,13 @@ const Profile = () => {
                             <h6>Tracks</h6>
                         </div>
                         {/* To be Added in a future group */}
-                        <div className='count-div' id='follower-count-div'>
+                        {/* <div className='count-div' id='follower-count-div'>
                             <h5>0</h5>
                             <h6>Followers</h6>
-                        </div>
+                        </div> */}
                         <div className='count-div' id='following-count-div'>
                             <h5>{userLikesTotal}</h5>
-                            <h6>Likes</h6>
+                            <h6>Favorited Tracks</h6>
                         </div>
                     </div>
                 </div>
@@ -354,7 +354,7 @@ const Profile = () => {
                     style={{backgroundColor: playlistsOpen? "rgb(83, 83, 83)": "rgba(100, 100, 100, 1)"}}>
                         <div id='playlists-btn-text'>
                             <FontAwesomeIcon icon={["fas", "list"]} />
-                            My Likes
+                            My Favorites
                         </div>
                         <div id='playlists-btn-line' style={{display: playlistsOpen? "block" : "none"}}>
                         </div>
