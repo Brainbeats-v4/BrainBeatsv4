@@ -171,9 +171,8 @@ router.get('/getTracksByID', async (req, res) => {
             });
         }
 
-        const userTracks = await prisma.Track.findMany({
+        const userTracks = await prisma.Track.find({
             where: { id: req.query.id },
-            include: {user: true}
         });
         if (!userTracks) {
             return res.status(404).json({
