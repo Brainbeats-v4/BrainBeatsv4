@@ -225,7 +225,7 @@
 }
 
 /* CSS for Mobile View */
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 600px) {
 
     .modal-dialog{
         display: flex;

@@ -345,7 +345,7 @@ const Profile = () => {
                     style={{backgroundColor: !playlistsOpen? "rgb(83, 83, 83) ": "rgba(100, 100, 100, 1)"}}>
                         <div id='tracks-btn-text'>
                             <FontAwesomeIcon icon={["fas", "music"]} />
-                            My Tracks
+                            <h6>My Tracks</h6>
                         </div>
                         <div id='tracks-btn-line' style={{display: playlistsOpen? "none" : "block"}}>
                         </div>
@@ -354,7 +354,7 @@ const Profile = () => {
                     style={{backgroundColor: playlistsOpen? "rgb(83, 83, 83)": "rgba(100, 100, 100, 1)"}}>
                         <div id='playlists-btn-text'>
                             <FontAwesomeIcon icon={["fas", "list"]} />
-                            My Favorites
+                            <h6>My Favorites</h6>
                         </div>
                         <div id='playlists-btn-line' style={{display: playlistsOpen? "block" : "none"}}>
                         </div>

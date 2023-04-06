@@ -301,7 +301,7 @@
     }
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
     .instruments-other-div
     {
         flex-direction: column;
