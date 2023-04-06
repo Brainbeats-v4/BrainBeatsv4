@@ -192,7 +192,7 @@ export interface User {
     // arrays of tables, optional
     tracks?: Array<Track> | null,
     playlists?: Array<Playlist> | null,
-    like?: Array<Like> | null,
+    likes?: Array<Like> | null,
     
     // optional
     verified?: boolean,
