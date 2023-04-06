@@ -23,7 +23,7 @@ import { MIDIManager } from "./MusicGeneration/MIDIManager";
 import { Stream } from "stream";
 import { useSelector } from "react-redux";
 
-import { NoteHandler } from "./MusicGeneration/OriginalNoteGeneration";
+import { NoteHandler } from "./MusicGeneration/NoteGeneration";
 import { WebSerial } from "webserial-wrapper";
 
 import EventEmitter from "events";
@@ -225,7 +225,8 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             channel07: data[7][0],
             timeStamp: data['timestamp'][0]
         }
-        
+        console.log(currentData);
+
         if (this.debugOutput) { console.log("DeviceStream:", currentData); }
 
         this.noteHandler.originalNoteGeneration(currentData);

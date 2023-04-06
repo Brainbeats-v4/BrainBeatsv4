@@ -13,7 +13,6 @@ import { MIDIManager } from './MIDIManager';
 export class NoteHandler {
 
     private debugOutput:boolean;    
-    
     // Universally used settings
     private numNotes:number;
     private octaves:number;
@@ -22,12 +21,15 @@ export class NoteHandler {
     private keyGroup:number;
     private scale:number;
     private keySignature;
+    private minValue:number = Infinity;
+    private maxValue:number = -Infinity;
     
     private instrumentNoteSettings:CytonSettings | GanglionSettings;
 
     private midiGenerator;
 
     private stopFlag:boolean = false;
+    private previousAmp:number = 0;
 
     public setStopFlag() {
         this.stopFlag = true;
@@ -43,8 +45,7 @@ export class NoteHandler {
     * In runtime, the headset data is compared to the array to determine which note it corresponds to. 
     * The note is determined by taking the floor of the two values in the array the data falls between.
     */
-    
-    public incrementArr:Array<number>; 
+    private incrementArr:Array<number>; 
     
     // The amount of time (in milliseconds) that each of the supported notes would take at the specified BPM
     private timeForEachNoteArray:Array<number>;
@@ -105,7 +106,7 @@ export class NoteHandler {
         
         // Dividing the total range by the number of notes
         var incrementAmount = Constants.MIN_MAX_AMPLITUDE_DIFFERENCE / this.numNotes; 
-
+        console.log(incrementAmount);
         // First index will always be 0
         this.incrementArr[0] = 0; 
         
@@ -113,7 +114,7 @@ export class NoteHandler {
         this.incrementArr[this.numNotes - 1] = Constants.MAX_AMPLITUDE + Constants.AMPLITUDE_OFFSET; 
 
         // Fill out the array so that each index is populated with incrementAmount * index
-        for (var i = 1; i < this.numNotes - 1; i++) {
+        for (var i = 1; i < this.numNotes; i++) {
             this.incrementArr[i] = incrementAmount * i + Constants.AMPLITUDE_OFFSET;
         }
 
@@ -123,40 +124,38 @@ export class NoteHandler {
                 console.error(i, ": ", this.incrementArr[i]);
             }
         }
+    }
 
+    private createNewIncrementArr() {
+    
     }
 
     // Takes in a raw value from the headset and assigns a note.
     private NoteDeclarationRaw(ampValue:number) {
-        let ampValue2 = 0;
+        let returnedAmpValue = 0;
+        returnedAmpValue = ampValue / Math.pow(10, 8);
+        // returnedAmpValue = (returnedAmpValue - Constants.AMPLITUDE_OFFSET); 
         
-        // Applies the offset to the headset's raw data
-        // console.log('ampValue: ', ampValue);
+        console.log(this.maxValue);
+        console.log(this.minValue);
+        if(this.maxValue < returnedAmpValue) {
+            this.maxValue = returnedAmpValue;
+        }
+        else if(this.minValue > returnedAmpValue) {
+            this.minValue = returnedAmpValue;
+        }
 
-        // Our rounding logic
-        ampValue2 = ampValue / Math.pow(10, 8);
-        
-        // There rounding logic: This function contains the following: 
-        // Math.round(`${data[0]}` * 10000000) / 10000000
-        // ampValue2 = roundTo7Decimal(ampValue);
-        // console.log('old rounding: ', ampValue2);
-        ampValue2 = (ampValue2 - -Constants.AMPLITUDE_OFFSET); 
-
-        if (this.debugOutput) console.log("ampval:", ampValue2);
-
+        if (this.debugOutput) console.log("ampval:", returnedAmpValue);
         // For every possible note, check to see if ampValue falls between two array positions. 
         // If so, return that position. If not, it will be treated as a rest (returning -1).
         for (var i = 0; i <= this.numNotes - 1; i++) {
-            // console.log('ampValue2: ' + ampValue2)
-            // console.log('incArr['+i+']: ' + this.incrementArr[i])
-            // console.log('incArr['+i+' + 1]: ' + this.incrementArr[i + 1])
-
             // If final index, prevent checking out of bounds
-            if (i == this.numNotes - 1)
-                return ampValue2 >= this.incrementArr[i] ? i : -1;
+            if (i === this.numNotes - 1)
+                return returnedAmpValue >= this.incrementArr[i] ? i : -1;
 
-            if (ampValue2 >= this.incrementArr[i] && ampValue2 <= this.incrementArr[i + 1])
+            if (returnedAmpValue >= this.incrementArr[i] && returnedAmpValue <= this.incrementArr[i + 1]) {
                 return i;
+            }
         }
 
         return -1;
@@ -231,11 +230,12 @@ export class NoteHandler {
         
 
             // Get note increment
+            console.log('Amp Value for Node ', i, ':');
             var declaredNote = this.NoteDeclarationRaw(curChannelData); 
             
             // Get the actual note and its octave
             var noteAndOctave = this.GetNoteWRTKey(declaredNote); 
-            
+            console.log(noteAndOctave);
             // Get the lowest octave that will be used in the song
             var floorOctave = GetFloorOctave(this.numNotes); 
             

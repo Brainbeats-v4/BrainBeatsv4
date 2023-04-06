@@ -7,15 +7,15 @@ import { Track, User } from "./Interfaces";
 // The highest and lowest possible values of the headset's data that we will actually use and parse into musical data.
 // Anything under the maximum and above the minimum will be sorted into respective notes, but anything above the maximum
 // or below the minimum will be treated as rests. 
-export const MAX_AMPLITUDE = 0.001;
-export const MIN_AMPLITUDE = -0.001;
+export const MAX_AMPLITUDE = 0.08;
+export const MIN_AMPLITUDE = -.08;
 
 // The distance between the ceiling amplitude and the floor amplitude.
 export const MIN_MAX_AMPLITUDE_DIFFERENCE = MAX_AMPLITUDE - MIN_AMPLITUDE;
 
-// An offset that is equal to the absolute value of MIN_AMPLITUDE. This offset is used to turn the negative MIN value 
-// into effectively zero, and the MAX value into itself plus this offset. This just removes negative numbers from all
-// of the calculation, making it simpler for humans to both read and write the code.
+/* The amplitude offset is important since most of the EEG input is coming in as negative values, in order to counter this
+    when we divide by 10^8 to get a value in our range of amplitudes we add .001 to ensure we are getting within the range
+    required to play audio. */
 export const AMPLITUDE_OFFSET = 0.001;
 
 // We only support these, now that we've 

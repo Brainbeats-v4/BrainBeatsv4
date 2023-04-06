@@ -73,17 +73,14 @@ export class MIDIManager {
                 case Enums.InstrumentTypes.SINEWAVE:
                     sampler = Samplers.NULL.toDestination();
                     polySynthesizer = new Tone.PolySynth().toDestination();
-                    console.log('SINE VOLUME: ', polySynthesizer.volume.value);
                     polySynthesizer.volume.value = -10;
                     break;
                 case Enums.InstrumentTypes.PIANO:
                     sampler = Samplers.Piano.toDestination();
-                    console.log('PIANO VOLUME: ', sampler.volume.value)
                     polySynthesizer = new Tone.PolySynth().toDestination();  
                     polySynthesizer.volume.value = -100;
                     break;
                 default:
-                    console.log('entered NULL')
                     sampler = Samplers.NULL.toDestination();
                     polySynthesizer = new Tone.PolySynth().toDestination();
                     polySynthesizer.volume.value = -10;
@@ -205,7 +202,6 @@ export class MIDIManager {
     public convertInput(noteData:any[]) {
         for(var i = 0; i < noteData.length; i++) {
             var noteDuration:MidiWriter.Duration = '1';
-            console.log(noteData[i].writer.noteLengthName);
             /* This code block sets the data from the note manager into usable data for
                the midi-writer-js API. */
             if (noteData[i].writer.noteLengthName === "sixteenth") noteDuration = '16';
@@ -264,7 +260,6 @@ export class MIDIManager {
             var instArr = Object.values(this.settings.deviceSettings.instruments)            
 
             if(frequency === undefined) continue;
-            console.log(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave));
 
             /*
                 * The duration lengths are defined in https://github.com/Tonejs/Tone.js/blob/641ada9/Tone/core/type/Units.ts#L53.
@@ -302,9 +297,7 @@ export class MIDIManager {
             if (this.synthArr[i].activeVoices < 1) {
                 this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now()) 
                 this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
-                console.log(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString);
             }      
-            console.log(this.synthArr[i].activeVoices)
 
                 // console.log("num Voices for ", i, ": ", this.synthArr[i].activeVoices);
             

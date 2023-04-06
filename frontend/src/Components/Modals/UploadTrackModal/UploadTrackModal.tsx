@@ -151,7 +151,7 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
                             </div>
                             <div className ='mt-3'>
                                 <h6 id="track-author-text">Track:</h6>
-                                <Playback midiString={track.midi}/>
+                                {/* <Playback midiString={track.midi}/> */}
                             </div>
                         </div>         
                     </div>
