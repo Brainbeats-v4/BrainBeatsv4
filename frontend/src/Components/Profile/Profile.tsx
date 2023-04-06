@@ -47,9 +47,9 @@ const Profile = () => {
         if (user != null){
             getProfileTracks();
             getUserLikes();
+            getUpdatedUser();
         }
     }, [])
-
 
     // For displaying profile picture
     const [displayPicture, setDisplayPicture] = useState(user?.profilePicture);
@@ -242,11 +242,42 @@ const Profile = () => {
         })
     }
 
-    // Gets User Track count
+    // Gets User Liked Tracks count
     async function getUserLikes() {
         if(user && (user.likes != null)){
+            console.log("OLD USER LIKES TOTAL: " + userLikesTotal)
             setUserLikesTotal(user.likes.length);
+            console.log("NEW USER LIKES TOTAL: " + userLikesTotal)
         }
+    }
+
+    // Gets User
+    async function getUpdatedUser() {
+
+        var currentUser = {userID: user?.id};
+        await sendAPI('get', '/users/getUserByID', currentUser)
+            .then(res => {
+                if(res.status == 200) {
+                    console.log("res: ", res.data.likes);
+                    var updatedUser:User = {
+                        id: res.data.id,
+                        firstName: res.data.firstName,
+                        lastName: res.data.lastName,
+                        username: res.data.username,
+                        email: res.data.email,
+                        bio: res.data.bio,
+                        profilePicture: res.data.profilePicture,
+                        
+                        // Unchanged
+                        likes: user?.likes,
+    
+                    }
+                    setUser(updatedUser);
+                    console.log("UPDATED USER.LIKES: ", user?.likes);
+                }
+            }).catch(e => {
+                console.error("Failed to count profile tracks: ", e);
+        })
     }
 
     return(
@@ -297,6 +328,7 @@ const Profile = () => {
                             <h5>{tracksTotal}</h5>
                             <h6>Tracks</h6>
                         </div>
+                        {/* To be Added in a future group */}
                         <div className='count-div' id='follower-count-div'>
                             <h5>0</h5>
                             <h6>Followers</h6>
