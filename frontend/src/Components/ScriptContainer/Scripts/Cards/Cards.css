@@ -211,7 +211,7 @@
 }
 
 /* CSS for Mobile View */
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
 
     .cards-body-div{
         flex-direction: column;

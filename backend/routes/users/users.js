@@ -180,7 +180,7 @@ router.get('/getUserByID', async (req, res) => {
                 },
             });
             console.log("userExists", userExists);
-            return res.status(200).json(userExists);
+            return res.status(200).json(getUser);
         } 
     } catch (err) {
         console.log(err);

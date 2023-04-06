@@ -47,9 +47,9 @@ const Profile = () => {
         if (user != null){
             getProfileTracks();
             getUserLikes();
+            getUpdatedUser();
         }
     }, [])
-
 
     // For displaying profile picture
     const [displayPicture, setDisplayPicture] = useState(user?.profilePicture);
@@ -242,11 +242,42 @@ const Profile = () => {
         })
     }
 
-    // Gets User Track count
+    // Gets User Liked Tracks count
     async function getUserLikes() {
         if(user && (user.likes != null)){
+            console.log("OLD USER LIKES TOTAL: " + userLikesTotal)
             setUserLikesTotal(user.likes.length);
+            console.log("NEW USER LIKES TOTAL: " + userLikesTotal)
         }
+    }
+
+    // Gets User
+    async function getUpdatedUser() {
+
+        var currentUser = {userID: user?.id};
+        await sendAPI('get', '/users/getUserByID', currentUser)
+            .then(res => {
+                if(res.status == 200) {
+                    console.log("res: ", res.data.likes);
+                    var updatedUser:User = {
+                        id: res.data.id,
+                        firstName: res.data.firstName,
+                        lastName: res.data.lastName,
+                        username: res.data.username,
+                        email: res.data.email,
+                        bio: res.data.bio,
+                        profilePicture: res.data.profilePicture,
+                        
+                        // Unchanged
+                        likes: user?.likes,
+    
+                    }
+                    setUser(updatedUser);
+                    console.log("UPDATED USER.LIKES: ", user?.likes);
+                }
+            }).catch(e => {
+                console.error("Failed to count profile tracks: ", e);
+        })
     }
 
     return(
@@ -297,13 +328,14 @@ const Profile = () => {
                             <h5>{tracksTotal}</h5>
                             <h6>Tracks</h6>
                         </div>
-                        <div className='count-div' id='follower-count-div'>
+                        {/* To be Added in a future group */}
+                        {/* <div className='count-div' id='follower-count-div'>
                             <h5>0</h5>
                             <h6>Followers</h6>
-                        </div>
+                        </div> */}
                         <div className='count-div' id='following-count-div'>
                             <h5>{userLikesTotal}</h5>
-                            <h6>Likes</h6>
+                            <h6>Favorited Tracks</h6>
                         </div>
                     </div>
                 </div>
@@ -313,7 +345,7 @@ const Profile = () => {
                     style={{backgroundColor: !playlistsOpen? "rgb(83, 83, 83) ": "rgba(100, 100, 100, 1)"}}>
                         <div id='tracks-btn-text'>
                             <FontAwesomeIcon icon={["fas", "music"]} />
-                            My Tracks
+                            <h6>My Tracks</h6>
                         </div>
                         <div id='tracks-btn-line' style={{display: playlistsOpen? "none" : "block"}}>
                         </div>
@@ -322,7 +354,7 @@ const Profile = () => {
                     style={{backgroundColor: playlistsOpen? "rgb(83, 83, 83)": "rgba(100, 100, 100, 1)"}}>
                         <div id='playlists-btn-text'>
                             <FontAwesomeIcon icon={["fas", "list"]} />
-                            My Likes
+                            <h6>My Favorites</h6>
                         </div>
                         <div id='playlists-btn-line' style={{display: playlistsOpen? "block" : "none"}}>
                         </div>

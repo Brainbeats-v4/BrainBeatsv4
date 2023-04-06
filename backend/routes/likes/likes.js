@@ -53,18 +53,17 @@ router.post('/createUserLike', async (req, res) => {
                 }
             });
 
-            // console.log(likeArray);
-
             // const newUser = await prisma.User.update({
             //     where: { id: userID },
             //     data: {
-            //         like: likeArray
+            //         likes: [...likeArray, newLike]
             //     }
             // });
+            
             res.status(201).json(newLike);
         }
     } catch (err) {
-        console.error(err);
+        console.error("from createUserLike: ", err);
         res.status(500).send({ msg: err });
     }
 });

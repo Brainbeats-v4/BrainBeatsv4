@@ -102,6 +102,15 @@ async function getLikeExists(trackID, userID) {
     return result;
 }
 
+// async function getUserLIkes(userID) {
+//     let res = await prisma.Like.findUnique({
+//         where: {
+//             userID
+//         }
+//     })
+//     return res;
+// }
+
 module.exports = {
     getUserExists: getUserExists,
     getTrackExists: getTrackExists,
