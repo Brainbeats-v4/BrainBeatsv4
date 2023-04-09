@@ -165,7 +165,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
          * ... 
          * Channel k: Playing G#  
          */
-        this.debugOutput = false;
+        this.debugOutput = true;
         this.noteHandler.setDebugOutput(false); 
     }
 
@@ -225,7 +225,9 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             channel07: data[7][0],
             timeStamp: data['timestamp'][0]
         }
-        console.log(currentData);
+
+        if (this.debugOutput) console.log({currentData});
+
 
         if (this.debugOutput) { console.log("DeviceStream:", currentData); }
 
