@@ -104,9 +104,9 @@ router.post('/loginUser', async (req, res) => {
                     username: userExists.username,
                     bio: userExists.bio,
                     profilePicture: userExists.profilePicture,
-                    tracks: userExists.tracks,
-                    playlists: userExists.playlists,
-                    likes: userExists.likes
+                    // tracks: userExists.tracks,
+                    // playlists: userExists.playlists,
+                    // likes: userExists.likes
                 },
                 token: token
             }
