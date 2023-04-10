@@ -600,7 +600,7 @@ const xylophone:IInstrument = {
     'C7': 'C7.[mp3|ogg]'
 
 };
-
+export const instrumentArr:Array<IInstrument> = [bassElectric, bassoon, cello, clarinet, contrabass, flute, frenchHorn, guitarAcoustic, guitarElectric, guitarNylon, harmonium, harp, organ, piano, saxophone, trombone, trumpet, tuba, violin, xylophone];
 
 export var SampleLibrary = {
     minify: false,
@@ -608,7 +608,7 @@ export var SampleLibrary = {
     baseUrl: '/samples/',
     list: ['bass-electric','bassoon','cello','clarinet','contrabass','flute','french-horn','guitar-acoustic','guitar-electric','guitar-nylon', 'harmonium','harp','organ','piano','saxophone','trombone','trumpet','tuba','violin','xylophone'],
     onload: null,
-    instrumentArr: [bassElectric, bassoon, cello, clarinet, contrabass, flute, frenchHorn, guitarAcoustic, guitarElectric, guitarNylon, harmonium, harp, organ, piano, saxophone, trombone, trumpet, tuba, violin, xylophone],
+    instrumentArr, //[bassElectric, bassoon, cello, clarinet, contrabass, flute, frenchHorn, guitarAcoustic, guitarElectric, guitarNylon, harmonium, harp, organ, piano, saxophone, trombone, trumpet, tuba, violin, xylophone],
 
     setExt: function (newExt:string) {
         var i

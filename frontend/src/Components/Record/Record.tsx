@@ -25,6 +25,8 @@ function Record() {
     const [debugOption1, setDebugOption1] = useState(false);
     const [debugOption2, setDebugOption2] = useState(false);
     const [debugOption3, setDebugOption3] = useState(false);
+
+    console.log(settings.deviceSettings.instruments);
     
     /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
     and import it. */

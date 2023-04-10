@@ -26,9 +26,13 @@ import { userModeState, userJWT } from '../../JWT';
     code cleaner, it starts at -3 since it is the initial value described in the Enum, adding the NULL value at the end */
 const InstrumentSettings = memo(() => {
     var instrumentArray:any[] = [];
-    for(var i = -3; i <= 8; i++) {
+    for(var i = 0; i < Object.values(InstrumentTypes).length / 2 - 1; i++) {
+
         let instrument = { value: i, name: InstrumentTypes[i] }
-        if(i == -3 || i == 8) instrumentArray.push(instrument);
+        
+        // This sets only Sine and Piano for debug purposes
+        // if(i == 0 || i == 11) 
+        instrumentArray.push(instrument);
     }
     return( 
         <>
@@ -137,7 +141,6 @@ const TrackSettings = () => {
         setDuration06(rand.getRandomDuration());
         setDuration07(rand.getRandomDuration());
     }
-
 
     function applySettingsEvent() {       
 
