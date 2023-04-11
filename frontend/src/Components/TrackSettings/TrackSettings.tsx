@@ -475,7 +475,7 @@ const TrackSettings = () => {
                 </div>
             </div>
 
-            {/* Shortcut for uloading posts */}
+            {/* Shortcut for uloading posts in dev */}
            {isDev() && <div>
                 <div>
                     <label className="form-label signup-text">Title</label>

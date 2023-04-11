@@ -104,10 +104,9 @@ export class ConcreteTestStream implements AbstractTestStream {
     public async initializeConnection() { 
         this.stopFlag = false; 
 
-        do {
-            this.recordInputStream()
+        for (var i = 0; i < 500; i++) {
+            this.recordInputStream();
         }
-        while(!this.stopFlag)
     }
 
     public recordInputStream() {
@@ -116,15 +115,16 @@ export class ConcreteTestStream implements AbstractTestStream {
             console.log("stopping");
             return false;
         }
+
         let currentData:DataStream8Ch = {
-            channel00: this.getRandomInt(20000, 120000),
-            channel01: this.getRandomInt(20000, 120000),
-            channel02: this.getRandomInt(20000, 120000),
-            channel03: this.getRandomInt(20000, 120000),
-            channel04: this.getRandomInt(20000, 120000),
-            channel05: this.getRandomInt(20000, 120000),
-            channel06: this.getRandomInt(20000, 120000),
-            channel07: this.getRandomInt(20000, 120000),
+            channel00: this.getRandomInt(20000, 120001),
+            channel01: this.getRandomInt(20000, 120001),
+            channel02: this.getRandomInt(20000, 120001),
+            channel03: this.getRandomInt(20000, 120001),
+            channel04: this.getRandomInt(20000, 120001),
+            channel05: this.getRandomInt(20000, 120001),
+            channel06: this.getRandomInt(20000, 120001),
+            channel07: this.getRandomInt(20000, 120001),
             timeStamp: Date.now(),
         }
 
@@ -158,9 +158,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
         this.noteHandler = new NoteHandler(this.settings, debugOptionObject);
         
         
-        /* If in dev, and you click "toggle debug", it will cascade and set them all.
-         * (Planning to change to event system if time.)
-         * or, individually set this to true to enable music related output during recording.
+        /* If in dev, and you enable "debugOption1"  or, individually set this to true to enable music related output during recording.
          * Ex: 
          * Channel 1: At Rest 
          * ... 
