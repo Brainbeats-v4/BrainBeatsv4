@@ -26,7 +26,7 @@ export class MIDIManager {
     private midi;
 
     private midiWriterTracks:Array<Track> = []; 
-    private currentVoices:Array<any> = [];
+    private currentVoices:Array<number> = [];
      
     /* The constructor for the MIDIManager requires you to input the settings from the user input
         and the  */
@@ -88,6 +88,7 @@ export class MIDIManager {
         Tone.getTransport().bpm.value = this.settings.bpm;
 
         for (var i = 0; i < 8; i++) {
+            this.currentVoices[i] = 0;
             var instArr = Object.values(this.settings.deviceSettings.instruments)            
             /*  Here we are assigning a sampler and a polysynth to each channel based on the instruments array, we are passing a NULL to those 
                 that will never utilize the sampler to maintain the samplerArr having a strict typing definition of Sampler and also keep the 
@@ -306,6 +307,24 @@ export class MIDIManager {
         }
     }
 
+    private setTimeForEachNoteArray(BPM:number, noteLength:number) {
+        switch(noteLength) {
+            case Enums.NoteDurations.SIXTEENTH:
+                return getMillisecondsFromBPM(BPM) / 4;
+            case Enums.NoteDurations.EIGHTH:
+                return getMillisecondsFromBPM(BPM) / 2;
+            case Enums.NoteDurations.QUARTER:
+                return getMillisecondsFromBPM(BPM);
+            case Enums.NoteDurations.HALF:
+                return getMillisecondsFromBPM(BPM) * 2;
+            case Enums.NoteDurations.WHOLE:
+                return getMillisecondsFromBPM(BPM) * 4;
+            default:
+                return getMillisecondsFromBPM(BPM) * 4;
+        }
+    }
+
+
     public async realtimeGenerate(noteData:any[]) {
        var instruments = this.settings.deviceSettings.instruments;
        var instrumentsArr = [];
@@ -353,262 +372,43 @@ export class MIDIManager {
             */
 
             var durationString:string = this.convertDurationToString(duration); 
-
             
+            var soundTime = this.currentVoices[i] * 1000;
+            console.log("soundTime: ", soundTime);
+            var noteTime = this.setTimeForEachNoteArray(this.settings.bpm, duration);
+            console.log("noteTime: ", noteTime);
             
-            var currentVoice = this.currentVoices[i];
             /* This is the base case, if there is nothing stored in the array then we don't want to check if the currentVoice is undefined */
-            if(currentVoice === undefined) {
+            if(Math.abs((this.synthArr[i].now() * 1000) - soundTime) >= noteTime) {
                 if(instArr[i] === Enums.InstrumentTypes.PIANO) {
-                    this.currentVoices[i] = this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
+                    this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
+                    this.currentVoices[i] = this.samplerArr[i].now()
                 }
-                else {
-                    this.currentVoices[i] = this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
+                else if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
+                    this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
+                    this.currentVoices[i] = this.synthArr[i].now()
                 }
+                this.convertInput(noteData[i], i);
             }
-            else if (currentVoice.name === 'Sampler') {      
-                console.log(currentVoice._activeSources);     
-                if(currentVoice._activeSources.size < 2) {
-                    if(instArr[i] === Enums.InstrumentTypes.PIANO) {
-                        this.currentVoices[i] = this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
-                        this.currentVoices[i].onended = () => {
-                            this.currentVoices[i]._activeSources.shift();
-                            console.log('ended');
-                        }
-                    }
-                    this.convertInput(noteData[i], i);    
-                }
-            }
-            else if(currentVoice.name === 'PolySynth') {
-                if(currentVoice._activeVoices.length < 1) {
-                    if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
-                        this.currentVoices[i] = this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
+            // else if (currentVoice.name === 'Sampler') {      
+            //     console.log(this.samplerArr[i].now());  
+            //     if(currentVoice._activeSources.size < 2) {
+            //         if(instArr[i] === Enums.InstrumentTypes.PIANO) {
+            //             this.currentVoices[i] = this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
+            //         }
+            //         this.convertInput(noteData[i], i);    
+            //     }
+            // }
+            // else if(currentVoice.name === 'PolySynth') {
+            //     if(currentVoice._activeVoices.length < 1) {
+            //         if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
+            //             this.currentVoices[i] = this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
  
-                    }
-                    this.convertInput(noteData[i], i);
-                }
-            }
-       }
-       
-
-    }
-
-    private getNoteData(soundType:number, freq:number, amplitude:number, ctx:any, noteLength:number) {
-
-        var buffer; // Local buffer variable.
-        var numSamples = findNumSamples(this.timeForEachNoteArray[noteLength]);
-
-        // For each supported sound type we call the correct function.
-        if (soundType === Enums.InstrumentTypes.SINEWAVE) {
-            buffer = this.generateSineWave(numSamples, freq, amplitude, ctx);
-        }
-        // else if (soundType === Enums.InstrumentTypes.TRIANGLEWAVE) {
-        //     buffer = this.generateTriangleWave(numSamples, freq, amplitude, ctx);
-        // }
-        // else if (soundType === Enums.InstrumentTypes.SQUAREWAVE) {
-        //     buffer = this.generateSquareWave(numSamples, freq, amplitude, ctx);
-        // }
-        else {
-            buffer = this.generateInstrumentWave(numSamples, freq, ctx, soundType);
-        }
-
-        return buffer;
-    }
-
-    private generateSineWave(numSamples:number, frequency:number, amplitude:number, ctx:any) {
-        let PI_2 = Math.PI * 2;
-
-        // Create the buffer for the node.
-        let buffer = ctx.createBuffer(1, numSamples, Constants.sampleRate);
-    
-        // Create the buffer into which the audio data will be placed.
-        let buf = buffer.getChannelData(0);
-    
-        // Loop numSamples times -- that's how many samples we will calculate and store.
-        for (let i = 0; i < numSamples; i++) {
-            // Calculate and store the value for this sample.
-            buf[i] = Math.sin(frequency * PI_2 * i / Constants.sampleRate) * amplitude;
-        }
-    
-        // Return the channel buffer.
-        return buffer;
-    }
-
-    private generateTriangleWave(numSamples:number, frequency:number, amplitude:number, ctx:any) {
-
-        // Here we calculate the number of samples for each wave oscillation.
-        var samplesPerOscillation = Constants.sampleRate / frequency;
-        // This is the first quarter of the oscillation. 0 - 1/4
-        var first = samplesPerOscillation / 4;
-        // This is the second quarter of the oscillation. 1/4 - 1/2
-        var second = samplesPerOscillation / 2;
-        // This is the third quarter of the oscillation. 1/2 - 3/4
-        var third = (samplesPerOscillation / 2) + (samplesPerOscillation / 4);
-        // We will count the samples as we go.
-        var counter = 0;
-    
-        // Step value. This is how much the sample value changes per sample.
-        var step = 1 / first;
-    
-        // Create the buffer for the node.
-        var buffer = ctx.createBuffer(1, numSamples, Constants.sampleRate);
-    
-        // Create the buffer into which the audio data will be placed.
-        var buf = buffer.getChannelData(0);
-    
-        // Loop numSamples times -- that's how many samples we will calculate and store.
-        for (var i = 0; i < numSamples; i++) {
-            // Increment the counter.
-            counter++;
-    
-            // See if this is the first quarter.
-            if (counter <= first) {
-                // Store the value.
-                buf[i] = step * counter * amplitude;
-            }
-            // See if this is the second quarter.
-            else if (counter <= second) {
-                // We want the count relative to this quarter.
-                var cnt = counter - first;
-    
-                // Store the value.
-                buf[i] = 1 - step * cnt * amplitude;
-            }
-            // See if this is the third quarter.
-            else if (counter <= third) {
-                // We want the count relative to this quarter.
-                var cnt = counter - second;
-    
-                // Store the value.
-                buf[i] = -(step * cnt) * amplitude;
-            }
-            // This is the fourth quarter.
-            else {
-                // We want the count relative to this quarter.
-                var cnt = counter - third;
-    
-                // Store the value.
-                buf[i] = -1 + (step * cnt) * amplitude;
-    
-                // See if we are done with this cycle.
-                if (counter >= samplesPerOscillation) {
-                    // Set to zero so we are ready for another cycle.
-                    counter = 0;
-                }
-            }
-        }
-        return buffer;
-    }
-
-    private generateSquareWave(numSamples:number, frequency:number, amplitude:number, ctx:any) {
-
-        // Here we calculate the number of samples for each wave oscillation.
-        var samplesPerOscillation = Constants.sampleRate / frequency;
-        // Create the value for the first oscillation change.
-        var first = samplesPerOscillation / 2;
-        // We will count the samples as we go.
-        var counter = 0;
-    
-        // Create the buffer for the node.
-        var buffer = ctx.createBuffer(1, numSamples, Constants.sampleRate);
-    
-        // Create the buffer into which the audio data will be placed.
-        var buf = buffer.getChannelData(0);
-    
-        // Loop numSamples times -- that's how many samples we will calculate and store.
-        for (var i = 0; i < numSamples; i++) {
-            // Increment the counter.
-            counter++;
-    
-            // This is the first half of the oscillation. it should be 1.
-            if (counter <= first) {
-                // Store the value.
-                buf[i] = 1 * amplitude;
-            }
-            // This is the second half of the oscillation. It should be -1.
-            else {
-                // Store the value.
-                buf[i] = -1 * amplitude;
-    
-                // See if we are done with this cycle.
-                if (counter >= samplesPerOscillation) {
-                    // Set to zero so we are ready for another cycle.
-                    counter = 0;
-                }
-            }
-        }
-    
-        // Return the channel buffer.
-        return buffer;
-    }
-
-    private generateInstrumentWave(numSamples:number, frequency:number, ctx:any, soundType:number) {    
-
-        // Get the instrument specs.
-        let inst = this.getOvertoneFrequencies(soundType, frequency);
-    
-        // Precalculate 2PI
-        let PI_2 = Math.PI * 2;
-    
-        // Create the buffer for the node.
-        let buffer = ctx.createBuffer(1, numSamples, Constants.sampleRate);
-    
-        // Create the buffer into which the audio data will be placed.
-        var buf = buffer.getChannelData(0);
-    
-        // Zero the buffer
-        for (var i = 0; i < numSamples; i++) {
-            buf[i] = 0;
-        }
-    
-        // Loop through the instrument spec.
-        for (var j = 0; j < inst.length / 2; j++) {
-            // Get the frequency multiplier from the data array.
-            var f = frequency * inst[j * 2];
-            //console.log("f: ", f, ", which is ", frequency, " times ", inst[j*2])
-            // Get the amplitude value from the data array.
-            var a = inst[j * 2 + 1];
-            //console.log("a: ", a)
-            // Loop numSamples times -- that's how many samples we will calculate and store.
-            for (var i = 0; i < numSamples; i++) {
-                // Calculate and store the value for this sample.
-                buf[i] += (Math.sin(f * PI_2 * i / Constants.sampleRate) * a);
-                //buf[i] = frequency;
-            }
-        }
-    
-        // Return the channel buffer.
-        return buffer;
-    }
-
-    private getOvertoneFrequencies(instrumentIndex:number, frequency:number) {
-        // Get the list of note amplitude values for this instrument.
-        let list = instrumentList[instrumentIndex];
-        // We will start with a default value.
-        let index = 0;
-        //console.log("frequency : " + frequency, ", list: " + list + ", instrumentIndex: " + instrumentIndex);
-        let diff = Math.abs(frequency - list[0][0]);
-    
-        // Loop through the list of frequencies/amplitudes and find the closest match.
-        for (let i = 1; i < list.length; i++) {
-            // Get the difference between incoming frequency value and the frequeny of this list element.
-            let td = Math.abs(frequency - list[i][0]);
-    
-            // If this is less (we are closer to the specified frequency) then we record the index and remember the new difference.
-            if (td < diff) {
-                diff = td;
-                index = i;
-            }
-        }
-    
-        // Here we take the current array and make a new array to return.
-        let retList = [];
-        for (let i = 1; i < list[index].length; i++) {
-            retList.push(i); // Push the harmonic number.
-            retList.push(list[index][i]); // Push the amplitude.
-        }
-    
-        return retList;
+            //         }
+            //         this.convertInput(noteData[i], i);
+            //     }
+            // }
+       }   
     }
 
     public setStopFlag() {
