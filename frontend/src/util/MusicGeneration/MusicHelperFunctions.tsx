@@ -123,20 +123,16 @@ export function roundTo7Decimal(data:number) {
 }
 
 
-
-
-
 // Will turn the following functions into a class later
-
 
 // Return a number from min inclusive to max exclusive
 function getRandomArbitrary(min:number, max:number) {
     return Math.floor(Math.random() * (max - min) + min);
-  }
+}
   
-// First to last, -3 (Sinewave) 8(Piano)
+// First to last, -3 (Sinewave) 8 + 1(Piano)
 export function getRandomInstrument() {
-    return getRandomArbitrary(-3, 9);
+    return getRandomArbitrary(0, 20);
 }
 
 // Frist to last, 0 (Whole) 4 (Sixteenth)

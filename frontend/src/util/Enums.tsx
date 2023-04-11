@@ -4,7 +4,6 @@ export enum InstrumentTypes {
     SINEWAVE = 0,
     BASSELECTRIC,
     BASSOON,
-    CELLO,
     CLARINET,
     CONTRABASS,
     FLUTE,

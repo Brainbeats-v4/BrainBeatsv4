@@ -249,6 +249,11 @@ function Record() {
                             </label>
                         </div>
                     </div>}
+
+                    {isDev() && <a id='download-midi-btn' download={'currentMIDI.MID'} href={MIDIUri}>
+                        <FontAwesomeIcon icon={["fas", "arrow-up-from-bracket"]} />
+                        download the midi
+                    </a>}
    
                     {/* ------------------------------------- End Debug checkboxes */}
                     <div className="setupGuide">
@@ -264,10 +269,6 @@ function Record() {
                         <FontAwesomeIcon icon={["fas", "square"]} />
                         Stop
                     </button>}
-                    <a id='download-midi-btn' download={'currentMIDI.MID'} href={MIDIUri}>
-                        <FontAwesomeIcon icon={["fas", "arrow-up-from-bracket"]} />
-                        download the midi
-                    </a>
                 </div>
             </div>
         </div>
