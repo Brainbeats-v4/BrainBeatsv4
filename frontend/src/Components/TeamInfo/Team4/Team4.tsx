@@ -12,6 +12,7 @@ import martinMcCarthy from '../../../images/Version4Photos/MartinMcCarthy.jpg';
 import brandonMrgich from '../../../images/Version4Photos/BrandonMrgich.png';
 import aidanFleming from '../../../images/Version4Photos/AidanFleming.jpg';
 import aribelRuiz from '../../../images/Version4Photos/AribelRuiz.jpg';
+import version4Team from '../../../images/Version4Photos/BrainBeats.jpg';
 
 const Team4 = () => {
 
@@ -141,6 +142,7 @@ const Team4 = () => {
                 {'GitHub '} 
                 <a href={teamInfo.github}>{teamInfo.github}</a>
             </h6>
+            <img src={version4Team} id='version4-team-photo' alt="Team image" onClick={() => {}}/>
         </div>
         <div className='about-team-members'>
             {memberList.map((teamMember) => (

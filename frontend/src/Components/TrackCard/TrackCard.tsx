@@ -201,6 +201,11 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                     var trackID: string = res.data[i].trackID;
                     var currentTrack:Track = await getLikedTrackByID(trackID);
 
+                    console.log(currentTrack);
+
+                    currentTrack.fullname = currentTrack.user?.firstName + ' ' + currentTrack.user?.lastName;
+
+
                     objArray.push(currentTrack);
                 }
                 setTrackList(objArray);
