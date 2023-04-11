@@ -189,6 +189,10 @@ p{
     flex-wrap: wrap;
 }
 
+#version4-team-photo{
+    width: 100%;
+}
+
 /* #member-card-body{
     cursor: default;
     background-color: #818181;
