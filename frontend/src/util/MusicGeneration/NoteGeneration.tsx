@@ -9,6 +9,7 @@ import { KeyGroups, Keys } from '../Enums';
 import { ganglionSettings } from 'device-decoder.third-party';
 import { ConcreteCytonStream } from '../DeviceAbstractFactory';
 import { MIDIManager } from './MIDIManager';
+import { TDebugOptionsObject } from '../Types';
 
 export class NoteHandler {
 
@@ -21,8 +22,9 @@ export class NoteHandler {
     private keyGroup:number;
     private scale:number;
     private keySignature;
-    private minValue:number = Infinity;
-    private maxValue:number = -Infinity;
+    
+    private minValue:number = Number.POSITIVE_INFINITY;
+    private maxValue:number = Number.NEGATIVE_INFINITY;
     
     private instrumentNoteSettings:CytonSettings | GanglionSettings;
 
@@ -30,6 +32,8 @@ export class NoteHandler {
 
     private stopFlag:boolean = false;
     private previousAmp:number = 0;
+
+    private curTime:number;
 
     public setStopFlag() {
         this.stopFlag = true;
@@ -51,11 +55,10 @@ export class NoteHandler {
     private timeForEachNoteArray:Array<number>;
 
 
-    constructor(settings:MusicSettings) {
+    constructor(settings:MusicSettings, debugOptionsObject: TDebugOptionsObject) {
         // console.log("Constructing originalNoteGeneration Class with the following settings: ");
         // console.log(settings);
 
-        this.debugOutput = false;
         this.octaves = settings.octaves;        
         this.numNotes = settings.numNotes;
         this.BPM = settings.bpm;
@@ -69,17 +72,20 @@ export class NoteHandler {
         this.keySignature = Constants.KEY_SIGNATURES[this.keyGroup][this.scale];
         this.instrumentNoteSettings = settings.deviceSettings;
 
-        this.midiGenerator = new MIDIManager(settings, this.timeForEachNoteArray);
+        this.midiGenerator = new MIDIManager(settings, this.timeForEachNoteArray, debugOptionsObject);
         this.stopFlag = false;
+        this.curTime = Date.now()
         
+        this.InitIncrementArr(Constants.MIN_AMPLITUDE, Constants.MAX_AMPLITUDE);
 
         /* Set this to true to enable real-time playback related output during recording.
          * Ex: 
          * Channel 1: At Rest 
-         * ... 
+         * ... f
          * Channel k: Playing G#  
          */
-        this.midiGenerator.setDebugOutput(true); // debug
+        this.debugOutput = debugOptionsObject.debugOption2;
+        this.midiGenerator.setDebugOutput(debugOptionsObject.debugOption3); // debug
     }
 
     // Helper function for constructor. 
@@ -102,16 +108,18 @@ export class NoteHandler {
 
     // This creates the array in which different "increments" for notes are housed. 
     // For more info see the comment for "var incrementArr"
-    private InitIncrementArr() {
-        
+    private InitIncrementArr(min:number, max:number) {
+
+        let ampDifference = max - min;
+        console.log(ampDifference);
         // Dividing the total range by the number of notes
-        var incrementAmount = Constants.MIN_MAX_AMPLITUDE_DIFFERENCE / this.numNotes; 
+        var incrementAmount = ampDifference / this.numNotes; 
         console.log(incrementAmount);
         // First index will always be 0
         this.incrementArr[0] = 0; 
         
         // Last index will always be the max value + the offset
-        this.incrementArr[this.numNotes - 1] = Constants.MAX_AMPLITUDE + Constants.AMPLITUDE_OFFSET; 
+        this.incrementArr[this.numNotes - 1] = max + Constants.AMPLITUDE_OFFSET; 
 
         // Fill out the array so that each index is populated with incrementAmount * index
         for (var i = 1; i < this.numNotes; i++) {
@@ -126,23 +134,25 @@ export class NoteHandler {
         }
     }
 
-    private createNewIncrementArr() {
-    
-    }
-
     // Takes in a raw value from the headset and assigns a note.
     private NoteDeclarationRaw(ampValue:number) {
         let returnedAmpValue = 0;
         returnedAmpValue = ampValue / Math.pow(10, 8);
-        // returnedAmpValue = (returnedAmpValue - Constants.AMPLITUDE_OFFSET); 
+        // returnedAmpValue = (returnedAmpValue + this.minValue); 
+
+        // console.log(returnedAmpValue);
+        // console.log(this.incrementArr);
         
-        console.log(this.maxValue);
-        console.log(this.minValue);
+        // console.log('MaxValue', this.maxValue);
+        // console.log('MinValue', this.minValue);
+        
         if(this.maxValue < returnedAmpValue) {
             this.maxValue = returnedAmpValue;
+            this.InitIncrementArr(this.minValue, this.maxValue);
         }
         else if(this.minValue > returnedAmpValue) {
             this.minValue = returnedAmpValue;
+            this.InitIncrementArr(this.minValue, this.maxValue);
         }
 
         if (this.debugOutput) console.log("ampval:", returnedAmpValue);
@@ -173,16 +183,15 @@ export class NoteHandler {
     private GetNoteWRTKey(note:number) {
         // console.log('Get WRTKey note: ' + note);
         // If the note increment is between 1 and 7, simply return that index in the key array with octave being zero.
-        if (note <= 7 && note >= 1)
+        if (note <= 7 && note >= 1) {
             return { note: this.keySignature[note - 1], octave: 0 };
-
+        }
         // If the note increment is less than zero, return -1 which will be treated as a rest.
-        else if (note <= 0)
+        else if (note <= 0) {
             return { note: -1, octave: 0 };
-
+        }   
         // If the note is valid and greater than 7
         else {
-
             // Mod by 7 to find note increment
             var noteMod = note % 7; 
 
@@ -202,21 +211,34 @@ export class NoteHandler {
             this.midiGenerator.setStopFlag();   
             return;
         }
-
-        this.InitIncrementArr();
         
         // Grab num channels, ignore last index which contains timeStamp
         var size = Object.keys(EEGdataObj).length - 1;
+
+        // let timeStamp = EEGdataObj.timeStamp;
+
+        // var diff = Math.abs(timeStamp - this.curTime);
+
+        // console.log({diff});
         
-        // Grab values as arrays for easy looping
+        // var smallestNoteInterval = (60000) / (this.BPM * (1/16))
+
+        // if (diff < smallestNoteInterval) return;
+        // else {
+        //     setTimeout(() => {
+        //         this.curTime = Date.now();
+        //     },smallestNoteInterval)
+        // }
+        
+        
+        // Grab values as arrays for easy looping    
         var dataArray = Object.values(EEGdataObj);
-        
         var instruments = Object.values(this.instrumentNoteSettings.instruments);
         var durations = Object.values(this.instrumentNoteSettings.durations);
-
         var generatedArr:any[] = [];
-        
-        var currentNoteData = {};        // Loop through each EEG channel
+        var currentNoteData = {};   
+
+        // Loop through each EEG channel
         for (var i = 0; i < size; i++){
             var channelNum = i+1;
 
@@ -278,7 +300,7 @@ export class NoteHandler {
 
         }
 
-        this.midiGenerator.convertInput(generatedArr);
+        // this.midiGenerator.convertInput(generatedArr);
         await this.midiGenerator.realtimeGenerate(generatedArr);        
     };
 

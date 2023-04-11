@@ -83,7 +83,7 @@ export function GetFloorOctave(numberNotes:number) {
         return 5;
     if (numberNotes == 21)
         return 4;
-    return 5;
+    return 5; // 3
 }
 
 // Finds the amount of samples that fit into the given amount of time in ms
@@ -123,20 +123,16 @@ export function roundTo7Decimal(data:number) {
 }
 
 
-
-
-
 // Will turn the following functions into a class later
-
 
 // Return a number from min inclusive to max exclusive
 function getRandomArbitrary(min:number, max:number) {
     return Math.floor(Math.random() * (max - min) + min);
-  }
+}
   
-// First to last, -3 (Sinewave) 8(Piano)
+// First to last, -3 (Sinewave) 8 + 1(Piano)
 export function getRandomInstrument() {
-    return getRandomArbitrary(-3, 9);
+    return getRandomArbitrary(0, 20);
 }
 
 // Frist to last, 0 (Whole) 4 (Sixteenth)

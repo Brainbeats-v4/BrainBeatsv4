@@ -7,8 +7,8 @@ import { Track, User } from "./Interfaces";
 // The highest and lowest possible values of the headset's data that we will actually use and parse into musical data.
 // Anything under the maximum and above the minimum will be sorted into respective notes, but anything above the maximum
 // or below the minimum will be treated as rests. 
-export const MAX_AMPLITUDE = 0.08;
-export const MIN_AMPLITUDE = -.08;
+export const MAX_AMPLITUDE = 0.001;
+export const MIN_AMPLITUDE = -.001;
 
 // The distance between the ceiling amplitude and the floor amplitude.
 export const MIN_MAX_AMPLITUDE_DIFFERENCE = MAX_AMPLITUDE - MIN_AMPLITUDE;

@@ -59,11 +59,11 @@ function doQuickSet(state: any, setting: string) {
           if((Object.keys(state.deviceSettings.instruments).length / 2) === 8) {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3,
-                _04: -3,
+                _04: 0,
                 _05: 1,
                 _06: 2,
                 _07: 3
@@ -83,7 +83,7 @@ function doQuickSet(state: any, setting: string) {
           else {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3
@@ -101,11 +101,11 @@ function doQuickSet(state: any, setting: string) {
           if((Object.keys(state.deviceSettings.instruments).length / 2) === 8) {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3,
-                _04: -3,
+                _04: 0,
                 _05: 1,
                 _06: 2,
                 _07: 3
@@ -125,7 +125,7 @@ function doQuickSet(state: any, setting: string) {
           else {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3
@@ -143,11 +143,11 @@ function doQuickSet(state: any, setting: string) {
           if((Object.keys(state.deviceSettings.instruments).length / 2) === 8) {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3,
-                _04: -3,
+                _04: 0,
                 _05: 1,
                 _06: 2,
                 _07: 3
@@ -167,7 +167,7 @@ function doQuickSet(state: any, setting: string) {
           else {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3
@@ -185,11 +185,11 @@ function doQuickSet(state: any, setting: string) {
           if((Object.keys(state.deviceSettings.instruments).length / 2) === 8) {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3,
-                _04: -3,
+                _04: 0,
                 _05: 1,
                 _06: 2,
                 _07: 3
@@ -209,7 +209,7 @@ function doQuickSet(state: any, setting: string) {
           else {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3
@@ -227,11 +227,11 @@ function doQuickSet(state: any, setting: string) {
           if((Object.keys(state.deviceSettings.instruments).length / 2) === 8) {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3,
-                _04: -3,
+                _04: 0,
                 _05: 1,
                 _06: 2,
                 _07: 3
@@ -251,7 +251,7 @@ function doQuickSet(state: any, setting: string) {
           else {
             settings = {
               instruments: {
-                _00: -3,
+                _00: 0,
                 _01: 1,
                 _02: 2,
                 _03: 3

@@ -31,16 +31,6 @@ function Record() {
     const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
     const navigate = useNavigate();
 
-    // Dev Debug button ----------------------------------
-    const [debugBool, setDebug] = useState(false);
-
-    function toggleDebug(soption:number) {
-        setDebug(!debugBool);
-        console.log("debug: ", debugBool);
-        device?.setDebugOutput(debugBool);
-    }
-    // ------------------------------- End Dev Debug button
-
     /* This useEffect is crucial!
      * This will set/unset the device once the change has been detected from "doRecording()" */
     useEffect(() => {
@@ -48,7 +38,7 @@ function Record() {
         if (device) {
             setTimeout(() => {
                 setRecording(true); // Used for the record button in the HTML.
-                device.setDebugOutput(debugBool);
+                device.setDebugOutput(debugOption1);
             }, 3000);
 
             device.initializeConnection();
@@ -66,15 +56,21 @@ function Record() {
     async function doRecording() {
         console.log("device:", deviceName);
 
+        var debugOptionObject = {
+            debugOption1, 
+            debugOption2,
+            debugOption3
+        }
+
         switch (deviceName) {
             case "random data":
-                setDevice(new ConcreteTestStream(settings));
+                setDevice(new ConcreteTestStream(settings, debugOptionObject));
                 break;
             case "cyton":
-                setDevice(new ConcreteCytonStream(settings));
+                setDevice(new ConcreteCytonStream(settings, debugOptionObject));
                 break;
             case "ganglion": 
-                setDevice(new ConcreteGanglionStream(settings));
+                setDevice(new ConcreteGanglionStream(settings, debugOptionObject));
                 break;
             default: return;
         }
@@ -231,22 +227,27 @@ function Record() {
                         <div className="form-check">
                             <input className="form-check-input" type="checkbox" value="1" id="flexCheckDefault" checked={debugOption1} onClick={() => handleForm(1)}/>
                             <label className="form-check-label" htmlFor="flexCheckDefault">
-                                device info & datastream <br/> (DeviceAbstractFactory)
+                                device info & datastream <br/> (File: DeviceAbstractFactory)
                             </label>
                         </div>
                         <div className="form-check">
                             <input className="form-check-input" type="checkbox" value="2" id="flexCheckDefault" checked={debugOption2} onClick={() => handleForm(2)}/>
                             <label className="form-check-label" htmlFor="flexCheckDefault">
-                                note generation stream <br/> (OriginalNoteGeneration)
+                                note generation stream <br/> (File: OriginalNoteGeneration)
                             </label>
                         </div>
                         <div className="form-check">
                             <input className="form-check-input" type="checkbox" value="3" id="flexCheckDefault" checked={debugOption3} onClick={() => handleForm(3)}/>
                             <label className="form-check-label" htmlFor="flexCheckDefault">
-                                midi playback <br/> (MIDIManager)
+                                midi playback <br/> (File: MIDIManager)
                             </label>
                         </div>
                     </div>}
+
+                    {isDev() && <a id='download-midi-btn' download={'currentMIDI.MID'} href={MIDIUri}>
+                        <FontAwesomeIcon icon={["fas", "arrow-up-from-bracket"]} />
+                        download the midi
+                    </a>}
    
                     {/* ------------------------------------- End Debug checkboxes */}
                     <div className="setupGuide">
@@ -262,10 +263,6 @@ function Record() {
                         <FontAwesomeIcon icon={["fas", "square"]} />
                         Stop
                     </button>}
-                    <a id='download-midi-btn' download={'currentMIDI.MID'} href={MIDIUri}>
-                        <FontAwesomeIcon icon={["fas", "arrow-up-from-bracket"]} />
-                        download the midi
-                    </a>
                 </div>
             </div>
         </div>
