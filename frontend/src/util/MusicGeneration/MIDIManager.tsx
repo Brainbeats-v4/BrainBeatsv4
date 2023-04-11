@@ -26,7 +26,7 @@ export class MIDIManager {
     private midi;
 
     private midiWriterTracks:Array<Track> = []; 
-
+    private currentVoices:Array<any> = [];
      
     /* The constructor for the MIDIManager requires you to input the settings from the user input
         and the  */
@@ -62,6 +62,7 @@ export class MIDIManager {
             var channel5 = new MidiWriter.Track();
             var channel6 = new MidiWriter.Track();
             var channel7 = new MidiWriter.Track();
+
             this.MIDIChannels.push(channel4, channel5, channel6, channel7)
             this.midiWriterTracks.push(newChannel4, newChannel5, newChannel6, newChannel7);
 
@@ -105,7 +106,6 @@ export class MIDIManager {
                 case Enums.InstrumentTypes.PIANO:
                     sampler = Samplers.Piano.toDestination();
                     polySynthesizer = new Tone.PolySynth().toDestination();  
-                    polySynthesizer.volume.value = -100;
                     break;
                 default:
                     sampler = Samplers.NULL.toDestination();
@@ -289,6 +289,23 @@ export class MIDIManager {
         return;
     }
 
+    private convertDurationToString(duration:number) {
+        switch(duration) {
+            case Enums.NoteDurations.WHOLE:
+                return "1n";
+            case Enums.NoteDurations.HALF:
+                return "2n";
+            case Enums.NoteDurations.QUARTER:
+                return "4n";
+            case Enums.NoteDurations.EIGHTH:
+                return "8n";
+            case Enums.NoteDurations.SIXTEENTH:
+                return "16n";
+            default:
+                return "2n";
+        }
+    }
+
     public async realtimeGenerate(noteData:any[]) {
        var instruments = this.settings.deviceSettings.instruments;
        var instrumentsArr = [];
@@ -335,35 +352,41 @@ export class MIDIManager {
                 * We also attempt to offset the following note by the ms equivalient of the current note len.
             */
 
-            var durationString:string;
+            var durationString:string = this.convertDurationToString(duration); 
 
-            switch(duration) {
-                case Enums.NoteDurations.WHOLE:
-                    durationString = "1n";
-                    break;
-                case Enums.NoteDurations.HALF:
-                    durationString = "2n";
-                    break;
-                case Enums.NoteDurations.QUARTER:
-                    durationString = "4n";
-                    break;
-                case Enums.NoteDurations.EIGHTH:
-                    durationString = "8n";
-                    break;
-                case Enums.NoteDurations.SIXTEENTH:
-                    durationString = "16n";
-                    break;
-                default:
-                    durationString = "2n";
-                    break;
+            
+            
+            var currentVoice = this.currentVoices[i];
+            /* This is the base case, if there is nothing stored in the array then we don't want to check if the currentVoice is undefined */
+            if(currentVoice === undefined) {
+                if(instArr[i] === Enums.InstrumentTypes.PIANO) {
+                    this.currentVoices[i] = this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
+                }
+                else {
+                    this.currentVoices[i] = this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
+                }
             }
-            
-            
-
-            if (this.synthArr[i].activeVoices < 1) {                
-                this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now()) 
-                if (instArr[i] === Enums.InstrumentTypes.PIANO) this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
-                this.convertInput(noteData[i], i);
+            else if (currentVoice.name === 'Sampler') {      
+                console.log(currentVoice._activeSources);     
+                if(currentVoice._activeSources.size < 2) {
+                    if(instArr[i] === Enums.InstrumentTypes.PIANO) {
+                        this.currentVoices[i] = this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
+                        this.currentVoices[i].onended = () => {
+                            this.currentVoices[i]._activeSources.shift();
+                            console.log('ended');
+                        }
+                    }
+                    this.convertInput(noteData[i], i);    
+                }
+            }
+            else if(currentVoice.name === 'PolySynth') {
+                if(currentVoice._activeVoices.length < 1) {
+                    if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
+                        this.currentVoices[i] = this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
+ 
+                    }
+                    this.convertInput(noteData[i], i);
+                }
             }
        }
        
