@@ -18,7 +18,8 @@ import ganglion from '@brainsatplay/ganglion'
 import Ganglion from 'ganglion-ble';
 
 import { ganglionSettings } from "device-decoder.third-party";
-import { DataStream8Ch, DataStream4Ch, MusicSettings } from "./Interfaces";
+import { DataStream8Ch, DataStream4Ch, MusicSettings} from "./Interfaces";
+import { TDebugOptionsObject } from "./Types";
 import { MIDIManager } from "./MusicGeneration/MIDIManager";
 import { Stream } from "stream";
 import { useSelector } from "react-redux";
@@ -87,16 +88,16 @@ export class ConcreteTestStream implements AbstractTestStream {
         return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
     }
 
-    constructor(settings:MusicSettings) {
+    constructor(settings:MusicSettings, debugOptionObject:TDebugOptionsObject) {
 
         console.log("Constructed Test Stream");
         
         this.stopFlag = false;
         this.settings = settings;
-        this.noteHandler = new NoteHandler(this.settings);
+        this.noteHandler = new NoteHandler(this.settings, debugOptionObject);
 
-        this.debugOutput = false;
-        this.noteHandler.setDebugOutput(false);
+        this.debugOutput = debugOptionObject.debugOption1;
+        this.noteHandler.setDebugOutput(debugOptionObject.debugOption2);
         this.counter = 0;
     }
 
@@ -151,10 +152,10 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     public noteHandler;
     private debugOutput:boolean;
 
-    constructor(settings:MusicSettings) {
+    constructor(settings:MusicSettings, debugOptionObject:TDebugOptionsObject) {
         this.stopFlag = false;
         this.settings = settings;
-        this.noteHandler = new NoteHandler(this.settings);
+        this.noteHandler = new NoteHandler(this.settings, debugOptionObject);
         
         
         /* If in dev, and you click "toggle debug", it will cascade and set them all.
@@ -165,8 +166,8 @@ export class ConcreteCytonStream implements AbstractCytonStream {
          * ... 
          * Channel k: Playing G#  
          */
-        this.debugOutput = true;
-        this.noteHandler.setDebugOutput(false); 
+        this.debugOutput = debugOptionObject.debugOption1;
+        this.noteHandler.setDebugOutput(debugOptionObject.debugOption2); 
     }
 
     public setDebugOutput(b:boolean) { this.debugOutput = b;}
@@ -257,7 +258,8 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     }
 }
 
-// Concreate Ganglion factory 
+// This device is no longer being supported as the ObenBCI packages have been deprecated for 5 years, 
+// along with the fact that the alternative libraries we are using not offering support for it.
 export class ConcreteGanglionStream implements AbstractGanglionStream {
     public device:any;
     public stopFlag:boolean;
@@ -265,12 +267,12 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
     public noteHandler:NoteHandler;
     private debugOutput:boolean;
 
-    constructor(settings:MusicSettings) {
+    constructor(settings:MusicSettings, debugOptionObject:TDebugOptionsObject) {
         this.settings = settings;
-        this.noteHandler = new NoteHandler(this.settings);
-        this.noteHandler.setDebugOutput(true);
+        this.noteHandler = new NoteHandler(this.settings, debugOptionObject);
+        this.noteHandler.setDebugOutput(debugOptionObject.debugOption2);
         this.stopFlag = false;
-        this.debugOutput = false;
+        this.debugOutput = debugOptionObject.debugOption1;
     }
 
     public setDebugOutput(b:boolean) {

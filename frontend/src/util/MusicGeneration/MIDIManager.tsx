@@ -7,6 +7,8 @@ import { instrumentList } from "./InstOvertoneDefinitions";
 import * as Tone from 'tone'
 import * as Samplers from '../Samplers';
 
+import { TDebugOptionsObject } from "../Types";
+
 import MidiWriter from 'midi-writer-js';
 import { Midi, Track } from '@tonejs/midi';
 
@@ -30,7 +32,7 @@ export class MIDIManager {
      
     /* The constructor for the MIDIManager requires you to input the settings from the user input
         and the  */
-    constructor(settings:MusicSettings, timeForEachNoteArray:Array<number>) {
+    constructor(settings:MusicSettings, timeForEachNoteArray:Array<number>, debugOptionsObject:TDebugOptionsObject) {
         this.MIDIURI = "";
         this.midi = new Midi();
 
@@ -68,7 +70,7 @@ export class MIDIManager {
         }
         this.settings = settings;
         this.stopFlag = false;
-        this.debugOutput = false;
+        this.debugOutput = debugOptionsObject.debugOption3;
         this.initializeSettings(settings);
         this.timeForEachNoteArray = timeForEachNoteArray;
         
