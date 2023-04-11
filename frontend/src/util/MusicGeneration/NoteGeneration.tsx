@@ -9,6 +9,7 @@ import { KeyGroups, Keys } from '../Enums';
 import { ganglionSettings } from 'device-decoder.third-party';
 import { ConcreteCytonStream } from '../DeviceAbstractFactory';
 import { MIDIManager } from './MIDIManager';
+import { TDebugOptionsObject } from '../Types';
 
 export class NoteHandler {
 
@@ -54,11 +55,10 @@ export class NoteHandler {
     private timeForEachNoteArray:Array<number>;
 
 
-    constructor(settings:MusicSettings) {
+    constructor(settings:MusicSettings, debugOptionsObject: TDebugOptionsObject) {
         // console.log("Constructing originalNoteGeneration Class with the following settings: ");
         // console.log(settings);
 
-        this.debugOutput = false;
         this.octaves = settings.octaves;        
         this.numNotes = settings.numNotes;
         this.BPM = settings.bpm;
@@ -72,7 +72,7 @@ export class NoteHandler {
         this.keySignature = Constants.KEY_SIGNATURES[this.keyGroup][this.scale];
         this.instrumentNoteSettings = settings.deviceSettings;
 
-        this.midiGenerator = new MIDIManager(settings, this.timeForEachNoteArray);
+        this.midiGenerator = new MIDIManager(settings, this.timeForEachNoteArray, debugOptionsObject);
         this.stopFlag = false;
         this.curTime = Date.now()
         
@@ -84,7 +84,8 @@ export class NoteHandler {
          * ... f
          * Channel k: Playing G#  
          */
-        this.midiGenerator.setDebugOutput(false); // debug
+        this.debugOutput = debugOptionsObject.debugOption2;
+        this.midiGenerator.setDebugOutput(debugOptionsObject.debugOption3); // debug
     }
 
     // Helper function for constructor. 
