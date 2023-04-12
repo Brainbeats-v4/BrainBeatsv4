@@ -243,11 +243,14 @@ const Profile = () => {
 
     // Gets User Liked Tracks count
     async function getUserLikes() {
-        if(user && (user.likes != null)){
-            console.log("OLD USER LIKES TOTAL: " + userLikesTotal)
-            setUserLikesTotal(user.likes.length);
-            console.log("NEW USER LIKES TOTAL: " + userLikesTotal)
-        }
+        var currentUser = {userID: user?.id};
+
+        await sendAPI('get', '/likes/getAllUserLikes', currentUser)
+            .then(async(res) => {
+               setUserLikesTotal(res.data.length);
+            }).catch(e => {
+                console.error("Failed to pull liked tracks: ", e);
+        })
     }
 
     // Gets User
@@ -347,7 +350,7 @@ const Profile = () => {
                         <div id='tracks-btn-line' style={{display: playlistsOpen? "none" : "block"}}>
                         </div>
                     </button>
-                    <button type="button" className="btn btn-secondary" id='playlists-btn' onClick={toggleTab} 
+                    <button type="button" className="btn btn-secondary" id='playlists-btn' onClick={() => {toggleTab(); getUserLikes();}} 
                     style={{backgroundColor: playlistsOpen? "rgb(83, 83, 83)": "rgba(100, 100, 100, 1)"}}>
                         <div id='playlists-btn-text'>
                             <FontAwesomeIcon icon={["fas", "list"]} />
@@ -363,18 +366,6 @@ const Profile = () => {
                 <h1>My Tracks</h1>
                 <hr></hr>
                 {user && <TrackCard cardType={'Profile'} input={user.id} />}
-                {/* <div>
-                    <ul>
-                        {
-                            userTracks.map(function(userTrack, index) {
-                                return(
-                                <li key={index}>
-                                    {userTrack.songTitle}
-                                </li>);
-                            })
-                        }
-                    </ul>
-                </div> */}
             </div>
 
             {/* Displays when Playlists tab selected */}
@@ -382,20 +373,6 @@ const Profile = () => {
                 <h1>My Likes</h1>
                 <hr></hr>
                 {user && <TrackCard cardType={'Likes'} input={user.id} />}
-
-                {/* <TrackCard cardType={'Profile'} input={user?.userId} /> */}
-                {/* <div>
-                    <ul>
-                        {
-                            userTracks.map(function(userTrack, index) {
-                                return(
-                                <li key={index}>
-                                    {userTrack.songTitle}
-                                </li>);
-                            })
-                        }
-                    </ul>
-                </div> */}
             </div>
         </div>
     )

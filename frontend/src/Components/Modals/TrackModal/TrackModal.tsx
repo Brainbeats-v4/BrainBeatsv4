@@ -51,16 +51,12 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
   // The ternary just sets the like array to the user like array if it exists, else the empty
   const [userLikeArr, setUserLikeArr] = useState(user ? user.likes ? user.likes : emptyLikeArr : emptyLikeArr);
 
-  const [favorited, setFavorited] = useState(checkLike()); // change this later
+  const [favorited, setFavorited] = useState(false); // change this later
 
   // Initializes favorited variable
   useEffect(() => {
-    // setFavorited(checkLike()); // need to debug. not calling checklike when opening/editing unliked track.
     checkTrackOwner();
-
-    console.log("userLikes: ", user?.likes);
-
-    setFavorited(checkLike());
+    checkLike();
   }, []);
 
   // ============================= Functions for User Track =============================
@@ -264,7 +260,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
 
   // ============================= Functions for Like System =============================
   // Checks for user like
-  function checkLike() {
+  async function checkLike() {
 
     let favorited:boolean = false;
     
@@ -272,50 +268,24 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     if (!user || !userLikeArr) {
       return false;
     }
-
-    // We're linearly searching here, we should try to do a lookup 
-    // TODO: user.like.includes(track); // <-- expected arg: "Like"
-
-    // Linearly searches for the like, break early if found
-
-    console.log("userLikeARRAY: ", userLikeArr);
-    for (var i = 0; i < userLikeArr.length; i++)
-    {
-      if (userLikeArr[i].trackID == track.id) {
-        favorited = true;
-        break;
-        // console.log("track '" + track.title + "' is liked.");
-      }
-    }
     
-    // if (user != null) {
-    //   let newLike = {
-    //     trackID: track.id,
-    //     userID: user.id,
-    //     token: jwt,
-    //   }
+    var currentUser = {userID: user.id};
 
-    //   console.log("checkLike(): marker newLike ");
-    //   console.log("checkLike() trackID: " + track.id);
-      
-    //   sendAPI("get", "/likes/getUserLike", newLike).then((res) => {
-    //     console.log("API call getUserLike");
-    //     if (res.status == 200) {
-    //       console.log("liked")
-    //       favorited = true;
-    //     }
-    //     else{
-    //       console.log("no like");
-    //       favorited = false;
-    //     }
-    //   }).then(() => {setFavorited(favorited)})
-    // }
-    // else {
-    //   console.log("User is null");
-    // }
+    await sendAPI('get', '/likes/getAllUserLikes', currentUser)
+        .then(async(res) => {
+          for(var i = 0; i < res.data.length; i++) {
+              
+            var trackID: string = res.data[i].trackID;
+            if(track.id == trackID) {
+              favorited = true;
+              break;
+            }
+          }
+      }).catch(e => {
+          console.error("Failed to pull liked tracks: ", e);
+      })
 
-    //  setFavorited(favorited);
-    return favorited;
+    setFavorited(favorited);
   }
 
   function incrementLike() {
@@ -714,10 +684,11 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
               </button>}
 
               
-              <button className='btn btn-secondary modal-btn'>
+              {/* Possibly add playlists feature in the future */}
+              {/* <button className='btn btn-secondary modal-btn'>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "plus"]} />
                 Add to Playlist
-              </button>
+              </button> */}
               {editing && <button className='btn btn-secondary modal-btn' onClick={() => {updateTrack(); updateThumbnail(track)}}>
                 <FontAwesomeIcon className='modal-track-icons' icon={["fas", "edit"]} />
                 Save
