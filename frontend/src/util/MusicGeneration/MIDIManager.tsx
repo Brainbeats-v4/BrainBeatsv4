@@ -6,6 +6,7 @@ import * as Constants from '../Constants';
 import { instrumentList } from "./InstOvertoneDefinitions";
 import * as Tone from 'tone'
 import * as Samplers from '../Samplers';
+import * as SL from "../Instruments";
 
 import { TDebugOptionsObject } from "../Types";
 
@@ -89,33 +90,223 @@ export class MIDIManager {
     private initializeSynth() {
         Tone.getTransport().bpm.value = this.settings.bpm;
 
-        for (var i = 0; i < 8; i++) {
-            this.currentVoices[i] = 0;
-            var instArr = Object.values(this.settings.deviceSettings.instruments)            
-            /*  Here we are assigning a sampler and a polysynth to each channel based on the instruments array, we are passing a NULL to those 
-                that will never utilize the sampler to maintain the samplerArr having a strict typing definition of Sampler and also keep the 
-                channel size consistent. If it seems practical in the future to alter the samplers for consistency they can just simply be defined 
-                in the Samplers.tsx file. */
-            var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>>;
-            var sampler:Tone.Sampler; 
+        this.currentVoices = new Array(8).fill(0);
+        var instArr = Object.values(this.settings.deviceSettings.instruments)            
+        
+        /*  Here we are assigning a sampler and a polysynth to each channel based on the instruments array, we are passing a NULL to those 
+        that will never utilize the sampler to maintain the samplerArr having a strict typing definition of Sampler and also keep the 
+        channel size consistent. If it seems practical in the future to alter the samplers for consistency they can just simply be defined 
+        in the Samplers.tsx file. */
+        var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> =  new Tone.PolySynth().toDestination();
+        var sampler;
 
-            // sampler.
-            switch(instArr[i]) {
-                case Enums.InstrumentTypes.SINEWAVE:
-                    sampler = Samplers.NULL.toDestination();
-                    polySynthesizer = new Tone.PolySynth().toDestination();
-                    polySynthesizer.volume.value = -10;
-                    break;
-                case Enums.InstrumentTypes.PIANO:
-                    sampler = Samplers.Piano.toDestination();
-                    polySynthesizer = new Tone.PolySynth().toDestination();  
-                    break;
-                default:
-                    sampler = Samplers.NULL.toDestination();
-                    polySynthesizer = new Tone.PolySynth().toDestination();
-                    polySynthesizer.volume.value = -10;
-                    break;
+        // Set the SL instrument for each enum
+        const instruments = {
+            [Enums.InstrumentTypes.SINEWAVE]: Samplers.NULL,
+            [Enums.InstrumentTypes.BASSELECTRIC]: SL.bassElectric,
+            [Enums.InstrumentTypes.BASSOON]: SL.bassoon,
+            [Enums.InstrumentTypes.CLARINET]: SL.clarinet,
+            [Enums.InstrumentTypes.CONTRABASS]: SL.contrabass,
+            [Enums.InstrumentTypes.FLUTE]: SL.flute,
+            [Enums.InstrumentTypes.FRENCHHORN]: SL.frenchHorn,
+            [Enums.InstrumentTypes.GUITARACOUSTIC]: SL.guitarAcoustic,
+            [Enums.InstrumentTypes.GUITARELECTRIC]: SL.guitarElectric,
+            [Enums.InstrumentTypes.GUITARNYLON]: SL.guitarNylon,
+            [Enums.InstrumentTypes.PIANO]: SL.piano,
+            [Enums.InstrumentTypes.HARMONIUM]: SL.harmonium,
+            [Enums.InstrumentTypes.HARP]: SL.harp,
+            [Enums.InstrumentTypes.ORGAN]: SL.organ,
+            [Enums.InstrumentTypes.SAXOPHONE]: SL.saxophone,
+            [Enums.InstrumentTypes.TROMBONE]: SL.trombone,
+            [Enums.InstrumentTypes.TRUMPET]: SL.trumpet,
+            [Enums.InstrumentTypes.TUBA]: SL.tuba,
+            [Enums.InstrumentTypes.VIOLIN]: SL.violin,
+            [Enums.InstrumentTypes.XYLOPHONE]: SL.xylophone,
+        };
+
+        // Loop through the user chosen instruments and set their SL values
+        for (var i = 0; i < 8; i++) {
+            
+            // Sinewave / Default
+            if (instArr[i] == 0 || instruments[instArr[i]] == undefined) {
+                sampler = Samplers.NULL.toDestination();
+                polySynthesizer.volume.value = -10;
+                continue;
             }
+
+            const instrument = instruments[instArr[i]] as SL.IInstrument;
+            sampler = SL.SampleLibrary.load({instruments: instrument}) as Tone.Sampler;
+            sampler.toDestination();
+            
+            // polySynthesizer.connect(sampler);
+
+            // var sampler:Tone.Sampler; 
+            // // sampler.
+            // switch(instArr[i]) {
+            //     case Enums.InstrumentTypes.SINEWAVE:
+            //         sampler = Samplers.NULL.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();
+            //         polySynthesizer.volume.value = -10;
+            //         break;                    
+            //     case Enums.InstrumentTypes.BASSELECTRIC:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.bassElectric
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.BASSOON:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.bassoon
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.CLARINET:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.clarinet
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.CONTRABASS:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.contrabass
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.FLUTE:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.flute
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.FRENCHHORN:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.frenchHorn
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.GUITARACOUSTIC:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.guitarAcoustic
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.GUITARELECTRIC:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.guitarElectric
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.GUITARNYLON:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.guitarNylon
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.PIANO:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.piano
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.HARMONIUM:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.harmonium
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.HARP:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.harp
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.ORGAN:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.organ
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.SAXOPHONE:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.saxophone
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.TROMBONE:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.trombone
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.TRUMPET:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.trumpet
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.TUBA:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.tuba
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.VIOLIN:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.violin
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     case Enums.InstrumentTypes.XYLOPHONE:
+            //         var sampler = SL.SampleLibrary.load({
+            //             instruments: SL.xylophone
+            //         }) as Tone.Sampler
+                    
+            //         // sampler = Samplers.Piano.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();  
+            //         break;
+            //     default:
+            //         sampler = Samplers.NULL.toDestination();
+            //         polySynthesizer = new Tone.PolySynth().toDestination();
+            //         polySynthesizer.volume.value = -10;
+            //         break;
+            // }
+
             this.samplerArr.push(sampler);
             this.synthArr.push(polySynthesizer);
         }

@@ -1,5 +1,8 @@
 import * as Tone from 'tone'
 
+// We forked a github containing definitions for each instrument available with toneJs.
+// https://github.com/brandonmrgich/tonejs-instruments/tree/master/samples
+
 export const Piano = new Tone.Sampler({
     urls: {
         A0: "A0.mp3",

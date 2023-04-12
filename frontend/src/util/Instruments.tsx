@@ -1,7 +1,7 @@
 /**
 * @fileoverview A sample library and quick-loader for tone.js
 *
-* @author N.P. Brosowsky (nbrosowsky@gmail.com)
+* @author N.P. Brosowsky /(nbrosowsky@gmail.com)
 * https://github.com/nbrosowsky/tonejs-instruments
 */
 
@@ -15,7 +15,7 @@ import * as Tone from 'tone'
 
 /*  These two interfaces can be moved to the interfaces util, but the arguments interface won't be used elsewhere and I don't think that
     the instrument one will be either, but I could be wrong. */
-interface IInstrument {
+export interface IInstrument {
     'A7'?:string,
     'A1'?:string,
     'A2'?:string,
@@ -104,15 +104,15 @@ interface IInstrument {
     
 }
 
-interface IArgs {
-    instruments?:Array<IInstrument>,
+export interface IArgs {
+    instruments?:Array<IInstrument>|IInstrument,
     baseUrl?:string,
     onload?:any,
     ext?:string,
     minify?:boolean
 }
 
-const bassElectric:IInstrument = {
+export const bassElectric:IInstrument = {
     'A#1': 'As1.[mp3|ogg]',
     'A#2': 'As2.[mp3|ogg]',
     'A#3': 'As3.[mp3|ogg]',
@@ -130,7 +130,7 @@ const bassElectric:IInstrument = {
     'G3': 'G3.[mp3|ogg]',
     'G4': 'G4.[mp3|ogg]'
 };
-const bassoon:IInstrument = {
+export const bassoon:IInstrument = {
     'A4': 'A4.[mp3|ogg]',
     'C3': 'C3.[mp3|ogg]',
     'C4': 'C4.[mp3|ogg]',
@@ -142,7 +142,7 @@ const bassoon:IInstrument = {
     'A2': 'A2.[mp3|ogg]',
     'A3': 'A3.[mp3|ogg]'
 };
-const cello:IInstrument = {
+export const cello:IInstrument = {
     'E3': 'E3.[mp3|ogg]',
     'E4': 'E4.[mp3|ogg]',
     'F2': 'F2.[mp3|ogg]',
@@ -179,7 +179,7 @@ const cello:IInstrument = {
     'E2': 'E2.[mp3|ogg]'
 
 };
-const clarinet:IInstrument = {
+export const clarinet:IInstrument = {
     'D4': 'D4.[mp3|ogg]',
     'D5': 'D5.[mp3|ogg]',
     'D6': 'D6.[mp3|ogg]',
@@ -193,7 +193,7 @@ const clarinet:IInstrument = {
     'D3': 'D3.[mp3|ogg]'
 
 };
-const contrabass:IInstrument = {
+export const contrabass:IInstrument = {
     'C2': 'C2.[mp3|ogg]',
     'C#3': 'Cs3.[mp3|ogg]',
     'D2': 'D2.[mp3|ogg]',
@@ -208,7 +208,7 @@ const contrabass:IInstrument = {
     'A#1': 'As1.[mp3|ogg]',
     'B3': 'B3.[mp3|ogg]'
 };
-const flute:IInstrument = {
+export const flute:IInstrument = {
     'A6': 'A6.[mp3|ogg]',
     'C4': 'C4.[mp3|ogg]',
     'C5': 'C5.[mp3|ogg]',
@@ -220,7 +220,7 @@ const flute:IInstrument = {
     'A4': 'A4.[mp3|ogg]',
     'A5': 'A5.[mp3|ogg]'
 };
-const frenchHorn:IInstrument =  {
+export const frenchHorn:IInstrument =  {
     'D3': 'D3.[mp3|ogg]',
     'D5': 'D5.[mp3|ogg]',
     'D#2': 'Ds2.[mp3|ogg]',
@@ -232,7 +232,7 @@ const frenchHorn:IInstrument =  {
     'C2': 'C2.[mp3|ogg]',
     'C4': 'C4.[mp3|ogg]',
 };
-const guitarAcoustic:IInstrument = {
+export const guitarAcoustic:IInstrument = {
     'F4': 'F4.[mp3|ogg]',
     'F#2': 'Fs2.[mp3|ogg]',
     'F#3': 'Fs3.[mp3|ogg]',
@@ -272,7 +272,7 @@ const guitarAcoustic:IInstrument = {
     'F3': 'F3.[mp3|ogg]'
 
 };
-const guitarElectric:IInstrument = {
+export const guitarElectric:IInstrument = {
     'D#3': 'Ds3.[mp3|ogg]',
     'D#4': 'Ds4.[mp3|ogg]',
     'D#5': 'Ds5.[mp3|ogg]',
@@ -291,7 +291,7 @@ const guitarElectric:IInstrument = {
     'C6': 'C6.[mp3|ogg]',
     'C#2': 'Cs2.[mp3|ogg]'
 };
-const guitarNylon:IInstrument = {
+export const guitarNylon:IInstrument = {
     'F#2': 'Fs2.[mp3|ogg]',
     'F#3': 'Fs3.[mp3|ogg]',
     'F#4': 'Fs4.[mp3|ogg]',
@@ -322,7 +322,7 @@ const guitarNylon:IInstrument = {
     'E4': 'E4.[mp3|ogg]',
     'E5': 'E5.[mp3|ogg]'
 };
-const harmonium:IInstrument = {
+export const harmonium:IInstrument = {
     'C2': 'C2.[mp3|ogg]',
     'C3': 'C3.[mp3|ogg]',
     'C4': 'C4.[mp3|ogg]',
@@ -359,7 +359,7 @@ const harmonium:IInstrument = {
     'A#3': 'As3.[mp3|ogg]',
     'A#4': 'As4.[mp3|ogg]'
 };
-const harp:IInstrument =  {
+export const harp:IInstrument =  {
     'C5': 'C5.[mp3|ogg]',
     'D2': 'D2.[mp3|ogg]',
     'D4': 'D4.[mp3|ogg]',
@@ -384,7 +384,7 @@ const harp:IInstrument =  {
     'B6': 'B6.[mp3|ogg]',
     'C3': 'C3.[mp3|ogg]'
 };
-const organ:IInstrument = {
+export const organ:IInstrument = {
     'C3': 'C3.[mp3|ogg]',
     'C4': 'C4.[mp3|ogg]',
     'C5': 'C5.[mp3|ogg]',
@@ -407,7 +407,7 @@ const organ:IInstrument = {
     'C1': 'C1.[mp3|ogg]',
     'C2': 'C2.[mp3|ogg]'
 };
-const piano:IInstrument = {
+export const piano:IInstrument = {
     'A7': 'A7.[mp3|ogg]',
     'A1': 'A1.[mp3|ogg]',
     'A2': 'A2.[mp3|ogg]',
@@ -493,7 +493,7 @@ const piano:IInstrument = {
     'G#5': 'Gs5.[mp3|ogg]',
     'G#6': 'Gs6.[mp3|ogg]'
 };
-const saxophone:IInstrument = {
+export const saxophone:IInstrument = {
     'D#5': 'Ds5.[mp3|ogg]',
     'E3': 'E3.[mp3|ogg]',
     'E4': 'E4.[mp3|ogg]',
@@ -528,7 +528,7 @@ const saxophone:IInstrument = {
     'D#4': 'Ds4.[mp3|ogg]'
 
 };
-const trombone:IInstrument = {
+export const trombone:IInstrument = {
     'A#3': 'As3.[mp3|ogg]',
     'C3': 'C3.[mp3|ogg]',
     'C4': 'C4.[mp3|ogg]',
@@ -548,7 +548,7 @@ const trombone:IInstrument = {
     'A#2': 'As2.[mp3|ogg]'
 
 };
-const trumpet:IInstrument = {
+export const trumpet:IInstrument = {
     'C6': 'C6.[mp3|ogg]',
     'D5': 'D5.[mp3|ogg]',
     'D#4': 'Ds4.[mp3|ogg]',
@@ -561,7 +561,7 @@ const trumpet:IInstrument = {
     'A#4': 'As4.[mp3|ogg]',
     'C4': 'C4.[mp3|ogg]'
 };
-const tuba:IInstrument = {
+export const tuba:IInstrument = {
     'A#2': 'As2.[mp3|ogg]',
     'A#3': 'As3.[mp3|ogg]',
     'D3': 'D3.[mp3|ogg]',
@@ -572,7 +572,7 @@ const tuba:IInstrument = {
     'F3': 'F3.[mp3|ogg]',
     'A#1': 'As1.[mp3|ogg]'
 };
-const violin:IInstrument = {
+export const violin:IInstrument = {
     'A3': 'A3.[mp3|ogg]',
     'A4': 'A4.[mp3|ogg]',
     'A5': 'A5.[mp3|ogg]',
@@ -589,7 +589,7 @@ const violin:IInstrument = {
     'G6': 'G6.[mp3|ogg]'
 
 };
-const xylophone:IInstrument = {
+export const xylophone:IInstrument = {
     'C8': 'C8.[mp3|ogg]',
     'G4': 'G4.[mp3|ogg]',
     'G5': 'G5.[mp3|ogg]',
