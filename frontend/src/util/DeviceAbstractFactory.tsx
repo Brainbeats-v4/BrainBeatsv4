@@ -211,7 +211,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             this.device.disconnect();
             return;
         }
-
+        console.log(data);
         // Package the data so it is easier to handle
         let currentData:DataStream8Ch = {
             channel00: data[0][0],
@@ -224,6 +224,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             channel07: data[7][0],
             timeStamp: data['timestamp'][0]
         }
+        
 
         if (this.debugOutput) console.log({currentData});
 

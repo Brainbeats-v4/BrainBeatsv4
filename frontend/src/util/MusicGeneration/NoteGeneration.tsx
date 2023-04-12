@@ -23,8 +23,8 @@ export class NoteHandler {
     private scale:number;
     private keySignature;
     
-    private minValue:number = Number.POSITIVE_INFINITY;
-    private maxValue:number = Number.NEGATIVE_INFINITY;
+    private minValue:Array<number> = []; 
+    private maxValue:Array<number> = []; 
     
     private instrumentNoteSettings:CytonSettings | GanglionSettings;
 
@@ -49,7 +49,7 @@ export class NoteHandler {
     * In runtime, the headset data is compared to the array to determine which note it corresponds to. 
     * The note is determined by taking the floor of the two values in the array the data falls between.
     */
-    private incrementArr:Array<number>; 
+    private incrementArr:Array<Array<number>> = [[]];
     
     // The amount of time (in milliseconds) that each of the supported notes would take at the specified BPM
     private timeForEachNoteArray:Array<number>;
@@ -63,7 +63,6 @@ export class NoteHandler {
         this.numNotes = settings.numNotes;
         this.BPM = settings.bpm;
 
-        this.incrementArr = new Array(this.numNotes);        
         this.timeForEachNoteArray = this.setTimeForEachNoteArray(this.BPM);
         
         this.keyGroup = KeyGroups[settings.keyGroup as keyof typeof KeyGroups];
@@ -76,8 +75,20 @@ export class NoteHandler {
         this.stopFlag = false;
         this.curTime = Date.now()
         
-        this.InitIncrementArr(Constants.MIN_AMPLITUDE, Constants.MAX_AMPLITUDE);
+        // We changed to using an IncrementArr per channel, as the signal strength varried too 
+        // much dependent on location for just one array. With just one array where it's min
+        // and max is decided by the channel with the widest amplitude, causes thinner channels
+        // to produce lots of silence.
+        for (var i = 0; i < 8; i++) {
+            this.minValue[i] = Number.POSITIVE_INFINITY;
+            this.maxValue[i] = Number.NEGATIVE_INFINITY;
+            
+            // Each channel's own increment array
+            this.incrementArr[i] = new Array(this.numNotes);        
 
+
+            this.InitIncrementArr(Constants.MIN_AMPLITUDE, Constants.MAX_AMPLITUDE, i);            
+        }
         /* Set this to true to enable real-time playback related output during recording.
          * Ex: 
          * Channel 1: At Rest 
@@ -108,62 +119,73 @@ export class NoteHandler {
 
     // This creates the array in which different "increments" for notes are housed. 
     // For more info see the comment for "var incrementArr"
-    private InitIncrementArr(min:number, max:number) {
-
-        let ampDifference = max - min;
-        console.log(ampDifference);
+    private InitIncrementArr(min:number, max:number, idx:number) {
+        let ampDifference:number = Math.abs(max - min);
+        var outlierThreshold:number = .001
+        
         // Dividing the total range by the number of notes
-        var incrementAmount = ampDifference / this.numNotes; 
-        console.log(incrementAmount);
+        var incrementAmount:number = ampDifference / this.numNotes; 
+        
         // First index will always be 0
-        this.incrementArr[0] = 0; 
+        this.incrementArr[idx][0] = incrementAmount / 2; 
         
         // Last index will always be the max value + the offset
-        this.incrementArr[this.numNotes - 1] = max + Constants.AMPLITUDE_OFFSET; 
+        this.incrementArr[idx][this.numNotes - 1] = ampDifference; 
 
         // Fill out the array so that each index is populated with incrementAmount * index
-        for (var i = 1; i < this.numNotes; i++) {
-            this.incrementArr[i] = incrementAmount * i + Constants.AMPLITUDE_OFFSET;
+        for (var i = 1; i < this.numNotes - 1; i++) {
+            this.incrementArr[idx][i] = incrementAmount * i
         }
 
-        // Debug
-        if (this.debugOutput) {
-            for (var i = 0; i < this.numNotes; i++) {
-                console.error(i, ": ", this.incrementArr[i]);
+        for (var i = 0; i < this.numNotes; i++) {
+            var diff = Math.abs(this.incrementArr[idx][i] - min);
+            if (diff > outlierThreshold) {
+                this.incrementArr[idx][i] = min + outlierThreshold;
             }
-        }
+            diff = Math.abs(this.incrementArr[idx][i] - max);
+            if (diff > outlierThreshold) {
+                this.incrementArr[idx][i] = max - outlierThreshold;
+            }
+        }    
     }
 
-    // Takes in a raw value from the headset and assigns a note.
-    private NoteDeclarationRaw(ampValue:number) {
-        let returnedAmpValue = 0;
-        returnedAmpValue = ampValue / Math.pow(10, 8);
-        // returnedAmpValue = (returnedAmpValue + this.minValue); 
+    private handleNoteGen(eegMin:number, eegMax:number, idx:number) {
+        const minFreq = 50; // Lowest frequency
+        const maxFreq = 5000; // Highest frequency
+        
+        const audioMin = minFreq + (eegMin - Constants.eegFreqs.delta[0]) / (Constants.eegFreqs.gamma[1] - Constants.eegFreqs.delta[0]) * (maxFreq - minFreq);
+        const audioMax = minFreq + (eegMax - Constants.eegFreqs.delta[0]) / (Constants.eegFreqs.gamma[1] - Constants.eegFreqs.delta[0]) * (maxFreq - minFreq);  
+        this.incrementArr[idx] = ([audioMin,audioMax]);
+        
+    }
 
-        // console.log(returnedAmpValue);
-        // console.log(this.incrementArr);
+
+    // Takes in a raw value from the headset and assigns a note, as well as the index of this channel
+    private NoteDeclarationRaw(ampValue:number, idx:number) {
         
-        // console.log('MaxValue', this.maxValue);
-        // console.log('MinValue', this.minValue);
+        let returnedAmpValue = ampValue / Math.pow(10, 5);
+        console.log(returnedAmpValue);
         
-        if(this.maxValue < returnedAmpValue) {
-            this.maxValue = returnedAmpValue;
-            this.InitIncrementArr(this.minValue, this.maxValue);
+        if(this.maxValue[idx] < returnedAmpValue) {
+            this.maxValue[idx] = returnedAmpValue;
+            this.InitIncrementArr(this.minValue[idx], this.maxValue[idx], idx);
         }
-        else if(this.minValue > returnedAmpValue) {
-            this.minValue = returnedAmpValue;
-            this.InitIncrementArr(this.minValue, this.maxValue);
+        if(this.minValue[idx] > returnedAmpValue) {
+            this.minValue[idx] = returnedAmpValue;
+            this.InitIncrementArr(this.minValue[idx], this.maxValue[idx], idx);
         }
 
         if (this.debugOutput) console.log("ampval:", returnedAmpValue);
+    
         // For every possible note, check to see if ampValue falls between two array positions. 
         // If so, return that position. If not, it will be treated as a rest (returning -1).
-        for (var i = 0; i <= this.numNotes - 1; i++) {
+        for (var i = 0; i < this.numNotes; i++) {
             // If final index, prevent checking out of bounds
             if (i === this.numNotes - 1)
-                return returnedAmpValue >= this.incrementArr[i] ? i : -1;
+                return returnedAmpValue >= this.incrementArr[idx][i] ? i : -1;
 
-            if (returnedAmpValue >= this.incrementArr[i] && returnedAmpValue <= this.incrementArr[i + 1]) {
+            if (returnedAmpValue >= this.incrementArr[idx][i] && returnedAmpValue <= this.incrementArr[idx][i + 1]) {
+                console.log(returnedAmpValue);
                 return i;
             }
         }
@@ -249,15 +271,14 @@ export class NoteHandler {
             
             var noteLengthName = getNoteLengthStringFromInt(noteLength);
             var instrumentName = getInstrumentNameFromInt(instrument);
-        
+            console.log('channel ', i);
 
             // Get note increment
-            console.log('Amp Value for Node ', i, ':');
-            var declaredNote = this.NoteDeclarationRaw(curChannelData); 
+            var declaredNote = this.NoteDeclarationRaw(curChannelData, i); 
             
             // Get the actual note and its octave
             var noteAndOctave = this.GetNoteWRTKey(declaredNote); 
-            console.log(noteAndOctave);
+            
             // Get the lowest octave that will be used in the song
             var floorOctave = GetFloorOctave(this.numNotes); 
             
@@ -271,22 +292,22 @@ export class NoteHandler {
                 noteFrequency = getFrequencyFromNoteOctaveString(noteOctaveString);
             }
 
-            let num = i+1;
-
-            // Test frequency of notes
-            var frequencyArray:number[] = [];
-            frequencyArray.fill(-1);
-
-
             // Debug -----------------------------------------
-            if (noteAndOctave.note != -1 && this.debugOutput) {
-                frequencyArray[i] = Number(noteAndOctave.note);
+            if (this.debugOutput) {  // Test frequency of notes 
+                let num = i+1;
+                var frequencyArray:number[] = [];
+                frequencyArray.fill(-1);
 
-                console.log("Channel " + num + ": Playing " + noteAndOctave.note);
-                
-            } else if(this.debugOutput) {
-                console.log("Channel " + num + ": At Rest");
-            } else {}
+                if (noteAndOctave.note != -1 && this.debugOutput) {
+                    frequencyArray[i] = Number(noteAndOctave.note);
+
+                    console.log("Channel " + num + ": Playing " + noteAndOctave.note);
+                    
+                } else if(this.debugOutput) {
+                    console.log("Channel " + num + ": At Rest");
+                } else {}
+                frequencyArray.forEach((n:any) => console.log(n));
+            } 
             // ------------------------------------- End Debug
 
             currentNoteData = {
@@ -294,10 +315,6 @@ export class NoteHandler {
                 writer:{noteLengthName, note: noteAndOctave.note, octave: noteAndOctave.octave+floorOctave}
             };
             generatedArr.push(currentNoteData);
-            
-            // Debug
-            // if (this.debugOutput) frequencyArray.forEach((n:any) => console.log(n));
-
         }
 
         // this.midiGenerator.convertInput(generatedArr);

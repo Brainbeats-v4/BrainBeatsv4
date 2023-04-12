@@ -108,3 +108,11 @@ export const emptyUser:User = {
     bio: '',
     profilePicture: '',
 }
+
+const delta = [0.5, 4];
+const theta = [4, 8];
+const alpha = [8, 13];
+const beta = [13, 30];
+const gamma = [30, 100];
+
+export const eegFreqs = { delta, theta, alpha, beta, gamma }

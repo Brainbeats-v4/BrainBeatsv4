@@ -5,7 +5,8 @@ import * as Enums from '../Enums';
 import * as Constants from '../Constants';
 import { instrumentList } from "./InstOvertoneDefinitions";
 import * as Tone from 'tone'
-import * as Samplers from '../Samplers';
+import {SamplerList} from '../Samplers';
+import * as SL from "../Instruments";
 
 import { TDebugOptionsObject } from "../Types";
 
@@ -89,32 +90,29 @@ export class MIDIManager {
     private initializeSynth() {
         Tone.getTransport().bpm.value = this.settings.bpm;
 
-        for (var i = 0; i < 8; i++) {
-            this.currentVoices[i] = 0;
-            var instArr = Object.values(this.settings.deviceSettings.instruments)            
-            /*  Here we are assigning a sampler and a polysynth to each channel based on the instruments array, we are passing a NULL to those 
-                that will never utilize the sampler to maintain the samplerArr having a strict typing definition of Sampler and also keep the 
-                channel size consistent. If it seems practical in the future to alter the samplers for consistency they can just simply be defined 
-                in the Samplers.tsx file. */
-            var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>>;
-            var sampler:Tone.Sampler; 
+        this.currentVoices = new Array(8).fill(0);
+        var instArr = Object.values(this.settings.deviceSettings.instruments)            
+        
+        /*  Here we are assigning a sampler and a polysynth to each channel based on the instruments array, we are passing a NULL to those 
+        that will never utilize the sampler to maintain the samplerArr having a strict typing definition of Sampler and also keep the 
+        channel size consistent. If it seems practical in the future to alter the samplers for consistency they can just simply be defined 
+        in the Samplers.tsx file. */
+        var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> =  new Tone.PolySynth().toDestination();
+        var sampler;
 
-            // sampler.
-            switch(instArr[i]) {
-                case Enums.InstrumentTypes.SINEWAVE:
-                    sampler = Samplers.NULL.toDestination();
-                    polySynthesizer = new Tone.PolySynth().toDestination();
-                    polySynthesizer.volume.value = -10;
-                    break;
-                case Enums.InstrumentTypes.PIANO:
-                    sampler = Samplers.Piano.toDestination();
-                    polySynthesizer = new Tone.PolySynth().toDestination();  
-                    break;
-                default:
-                    sampler = Samplers.NULL.toDestination();
-                    polySynthesizer = new Tone.PolySynth().toDestination();
-                    polySynthesizer.volume.value = -10;
-                    break;
+        // Loop through the user chosen instruments and set their SL values
+        for (var i = 0; i < 8; i++) {
+            
+            // Sinewave / Default
+            if (instArr[i] === 0) {
+                sampler = SamplerList[instArr[i]].toDestination();
+                polySynthesizer.volume.value = -10;
+                continue;
+            }
+            else {
+                // This is piano right now, any new instrument that gets added needs to go in in its respective location in the sampler list
+                // constant
+                sampler = SamplerList[1].toDestination()
             }
             this.samplerArr.push(sampler);
             this.synthArr.push(polySynthesizer);
@@ -142,20 +140,6 @@ export class MIDIManager {
         return res;
     };
 
-    private chunkArray(array: Uint8Array | Uint16Array, chunkSize: number) {
-        const result = [];
-        const numChunks = Math.ceil(array.length / chunkSize);
-      
-        for (let i = 0; i < numChunks; i++) {
-          const start = i * chunkSize;
-          const end = start + chunkSize;
-          const chunk = array.slice(start, end);
-          result.push(chunk);
-        }
-      
-        return result;
-      }
-
     /*  We hand the file over to this function as a Uint8Array and then
         convert it into an audio file in base64 format. */
     private convertToBase64(file:Uint8Array): Promise<string> {
@@ -181,9 +165,6 @@ export class MIDIManager {
     public async returnMIDI() {
     
         // Handles midi file generation for download    
-
-        const blob = new Blob([this.midi.toArray()], { type: 'audio/midi' });
-
         // Create a download link for the Blob object
         // const url = URL.createObjectURL(blob);
         // return url;
@@ -192,12 +173,11 @@ export class MIDIManager {
         
         var midiBuildFile:Uint8Array = write.buildFile();
         
-        console.log(write.base64());
-        console.log({midiBuildFile});
+        console.log('buildFile: ', midiBuildFile);
         
         // return write.base64();
         
-        const midiFileChunks = this.sliceIntoChunks(midiBuildFile, 8);
+        const midiFileChunks = this.sliceIntoChunks(midiBuildFile, 5000);
         console.log(midiFileChunks);
 
         const fileString = new Uint8Array(midiFileChunks.reduce((acc:any[], midiFileChunk) => {
@@ -362,7 +342,6 @@ export class MIDIManager {
             var frequency = playerInfo.noteFrequency;
 
             var instArr = Object.values(this.settings.deviceSettings.instruments)            
-
             if(frequency === undefined) continue;
 
             /*
@@ -376,21 +355,21 @@ export class MIDIManager {
             var durationString:string = this.convertDurationToString(duration); 
             
             var soundTime = this.currentVoices[i] * 1000;
-            console.log("soundTime: ", soundTime);
             var noteTime = this.setTimeForEachNoteArray(this.settings.bpm, duration);
-            console.log("noteTime: ", noteTime);
-            
             /* This is the base case, if there is nothing stored in the array then we don't want to check if the currentVoice is undefined */
-            if(Math.abs((this.synthArr[i].now() * 1000) - soundTime) >= noteTime) {
-                if(instArr[i] === Enums.InstrumentTypes.PIANO) {
-                    this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
-                    this.currentVoices[i] = this.samplerArr[i].now()
-                }
-                else if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
+            if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
+                if(Math.abs((this.synthArr[i].now() * 1000) - soundTime) >= noteTime) {
                     this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
                     this.currentVoices[i] = this.synthArr[i].now()
+                    this.convertInput(noteData[i], i);
                 }
-                this.convertInput(noteData[i], i);
+            }
+            else {
+                if(Math.abs((this.samplerArr[i].now() * 1000) - soundTime) >= noteTime) {
+                    this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now());
+                    this.currentVoices[i] = this.samplerArr[i].now();
+                    this.convertInput(noteData[i], i);
+                }
             }
             // else if (currentVoice.name === 'Sampler') {      
             //     console.log(this.samplerArr[i].now());  
