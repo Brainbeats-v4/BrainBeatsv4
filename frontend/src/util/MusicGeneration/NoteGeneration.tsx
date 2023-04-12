@@ -138,7 +138,8 @@ export class NoteHandler {
 
         // Fill out the array so that each index is populated with incrementAmount * index
         for (var i = 1; i < this.numNotes; i++) {
-            this.incrementArr[idx][i] = incrementAmount * i + Constants.AMPLITUDE_OFFSET;
+            this.incrementArr[idx][i] = Math.floor((incrementAmount * i + Constants.AMPLITUDE_OFFSET) * 1e9 ) / 1e9;
+
         }
 
         // Debug
