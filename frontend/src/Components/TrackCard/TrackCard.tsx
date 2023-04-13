@@ -73,24 +73,6 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                     currentTrack.fullname = res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
                     objArray.push(currentTrack);
 
-                    // var currentTrack:Track = {
-                    //     id: res.data[i].id,
-                    //     title: res.data[i].title,
-                    //     bpm: res.data[i].bpm,
-                    //     key: res.data[i].key,
-                    //     instruments: res.data[i].instruments,
-                    //     noteTypes: res.data[i].noteTypes,
-                    //     likeCount: res.data[i].likeCount,
-                    //     midi: res.data[i].midi,
-                    //     thumbnail: res.data[i].thumbnail,
-                    //     user: res.data[i].user,
-                    //     userID: res.data[i].userID,
-                    //     createdAt: res.data[i].createdAt,
-                    //     playlistTracks: res.data[i].playlistTracks,
-                    //     public: res.data[i].public,
-                    //     like: res.data[i].like,
-                    //     fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName
-                    // }
                 }
                 setTrackList(objArray);
                 setTracksPulled(true)
@@ -144,49 +126,21 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
         var objArray:Track[] = [];
 
         var currentUser = {userID: input};
-        // console.log({currentUser});
 
-        // Calling getUserByID to check if user has tracks
-        // var userTracks: any[] = [];
-        // await sendAPI('get', '/users/getUserByID', currentUser)
-        // .then(res => {
-        //     userTracks = res.data.tracks;
-        //     console.log("userTracks: " + res.data.tracks);
-        // })
+        await sendAPI('get', '/tracks/getUserTracksByID', currentUser)
+            .then(res => {
+                for(var i = 0; i < res.data.length; i++) {                    
+                    var currentTrack:Track = res.data[i];
+                    var fullname:string =  res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
+                    currentTrack = Object.assign({fullname: fullname}, currentTrack);
 
-        // if (userTracks == undefined){
-            await sendAPI('get', '/tracks/getUserTracksByID', currentUser)
-                .then(res => {
-                    for(var i = 0; i < res.data.length; i++) {
-                        
-                        var currentTrack:Track = res.data[i];
-                        var fullname:string =  res.data[i].user.firstName + ' ' + res.data[i].user.lastName;
-                        currentTrack = Object.assign({fullname: fullname}, currentTrack);
-
-                        // var currentTrack:Track = {
-                        //     createdAt: res.data[i].createdAt,
-                        //     id: res.data[i].id,
-                        //     likeCount: res.data[i].likeCount,
-                        //     midi: res.data[i].midi,
-                        //     public: res.data[i].public,
-                        //     thumbnail: res.data[i].thumbnail,
-                        //     title: res.data[i].title,
-                        //     userID: res.data[i].userID,
-                        //     fullname: res.data[i].user.firstName + ' ' + res.data[i].user.lastName,
-                        // }
-
-                        objArray.push(currentTrack);
-                    }
-                    setTrackList(objArray);
-                    setTracksPulled(true)
-                }).catch(e => {
-                    console.error("Failed to pull profile tracks: ", e);
-            })
-        // }
-        // else {
-        //     setTrackList(objArray);
-        //     setTracksPulled(true)
-        // }
+                    objArray.push(currentTrack);
+                }
+                setTrackList(objArray);
+                setTracksPulled(true)
+            }).catch(e => {
+                console.error("Failed to pull profile tracks: ", e);
+        })
     }
 
     async function getLikedTracks() {
@@ -201,11 +155,10 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                     var trackID: string = res.data[i].trackID;
                     var currentTrack:Track = await getLikedTrackByID(trackID);
 
-                    console.log(currentTrack);
-
-                    currentTrack.fullname = currentTrack.user?.firstName + ' ' + currentTrack.user?.lastName;
-
-
+                    var fullname:string =  currentTrack?.user?.firstName + ' ' + currentTrack?.user?.lastName;
+                    console.log(currentTrack.user);
+                    currentTrack = Object.assign({fullname: fullname}, currentTrack);
+                    
                     objArray.push(currentTrack);
                 }
                 setTrackList(objArray);
@@ -237,9 +190,11 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                         "midi": res.data.midi,
                         "thumbnail": res.data.thumbnail,
                         "userID": res.data.userID,
-                        "public": res.data.public
+                        "public": res.data.public,
+                        "user": res.data.user
                     }
                 }
+                console.log(likedTrack);
                 
             }).catch(e => {
                 console.error("Failed to pull liked tracks: ", e);
@@ -249,7 +204,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     
     function PopulateTrackCards() {
         const MAX_COLS:number = 4;
-        const MAX_ROWS:number = 2;
+        const MAX_ROWS:number = 4;
         var gridArray:any[] = [];
         var currentTrackCounter:number = 0;
         const defaultImage = 'https://cdn.discordapp.com/attachments/1022862908012634172/1028025868175540355/DALLE_2022-10-07_15.27.09_-_A_brain_listening_music_eyes_open_smiling_vector_art.png';
@@ -288,34 +243,6 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     }
 
     let trackCards = PopulateTrackCards();
-
-    // const updateTrackCards = (index: number) => (e: { target: { name: any; value: any; }; }) => {        
-    //     const newTrackList = trackCards.map((item, i) => {
-    //         if (index === i) {
-    //           return { ...item, [e.target.name]: e.target.value };
-    //         } else {
-    //           return item;
-    //         }
-    //       });
-    //       trackCards = newTrackList;
-    //       console.log("updated track cards");
-    // }
-
-    // const [tracksDisplayed, setTracksDisplayed] = useState<Track[]>(trackCards);
-    // console.log(tracksDisplayed);
-
-
-    // const updateTracksDisplayed = (index: number) => (e: { target: { name: any; value: any; }; }) => {        
-    //     const newTrackList = tracksDisplayed.map((item, i) => {
-    //       if (index === i) {
-    //         return { ...item, [e.target.name]: e.target.value };
-    //       } else {
-    //         return item;
-    //       }
-    //     });
-    //     setTracksDisplayed(newTrackList);
-    //   };
-
 
     return (
         <div className='container text-center'>

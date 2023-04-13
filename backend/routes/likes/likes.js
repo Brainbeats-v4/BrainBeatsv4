@@ -141,7 +141,7 @@ router.get('/getUserLike', async (req, res) => {
         else res.status(200);
 
         // console.log("Like Status: " + likeStatus);
-        // console.log("Status Code: " + res.statusCode);
+        console.log("Status Code: " + res.statusCode);
     } catch (err) {
         console.error(err);
         res.status(500).send(err);

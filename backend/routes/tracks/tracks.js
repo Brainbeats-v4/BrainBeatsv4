@@ -173,6 +173,7 @@ router.get('/getTrackByID', async (req, res) => {
 
         const track = await prisma.Track.findUnique({
             where: { id: req.query.id },
+            include: {user: true}
         });
         if (!track) {
             return res.status(404).json({
