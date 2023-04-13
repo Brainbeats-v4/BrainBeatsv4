@@ -25,6 +25,8 @@ export class NoteHandler {
     
     private minValue:Array<number> = []; 
     private maxValue:Array<number> = []; 
+
+    private avgArray:Array<number> = [];
     
     private instrumentNoteSettings:CytonSettings | GanglionSettings;
 
@@ -39,6 +41,8 @@ export class NoteHandler {
         this.stopFlag = true;
     }
 
+    private averages:Array<Array<number>> = [[]];
+
     /* An array of size numNotes is used to store the cutoff values for each increment. 
     * 
     * The MIN_MAX_AMPLITUDE_DIFFERENCE is divided by numNotes to create evenly spaced sections in the array. 
@@ -49,7 +53,7 @@ export class NoteHandler {
     * In runtime, the headset data is compared to the array to determine which note it corresponds to. 
     * The note is determined by taking the floor of the two values in the array the data falls between.
     */
-    private incrementArr:Array<Array<number>> = [[]];
+    private incrementArr:Array<number> = [];
     
     // The amount of time (in milliseconds) that each of the supported notes would take at the specified BPM
     private timeForEachNoteArray:Array<number>;
@@ -75,6 +79,8 @@ export class NoteHandler {
         this.stopFlag = false;
         this.curTime = Date.now()
         
+        this.incrementArr = new Array(this.numNotes).fill(0);
+
         // We changed to using an IncrementArr per channel, as the signal strength varried too 
         // much dependent on location for just one array. With just one array where it's min
         // and max is decided by the channel with the widest amplitude, causes thinner channels
@@ -83,11 +89,10 @@ export class NoteHandler {
             this.minValue[i] = Number.POSITIVE_INFINITY;
             this.maxValue[i] = Number.NEGATIVE_INFINITY;
             
-            // Each channel's own increment array
-            this.incrementArr[i] = new Array(this.numNotes);        
-
-
-            this.InitIncrementArr(Constants.MIN_AMPLITUDE, Constants.MAX_AMPLITUDE, i);            
+            // Each channel's own increment array and average array
+            this.averages[i] = new Array(8).fill(0);
+            console.log(this.averages[i]);
+            this.InitIncrementArr(Constants.MIN_AMPLITUDE, Constants.MAX_AMPLITUDE, i, 0);            
         }
         /* Set this to true to enable real-time playback related output during recording.
          * Ex: 
@@ -116,78 +121,148 @@ export class NoteHandler {
             getMillisecondsFromBPM(BPM) * 4
         ]
     }
+    private lerp = (x:number, y:number, a:number) => {
+        return x * (1 - a) + y * a;
+    }
+
+    private getPercentiles(min:number, max:number): {p25: number, p75: number} {
+        const range = max - min;
+        const quartile = range / 4;
+        const p25 = min + quartile;
+        const p75 = max - quartile;
+        return {p25, p75};
+    }
+      
 
     // This creates the array in which different "increments" for notes are housed. 
     // For more info see the comment for "var incrementArr"
-    private InitIncrementArr(min:number, max:number, idx:number) {
-        let ampDifference:number = Math.abs(max - min);
+    private InitIncrementArr(min:number, max:number, idx:number, ampVal:number) {
+        var globalAvg = 0;
+        var minAvg = 200000000;
+        var maxAvg = 0;
+
+        
+        if(ampVal > 0) {
+            console.log("setting min max stuff")
+            for(let i = 0; i < 8; i++) {
+                var tempAvg = this.average(this.averages[i]);
+                console.log({tempAvg});
+                if (tempAvg < minAvg)
+                    minAvg = tempAvg;
+                if(tempAvg > maxAvg)
+                    maxAvg = tempAvg;
+    
+                globalAvg += tempAvg;
+            }
+            
+            globalAvg = globalAvg / 8;
+            
+            console.log({globalAvg})
+            console.log({minAvg})
+            console.log({maxAvg})
+        }
+                
+        var l = this.lerp(min, max, ampVal);
+
+        // Leaning left
+        if (globalAvg - minAvg < globalAvg - maxAvg) {
+
+
+        }
+        // Leaning right
+        else {
+
+        }
+
+
+        var range = maxAvg - minAvg;
+        var quartile = range / 4;
+        const p25 = minAvg + quartile;
+        const p75 = maxAvg - quartile;
+
+        
+        let ampDifference:number = Math.abs(p75 - p25);
         
         // Dividing the total range by the number of notes
         var incrementAmount:number = ampDifference / this.numNotes; 
-        
+
         // First index will always be 0
-        this.incrementArr[idx][0] = incrementAmount / 2; 
+        this.incrementArr[0] = p25;
         
+
         // Last index will always be the max value + the offset
-        this.incrementArr[idx][this.numNotes - 1] = ampDifference; 
+        this.incrementArr[this.numNotes - 1] = p75; 
 
         // Fill out the array so that each index is populated with incrementAmount * index
         for (var i = 1; i < this.numNotes - 1; i++) {
-            this.incrementArr[idx][i] = incrementAmount * i
+            this.incrementArr[i] = p25 + (incrementAmount * i);
         }
+
+
+        // for (var i = 0; i < this.numNotes; i++) {
+        //     var diff = Math.abs(this.incrementArr[i] - min);
+        //     if (diff > outlierThreshold) {
+        //         this.incrementArr[i] = min + outlierThreshold;
+        //     }
+        //     diff = Math.abs(this.incrementArr[i] - max);
+        //     if (diff > outlierThreshold) {
+        //         this.incrementArr[i] = max - outlierThreshold;
+        //     }
+        // }    
+
+        // Debug
+        // if (this.debugOutput) {
+        //     for (var i = 0; i < this.numNotes; i++) {
+        //         console.log("inc array: ", this.incrementArr[i]);
+        //     }
+        // }
     }
 
-    private handleNoteGen(eegMin:number, eegMax:number, idx:number) {
-        const minFreq = 50; // Lowest frequency
-        const maxFreq = 5000; // Highest frequency
-        
-        const audioMin = minFreq + (eegMin - Constants.eegFreqs.delta[0]) / (Constants.eegFreqs.gamma[1] - Constants.eegFreqs.delta[0]) * (maxFreq - minFreq);
-        const audioMax = minFreq + (eegMax - Constants.eegFreqs.delta[0]) / (Constants.eegFreqs.gamma[1] - Constants.eegFreqs.delta[0]) * (maxFreq - minFreq);  
-        this.incrementArr[idx] = ([audioMin,audioMax]);
-        
-    }
-
+    private average = (arr:Array<number>) => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
 
     // Takes in a raw value from the headset and assigns a note, as well as the index of this channel
     private NoteDeclarationRaw(ampValue:number, idx:number) {
+
         
-        let returnedAmpValue = ampValue / Math.pow(10, 5);
-        console.log(returnedAmpValue);
+        if(ampValue < 0) ampValue *= -2; 
         
+        let returnedAmpValue = ampValue / Math.pow(10, 7);
+        if(this.averages[idx].length === 1000) {
+            this.averages[idx].shift();
+        }
+       
+        this.averages[idx].push(returnedAmpValue);
+        
+        let avg = this.average(this.averages[idx]);
+
+        this.avgArray[idx] = avg;
+
+
         if(this.maxValue[idx] < returnedAmpValue) {
             this.maxValue[idx] = returnedAmpValue;
-            this.InitIncrementArr(this.minValue[idx], this.maxValue[idx], idx);
+            this.InitIncrementArr(this.minValue[idx], this.maxValue[idx], idx, avg);
         }
         if(this.minValue[idx] > returnedAmpValue) {
             this.minValue[idx] = returnedAmpValue;
-            this.InitIncrementArr(this.minValue[idx], this.maxValue[idx], idx);
+            this.InitIncrementArr(this.minValue[idx], this.maxValue[idx], idx, returnedAmpValue);
         }
 
-        if (this.debugOutput) console.log("ampval:", returnedAmpValue);
-        var threshold = .1
+        if (this.debugOutput) {
+            console.log("ampval:", returnedAmpValue);
+            console.log(this.incrementArr);
+        } 
+
         // For every possible note, check to see if ampValue falls between two array positions. 
         // If so, return that position. If not, it will be treated as a rest (returning -1).
         for (var i = 0; i < this.numNotes; i++) {
-            console.log(this.incrementArr[idx]);
-            if (returnedAmpValue >= this.incrementArr[idx][i] && returnedAmpValue <= this.incrementArr[idx][i + 1]) {
-                var diff = Math.abs(returnedAmpValue - this.incrementArr[idx][i]) / 100;
-                if(diff < threshold) {
-                    console.log('threshold', i)
-                    return i;
-                }
-            }
-            else {
-                console.log(-1)
-                return -1
-            }
             // If final index, prevent checking out of bounds
-            // if (i === this.numNotes - 1)
-            //     return returnedAmpValue >= this.incrementArr[idx][i] ? i : -1;
+            if (i === this.numNotes - 1) {
+                return returnedAmpValue >= this.incrementArr[i] ? -1 : i;
+            }
 
-            // if (returnedAmpValue >= this.incrementArr[idx][i] && returnedAmpValue <= this.incrementArr[idx][i + 1]) {
-            //     console.log(returnedAmpValue);
-            //     return i;
-            // }
+            if (returnedAmpValue >= this.incrementArr[i] && returnedAmpValue <= this.incrementArr[i + 1]) {
+                return i;
+            }
         }
 
         return -1;

@@ -163,7 +163,7 @@ export class MIDIManager {
         puts them all into a new MIDIWriter which builds them all into a base64
         string. */
     public async returnMIDI() {
-    
+        console.log('midiChannels: ', this.MIDIChannels);
         // Handles midi file generation for download    
         // Create a download link for the Blob object
         // const url = URL.createObjectURL(blob);
@@ -238,27 +238,36 @@ export class MIDIManager {
     }
 
     public convertInput(noteData:any, i:number) {
-        console.log('beginning to write');
+        console.log('beginning to write on channel: ', i);
         var writing = noteData.writer.note;
         var noteDuration:MidiWriter.Duration = '1';
 
         /* This code block sets the data from the note manager into usable data for
             the midi-writer-js API. */
         if (noteData.writer.noteLengthName === "sixteenth") noteDuration = '16';
-        else if (noteData.writer.noteLengthName === "eigth") noteDuration = '8';
+        else if (noteData.writer.noteLengthName === "eighth") noteDuration = '8';
         else if (noteData.writer.noteLengthName === "quarter") noteDuration = '4';
         else if (noteData.writer.noteLengthName === "half") noteDuration = '2';
         else if (noteData.writer.noteLengthName === "whole") noteDuration = '1';
+        else {
+            console.log("we fell to default length:", noteData.writer.noteLengthName);
+            noteDuration = '4';
+        }
         
         var generatedNote:MidiWriter.NoteEvent;
 
         if (noteData.writer.note === -1)  {// Rest
+            console.log('writing a rest on channel: ', i);
+
             generatedNote = new MidiWriter.NoteEvent({pitch: 'A0', velocity:0, duration: noteDuration});
             this.MIDIChannels[i].addEvent(generatedNote);
-            
-        } else {
-            var pitch:MidiWriter.Pitch = this.definePitch(noteData.writer.note, noteData.writer.octave);
 
+            console.log('the channel after this write: ', this.MIDIChannels[i]);
+        } else {
+
+            console.log('writing ', noteData.writer.note, noteData.writer.octave, 'on channel:', i);
+            
+            var pitch:MidiWriter.Pitch = this.definePitch(noteData.writer.note, noteData.writer.octave);
             // var temp:NoteConstructorInterface = {
             //     pitch, duration: noteDuration, octave: octave, time: this.midiWriterTracks[i].duration
             // }
@@ -267,6 +276,7 @@ export class MIDIManager {
             
             generatedNote = new MidiWriter.NoteEvent({pitch: pitch, duration: noteDuration});
             this.MIDIChannels[i].addEvent(generatedNote);
+            console.log('the channel after this write: ', this.MIDIChannels[i]);
         }
 
         return;
@@ -290,6 +300,9 @@ export class MIDIManager {
     }
 
     private setTimeForEachNoteArray(BPM:number, noteLength:number) {
+
+        console.log({noteLength});
+        
         switch(noteLength) {
             case Enums.NoteDurations.SIXTEENTH:
                 return getMillisecondsFromBPM(BPM) / 4;
@@ -345,30 +358,33 @@ export class MIDIManager {
             if(frequency === undefined) continue;
 
             /*
-                * The duration lengths are defined in https://github.com/Tonejs/Tone.js/blob/641ada9/Tone/core/type/Units.ts#L53.
-                * To add more values in the future just reference the above link and add to the enums in '../Enums.tsx'.
-                * If you want to add frequencies, you can define them either in basic terms like 'B3' or use a numeric value,
-                * because we want a more specific sound we are using numerics.
-                * We also attempt to offset the following note by the ms equivalient of the current note len.
+            * The duration lengths are defined in https://github.com/Tonejs/Tone.js/blob/641ada9/Tone/core/type/Units.ts#L53.
+            * To add more values in the future just reference the above link and add to the enums in '../Enums.tsx'.
+            * If you want to add frequencies, you can define them either in basic terms like 'B3' or use a numeric value,
+            * because we want a more specific sound we are using numerics.
+            * We also attempt to offset the following note by the ms equivalient of the current note len.
             */
 
             var durationString:string = this.convertDurationToString(duration); 
             
             var soundTime = this.currentVoices[i] * 1000;
-            var noteTime = this.setTimeForEachNoteArray(this.settings.bpm, duration);
+            var noteDurationMS = this.setTimeForEachNoteArray(this.settings.bpm, duration);
+            console.log({noteDurationMS});
             /* This is the base case, if there is nothing stored in the array then we don't want to check if the currentVoice is undefined */
             if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
-                if(Math.abs((this.synthArr[i].now() * 1000) - soundTime) >= noteTime) {
+                if(Math.abs((this.synthArr[i].now() * 1000) - soundTime) >= noteDurationMS) {
+                    this.convertInput(noteData[i], i);
                     this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
                     this.currentVoices[i] = this.synthArr[i].now()
-                    this.convertInput(noteData[i], i);
                 }
             }
             else {
-                if(Math.abs((this.samplerArr[i].now() * 1000) - soundTime) >= noteTime) {
+                if(Math.abs((this.samplerArr[i].now() * 1000) - soundTime) >= noteDurationMS) {
+                    console.log('playing this note on channel: ', i);
+                    this.convertInput(noteData[i], i);
+
                     this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now());
                     this.currentVoices[i] = this.samplerArr[i].now();
-                    this.convertInput(noteData[i], i);
                 }
             }
             // else if (currentVoice.name === 'Sampler') {      

@@ -104,7 +104,7 @@ export class ConcreteTestStream implements AbstractTestStream {
     public async initializeConnection() { 
         this.stopFlag = false; 
 
-        for (var i = 0; i < 500; i++) {
+        for (var i = 0; i < 3000; i++) {
             this.recordInputStream();
         }
     }
@@ -117,14 +117,14 @@ export class ConcreteTestStream implements AbstractTestStream {
         }
 
         let currentData:DataStream8Ch = {
-            channel00: this.getRandomInt(20000, 120001),
-            channel01: this.getRandomInt(20000, 120001),
-            channel02: this.getRandomInt(20000, 120001),
-            channel03: this.getRandomInt(20000, 120001),
-            channel04: this.getRandomInt(20000, 120001),
-            channel05: this.getRandomInt(20000, 120001),
-            channel06: this.getRandomInt(20000, 120001),
-            channel07: this.getRandomInt(20000, 120001),
+            channel00: this.getRandomInt(-800000, 800000),
+            channel01: this.getRandomInt(-400000, 400000),
+            channel02: this.getRandomInt(-200000, 200000),
+            channel03: this.getRandomInt(-100000, 100000),
+            channel04: this.getRandomInt(-50000, 50000),
+            channel05: this.getRandomInt(-250000, 250000),
+            channel06: this.getRandomInt(-125000, 125000),
+            channel07: this.getRandomInt(-75000, 75000),
             timeStamp: Date.now(),
         }
 
@@ -211,7 +211,7 @@ export class ConcreteCytonStream implements AbstractCytonStream {
             this.device.disconnect();
             return;
         }
-        console.log(data);
+        // console.log(data);
         // Package the data so it is easier to handle
         let currentData:DataStream8Ch = {
             channel00: data[0][0],

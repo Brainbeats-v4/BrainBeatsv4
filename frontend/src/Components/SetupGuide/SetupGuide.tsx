@@ -5,6 +5,8 @@ import sendAPI from '../../SendAPI'
 import { wait } from "@testing-library/user-event/dist/utils";
 import './SetupGuide.css'
 
+import bluetoothScreenshot from '../../images/BluetoothConnection.png';
+
 function SetupGuide() {
     function closeTab() {
         window.opener = null;
@@ -40,7 +42,9 @@ function SetupGuide() {
     
                 Once you have your device setup and plugged into your computer, simply turn the power switch on to the USB setting and hit record, you should see a
                 bluetooth option display on your screen. It should look like this: <br />
-                <strong>DISPLAY IMAGE HERE</strong> <br />
+                <br></br>
+                <img className="img" src={bluetoothScreenshot} alt="bluetooth reference" /> <br />
+                Finally, connect your device and begin recording.
             </p>
             <button className="acceptBtn" onClick={closeTab}>I understand, take me back</button>
         </div>
