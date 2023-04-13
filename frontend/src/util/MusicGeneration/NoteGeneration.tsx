@@ -162,17 +162,24 @@ export class NoteHandler {
             console.log({maxAvg})
         }
                 
-        // var l = this.lerp(min, max, ampVal);
+        var l = this.lerp(min, max, ampVal);
+
+        // Leaning left
+        if (globalAvg - minAvg < globalAvg - maxAvg) {
+
+
+        }
+        // Leaning right
+        else {
+
+        }
+
 
         var range = maxAvg - minAvg;
         var quartile = range / 4;
         const p25 = minAvg + quartile;
         const p75 = maxAvg - quartile;
 
-        
-        // console.log({l});
-        // console.log({min});
-        // console.log({max});
         
         let ampDifference:number = Math.abs(p75 - p25);
         
