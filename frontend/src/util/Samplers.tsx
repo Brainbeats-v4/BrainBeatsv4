@@ -43,6 +43,10 @@ export const Piano = new Tone.Sampler({
 export const NULL = new Tone.Sampler({
     release: 10
 });
+
+export const SamplerList = [
+    NULL, Piano, 
+]
 // export const Flute = new Tone.Sampler({
 //     urls: {
 //         'A6': 'A6.mp3',

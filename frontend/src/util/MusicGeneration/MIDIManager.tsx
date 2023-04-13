@@ -5,7 +5,7 @@ import * as Enums from '../Enums';
 import * as Constants from '../Constants';
 import { instrumentList } from "./InstOvertoneDefinitions";
 import * as Tone from 'tone'
-import * as Samplers from '../Samplers';
+import {SamplerList} from '../Samplers';
 import * as SL from "../Instruments";
 
 import { TDebugOptionsObject } from "../Types";
@@ -100,213 +100,20 @@ export class MIDIManager {
         var polySynthesizer:Tone.PolySynth<Tone.Synth<Tone.SynthOptions>> =  new Tone.PolySynth().toDestination();
         var sampler;
 
-        // Set the SL instrument for each enum
-        const instruments = {
-            [Enums.InstrumentTypes.SINEWAVE]: Samplers.NULL,
-            [Enums.InstrumentTypes.BASSELECTRIC]: SL.bassElectric,
-            [Enums.InstrumentTypes.BASSOON]: SL.bassoon,
-            [Enums.InstrumentTypes.CLARINET]: SL.clarinet,
-            [Enums.InstrumentTypes.CONTRABASS]: SL.contrabass,
-            [Enums.InstrumentTypes.FLUTE]: SL.flute,
-            [Enums.InstrumentTypes.FRENCHHORN]: SL.frenchHorn,
-            [Enums.InstrumentTypes.GUITARACOUSTIC]: SL.guitarAcoustic,
-            [Enums.InstrumentTypes.GUITARELECTRIC]: SL.guitarElectric,
-            [Enums.InstrumentTypes.GUITARNYLON]: SL.guitarNylon,
-            [Enums.InstrumentTypes.PIANO]: SL.piano,
-            [Enums.InstrumentTypes.HARMONIUM]: SL.harmonium,
-            [Enums.InstrumentTypes.HARP]: SL.harp,
-            [Enums.InstrumentTypes.ORGAN]: SL.organ,
-            [Enums.InstrumentTypes.SAXOPHONE]: SL.saxophone,
-            [Enums.InstrumentTypes.TROMBONE]: SL.trombone,
-            [Enums.InstrumentTypes.TRUMPET]: SL.trumpet,
-            [Enums.InstrumentTypes.TUBA]: SL.tuba,
-            [Enums.InstrumentTypes.VIOLIN]: SL.violin,
-            [Enums.InstrumentTypes.XYLOPHONE]: SL.xylophone,
-        };
-
         // Loop through the user chosen instruments and set their SL values
         for (var i = 0; i < 8; i++) {
             
             // Sinewave / Default
-            if (instArr[i] == 0 || instruments[instArr[i]] == undefined) {
-                sampler = Samplers.NULL.toDestination();
+            if (instArr[i] === 0) {
+                sampler = SamplerList[instArr[i]].toDestination();
                 polySynthesizer.volume.value = -10;
                 continue;
             }
-
-            const instrument = instruments[instArr[i]] as SL.IInstrument;
-            sampler = SL.SampleLibrary.load({instruments: instrument}) as Tone.Sampler;
-            sampler.toDestination();
-            
-            // polySynthesizer.connect(sampler);
-
-            // var sampler:Tone.Sampler; 
-            // // sampler.
-            // switch(instArr[i]) {
-            //     case Enums.InstrumentTypes.SINEWAVE:
-            //         sampler = Samplers.NULL.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();
-            //         polySynthesizer.volume.value = -10;
-            //         break;                    
-            //     case Enums.InstrumentTypes.BASSELECTRIC:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.bassElectric
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.BASSOON:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.bassoon
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.CLARINET:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.clarinet
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.CONTRABASS:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.contrabass
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.FLUTE:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.flute
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.FRENCHHORN:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.frenchHorn
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.GUITARACOUSTIC:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.guitarAcoustic
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.GUITARELECTRIC:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.guitarElectric
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.GUITARNYLON:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.guitarNylon
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.PIANO:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.piano
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.HARMONIUM:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.harmonium
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.HARP:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.harp
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.ORGAN:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.organ
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.SAXOPHONE:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.saxophone
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.TROMBONE:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.trombone
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.TRUMPET:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.trumpet
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.TUBA:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.tuba
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.VIOLIN:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.violin
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     case Enums.InstrumentTypes.XYLOPHONE:
-            //         var sampler = SL.SampleLibrary.load({
-            //             instruments: SL.xylophone
-            //         }) as Tone.Sampler
-                    
-            //         // sampler = Samplers.Piano.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();  
-            //         break;
-            //     default:
-            //         sampler = Samplers.NULL.toDestination();
-            //         polySynthesizer = new Tone.PolySynth().toDestination();
-            //         polySynthesizer.volume.value = -10;
-            //         break;
-            // }
-
+            else {
+                // This is piano right now, any new instrument that gets added needs to go in in its respective location in the sampler list
+                // constant
+                sampler = SamplerList[1].toDestination()
+            }
             this.samplerArr.push(sampler);
             this.synthArr.push(polySynthesizer);
         }
@@ -333,20 +140,6 @@ export class MIDIManager {
         return res;
     };
 
-    private chunkArray(array: Uint8Array | Uint16Array, chunkSize: number) {
-        const result = [];
-        const numChunks = Math.ceil(array.length / chunkSize);
-      
-        for (let i = 0; i < numChunks; i++) {
-          const start = i * chunkSize;
-          const end = start + chunkSize;
-          const chunk = array.slice(start, end);
-          result.push(chunk);
-        }
-      
-        return result;
-      }
-
     /*  We hand the file over to this function as a Uint8Array and then
         convert it into an audio file in base64 format. */
     private convertToBase64(file:Uint8Array): Promise<string> {
@@ -372,9 +165,6 @@ export class MIDIManager {
     public async returnMIDI() {
     
         // Handles midi file generation for download    
-
-        const blob = new Blob([this.midi.toArray()], { type: 'audio/midi' });
-
         // Create a download link for the Blob object
         // const url = URL.createObjectURL(blob);
         // return url;
@@ -383,12 +173,11 @@ export class MIDIManager {
         
         var midiBuildFile:Uint8Array = write.buildFile();
         
-        console.log(write.base64());
-        console.log({midiBuildFile});
+        console.log('buildFile: ', midiBuildFile);
         
         // return write.base64();
         
-        const midiFileChunks = this.sliceIntoChunks(midiBuildFile, 8);
+        const midiFileChunks = this.sliceIntoChunks(midiBuildFile, 5000);
         console.log(midiFileChunks);
 
         const fileString = new Uint8Array(midiFileChunks.reduce((acc:any[], midiFileChunk) => {
@@ -553,7 +342,6 @@ export class MIDIManager {
             var frequency = playerInfo.noteFrequency;
 
             var instArr = Object.values(this.settings.deviceSettings.instruments)            
-
             if(frequency === undefined) continue;
 
             /*
@@ -567,21 +355,21 @@ export class MIDIManager {
             var durationString:string = this.convertDurationToString(duration); 
             
             var soundTime = this.currentVoices[i] * 1000;
-            console.log("soundTime: ", soundTime);
             var noteTime = this.setTimeForEachNoteArray(this.settings.bpm, duration);
-            console.log("noteTime: ", noteTime);
-            
             /* This is the base case, if there is nothing stored in the array then we don't want to check if the currentVoice is undefined */
-            if(Math.abs((this.synthArr[i].now() * 1000) - soundTime) >= noteTime) {
-                if(instArr[i] === Enums.InstrumentTypes.PIANO) {
-                    this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now())
-                    this.currentVoices[i] = this.samplerArr[i].now()
-                }
-                else if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
+            if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
+                if(Math.abs((this.synthArr[i].now() * 1000) - soundTime) >= noteTime) {
                     this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
                     this.currentVoices[i] = this.synthArr[i].now()
+                    this.convertInput(noteData[i], i);
                 }
-                this.convertInput(noteData[i], i);
+            }
+            else {
+                if(Math.abs((this.samplerArr[i].now() * 1000) - soundTime) >= noteTime) {
+                    this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now());
+                    this.currentVoices[i] = this.samplerArr[i].now();
+                    this.convertInput(noteData[i], i);
+                }
             }
             // else if (currentVoice.name === 'Sampler') {      
             //     console.log(this.samplerArr[i].now());  
