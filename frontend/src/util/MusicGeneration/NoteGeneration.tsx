@@ -121,7 +121,6 @@ export class NoteHandler {
     // For more info see the comment for "var incrementArr"
     private InitIncrementArr(min:number, max:number, idx:number) {
         let ampDifference:number = Math.abs(max - min);
-        var outlierThreshold:number = .001
         
         // Dividing the total range by the number of notes
         var incrementAmount:number = ampDifference / this.numNotes; 
@@ -136,17 +135,6 @@ export class NoteHandler {
         for (var i = 1; i < this.numNotes - 1; i++) {
             this.incrementArr[idx][i] = incrementAmount * i
         }
-
-        for (var i = 0; i < this.numNotes; i++) {
-            var diff = Math.abs(this.incrementArr[idx][i] - min);
-            if (diff > outlierThreshold) {
-                this.incrementArr[idx][i] = min + outlierThreshold;
-            }
-            diff = Math.abs(this.incrementArr[idx][i] - max);
-            if (diff > outlierThreshold) {
-                this.incrementArr[idx][i] = max - outlierThreshold;
-            }
-        }    
     }
 
     private handleNoteGen(eegMin:number, eegMax:number, idx:number) {
@@ -176,18 +164,30 @@ export class NoteHandler {
         }
 
         if (this.debugOutput) console.log("ampval:", returnedAmpValue);
-    
+        var threshold = .1
         // For every possible note, check to see if ampValue falls between two array positions. 
         // If so, return that position. If not, it will be treated as a rest (returning -1).
         for (var i = 0; i < this.numNotes; i++) {
-            // If final index, prevent checking out of bounds
-            if (i === this.numNotes - 1)
-                return returnedAmpValue >= this.incrementArr[idx][i] ? i : -1;
-
+            console.log(this.incrementArr[idx]);
             if (returnedAmpValue >= this.incrementArr[idx][i] && returnedAmpValue <= this.incrementArr[idx][i + 1]) {
-                console.log(returnedAmpValue);
-                return i;
+                var diff = Math.abs(returnedAmpValue - this.incrementArr[idx][i]) / 100;
+                if(diff < threshold) {
+                    console.log('threshold', i)
+                    return i;
+                }
             }
+            else {
+                console.log(-1)
+                return -1
+            }
+            // If final index, prevent checking out of bounds
+            // if (i === this.numNotes - 1)
+            //     return returnedAmpValue >= this.incrementArr[idx][i] ? i : -1;
+
+            // if (returnedAmpValue >= this.incrementArr[idx][i] && returnedAmpValue <= this.incrementArr[idx][i + 1]) {
+            //     console.log(returnedAmpValue);
+            //     return i;
+            // }
         }
 
         return -1;
@@ -236,41 +236,20 @@ export class NoteHandler {
         
         // Grab num channels, ignore last index which contains timeStamp
         var size = Object.keys(EEGdataObj).length - 1;
-
-        // let timeStamp = EEGdataObj.timeStamp;
-
-        // var diff = Math.abs(timeStamp - this.curTime);
-
-        // console.log({diff});
-        
-        // var smallestNoteInterval = (60000) / (this.BPM * (1/16))
-
-        // if (diff < smallestNoteInterval) return;
-        // else {
-        //     setTimeout(() => {
-        //         this.curTime = Date.now();
-        //     },smallestNoteInterval)
-        // }
-        
         
         // Grab values as arrays for easy looping    
         var dataArray = Object.values(EEGdataObj);
-        var instruments = Object.values(this.instrumentNoteSettings.instruments);
         var durations = Object.values(this.instrumentNoteSettings.durations);
         var generatedArr:any[] = [];
         var currentNoteData = {};   
 
         // Loop through each EEG channel
         for (var i = 0; i < size; i++){
-            var channelNum = i+1;
-
             // Data for the current index
             var curChannelData:number = dataArray[i];
-            var instrument:number = instruments[i];
             var noteLength:number = durations[i];
             
             var noteLengthName = getNoteLengthStringFromInt(noteLength);
-            var instrumentName = getInstrumentNameFromInt(instrument);
             console.log('channel ', i);
 
             // Get note increment
@@ -287,7 +266,7 @@ export class NoteHandler {
             var noteFrequency;
 
             // If the generated note is not a rest
-            if (noteAndOctave.note != -1) {
+            if (noteAndOctave.note !== -1) {
                 noteOctaveString = noteAndOctave.note + (noteAndOctave.octave + floorOctave).toString();
                 noteFrequency = getFrequencyFromNoteOctaveString(noteOctaveString);
             }
@@ -298,7 +277,7 @@ export class NoteHandler {
                 var frequencyArray:number[] = [];
                 frequencyArray.fill(-1);
 
-                if (noteAndOctave.note != -1 && this.debugOutput) {
+                if (noteAndOctave.note !== -1 && this.debugOutput) {
                     frequencyArray[i] = Number(noteAndOctave.note);
 
                     console.log("Channel " + num + ": Playing " + noteAndOctave.note);
