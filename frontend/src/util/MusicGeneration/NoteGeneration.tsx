@@ -155,7 +155,8 @@ export class NoteHandler {
         
         const audioMin = minFreq + (eegMin - Constants.eegFreqs.delta[0]) / (Constants.eegFreqs.gamma[1] - Constants.eegFreqs.delta[0]) * (maxFreq - minFreq);
         const audioMax = minFreq + (eegMax - Constants.eegFreqs.delta[0]) / (Constants.eegFreqs.gamma[1] - Constants.eegFreqs.delta[0]) * (maxFreq - minFreq);  
-        this.incrementArr[idx] = ([audioMin,audioMax]);  
+        this.incrementArr[idx] = ([audioMin,audioMax]);
+        
     }
 
 
@@ -175,7 +176,7 @@ export class NoteHandler {
         }
 
         if (this.debugOutput) console.log("ampval:", returnedAmpValue);
-        
+    
         // For every possible note, check to see if ampValue falls between two array positions. 
         // If so, return that position. If not, it will be treated as a rest (returning -1).
         for (var i = 0; i < this.numNotes; i++) {
