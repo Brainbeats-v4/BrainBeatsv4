@@ -1,4 +1,4 @@
-import react, { memo, useState, useEffect } from 'react';
+import react, { memo, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { InstrumentTypes, KeyGroups, NoteDurations, Keys } from '../../util/Enums';
 import { KEY_SIGNATURES } from '../../util/Constants';
@@ -19,6 +19,8 @@ import { env } from 'process';
 import sendAPI from '../../SendAPI';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userModeState, userJWT } from '../../JWT';
+
+
 
 /* uploadPost will be moved from here into the record, the logic is useful for now though */
 
@@ -107,11 +109,15 @@ const TrackSettings = () => {
     const [duration06, setDuration06] = useState(NoteDurations.QUARTER)
     const [duration07, setDuration07] = useState(NoteDurations.QUARTER)
 
+    const [, updateState] = useState<any>();
+    const forceUpdate = useCallback(() => updateState({}), [])
+
+
     const [bpm, setBpm] = useState(120);
     const [octaves, setOctaves] = useState(1);
-    const [numNotes, setNumNotes] = useState(7);
     const [keyGroup, setKeyGroup] = useState("Major");
     const [scale, setScale] = useState("C");
+    var numNotes;
 
     var getRandomMusicSettings = () => {
 
@@ -121,7 +127,7 @@ const TrackSettings = () => {
         setBpm(rand.getRandomBPM());
         setKeyGroup(rand.getRandomKeyGroup());
         setScale(rand.getRandomScale());
-        setNumNotes(octaves * 7);
+        numNotes = octaves * 7;
         
         setInstrument00(rand.getRandomInstrument());
         setInstrument01(rand.getRandomInstrument());
@@ -143,10 +149,12 @@ const TrackSettings = () => {
     }
 
     function applySettingsEvent() {       
+        var numNotes = octaves * 7;
 
-        setNumNotes(octaves*7);
-        var generationSettings:MusicSettings;
+        console.log(numNotes);
         
+        
+        var generationSettings:MusicSettings;
         var deviceSettings;
 
         if(device === 'cyton' || device === "random data") {
@@ -190,6 +198,9 @@ const TrackSettings = () => {
                 }
             };
         }
+
+        console.log({numNotes});
+        console.log({octaves})
 
         generationSettings = {
             // Used to store the instrument each node should be used to output
@@ -433,7 +444,7 @@ const TrackSettings = () => {
                         <div className='row instruments-other-div'>
                             <div className='col instrument-box-other'>
                                 <label htmlFor="octave">Number of Octaves:</label>
-                                <select className="dropdowns2" name="octave" id="octave-option" value={octaves} defaultValue={octaves} onChange={(e) => setOctaves(Number(e.target.value))}>
+                                <select className="dropdowns2" name="octave" id="octave-option" value={octaves} defaultValue={octaves} onChange={(e) => {setOctaves(Number(e.target.value))}}>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
