@@ -107,12 +107,11 @@ export class MIDIManager {
             if (instArr[i] === 0) {
                 sampler = SamplerList[instArr[i]].toDestination();
                 polySynthesizer.volume.value = -10;
-                continue;
             }
             else {
                 // This is piano right now, any new instrument that gets added needs to go in in its respective location in the sampler list
                 // constant
-                sampler = SamplerList[1].toDestination()
+                sampler = SamplerList[instArr[i]].toDestination()
             }
             this.samplerArr.push(sampler);
             this.synthArr.push(polySynthesizer);
@@ -372,7 +371,8 @@ export class MIDIManager {
             console.log({noteDurationMS});
             /* This is the base case, if there is nothing stored in the array then we don't want to check if the currentVoice is undefined */
             if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
-                if(Math.abs((this.synthArr[i].now() * 1000) - soundTime) >= noteDurationMS) {
+                console.log(this.synthArr[i]);
+                if(this.synthArr[i].activeVoices < 1) {
                     this.convertInput(noteData[i], i);
                     this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
                     this.currentVoices[i] = this.synthArr[i].now()
