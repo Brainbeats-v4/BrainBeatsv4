@@ -111,6 +111,7 @@ export class MIDIManager {
             else {
                 // This is piano right now, any new instrument that gets added needs to go in in its respective location in the sampler list
                 // constant
+                console.log(instArr[i], SamplerList[instArr[i]]);
                 sampler = SamplerList[instArr[i]].toDestination()
             }
             this.samplerArr.push(sampler);
