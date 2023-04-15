@@ -156,30 +156,12 @@ export class NoteHandler {
             }
             
             globalAvg = globalAvg / 8;
-            
-            console.log({globalAvg})
-            console.log({minAvg})
-            console.log({maxAvg})
         }
-                
-        var l = this.lerp(min, max, ampVal);
-
-        // Leaning left
-        if (globalAvg - minAvg < globalAvg - maxAvg) {
-
-
-        }
-        // Leaning right
-        else {
-
-        }
-
 
         var range = maxAvg - minAvg;
         var quartile = range / 4;
         const p25 = minAvg + quartile;
         const p75 = maxAvg - quartile;
-
         
         let ampDifference:number = Math.abs(p75 - p25);
         
@@ -189,33 +171,14 @@ export class NoteHandler {
         // First index will always be 0
         this.incrementArr[0] = p25;
         
-
         // Last index will always be the max value + the offset
         this.incrementArr[this.numNotes - 1] = p75; 
 
         // Fill out the array so that each index is populated with incrementAmount * index
         for (var i = 1; i < this.numNotes - 1; i++) {
-            this.incrementArr[i] = p25 + (incrementAmount * i);
+            var offset = (Math.random() - 0.5) * incrementAmount / 2;
+            this.incrementArr[i] = p25 + (incrementAmount * i) + offset;
         }
-
-
-        // for (var i = 0; i < this.numNotes; i++) {
-        //     var diff = Math.abs(this.incrementArr[i] - min);
-        //     if (diff > outlierThreshold) {
-        //         this.incrementArr[i] = min + outlierThreshold;
-        //     }
-        //     diff = Math.abs(this.incrementArr[i] - max);
-        //     if (diff > outlierThreshold) {
-        //         this.incrementArr[i] = max - outlierThreshold;
-        //     }
-        // }    
-
-        // Debug
-        // if (this.debugOutput) {
-        //     for (var i = 0; i < this.numNotes; i++) {
-        //         console.log("inc array: ", this.incrementArr[i]);
-        //     }
-        // }
     }
 
     private average = (arr:Array<number>) => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
@@ -254,18 +217,34 @@ export class NoteHandler {
 
         // For every possible note, check to see if ampValue falls between two array positions. 
         // If so, return that position. If not, it will be treated as a rest (returning -1).
+        var index = 0;
         for (var i = 0; i < this.numNotes; i++) {
             // If final index, prevent checking out of bounds
             if (i === this.numNotes - 1) {
-                return returnedAmpValue >= this.incrementArr[i] ? -1 : i;
+                index = returnedAmpValue >= this.incrementArr[i] ? -1 : i;
+                break;
             }
 
             if (returnedAmpValue >= this.incrementArr[i] && returnedAmpValue <= this.incrementArr[i + 1]) {
-                return i;
+                index = i;
+                break;
             }
         }
 
-        return -1;
+        if (index >= 0) {
+            // Add some random jitter to the index to choose a nearby note
+            var jitter = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+            index += jitter;
+        
+            // Make sure the index is within bounds
+            if (index < 0) {
+                index = 0;
+            } else if (index >= this.numNotes) {
+                index = this.numNotes - 1;
+            }
+        }
+        
+        return index;
     }
 
     /* This function is simply calling the MIDI Generator's function to return MIDI,
