@@ -111,7 +111,7 @@ export class MIDIManager {
             else {
                 // This is piano right now, any new instrument that gets added needs to go in in its respective location in the sampler list
                 // constant
-                console.log(instArr[i], SamplerList[instArr[i]]);
+                // console.log(instArr[i], SamplerList[instArr[i]]);
                 sampler = SamplerList[instArr[i]].toDestination()
             }
             this.samplerArr.push(sampler);
@@ -163,7 +163,7 @@ export class MIDIManager {
         puts them all into a new MIDIWriter which builds them all into a base64
         string. */
     public async returnMIDI() {
-        console.log('midiChannels: ', this.MIDIChannels);
+        // console.log('midiChannels: ', this.MIDIChannels);
         // Handles midi file generation for download    
         // Create a download link for the Blob object
         // const url = URL.createObjectURL(blob);
@@ -173,12 +173,12 @@ export class MIDIManager {
         
         var midiBuildFile:Uint8Array = write.buildFile();
         
-        console.log('buildFile: ', midiBuildFile);
+        // console.log('buildFile: ', midiBuildFile);
         
         // return write.base64();
         
         const midiFileChunks = this.sliceIntoChunks(midiBuildFile, 5000);
-        console.log(midiFileChunks);
+        // console.log(midiFileChunks);
 
         const fileString = new Uint8Array(midiFileChunks.reduce((acc:any[], midiFileChunk) => {
             return [...acc, ...Array.from(midiFileChunk)];

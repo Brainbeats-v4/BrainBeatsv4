@@ -11,7 +11,7 @@ export const deviceSlice = createSlice({
   initialState,
   reducers: {
     set: (state, action: PayloadAction<String>) => {
-        console.log("setting state: ", action.payload);
+        // console.log("setting state: ", action.payload);
       state = action.payload
       return state;
     },

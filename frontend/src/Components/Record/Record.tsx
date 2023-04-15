@@ -54,7 +54,7 @@ function Record() {
         could define this earlier and pass it down to this function (in the case that you have different EEG device with the same
         number of channels) but we didn't see a need for it in our case. */
     async function doRecording() {
-        console.log("Device:", deviceName);
+        // console.log("Device:", deviceName);
 
         var debugOptionObject = {
             debugOption1, 
@@ -83,7 +83,7 @@ function Record() {
     }
     
     function stopRecording() {
-        console.log('Recording stopped!');
+        // console.log('Recording stopped!');
         /* When the device is stopped it signals the call to return the MIDI since
             we are no longer recording input. 
             This will check for sucessful return of a MIDI base64 string to be stored 
