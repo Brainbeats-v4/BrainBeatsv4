@@ -49,7 +49,7 @@ const Playback:React.FC<Props> = ({midiString}) => {
     /* The base64 string has "data:audio/midi;base64," stored before the actual data,
         the playback function doesn't like that so we just take it off for reading */
     function parseBase64(b64String:string) {
-        console.log(b64String.split(','));
+        // console.log(b64String.split(','));
         return b64String.split(',')[1];
     }
 
@@ -63,11 +63,12 @@ const Playback:React.FC<Props> = ({midiString}) => {
         return MidiFileParser(text);
     }
 
+    // TODO:
     function handlePlayback() {
 
         // this needs to be changed, not now though
         var plyr = new MidiPlayerInterface.Player(function(event:any) {
-            console.log(event);
+            // console.log(event);
         });
 
         plyr.loadFile(url);

@@ -151,7 +151,7 @@ const TrackSettings = () => {
     function applySettingsEvent() {       
         var numNotes = octaves * 7;
 
-        console.log(numNotes);
+        // console.log(numNotes);
         
         
         var generationSettings:MusicSettings;
@@ -199,9 +199,6 @@ const TrackSettings = () => {
             };
         }
 
-        console.log({numNotes});
-        console.log({octaves})
-
         generationSettings = {
             // Used to store the instrument each node should be used to output
             deviceSettings,
@@ -215,10 +212,7 @@ const TrackSettings = () => {
         // Apply settings to redux
         dispatch(setSettingsState(generationSettings));
         dispatch(setDeviceState(device));
-
-        console.log(device);
-        navigate("/script-settings")
-    
+        navigate("/script-settings");
     }
 
     // useEffect(() => {
@@ -236,7 +230,6 @@ const TrackSettings = () => {
   
     // Shortcut for uploading posts
     function uploadPost() {
-        console.log(likes);
 
         if (!user) {
             console.error("You must be logged in to create a post");
@@ -261,9 +254,9 @@ const TrackSettings = () => {
         }
         sendAPI('post', '/tracks/createTrack', info)
             .then(res => {
-                console.log(res);
+                // console.log(res);
             }).catch(err => {
-                console.log(err);
+                console.error(err);
             })
         
     }

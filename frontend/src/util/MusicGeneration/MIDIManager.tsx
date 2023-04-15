@@ -238,7 +238,7 @@ export class MIDIManager {
     }
 
     public convertInput(noteData:any, i:number) {
-        console.log('beginning to write on channel: ', i);
+        if (this.debugOutput) console.log('beginning to write on channel: ', i);
         var writing = noteData.writer.note;
         var noteDuration:MidiWriter.Duration = '1';
 
@@ -250,22 +250,22 @@ export class MIDIManager {
         else if (noteData.writer.noteLengthName === "half") noteDuration = '2';
         else if (noteData.writer.noteLengthName === "whole") noteDuration = '1';
         else {
-            console.log("we fell to default length:", noteData.writer.noteLengthName);
+            if (this.debugOutput) console.log("we fell to default length:", noteData.writer.noteLengthName);
             noteDuration = '4';
         }
         
         var generatedNote:MidiWriter.NoteEvent;
 
         if (noteData.writer.note === -1)  {// Rest
-            console.log('writing a rest on channel: ', i);
+            if (this.debugOutput) console.log('writing a rest on channel: ', i);
 
             generatedNote = new MidiWriter.NoteEvent({pitch: 'A0', velocity:0, duration: noteDuration});
             this.MIDIChannels[i].addEvent(generatedNote);
 
-            console.log('the channel after this write: ', this.MIDIChannels[i]);
+            // if (this.debugOutput) console.log('the channel after this write: ', this.MIDIChannels[i]);
         } else {
 
-            console.log('writing ', noteData.writer.note, noteData.writer.octave, 'on channel:', i);
+            // if (this.debugOutput) console.log('writing ', noteData.writer.note, noteData.writer.octave, 'on channel:', i);
             
             var pitch:MidiWriter.Pitch = this.definePitch(noteData.writer.note, noteData.writer.octave);
             // var temp:NoteConstructorInterface = {
@@ -276,7 +276,7 @@ export class MIDIManager {
             
             generatedNote = new MidiWriter.NoteEvent({pitch: pitch, duration: noteDuration});
             this.MIDIChannels[i].addEvent(generatedNote);
-            console.log('the channel after this write: ', this.MIDIChannels[i]);
+            // if (this.debugOutput) console.log('the channel after this write: ', this.MIDIChannels[i]);
         }
 
         return;
@@ -299,10 +299,7 @@ export class MIDIManager {
         }
     }
 
-    private setTimeForEachNoteArray(BPM:number, noteLength:number) {
-
-        console.log({noteLength});
-        
+    private setTimeForEachNoteArray(BPM:number, noteLength:number) {        
         switch(noteLength) {
             case Enums.NoteDurations.SIXTEENTH:
                 return getMillisecondsFromBPM(BPM) / 4;
@@ -369,10 +366,10 @@ export class MIDIManager {
             
             var soundTime = this.currentVoices[i] * 1000;
             var noteDurationMS = this.setTimeForEachNoteArray(this.settings.bpm, duration);
-            console.log({noteDurationMS});
+
             /* This is the base case, if there is nothing stored in the array then we don't want to check if the currentVoice is undefined */
             if(instArr[i] === Enums.InstrumentTypes.SINEWAVE) {
-                console.log(this.synthArr[i]);
+                // if (this.debugOutput) console.log(this.synthArr[i]);
                 if(this.synthArr[i].activeVoices < 1) {
                     this.convertInput(noteData[i], i);
                     this.synthArr[i].triggerAttackRelease(frequency, durationString, this.synthArr[i].now())
@@ -381,7 +378,7 @@ export class MIDIManager {
             }
             else {
                 if(Math.abs((this.samplerArr[i].now() * 1000) - soundTime) >= noteDurationMS) {
-                    console.log('playing this note on channel: ', i);
+                    if (this.debugOutput) console.log('playing this note on channel: ', i);
                     this.convertInput(noteData[i], i);
 
                     this.samplerArr[i].triggerAttackRelease(this.definePitch(noteData[i].writer.note, noteData[i].writer.octave), durationString, this.samplerArr[i].now());
@@ -410,10 +407,12 @@ export class MIDIManager {
     }
 
     public setStopFlag() {
+        if (this.debugOutput) console.log("Setting stop flag in MIDIManager.");
         this.stopFlag = true;
     }
 
     public setDebugOutput(b:boolean){
         this.debugOutput = b;
+        if (this.debugOutput) console.log("Setting MIDIManager debug to ", b);
     }
 }

@@ -18,9 +18,8 @@ import { Track, Like } from '../../../util/Interfaces';
 import './TrackModal.css';
 import '../../TrackCard/TrackCard.css';
 import TrackCard from '../../TrackCard/TrackCard';
-import finalPropsSelectorFactory from 'react-redux/es/connect/selectorFactory';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { time } from 'console';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import * as Interfaces from '../../../util/Interfaces';
 
 type Props = {
@@ -151,7 +150,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     track.public = newVisibility;
     track.likeCount = likes;
 
-    console.log("updating track");
+    // console.log("updating track");
   }
 
 
@@ -170,42 +169,42 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
 
   // Returns the compressed Base64 image
   // Borrowed from: https://github.com/josefrichter/resize/blob/master/public/preprocess.js
-  function compressImage(file:File) { 
-    const fr = new FileReader();
+  // function compressImage(file:File) { 
+  //   const fr = new FileReader();
 
-    fr.readAsArrayBuffer(file);
-    fr.onload = function (ev: ProgressEvent<FileReader>) {
+  //   fr.readAsArrayBuffer(file);
+  //   fr.onload = function (ev: ProgressEvent<FileReader>) {
       
-      var res = ev.target?.result
-      if (!res) {
-        console.error("Error resizing image");
-        return;
-      }
+  //     var res = ev.target?.result
+  //     if (!res) {
+  //       console.error("Error resizing image");
+  //       return;
+  //     }
 
-      // blob stuff
-      var blob = new Blob([res]); // create blob...
-      window.URL = window.URL || window.webkitURL;
-      var blobURL:string = window.URL.createObjectURL(blob); // and get it's URL
+  //     // blob stuff
+  //     var blob = new Blob([res]); // create blob...
+  //     window.URL = window.URL || window.webkitURL;
+  //     var blobURL:string = window.URL.createObjectURL(blob); // and get it's URL
       
-      // helper Image object
-      var image:HTMLImageElement = new Image();
-      image.src = blobURL;
+  //     // helper Image object
+  //     var image:HTMLImageElement = new Image();
+  //     image.src = blobURL;
 
-      image.onload = function() {
+  //     image.onload = function() {
         
-        // have to wait till it's loaded
-        var resized = resizeMe(image); // send it to canvas
+  //       // have to wait till it's loaded
+  //       var resized = resizeMe(image); // send it to canvas
         
-        if (!resized) {
-          console.error("Error resizing image");
-        }
-        else {
-          console.log("resized image", resized);
-          return resized;
-        }
-      }
-    };
-  }
+  //       if (!resized) {
+  //         console.error("Error resizing image");
+  //       }
+  //       else {
+  //         // console.log("resized image", resized);
+  //         return resized;
+  //       }
+  //     }
+  //   };
+  // }
 
   function convertToBase64(file:File) {
     return new Promise((resolve, reject) => {
@@ -331,7 +330,10 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
         setSuccessMsg(JSON.stringify(res.data))
         setFavorited(true);
 
-        incrementLike().then(newlikes => incrementLike()).then(newLikes => {updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
+        incrementLike().then(newlikes => incrementLike()).then(newLikes => {
+          updateLikes(newLikes); 
+          return true;
+        }).catch(err => console.error("There was an error liking this post. ", err));
         // updateUserLikesArray();
 
 
@@ -395,11 +397,14 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
           setSuccessMsg(JSON.stringify(res.data));
           
           // Decrements local likeCount
-          decrementLike().then(newLikes => decrementLike()).then(newLikes => { updateLikes(newLikes); return true;}).catch(err => console.log("There was an error: " + err));
+          decrementLike().then(newLikes => decrementLike()).then(newLikes => { 
+            updateLikes(newLikes); 
+            return true;
+          }).catch(err => console.error("There was an error unliking this post.", err));
           
           // Searching for unfavorited track to update user LikeArray
           let newLikeArr: Array<Interfaces.Like> = [...userLikeArr]; 
-          console.log("removeLike() userLikeArr: ", userLikeArr);   
+          // console.log("removeLike() userLikeArr: ", userLikeArr);   
 
           if (user?.likes != null) {
             for (var i = 0; i < user.likes.length; i++) {
@@ -408,7 +413,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
             }
   
             // Set user like array to be array with removed like
-            console.log("removeLike() newLikeArr: ", newLikeArr);
+            // console.log("removeLike() newLikeArr: ", newLikeArr);
             
             var newUser:Interfaces.User = {
               // unchanged
@@ -536,14 +541,14 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
 
 
 
-    console.log({track});
+    // console.log({track});
     // return;
 
     sendAPI('put', '/tracks/updateTrack', payload).then((res) => {
-      console.log(res);
+      // console.log(res);
 
-    }).catch(e => {
-      console.log(e);
+    }).catch(err => {
+      console.error(err);
     })
   }
 

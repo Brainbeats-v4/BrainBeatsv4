@@ -35,9 +35,9 @@ const SignUp = () => {
             "subject": "BrainBeats account verification for " + userInformation.firstName + " " + userInformation.lastName + "."
         }
         await sendAPI("post", "/authentication/sendVerificationEmail", userData).then((res) => {
-            console.log(res);
+            // console.log(res);
         }).catch((err) => {
-            console.log(err);
+            console.error(err);
         })
         return false;
     }
@@ -63,7 +63,7 @@ const SignUp = () => {
         await convertToBase64(defaultProfilePic).then(res => {
             base64result = res;
         })
-        console.log(base64result);
+        // console.log(base64result);
         const userInformation = {
             "email": email,
             "username": username,
@@ -82,14 +82,14 @@ const SignUp = () => {
                 .then(res => {
                     setSuccessMsg('Account created successfully, you will shortly be redirected.');
                     setErrorMsg('');
-                    console.log(res);
+                    // console.log(res);
                     
                     sendValidationEmail(userInformation);
                     navigate("/login");
 
                 }).catch(err => {
-                    setErrorMsg('Unable to create account');
-                    console.log(err);
+                    setErrorMsg('Unable to create account. Please try with a different email. ');
+                    console.error(err);
                 })
         }
     }

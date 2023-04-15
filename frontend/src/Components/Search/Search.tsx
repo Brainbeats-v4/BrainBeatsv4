@@ -59,7 +59,7 @@ const SearchPage = () => {
   const [liked, setLiked] = useState([]) as any;
 
   useEffect(() => {
-    console.log("request");
+    // console.log("request");
     if (!title) {
       sendAPI("get", "/tracks/getAllTracks").then((res) => {
         setPost(res.data);
@@ -96,7 +96,7 @@ const SearchPage = () => {
   }
 
 function searchFuntion() {
-    console.log(query);
+    // console.log(query);
     // let parentDiv = document.getElementsByClassName("searchBody")
 
 
@@ -127,7 +127,7 @@ function searchFuntion() {
       playlistID: prop.id,
       token: jwt,
     };
-    console.log(bodyData);
+    // console.log(bodyData);
     sendAPI("post", "/playlists/addPostToPlaylist", bodyData).then((res) => {
       setAddedToPlay("Post added to playlist");
     });
@@ -168,7 +168,7 @@ function searchFuntion() {
           setLiked((l: any[]) => [... l,res.data])
       })
       .catch((err) => {
-          console.log(err.data)
+          console.error(err.data)
       })
     }
   },[])
@@ -186,7 +186,7 @@ function searchFuntion() {
         .then((res) => {
             setLiked((l: any[]) => l.filter((p) => p.postID !== post))})
         .catch((err) => {
-            console.log(err.data)
+            console.error(err.data)
         })
       }
 

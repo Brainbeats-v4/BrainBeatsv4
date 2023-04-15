@@ -31,13 +31,13 @@ const ResetPassword = () => {
         await sendAPI("put", "/users/reset", userData).then((res) => {
             // setErrorMsg("");
             // setSuccessMsg("");
-            console.log(res);
+            // console.log(res);
             navigate("/login");
 
         }).catch((err) => {
-            setErrorMsg("Link expired" + "  " + err);
+            setErrorMsg("Link expired.");
             setSuccessMsg("");
-            console.log(err);
+            console.error(err);
         })
     }
 
