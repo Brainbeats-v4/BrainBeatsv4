@@ -216,7 +216,7 @@ const Profile = () => {
         
         sendAPI('put', '/users/updateUser', payload)
             .then(({status}) => {
-                console.log(status);
+                // console.log(status);
                 
                 setUser(updatedUser);
                 // console.log(user);
