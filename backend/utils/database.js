@@ -26,6 +26,7 @@ async function getUserExists(searchVal, searchType) {
                     likes: true,
                     playlists: true,
                     tracks: true,
+                    verified: true
                 }
             });
             break;

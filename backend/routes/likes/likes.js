@@ -153,11 +153,11 @@ router.get('/getAllUserLikes', async (req, res) => {
     try {
         const allLikes = await prisma.Like.findMany({
             where: { userID: req.query.userID },
-            data: {
-                public: true
+            include: {
+                track: true
             }
         });
-
+        console.log(allLikes);
         res.status(200).json(allLikes);
     } catch (err) {
         console.error(err);

@@ -88,8 +88,13 @@ const SignUp = () => {
                     navigate("/login");
 
                 }).catch(err => {
-                    setErrorMsg('Unable to create account');
                     console.log(err);
+                    if(err.response.data.msg.includes('Email or username already exists')) {
+                        setErrorMsg('Unable to create account, user already exists under this email or username')
+                    }
+                    else {
+                        setErrorMsg('Unable to create account');
+                    }
                 })
         }
     }

@@ -4,10 +4,12 @@
     /* background-color: black; */
     height: 100vh;
     min-width: 70vw;
+    color: white;
 }
 
 #verify-div {
-    display: flex;
+    display: inline-block;
+    text-align: center;
     justify-content: center;
     background-color: rgb(18, 18, 18);
     height: 70%;
