@@ -89,14 +89,14 @@ export class ConcreteTestStream implements AbstractTestStream {
     }
 
     constructor(settings:MusicSettings, debugOptionObject:TDebugOptionsObject) {
+        this.debugOutput = debugOptionObject.debugOption1;
 
-        console.log("Constructed Test Stream");
+        if (this.debugOutput) console.log("Constructed Test Stream");
         
         this.stopFlag = false;
         this.settings = settings;
         this.noteHandler = new NoteHandler(this.settings, debugOptionObject);
 
-        this.debugOutput = debugOptionObject.debugOption1;
         this.noteHandler.setDebugOutput(debugOptionObject.debugOption2);
         this.counter = 0;
     }
@@ -112,7 +112,7 @@ export class ConcreteTestStream implements AbstractTestStream {
     public recordInputStream() {
         // Check for flag to disconnect the device and return
         if(this.stopFlag) {
-            console.log("stopping");
+            if (this.debugOutput) console.log("stopping");
             return false;
         }
 
@@ -128,7 +128,7 @@ export class ConcreteTestStream implements AbstractTestStream {
             timeStamp: Date.now(),
         }
 
-        if (this.debugOutput) { console.log("DeviceStream:", currentData); }
+        if (this.debugOutput) { console.log("DeviceRawStream:", currentData); }
 
         this.noteHandler.originalNoteGeneration(currentData);
         return true;
@@ -257,8 +257,11 @@ export class ConcreteCytonStream implements AbstractCytonStream {
     }
 }
 
-// This device is no longer being supported as the ObenBCI packages have been deprecated for 5 years, 
-// along with the fact that the alternative libraries we are using not offering support for it.
+/* This device is no longer being supported as the ObenBCI packages have been deprecated for 5 years, 
+ * along with the fact that the alternative libraries we are using not offering support for it.
+ * Please reach out to BrainAtPlay, and refer to their library for handling Web BLE connection
+ * to this device. 
+ */
 export class ConcreteGanglionStream implements AbstractGanglionStream {
     public device:any;
     public stopFlag:boolean;
@@ -279,16 +282,16 @@ export class ConcreteGanglionStream implements AbstractGanglionStream {
     }
 
     public async initializeConnection() {
-        console.log("Starting Ganglion Connection");
+        // console.log("Starting Ganglion Connection");
         this.stopFlag = false;
 
         // let device = DevicesThirdParty['BLE_CUSTOM']['ganglion'];
         let device = new Ganglion();
-        console.log(device);
+        // console.log(device);
         let conn = await device.connect();
-        console.log(conn);
+        // console.log(conn);
         let start = await device.start();
-        console.log(start);
+        // console.log(start);
     }
 
     /* This function records input stream from the device and inputs it into

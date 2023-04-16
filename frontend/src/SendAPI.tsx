@@ -8,7 +8,7 @@ const sendAPI = async (method:any, path:any, data:any = null) => {
         params: '',
         data: ''
     }
-    console.log(config);
+    // console.log(config);
     if(method === 'get') config.params =  data;
     else config.data = data;
     const res = await axios(config);

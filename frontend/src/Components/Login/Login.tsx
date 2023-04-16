@@ -22,7 +22,7 @@ const Login = () => {
 
         sendAPI('post', '/users/loginUser', userInformation)
             .then(res => {
-                console.log(res.data.user)
+                // console.log(res.data.user)
                 setJWT(res.data.token);
                 setUserMode(res.data.user);
                 navigate('/profile');

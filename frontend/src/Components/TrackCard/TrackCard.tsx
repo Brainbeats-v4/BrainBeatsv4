@@ -23,10 +23,12 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     const [currentTrack, setCurrentTrack] = useState<Track>(emptyTrack);
     const [trackList, setTrackList] = useState<Track[]>([]);
     const [newTrackList, setNewTrackList] = useState<any[]>([]);
-
+    const [tracksPulled, setTracksPulled] = useState(false);
+    const [currentSearch, setCurrentSearch] = useState('');
 
     // For refresing track list component on page
     const [seed, setSeed] = useState(1);
+    
     const resetTrackComponent = () => {
         // console.log("resetTrackComponent()");
         setSeed(Math.random());
@@ -35,13 +37,10 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     }
 
     // Initializes newTrackList
-    useEffect(() => {
-        setNewTrackList(PopulateTrackCards()); // need to debug. not calling checklike when opening/editing unliked track.
-        // console.log("use effect: " + newTrackList);
-    }, []);
-
-    const [tracksPulled, setTracksPulled] = useState(false);
-    const [currentSearch, setCurrentSearch] = useState('');
+    // useEffect(() => {
+    //     setNewTrackList(PopulateTrackCards()); // need to debug. not calling checklike when opening/editing unliked track.
+    //     // console.log("use effect: " + newTrackList);
+    // }, []);
 
 
     // ! Possibly not needed
@@ -78,7 +77,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                 setTracksPulled(true)
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
             });
         return;
     }
@@ -86,11 +85,10 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
     async function getSearchTracks(title:string) {
         var objArray:Track[] = [];
         setCurrentSearch(title);
-        console.log(title)
+        // console.log(title)
         let query = {title: title};
         await sendAPI('get', '/tracks/getTracksByTitle', query)
         .then((res) => {
-            console.log(res);
                 for(var i = 0; i < res.data.length; i++) {
 
                     var currentTrack:Track = res.data[i];
@@ -117,7 +115,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                 setTracksPulled(true)
             })
             .catch(err => {
-                console.log(err);
+                console.error(err);
             });
         return;
     }
@@ -136,8 +134,10 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
 
                     objArray.push(currentTrack);
                 }
+
                 setTrackList(objArray);
                 setTracksPulled(true)
+
             }).catch(e => {
                 console.error("Failed to pull profile tracks: ", e);
         })
@@ -156,13 +156,14 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                     var currentTrack:Track = await getLikedTrackByID(trackID);
 
                     var fullname:string =  currentTrack?.user?.firstName + ' ' + currentTrack?.user?.lastName;
-                    console.log(currentTrack.user);
+                    // console.log(currentTrack.user);
                     currentTrack = Object.assign({fullname: fullname}, currentTrack);
                     
                     objArray.push(currentTrack);
                 }
                 setTrackList(objArray);
                 setTracksPulled(true)
+                
             }).catch(e => {
                 console.error("Failed to pull liked tracks: ", e);
         })
@@ -194,7 +195,7 @@ const TrackCard: React.FC<Props> = ({cardType, input}) => {
                         "user": res.data.user
                     }
                 }
-                console.log(likedTrack);
+                // console.log(likedTrack);
                 
             }).catch(e => {
                 console.error("Failed to pull liked tracks: ", e);

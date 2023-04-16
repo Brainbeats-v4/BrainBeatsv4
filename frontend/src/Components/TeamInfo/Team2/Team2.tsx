@@ -130,8 +130,8 @@ const Team2 = () => {
             </h6>
         </div>
         <div className='about-team-members'>
-            {memberList.map((teamMember) => (
-                    <div className="col track-col">
+            {memberList.map((teamMember, index) => (
+                    <div className="col track-col" key={index}>
                         <button className=" btn btn-primary card" id='member-card-body' onClick={() =>setTeamMember(teamMember)}>
                             <img src={teamMember.image} className="card-img-top" id="card-img-ID" alt="..."/>
                             <div className="card-body">

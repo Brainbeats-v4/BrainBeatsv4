@@ -145,23 +145,23 @@ const Profile = () => {
         await convertToBase64(file).then(res => {
             base64result = res;
         })
-        console.log(base64result);
+        // console.log(base64result);
         
         
         blobResult = await file.arrayBuffer();
 
-        console.log(blobResult);
+        // console.log(blobResult);
 
         var updatedUser = {
             id: user?.id,
             token: jwt,
             profilePicture: base64result
         };
-        console.log(updatedUser);
+        // console.log(updatedUser);
         sendAPI('put', '/images/updateUserProfilePic', updatedUser)
             .then(res => {
                 setDisplayPicture(base64result);
-                console.log(res);
+                // console.log(res);
                 var updatedUser:User = {
                     id: res.data.updateUser.id,
                     firstName: res.data.updateUser.firstName,
@@ -179,7 +179,7 @@ const Profile = () => {
                 }
                 setUser(updatedUser);
             }).catch(err => {
-                console.log(err);
+                console.error(err);
             })
     };
 
@@ -216,16 +216,14 @@ const Profile = () => {
         
         sendAPI('put', '/users/updateUser', payload)
             .then(({status}) => {
-                console.log(status);
+                // console.log(status);
                 
                 setUser(updatedUser);
-                console.log(user);
+                // console.log(user);
 
             }).catch(err => {
                 console.log(err);
             })
-
-            console.log(user.firstName);
     };
 
     // Gets User Track count

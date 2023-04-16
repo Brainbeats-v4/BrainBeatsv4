@@ -60,8 +60,12 @@ export class NoteHandler {
 
 
     constructor(settings:MusicSettings, debugOptionsObject: TDebugOptionsObject) {
-        // console.log("Constructing originalNoteGeneration Class with the following settings: ");
-        // console.log(settings);
+        this.debugOutput = debugOptionsObject.debugOption2;
+        
+        if (this.debugOutput) {
+            console.log("Constructing originalNoteGeneration Class with the following settings: ");
+            console.log(settings);
+        }
 
         this.octaves = settings.octaves;        
         this.numNotes = settings.numNotes;
@@ -89,9 +93,8 @@ export class NoteHandler {
             this.minValue[i] = Number.POSITIVE_INFINITY;
             this.maxValue[i] = Number.NEGATIVE_INFINITY;
             
-            // Each channel's own increment array and average array
+            // Each channel's own average array for adjusting global increment array
             this.averages[i] = new Array(8).fill(0);
-            console.log(this.averages[i]);
             this.InitIncrementArr(Constants.MIN_AMPLITUDE, Constants.MAX_AMPLITUDE, i, 0);            
         }
         /* Set this to true to enable real-time playback related output during recording.
@@ -100,7 +103,6 @@ export class NoteHandler {
          * ... f
          * Channel k: Playing G#  
          */
-        this.debugOutput = debugOptionsObject.debugOption2;
         this.midiGenerator.setDebugOutput(debugOptionsObject.debugOption3); // debug
     }
 
@@ -141,12 +143,12 @@ export class NoteHandler {
         var minAvg = 200000000;
         var maxAvg = 0;
 
+        // All of the averaging you see is just to adjust the increment array to attempt
+        // to find the best range and incrementAmount to represent all electrodes.
         
         if(ampVal > 0) {
-            console.log("setting min max stuff")
             for(let i = 0; i < 8; i++) {
                 var tempAvg = this.average(this.averages[i]);
-                console.log({tempAvg});
                 if (tempAvg < minAvg)
                     minAvg = tempAvg;
                 if(tempAvg > maxAvg)
@@ -304,10 +306,11 @@ export class NoteHandler {
             var noteLength:number = durations[i];
             
             var noteLengthName = getNoteLengthStringFromInt(noteLength);
-            console.log('channel ', i);
-
+            
             // Get note increment
             var declaredNote = this.NoteDeclarationRaw(curChannelData, i); 
+            
+            if (this.debugOutput) console.log('channel ', i, " has note ", declaredNote);
             
             // Get the actual note and its octave
             var noteAndOctave = this.GetNoteWRTKey(declaredNote); 
@@ -354,15 +357,16 @@ export class NoteHandler {
         await this.midiGenerator.realtimeGenerate(generatedArr);        
     };
 
+    // unused
     public prepNotesForMIDI(){
         let res;
-
         return res;
     }
 
 
     public setDebugOutput(b:boolean){
         this.debugOutput = b;
+        if (this.debugOutput) console.log("Setting Notehandler debug to ", b);
     }
 
 }

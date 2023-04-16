@@ -37,8 +37,8 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
         setVisibility(!visibility);
         setButtonText(visibility ? "Make Private" : "Make Public");
 
-        console.log("clicking");
-        console.log(visibility, buttonText);
+        // console.log("clicking");
+        // console.log(visibility, buttonText);
     }
 
     useEffect(() => {
@@ -48,7 +48,7 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
     function updateTrack (visibility = track.public, trackName = track.title, thumbnail = track.thumbnail) {
 
         if (jwt == null) navigate("/login");
-        console.log(track);
+        // console.log(track);
         let updatedTrack = {
             id: track.id,
             title: trackName,
@@ -93,11 +93,11 @@ const UploadTrackModal: React.FC<Props> = ({track}) => {
             }
             sendAPI('post', '/tracks/createTrack', newTrack).then(res => {
                 if(res.status == 201) {
-                    console.log(res);
+                    // console.log(res);
                     navigate('/profile');
                 }
                 else {
-                    console.log(res);
+                    // console.log(res);
                 }
             }).catch(err => {
                 console.log(err);

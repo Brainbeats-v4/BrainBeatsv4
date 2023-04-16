@@ -35,10 +35,10 @@ const Forgot = () => {
                 
                 navigate("/login");
             }).catch(err => {
-                setErrorMsg("Failed to send password recovery email.");
+                setErrorMsg("Failed to send password recovery email, please try again later.");
                 setSuccessMsg("");
                 // navigate("/login");
-                console.log(err);
+                console.error(err);
             })
     }
 
