@@ -302,6 +302,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
 
   // Creates a new like
   function addLike() {
+   
     if (!user) {
       navigate("/login");
       return;
@@ -314,11 +315,11 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     }
 
     // add it to the end of the current like array, and set the state
-    let newLikeArr: Array<Interfaces.Like> = [...userLikeArr, newUserLike];    
+    let newLikeArr: Array<Interfaces.Like> = [...userLikeArr, newUserLike];         // <------
     setUserLikeArr(newLikeArr);
     
     // add jwt to newUserLike for the payload
-    newUserLike = Object.assign({token: jwt}, newUserLike);
+    newUserLike = Object.assign({token: jwt}, newUserLike);     // <------
     
     sendAPI("post", "/likes/createUserLike", newUserLike).then((res) => {
       
@@ -344,11 +345,11 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
           profilePicture: user.profilePicture,
           username: user.username, 
           token: jwt,
-          likes: [...user.likes, res.data]
+          // likes: [...user.likes, res.data]
         };
         
         setUser(newUser);
-        setUserLikeArr(newUser.likes);
+        // setUserLikeArr(newUser.likes);
 
       }
       else {
@@ -361,68 +362,6 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
       setFavorited(false);
     })
   }
-
-  // function updateUserLikesArray(){
-  //   if(user) {
-  //     console.log("like changed, updating user with new like array:");
-  //     // Like created, now update the user with the new like array
-
-  //     var likesArray:Like[] = [];
-
-  //     for(var i = 0; i < userLikeArr.length; i++) {
-                    
-  //       var currentLike:Like = userLikeArr[i];
-  //       // console.log("current Track: ", currentTrack);
-
-  //       likesArray.push(currentLike);
-  //   }
-
-  //     var updatedUser:Interfaces.User = {
-  //         // unchanged
-  //         id: user.id,
-  //         firstName: user.firstName,
-  //         lastName: user.lastName,
-  //         email: user.email,
-  //         bio: user.bio,
-  //         profilePicture: user.profilePicture,
-  //         username: user.username, 
-  //         token: jwt,
-  //         likes: likesArray,
-  //     };
-
-  //     var updatedUserObj = {
-  //       // unchanged
-  //       id: user?.id,
-  //       token: jwt,
-  //       likes: likesArray,
-  //       // likes: {
-  //       //   create: userLikeArr.map((likedTrack: Like) => ({
-  //       //     trackID: likedTrack.trackID,
-  //       //     userID: likedTrack.userID,
-  //       //   }))
-  //       // },
-  //     };
-
-  //     setUser(updatedUser);
-  //     console.log("updateUserLikesArray() user: ", updatedUser);
-
-  //     sendAPI('put', '/users/updateUser', updatedUserObj)
-  //           .then(res => {
-  //             if (res.status == 201) {
-  //               console.error(res.statusText);
-  //               return;
-  //             }
-  //               console.log(res);
-  //               var updatedUser:Interfaces.User = res.data;
-  
-  //               setUser(updatedUser);
-  //               console.log(updatedUser);
-  
-  //           }).catch(e => {
-  //               console.error(e);
-  //           })
-  //   }
-  // }
 
   function decrementLike() {
 
@@ -441,7 +380,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
   // Removes a new like
   function removeLike() {
 
-    if((user != null) && (user.likes != null)) {
+    if((user != null)) {
       let removedLike:Like = {
         userID: user.id,
         trackID: track.id,
@@ -481,11 +420,11 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
               profilePicture: user.profilePicture,
               username: user.username, 
               token: jwt,
-              likes: newLikeArr
+              // likes: newLikeArr
             };
             
             setUser(newUser);
-            setUserLikeArr(newUser.likes);
+            // setUserLikeArr(newUser.likes);
           }
         }
         else {
