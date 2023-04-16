@@ -582,16 +582,23 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
               
               <h6 id="track-author-text">By {track.fullname} </h6>
 
-              {!trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={playTrack}>
+
+              {<button type="button" className="btn btn-primary" id='play-btn' onClick={playTrack}>
                 <a style={{color: "white", textDecoration: "none", display: "flex", justifyContent: "center"}} id='download-midi-btn' download={'myTrack.MID'} href={track.midi}>
                     <FontAwesomeIcon className='modal-track-icons fa-xl' id='modal-track-play-icon' icon={["fas", "download"]} />
                     <h4>Download</h4> 
                 </a>
               </button>}
-              {trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={stopTrack}>
+              {/* {!trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={playTrack}>
+                <a style={{color: "white", textDecoration: "none", display: "flex", justifyContent: "center"}} id='download-midi-btn' download={'myTrack.MID'} href={track.midi}>
+                    <FontAwesomeIcon className='modal-track-icons fa-xl' id='modal-track-play-icon' icon={["fas", "download"]} />
+                    <h4>Download</h4> 
+                </a>
+              </button>} */}
+              {/* {trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={stopTrack}>
                 <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "play"]} />
                 <h3>Stop</h3>
-              </button>}
+              </button>} */}
 
               {isDev() && <h5>Upload midi<input id="track-cover-upload"  onChange={event=> {if(!event.target.files) {return} else {uploadMidi(event.target.files[0])}}} name="midi" type="file" accept='.MID, .MIDI'/></h5>}
 
