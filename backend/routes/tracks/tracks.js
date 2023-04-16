@@ -226,16 +226,21 @@ router.delete('/deleteTrack', async (req, res) => {
     }
 });
 
+/*  This API call just gets the top 8 popular tracks to display on the home page,
+    it can be altered by changing the take below but since we are displaying 4 tracks
+    on each row it should be a multiple of 4. */
 router.get('/getPublicPopularTracks', async(req, res) => {
     try {
         const tracks = await prisma.Track.findMany({
-            where: {
-            likeCount: {
-                gte: 10,
+            take: 8,
+            orderBy: 
+            {
+                likeCount: 'desc',
             },
-            public: {
-                equals: true
-            }
+            where: {
+                public: {
+                    equals: true
+                }
             },
             include: {
                 user: {

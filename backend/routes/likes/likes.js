@@ -157,7 +157,7 @@ router.get('/getAllUserLikes', async (req, res) => {
             //     public: true
             // }
         });
-
+        console.log(allLikes);
         res.status(200).json(allLikes);
     } catch (err) {
         console.error(err);
