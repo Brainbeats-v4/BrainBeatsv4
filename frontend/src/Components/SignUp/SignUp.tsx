@@ -1,9 +1,11 @@
-import { wait } from "@testing-library/user-event/dist/utils";
-import { userInfo } from "os";
-import React, {useEffect, useState} from "react";
-import { useNavigate } from "react-router-dom";
+/*  Signing up is simple, this component just uses a regex to determine a valid email for sign up and sends it to the backend,
+    it also calls a function to send a verification email to a user based on the email, which is also handled in the backend.
+    We currently only use the username for display, the sign in only has functionality for email, this can easily be changed
+    but we found that usernames for our website weren't particularly practical other than giving users an identifiable tag for
+    the social aspects of BrainBeats.  */
+import  {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import sendAPI from "../../SendAPI";
-import validateEmail from "../../util/validateEmail";
 import './SignUp.css';
 import defaultProfilePic from '../../images/bbmascot1.png'
 
@@ -17,6 +19,15 @@ const SignUp = () => {
     const [successMsg, setSuccessMsg] = useState('');
     const navigate = useNavigate();
 
+    /*  The validate email function just runs a regex on the email that checks for something@something.something. As of right 
+        now it has an issue detecting emails  that follow the format of email@prefix.suffix.com (i.e myname@knights.ucf.edu), which 
+        is something to take note of. */
+    function validateEmail(email:String) {
+        var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]*$/;
+        if (email.match(emailRegex)) return true;
+        return false;
+    }
+
     function validateFields() {
         if(!username || !password || !firstName || !lastName || !email) {
             setErrorMsg('Please fill out all the input fields and try again.');
@@ -28,6 +39,7 @@ const SignUp = () => {
         }
         return true;
     }
+
 
     async function sendValidationEmail(userInformation: any) {
         const userData = {
