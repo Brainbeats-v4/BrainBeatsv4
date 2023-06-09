@@ -39,24 +39,6 @@ const Verify = () => {
         navigate("/login");
 
     }
-    
-    
-    // function hideNav() {
-    //     const nav = document.getElementById('header-ID') as HTMLDivElement | null;
-    //     console.log(nav?.innerHTML);
-        
-    //     if (nav != null) {
-    //         console.log('nav not null')
-    //         nav.style.display = 'none';
-    //     }
-
-
-    //     // let nav = document.getElementById('header-ID')
-    //     // if(nav) {
-    //     //     (nav as HTMLDivElement).style.display = 'none';
-    //     //     console.log("console entered");
-    //     // } 
-    // }
 
     return (
     <div id='verify-container'>

@@ -191,16 +191,13 @@ export class NoteHandler {
         
         /* returnedAmpValue is mapped down into a range that allows for offsetting, hence dividing by 10 to the 7th */
         let returnedAmpValue = ampValue / Math.pow(10, 7);
+        
         if(this.previousThousandEEG[idx].length === 1000) {
             this.previousThousandEEG[idx].shift();
         }
-       
         this.previousThousandEEG[idx].push(returnedAmpValue);
-        
         let avg = this.average(this.previousThousandEEG[idx]);
-
         this.avgArray[idx] = avg;
-
 
         if(this.maxValue[idx] < returnedAmpValue) {
             this.maxValue[idx] = returnedAmpValue;
@@ -248,9 +245,12 @@ export class NoteHandler {
         return index;
     }
 
-    /* This function is simply calling the MIDI Generator's function to return MIDI,
-        it gets called here since the NoteGeneration class is responsible for passing values
-        to MIDI and therefore the MIDI Generator is */
+    /*  This function is simply calling the MIDI Generator's function to return MIDI, it gets called here since the 
+        NoteGeneration class is responsible for passing values to MIDI and therefore the MIDI Generator is a child component of it. 
+        To better depict the flow of this:
+        DeviceFactory receives stop flag from Record component -> Stops datastream and alerts NoteGeneration
+        -> MIDIManager returnMIDI called from this function and converts to base64.
+        This data is then returned upstream all the way back to Record. */
     public returnMIDI() { 
         return this.midiGenerator.returnMIDI();
     }
