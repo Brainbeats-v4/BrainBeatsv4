@@ -6,6 +6,7 @@ BrainBeats is an open-sourced web application built for converting electroenceph
 The functionality of this platform allows you to create a script for your recording session, record your song with an EEG headset utilizing your own unique musical settings, posting your recorded songs, downloading the MIDI equivalent of your song, and creating playlists with music you enjoy. The platform allows you to connect with other users creating music with their own EEG headset, and to interact with their posts.
 
 **Running The Code**
+
 In order to access these files and run them locally you will need to have the following technologies installed on your local device:
  - Node.js: BrainBeats uses Node.js to operate our both our backend and frontend. You can install the latest version on their [website](https://nodejs.org/en).
  - NPM: NPM should already be installed once you have installed Node.js, check for the latest version using `npm install -g npm@latest` on your command line.
