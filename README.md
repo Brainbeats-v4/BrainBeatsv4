@@ -18,3 +18,13 @@ Gain access to the repository on your local device by running the following on t
 
 Now you can simply run
 `cd BrainBeatsv4`
+
+You can create your own bash script to run both the frontend and backend, however, as the project is developed right now it can be run using two terminal instances:
+
+For the frontend:
+`cd frontend`
+`npm start`
+
+For the backend:
+`cd backend`
+`nodemon server`
