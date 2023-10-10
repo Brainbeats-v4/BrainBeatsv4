@@ -1,5 +1,5 @@
-## **BrainBeats Version 4**
-This repository houses all of the codebase for BrainBeats version 4.
+## **BrainBeats Version 5**
+This repository houses all of the codebase for BrainBeats version 5.
 
 BrainBeats is an open-sourced web application built for converting electroencephalogram (EEG) into Musical Instrument Digital Interface files (MIDI) which can be converted to generic audio files (.mp3, .wav, etc.). Audio files created by users can then be uploaded, edited, shared, and downloaded on BrainBeats’ web platform with a BrainBeats user account.
 
