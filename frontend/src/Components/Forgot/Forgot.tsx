@@ -2,7 +2,7 @@ import {useState} from "react";
 // import '../Login/Login.css';
 import './Forgot.css';
 import sendAPI from '../../SendAPI';
-import validateEmail from "../../util/validateEmail";
+// import validateEmail from "../../util/validateEmail";
 import { useRecoilState } from 'recoil';
 import { useNavigate } from "react-router-dom";
 // import { userJWT, userModeState } from "../../JWT";
@@ -19,11 +19,11 @@ const Forgot = () => {
             "email": email
         }
 
-        if (!validateEmail(email)){
-            setErrorMsg("Invalid email.");
-            setSuccessMsg("");
-            return;
-        }
+        // if (!validateEmail(email)){
+        //     setErrorMsg("Invalid email.");
+        //     setSuccessMsg("");
+        //     return;
+        // }
 
         setSuccessMsg("Recovery link sent! \n Please allow at least 5 minutes to recieve the email before trying again.");
         setErrorMsg("");
