@@ -14,10 +14,10 @@ In order to access these files and run them locally you will need to have the fo
 Once you have these installed you are ready to begin working with BrainBeats!
 
 Gain access to the repository on your local device by running the following on the command line:
-`git clone https://github.com/Brainbeats-v4/BrainBeatsv4.git`
+`git clone https://github.com/BrainBeatsv5/BrainBeatsV5.git`
 
 Now you can simply run
-`cd BrainBeatsv4`
+`cd BrainBeatsV5`
 
 You can create your own bash script to run both the frontend and backend, however, as the project is developed right now it can be run using two terminal instances:
 
