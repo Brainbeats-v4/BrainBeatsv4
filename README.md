@@ -19,12 +19,6 @@ Gain access to the repository on your local device by running the following on t
 Now you can simply run
 `cd BrainBeatsV5`
 
-You can create your own bash script to run both the frontend and backend, however, as the project is developed right now it can be run using two terminal instances:
+For information on building the frontend go to [Backend README](https://github.com/BrainBeatsv5/BrainBeatsV5/blob/main/backend/README.md)
 
-For the frontend:
-`cd frontend`
-`npm start`
-
-For the backend:
-`cd backend`
-`nodemon server`
+For information on building the frontend go to [Frontend README](https://github.com/BrainBeatsv5/BrainBeatsV5/blob/main/frontend/README.md)
