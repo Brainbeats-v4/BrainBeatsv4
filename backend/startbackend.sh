@@ -42,6 +42,7 @@ if ! [ -f .env ];
         done
         
         echo "DATABASE_URL="mysql://brainbeats_root@localhost:3306/brainbeats"" > .env
+        echo "JWT_KEY=secret" >> .env
 
     else
         echo ".env file found, continuing."
