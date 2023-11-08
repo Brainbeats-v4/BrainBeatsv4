@@ -133,10 +133,10 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     }
     
     sendAPI("put", "/tracks/updateTrack", updatedTrack).then((res) => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         setErrMsg(trackName);
       }
-      else if (res.status = 413) {
+      else if (res.status === 413) {
         setErrMsg("Image must be < 3mb")
       }
       else {
@@ -459,7 +459,7 @@ const TrackModal: React.FC<Props> = ({track, closeModal}) => {
     }
     
     sendAPI("put", "/tracks/updateTrack", updatedTrack).then((res) => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         setErrMsg(trackName);
       }
       else {

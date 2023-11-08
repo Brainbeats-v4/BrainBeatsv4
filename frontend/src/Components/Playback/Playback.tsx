@@ -1,3 +1,6 @@
+// This is the main MIDI playback file.
+// It will contain a button and a timeline which
+// will play the MIDI.
 import { useState } from 'react';
 
 import * as Tone from 'tone';
