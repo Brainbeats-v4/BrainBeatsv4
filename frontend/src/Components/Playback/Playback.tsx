@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import * as Tone from 'tone';
 import { Midi } from '@tonejs/midi';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Buffer } from 'buffer';
 
 import MidiPlayerInterface from 'midi-player-ts';
@@ -24,8 +25,11 @@ const Playback: React.FC<Props> = ({ midiString }) => {
     var midi: Midi;
 
     const blob: Blob = new Blob([binaryString], { type: "audio/midi" });
+    const [trackIsPlaying, setTrackIsPlaying] = useState(false);
 
     const url = URL.createObjectURL(blob);
+
+    const synths: Tone.PolySynth[] = []
 
 
     //read the file
@@ -56,90 +60,68 @@ const Playback: React.FC<Props> = ({ midiString }) => {
         return b64String.split(',')[1];
     }
 
-    async function dontHandlePlayback() {
-        const response = await fetch(url);
-        const buffer = await response.arrayBuffer();
-
-        const decoder = new TextDecoder('iso-8859-1');
-
-        const text = decoder.decode(buffer);
-        return MidiFileParser(text);
-    }
     // this is a testing function to test playing audio
     async function playAudio() {
+        
         Midi.fromUrl(midiString).then(midi => {
 
             //synth playback
-            const synths = []
-            const now = Tone.now() + 0.5
             midi.tracks.forEach(track => {
                 //create a synth for each track
                 const synth = new Tone.PolySynth(Tone.Synth, {
                     envelope: {
-                        attack: 0.02,
-                        decay: 0.1,
-                        sustain: 0.3,
-                        release: 1
+                        attack: 0.01,
+                        decay: 10,
+                        sustain: 0.5,
+                        release: 0.5
                     }
-                }).toMaster()
+                }).toDestination()
                 synths.push(synth)
                 //schedule all of the events
                 track.notes.forEach(note => {
-                    synth.triggerAttackRelease(note.name, note.duration, note.time + now, note.velocity)
+                    Tone.Transport.scheduleOnce((time) => {
+                        synth.triggerAttackRelease(note.name, note.duration, time, note.velocity)
+                    }, note.time);
                 })
             })
+            setTrackIsPlaying(true);
+
         })
+        Tone.Transport.start();
     }
 
-    // TODO:
-    function handlePlayback() {
+    async function pauseAudio() {
+        console.log("stopping audio")
+        // while (synths.length) {
+        //     console.log(synths.length);
+        //     const synth = synths.shift();
+        //     if (synth) {
+        //         synth.dispose();
+        //     }
+        //
+        //
+        //
+        // }
+        // console.log("audio stopped")
+        Tone.Transport.pause();
+        setTrackIsPlaying(false);
+    }
 
-                // this needs to be changed, not now though
-                var plyr = new MidiPlayerInterface.Player(function(event: any) {
-                    // console.log(event);
-                });
-
-                plyr.loadFile(url);
-
-                plyr.play();
-
-                // var midiJSON = midi.toJSON();
-                // setPlaying(!playing);
-                // console.log(playing);
-                // var synths:Array<Tone.PolySynth<Tone.Synth<Tone.SynthOptions>>> = [];
-                // if(playing) {
-                //     console.log(midiJSON);
-
-                //     midiJSON.tracks.forEach((track) => {
-                //         const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-                //         synths.push(synth);
-                //         track.notes.forEach((note) => {
-                //             console.log(note);
-                //             synth.triggerAttackRelease(
-                //                 note.name,
-                //                 note.duration,
-                //                 note.time + Tone.now(),
-                //                 note.velocity
-                //             );
-                //         });
-                //         console.log('played');
-                //     });
-                // }
-                // else {
-                //     while(synths.length) {
-                //         const synth = synths.shift();
-                //         synth?.disconnect();
-                //     }
-                // }
-            }
 
 
 
     return (
-            <div>
-                <button onClick={playAudio}>Play me</button>
-            </div>
-        )
-    }
+        <div>
+            {!trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={playAudio}>
+                <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "play"]} />
+                <h3>Play</h3>
+            </button>}
+            {trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={pauseAudio}>
+                <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "pause"]} />
+                <h3>Pause</h3>
+            </button>}
+        </div>
+    )
+}
 
-    export default Playback;
+export default Playback;
