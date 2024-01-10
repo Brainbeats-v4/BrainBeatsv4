@@ -17,10 +17,10 @@ type Props = {
 
 const Playback: React.FC<Props> = ({ midiString }) => {
 
-    const [trackIsPlaying, setTrackIsPlaying] = useState(false);
-    const [hasStarted, setHasStarted] = useState(false);
+    let [trackIsPlaying, setTrackIsPlaying] = useState(false);
+    let [hasStarted, setHasStarted] = useState(false);
 
-    const [trackLength, setTrackLength] = useState(0)
+    let [trackLength, setTrackLength] = useState(0)
 
 
     const synths: Tone.PolySynth[] = []
@@ -34,8 +34,11 @@ const Playback: React.FC<Props> = ({ midiString }) => {
 
     // this is a testing function to test playing audio
     async function playAudio() {
+        Tone.start();
 
         if (!hasStarted) {
+            Tone.Transport.seconds = 0;
+            console.log("starting playback");
             Midi.fromUrl(midiString).then(midi => {
                 setTrackLength(midi.duration)
 
@@ -53,7 +56,6 @@ const Playback: React.FC<Props> = ({ midiString }) => {
                     synths.push(synth)
                     //schedule all of the events
                     track.notes.forEach(note => {
-                        console.log("adding note")
                         Tone.Transport.scheduleOnce((time) => {
                             synth.triggerAttackRelease(note.name, note.duration, time, note.velocity)
                         }, note.time);
@@ -68,9 +70,14 @@ const Playback: React.FC<Props> = ({ midiString }) => {
     }
 
     async function pauseAudio() {
-        console.log("stopping audio")
+        console.log("pausing audio")
         Tone.Transport.pause();
         setTrackIsPlaying(false);
+    }
+
+    async function closeAudio() {
+        console.log("closing audio");
+        Tone.Transport.cancel();
     }
 
 

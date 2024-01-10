@@ -15,7 +15,7 @@ if [ "$RESULT" != "brainbeats" ];
         while true; do
             read -p "Allow the script to create it? (Y/n) " yn
             case $yn in
-                [Yy]* ) echo "running > mysql -e CREATE DATABASE brainbeats"; break;;
+                [Yy]* ) echo "running > mysql -e CREATE DATABASE brainbeats\n"; break;;
                 [Nn]* ) echo "exiting"; exit;;
                 * ) echo "Please answer yes or no.";;
             esac

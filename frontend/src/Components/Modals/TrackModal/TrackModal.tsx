@@ -9,6 +9,7 @@ import buildPath from '../../../util/ImagePath';
 import { resizeMe } from '../../../util/ImageHelperFunctions';
 import React from 'react';
 import isDev from '../../../util/isDev';
+import * as Tone from 'tone';
 
 import trackPlayback from './trackPlayback';
 import Playback from '../../Playback/Playback';
@@ -48,6 +49,7 @@ const TrackModal: React.FC<Props> = ({ track, closeModal }) => {
 
     const [likeCount, setLikeCount] = useState(track.likeCount);
 
+
     // The ternary just sets the like array to the user like array if it exists, else the empty
     const [userLikeArr, setUserLikeArr] = useState(user ? user.likes ? user.likes : emptyLikeArr : emptyLikeArr);
 
@@ -58,6 +60,8 @@ const TrackModal: React.FC<Props> = ({ track, closeModal }) => {
         checkTrackOwner();
         checkLike();
     }, []);
+
+     
 
     // ============================= Functions for User Track =============================
     function checkTrackOwner() {
@@ -156,7 +160,7 @@ const TrackModal: React.FC<Props> = ({ track, closeModal }) => {
 
 
     // ============================= Functions for Track Cover System =============================
-
+        
     // For displaying track thumbnail picture
     const [displayThumbnail, setDisplayThumbnail] = useState(track !== null ? track.thumbnail : undefined);
 
@@ -506,17 +510,9 @@ const TrackModal: React.FC<Props> = ({ track, closeModal }) => {
 
     }
 
-    function stopTrack() {
-        try {
-
-            setTrackIsPlaying(false);
-
-        } catch (e) {
-            console.error("Failed to stop midi playback: ", e);
-
-            // Temporary solution, just to refresh the page which *should* halt the midi playback
-            navigate('home');
-        }
+    async function cleanStuff(){
+        console.log("closing modal");
+        Tone.Transport.cancel();
     }
 
 
@@ -557,7 +553,7 @@ const TrackModal: React.FC<Props> = ({ track, closeModal }) => {
         <>
             <div>
                 <div className='modal-background'>
-                    <Modal.Header className='modal-container-header' closeButton>
+                    <Modal.Header className='modal-container-header' closeButton onClick={() => cleanStuff()}>
                     </Modal.Header>
                     <Modal.Body className='modal-container-body'>
                         <div id='modal-track-cover-div'>
@@ -590,20 +586,6 @@ const TrackModal: React.FC<Props> = ({ track, closeModal }) => {
                                     <h4>Download</h4>
                                 </a>
                             </button>}
-                            {/*{!trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={playTrack}>
-                <a style={{color: "white", textDecoration: "none", display: "flex", justifyContent: "center"}} id='download-midi-btn' download={'myTrack.MID'} href={track.midi}>
-                    <FontAwesomeIcon className='modal-track-icons fa-xl' id='modal-track-play-icon' icon={["fas", "download"]} />
-                    <h4>Download</h4> 
-                </a>
-              </button>} */}
-                            {/*{!trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={playTrack}>
-                <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "play"]} />
-                <h3>Play</h3>
-              </button>} 
-              {trackIsPlaying && <button type="button" className="btn btn-primary" id='play-btn' onClick={stopTrack}>
-                <FontAwesomeIcon className='modal-track-icons fa-2x' id='modal-track-play-icon' icon={["fas", "pause"]} />
-                <h3>Pause</h3>
-              </button>} */}
                             <div className='mt-3'>
                                 <h6 id="track-author-text">Track:</h6>
                                 <Playback midiString={track.midi} />
