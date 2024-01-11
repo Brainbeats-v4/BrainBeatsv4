@@ -11,48 +11,50 @@ import { useNavigate } from 'react-router-dom';
 
 function Cards() {
     const initialBackground = {
-		displayColorPicker: false,
-		color: {
-		  r: '14',
-		  g: '14',
-		  b: '14',
-		  a: '14',
-		},
-	}
-	const initialTextColor = {
-		displayColorPicker: false,
-		color: {
-		  r: '255',
-		  g: '255',
-		  b: '255',
-		  a: '255',
-		},
-	}
+        displayColorPicker: false,
+        color: {
+            r: '14',
+            g: '14',
+            b: '14',
+            a: '14',
+        },
+    }
+    const initialTextColor = {
+        displayColorPicker: false,
+        color: {
+            r: '255',
+            g: '255',
+            b: '255',
+            a: '255',
+        },
+    }
 
     // For displaying Modal
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
 
+    const [selectedView, setSelectedView] = useState("color");
+
     // For collecting image from Redux
     const image = useAppSelector(state => state.imageSlice)
     const dispatch = useDispatch();
-    
+
     // For holding card information
     const [cards, setCards] = useState<Card[]>([])
-	const [cardText, setCardTextState] = useState('');
-	const [speed, setSpeed] = useState(1)
-	const [backgroundColor, setBackgroundColor] = useState(initialBackground);
-	const [textColor, setTextColor] = useState(initialTextColor);
+    const [cardText, setCardTextState] = useState('');
+    const [speed, setSpeed] = useState(1)
+    const [backgroundColor, setBackgroundColor] = useState(initialBackground);
+    const [textColor, setTextColor] = useState(initialTextColor);
     const [imageURL, setImageURL] = useState('');
 
     // Navigating
     const navigate = useNavigate();
-    const doNavigate = (route:string) => {
+    const doNavigate = (route: string) => {
         navigate(route);
     }
 
     const setColorBackground = (color: { rgb: any; }) => {
-		setBackgroundColor({ displayColorPicker: backgroundColor.displayColorPicker, color: color.rgb });
+        setBackgroundColor({ displayColorPicker: backgroundColor.displayColorPicker, color: color.rgb });
         setImageURL('');
     };
     const setColorText = (color: { rgb: any; }) => {
@@ -60,23 +62,23 @@ function Cards() {
     };
 
     const addCard = () => {
-		if(cardText === '' && imageURL === ''){
-			alert("Invalid Card format: Must include either an image or text")
-			return
-		}
-		let newCard: Card = {
-			textColor: textColor.color,
-			backgroundColor: backgroundColor.color,
-			speed: speed * 1000,
-			text: cardText,
+        if (cardText === '' && imageURL === '') {
+            alert("Invalid Card format: Must include either an image or text")
+            return
+        }
+        let newCard: Card = {
+            textColor: textColor.color,
+            backgroundColor: backgroundColor.color,
+            speed: speed * 1000,
+            text: cardText,
             url: imageURL,
-		}
+        }
 
-		//set input back to default
-		setBackgroundColor(initialBackground);
-		setTextColor(initialTextColor);
-		setCardTextState('');
-		setSpeed(1);
+        //set input back to default
+        setBackgroundColor(initialBackground);
+        setTextColor(initialTextColor);
+        setCardTextState('');
+        setSpeed(1);
         setImageURL('');
 
         cards.push(newCard);
@@ -84,7 +86,7 @@ function Cards() {
         console.log(newCard);
         console.log(cards);
         // dispatch(set(cards));
-	}
+    }
 
     const sendCards = () => {
         dispatch(set(cards));
@@ -93,23 +95,39 @@ function Cards() {
     useEffect(() => {
         setImageURL(image.urls.regular)
         setShow(false);
-      }, [image]);
+    }, [image]);
 
-    return(
+    return (
         <div id='record-card-info-div'>
-             <Modal id='pop-up' show={show} onHide={handleClose}>
-                <ImageModal /*setImageURL={setImageURL}*//>
+            <Modal id='pop-up' show={show} onHide={handleClose}>
+                <ImageModal /*setImageURL={setImageURL}*/ />
             </Modal>
             <div className='cards-body-div'>
                 <div id='card-settings-div'>
                     <h6 className='record-heading'>Card Settings</h6>
                     <div id='record-uploads-div'>
-                    <label className='record-heading' htmlFor="file-upload">Background:</label>
-                        <div id='background-settings'>
-                            <div className='record-upload'>
-                                <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Select Background Image</button>
-                            </div>
-                            <h6 className='OR-subtitle'>OR</h6>
+                        <div>
+                            <input type="radio" id="color-select" name="card-type" value="color"
+                                checked={selectedView === "color"}
+                                onChange={() => setSelectedView("color")} />
+                            <label className='check-box' htmlFor="color">Color</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="image-select" name="card-type" value="image"
+                                checked={selectedView === "image"}
+                                onChange={() => setSelectedView("image")} />
+                            <label className='check-box' htmlFor="image">Image</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="video-select" name="card-type" value="video"
+                                checked={selectedView === "video"}
+                                onChange={() => setSelectedView("video")} />
+                            <label className='check-box' htmlFor="video">Video</label>
+                        </div>
+
+                        <div id='color-settings' hidden={selectedView !== "color"}>
                             <label className='record-heading2' htmlFor="file-upload">Select Background Color</label>
                             <div className='record-upload1'>
                                 <CompactPicker
@@ -117,7 +135,47 @@ function Cards() {
                                 />
                             </div>
                         </div>
-                        
+
+                        <div className='record-upload' hidden={selectedView !== "image"}>
+                            <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Select Image</button>
+                        </div>
+
+                        <div className='record-upload' hidden={selectedView !== "video"}>
+                            <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => { }}>Upload Video</button>
+
+
+                            <label className='record-heading' htmlFor="file-upload">Video Start Time:</label>
+                            <div className='record-upload1'>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    placeholder="Seconds"
+                                    className="timeInput"
+                                    onChange={(e) => setSpeed(e.target.valueAsNumber)}
+                                    value={speed}
+                                />
+                            </div>
+
+                            <input type="checkbox" id="video-check"></input>
+                            <label className='check-box' htmlFor="video-check">Use video audio</label>
+
+                        </div>
+
+                        <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Upload Audio</button>
+
+                        <label className='record-heading' htmlFor="file-upload">Audio Start Time:</label>
+                        <div className='record-upload1'>
+                            <input
+                                type="number"
+                                step="0.01"
+                                placeholder="Seconds"
+                                className="timeInput"
+                                onChange={(e) => setSpeed(e.target.valueAsNumber)}
+                                value={speed}
+                            />
+                        </div>
+
+
                         <label className='record-heading' htmlFor="file-upload">Text Color:</label>
                         <div className='record-upload1'>
                             <CompactPicker
@@ -137,6 +195,7 @@ function Cards() {
                         <div className='record-upload1'>
                             <input
                                 type="number"
+                                step="0.01"
                                 placeholder="Seconds"
                                 className="timeInput"
                                 onChange={(e) => setSpeed(e.target.valueAsNumber)}
@@ -164,7 +223,7 @@ function Cards() {
             <div className='cards-footer-div'>
                 <div id='record-buttons-div'>
                     <button type="button" className="btn btn-secondary" id='skip-step-btn' onClick={() => doNavigate("/record")}>Skip This Step</button>
-                    <button type="button" className="btn btn-secondary" id='go-record-btn' onClick={() => {doNavigate("/record"); sendCards();}}>Go to Record</button>
+                    <button type="button" className="btn btn-secondary" id='go-record-btn' onClick={() => { doNavigate("/record"); sendCards(); }}>Go to Record</button>
                 </div>
             </div>
         </div>);

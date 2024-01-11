@@ -83,6 +83,7 @@
     text-align: center;
     font-weight: 400;
 }
+
 .record-upload {
     /* background-color: rgb(176, 176, 176); */
     width: 100%;
@@ -94,6 +95,12 @@
 .record-upload1 {
     width: 90%;
     margin-bottom: 3%;
+}
+
+.check-box {
+    width: 90%;
+    margin-bottom: 3%;
+    color: #ffffff;
 }
 
 .record-upload-background{
