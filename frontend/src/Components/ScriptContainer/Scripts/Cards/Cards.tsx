@@ -127,7 +127,7 @@ function Cards() {
                             <label className='check-box' htmlFor="video">Video</label>
                         </div>
 
-                        <div id='color-settings' hidden={selectedView !== "color"}>
+                        <div id='color-settings' className='area-settings' hidden={selectedView !== "color"}>
                             <label className='record-heading2' htmlFor="file-upload">Select Background Color</label>
                             <div className='record-upload1'>
                                 <CompactPicker
@@ -136,11 +136,13 @@ function Cards() {
                             </div>
                         </div>
 
-                        <div className='record-upload' hidden={selectedView !== "image"}>
+                        <div className='area-settings' hidden={selectedView !== "image"}>
                             <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>AI Image</button>
+                            <h6 className='OR-subtitle'>OR</h6>
+                            <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Upload Image</button>
                         </div>
 
-                        <div className='record-upload' hidden={selectedView !== "video"}>
+                        <div className='area-settings' hidden={selectedView !== "video"}>
                             <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => { }}>Upload Video</button>
 
 

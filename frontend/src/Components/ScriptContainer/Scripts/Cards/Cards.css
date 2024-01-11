@@ -77,6 +77,16 @@
     height: fit-content;
     padding: 8px;
 }
+.area-settings{
+    background-color: rgb(56, 56, 56);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 10px ;
+    width: 100%;
+    height: fit-content;
+    padding: 8px;
+}
 
 .OR-subtitle{
     color: #ffffff;
