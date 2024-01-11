@@ -1,2 +1,3 @@
-sudo npm i
-sudo nodemon start
+npm i
+npm start
+

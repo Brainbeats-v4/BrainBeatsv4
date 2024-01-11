@@ -137,7 +137,7 @@ function Cards() {
                         </div>
 
                         <div className='record-upload' hidden={selectedView !== "image"}>
-                            <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Select Image</button>
+                            <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>AI Image</button>
                         </div>
 
                         <div className='record-upload' hidden={selectedView !== "video"}>
