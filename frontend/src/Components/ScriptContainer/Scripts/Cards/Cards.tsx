@@ -54,9 +54,22 @@ function Cards() {
         navigate(route);
     }
 
-    const handleVideoAudio = () =>{
+    const handleVideoAudio = () => {
         setUsingVideoAudio(!usingVideoAudio);
         console.log(usingVideoAudio);
+    }
+
+    const uploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // console.log(event!.target.files[0]);
+        // setImageURL(event.target.name); 
+        if (!event.target.files) {
+            console.log("it's null")
+            return
+        }
+
+        setImageURL(URL.createObjectURL(event.target.files[0]));
+        
+
     }
 
     const disableAudio = () => {
@@ -150,7 +163,7 @@ function Cards() {
                             <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>AI Image</button>
                             <h6 className='OR-subtitle'>OR</h6>
                             <label className='record-heading2' htmlFor="file-upload">Select Image File:</label>
-                            <input type="file" className="btn btn-secondary" />
+                            <input type="file" className="btn btn-secondary" onChange={uploadImage} />
                         </div>
 
                         <div className='area-settings' hidden={selectedView !== "video"}>
