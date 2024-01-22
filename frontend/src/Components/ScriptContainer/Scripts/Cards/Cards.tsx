@@ -46,11 +46,21 @@ function Cards() {
     const [backgroundColor, setBackgroundColor] = useState(initialBackground);
     const [textColor, setTextColor] = useState(initialTextColor);
     const [imageURL, setImageURL] = useState('');
+    const [usingVideoAudio, setUsingVideoAudio] = useState(false);
 
     // Navigating
     const navigate = useNavigate();
     const doNavigate = (route: string) => {
         navigate(route);
+    }
+
+    const handleVideoAudio = () =>{
+        setUsingVideoAudio(!usingVideoAudio);
+        console.log(usingVideoAudio);
+    }
+
+    const disableAudio = () => {
+        return selectedView === "video" && usingVideoAudio;
     }
 
     const setColorBackground = (color: { rgb: any; }) => {
@@ -139,11 +149,13 @@ function Cards() {
                         <div className='area-settings' hidden={selectedView !== "image"}>
                             <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>AI Image</button>
                             <h6 className='OR-subtitle'>OR</h6>
-                            <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Upload Image</button>
+                            <label className='record-heading2' htmlFor="file-upload">Select Image File:</label>
+                            <input type="file" className="btn btn-secondary" />
                         </div>
 
                         <div className='area-settings' hidden={selectedView !== "video"}>
-                            <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => { }}>Upload Video</button>
+                            <label className='record-heading2' htmlFor="file-upload">Select Video File:</label>
+                            <input type="file" className="btn btn-secondary" />
 
 
                             <label className='record-heading' htmlFor="file-upload">Video Start Time:</label>
@@ -158,12 +170,13 @@ function Cards() {
                                 />
                             </div>
 
-                            <input type="checkbox" id="video-check"></input>
+                            <input type="checkbox" id="video-check" checked={usingVideoAudio} onChange={handleVideoAudio}></input>
                             <label className='check-box' htmlFor="video-check">Use video audio</label>
 
                         </div>
 
-                        <button type="button" className="btn btn-secondary" id='image-card-btn' onClick={() => setShow(true)}>Upload Audio</button>
+                        <label className='record-heading2' htmlFor="file-upload">Upload Audio File:</label>
+                        <input type="file" className="btn btn-secondary" disabled={disableAudio()} />
 
                         <label className='record-heading' htmlFor="file-upload">Audio Start Time:</label>
                         <div className='record-upload1'>
@@ -174,6 +187,7 @@ function Cards() {
                                 className="timeInput"
                                 onChange={(e) => setSpeed(e.target.valueAsNumber)}
                                 value={speed}
+                                disabled={disableAudio()}
                             />
                         </div>
 
