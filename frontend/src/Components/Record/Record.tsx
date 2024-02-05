@@ -1,6 +1,6 @@
 import { ConcreteCytonStream, ConcreteGanglionStream, ConcreteTestStream } from '../../util/DeviceAbstractFactory';
 import { useAppSelector } from "../../Redux/hooks";
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import './Record.css'
@@ -25,7 +25,7 @@ function Record() {
     const [debugOption1, setDebugOption1] = useState(false);
     const [debugOption2, setDebugOption2] = useState(false);
     const [debugOption3, setDebugOption3] = useState(false);
-    
+
     /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
     and import it. */
     const [device, setDevice] = useState<ConcreteGanglionStream | ConcreteCytonStream | ConcreteTestStream>();
@@ -47,8 +47,8 @@ function Record() {
         else {
             setRecording(false);
         }
-      }, [device]);
-    
+    }, [device]);
+
     /*  doRecording simply creates an instance of the device we're using, in our case we only have the ganglion board and the
         cyton board, the if condition that assigns the deviceType is checking to see the number of channels accepted, here you
         could define this earlier and pass it down to this function (in the case that you have different EEG device with the same
@@ -57,7 +57,7 @@ function Record() {
         // console.log("Device:", deviceName);
 
         var debugOptionObject = {
-            debugOption1, 
+            debugOption1,
             debugOption2,
             debugOption3
         }
@@ -69,19 +69,19 @@ function Record() {
             case "cyton":
                 setDevice(new ConcreteCytonStream(settings, debugOptionObject));
                 break;
-            case "ganglion": 
+            case "ganglion":
                 setDevice(new ConcreteGanglionStream(settings, debugOptionObject));
                 break;
             default: return;
         }
         /* ! Use Effect above will now be triggered */
-        
+
         /*  Once we have defined the class we can initialize it. If you're to add another one of these it's important 
             to make sure that its class has an initializeConnection function to keep this function clean and avoid 
             conditionals here. In the case that somebody didn't connect a proper device, it's important not to call the
             initialize connection function to avoid errors. */
     }
-    
+
     function stopRecording() {
         // console.log('Recording stopped!');
         /* When the device is stopped it signals the call to return the MIDI since
@@ -89,7 +89,7 @@ function Record() {
             This will check for sucessful return of a MIDI base64 string to be stored 
             in the database and make it easily downloadable. */
         device?.stopDevice()?.then(
-            (url:string) => {
+            (url: string) => {
                 // console.log("Midi URL from Record.tsx: ", url);
                 setMIDIURI(url);
             }
@@ -100,8 +100,8 @@ function Record() {
         setRecording(false);
     }
 
-    function handleForm(e:number) {
-        switch(e) {
+    function handleForm(e: number) {
+        switch (e) {
             case 1:
                 setDebugOption1(!debugOption1);
                 break;
@@ -111,7 +111,7 @@ function Record() {
             case 3:
                 setDebugOption3(!debugOption3);
                 break;
-            default: 
+            default:
                 break;
         }
     }
@@ -133,7 +133,7 @@ function Record() {
         if (user) {
 
             // TODO: Grab the midi and place it in the track
-            var newTrack:Track = {
+            var newTrack: Track = {
                 "id": "",
                 "title": "",
                 "bpm": settings.bpm,
@@ -159,8 +159,8 @@ function Record() {
          * if they wish to post.)
          */
         else {
-             // Open modal with no user info. The user would not be able to upload the track, only download
-             var newTrack:Track = {
+            // Open modal with no user info. The user would not be able to upload the track, only download
+            var newTrack: Track = {
                 "id": "",
                 "title": "",
                 "bpm": settings.bpm,
@@ -196,7 +196,7 @@ function Record() {
     function showSaveModal() {
         if (MIDIUri == '')
             showRecordTrackAlert();
-        else 
+        else
             showEditTrackInfo();
     }
 
@@ -204,42 +204,42 @@ function Record() {
         navigate("/script-settings");
     }
 
-    return(
+    return (
         <div className='container' id='record-container'>
             <h2 className='record-heading'>Recording Music</h2>
             <div id='record-container-body'>
                 <Modal id='pop-up' show={show} onHide={handleClose}>
-                    <UploadTrackModal track={currentTrack}/>
+                    <UploadTrackModal track={currentTrack} />
                 </Modal>
                 <div id='script-div'>
                     <RecordCards></RecordCards>
                     <div id='record-publish-buttons-div'>
-                        <button type="button" className="btn btn-secondary" id='record-cancel-btn' onClick={() => {goBackToCards()}}>Back</button>
-                        <button type="button" className="btn btn-secondary" id='record-publish-btn' onClick={() => {showSaveModal()}}>Save</button>
+                        <button type="button" className="btn btn-secondary" id='record-cancel-btn' onClick={() => { goBackToCards() }}>Back</button>
+                        <button type="button" className="btn btn-secondary" id='record-publish-btn' onClick={() => { showSaveModal() }}>Save</button>
                     </div>
                 </div>
 
                 <div id='record-btns-div'>
-                    
+
                     {/* Debug checkboxes --------(from bootstrap)----------------- */}
                     {isDev() && <div className="devBox">
                         <h2>Debug options</h2>
                         <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="1" id="flexCheckDefault" checked={debugOption1} onClick={() => handleForm(1)}/>
+                            <input className="form-check-input" type="checkbox" value="1" id="flexCheckDefault" checked={debugOption1} onClick={() => handleForm(1)} />
                             <label className="form-check-label" htmlFor="flexCheckDefault">
-                                device info & datastream <br/> (File: DeviceAbstractFactory)
+                                device info & datastream <br /> (File: DeviceAbstractFactory)
                             </label>
                         </div>
                         <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="2" id="flexCheckDefault" checked={debugOption2} onClick={() => handleForm(2)}/>
+                            <input className="form-check-input" type="checkbox" value="2" id="flexCheckDefault" checked={debugOption2} onClick={() => handleForm(2)} />
                             <label className="form-check-label" htmlFor="flexCheckDefault">
-                                note generation stream <br/> (File: OriginalNoteGeneration)
+                                note generation stream <br /> (File: OriginalNoteGeneration)
                             </label>
                         </div>
                         <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="3" id="flexCheckDefault" checked={debugOption3} onClick={() => handleForm(3)}/>
+                            <input className="form-check-input" type="checkbox" value="3" id="flexCheckDefault" checked={debugOption3} onClick={() => handleForm(3)} />
                             <label className="form-check-label" htmlFor="flexCheckDefault">
-                                midi playback <br/> (File: MIDIManager)
+                                midi playback <br /> (File: MIDIManager)
                             </label>
                         </div>
                     </div>}
@@ -248,18 +248,24 @@ function Record() {
                         <FontAwesomeIcon icon={["fas", "arrow-up-from-bracket"]} />
                         download the midi
                     </a>}
-   
+
                     {/* ------------------------------------- End Debug checkboxes */}
                     <div className="setupGuide">
-                            <h2>New to BrainBeats?</h2>
-                            <p>If you need to understand how to get started, view our setup guide <Link to="/setup" target="_blank">here.</Link><br />
+                        <h2>New to BrainBeats?</h2>
+                        <p>If you need to understand how to get started, view our setup guide <Link to="/setup" target="_blank">here.</Link><br />
                             Otherwise, continue by hitting the record button below:</p>
+                        <label htmlFor="genselect">Select Music Generation Method:</label>
+                        <select name="genselect" id="genselect">
+                            <option value="legacy">Legacy</option>
+                            <option value="procedural">Procedural</option>
+                            <option value="ai">AI</option>
+                        </select>
                     </div>
-                   {!isRecording && <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={doRecording}>
+                    {!isRecording && <button type="button" className="btn btn-secondary" id='recording-play-btn' onClick={doRecording}>
                         <FontAwesomeIcon icon={["fas", "circle"]} />
                         Record
                     </button>}
-                   {isRecording &&  <button type="button" className="btn btn-secondary" id='recording-stop-btn' onClick={stopRecording}>
+                    {isRecording && <button type="button" className="btn btn-secondary" id='recording-stop-btn' onClick={stopRecording}>
                         <FontAwesomeIcon icon={["fas", "square"]} />
                         Stop
                     </button>}
