@@ -25,6 +25,7 @@ function Record() {
     const [debugOption1, setDebugOption1] = useState(false);
     const [debugOption2, setDebugOption2] = useState(false);
     const [debugOption3, setDebugOption3] = useState(false);
+    const [genOption, setGenOption] = useState('legacy');
 
     /*  Add the interface of a new stream here in the case that you've created a new one, you should define it in the DeviceAbstractFactory
     and import it. */
@@ -255,7 +256,7 @@ function Record() {
                         <p>If you need to understand how to get started, view our setup guide <Link to="/setup" target="_blank">here.</Link><br />
                             Otherwise, continue by hitting the record button below:</p>
                         <label htmlFor="genselect">Select Music Generation Method:</label>
-                        <select name="genselect" id="genselect">
+                        <select disabled={isRecording} name="genselect"value={genOption} id="genselect" onChange={(e) => setGenOption(e.target.value)}>
                             <option value="legacy">Legacy</option>
                             <option value="procedural">Procedural</option>
                             <option value="ai">AI</option>
