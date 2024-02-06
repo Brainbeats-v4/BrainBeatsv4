@@ -9,6 +9,8 @@ import { useDispatch } from 'react-redux';
 import { set, unset } from '../../../../Redux/slices/cardArraySlice'
 import { useNavigate } from 'react-router-dom';
 
+import * as Tone from 'tone';
+
 function Cards() {
     const initialBackground = {
         displayColorPicker: false,
@@ -46,6 +48,7 @@ function Cards() {
     const [backgroundColor, setBackgroundColor] = useState(initialBackground);
     const [textColor, setTextColor] = useState(initialTextColor);
     const [imageURL, setImageURL] = useState('');
+    const [audioURL, setAudioURL] = useState('');
     const [usingVideoAudio, setUsingVideoAudio] = useState(false);
 
     // Navigating
@@ -72,6 +75,15 @@ function Cards() {
 
     }
 
+    const uploadAudio = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(!event.target.files) {
+            console.log("Audio URL is null")
+            return
+        }
+        
+        setAudioURL(URL.createObjectURL(event.target.files[0]));
+    }
+
     const disableAudio = () => {
         return selectedView === "video" && usingVideoAudio;
     }
@@ -94,7 +106,8 @@ function Cards() {
             backgroundColor: backgroundColor.color,
             speed: speed * 1000,
             text: cardText,
-            url: imageURL,
+            imageURL: imageURL,
+            audioURL: audioURL,
         }
 
         //set input back to default
@@ -189,7 +202,7 @@ function Cards() {
                         </div>
 
                         <label className='record-heading2' htmlFor="file-upload">Upload Audio File:</label>
-                        <input type="file" className="btn btn-secondary" disabled={disableAudio()} />
+                        <input type="file" className="btn btn-secondary" disabled={disableAudio()} onChange={uploadAudio} />
 
                         <label className='record-heading' htmlFor="file-upload">Audio Start Time:</label>
                         <div className='record-upload1'>

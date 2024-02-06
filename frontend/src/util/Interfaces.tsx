@@ -100,7 +100,8 @@ export type Card = {
         b: string,
         a: string,
     },
-    url: string,
+    imageURL: string,
+    audioURL: string,
     text: string,
     speed: number,
 }

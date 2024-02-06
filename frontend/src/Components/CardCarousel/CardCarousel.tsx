@@ -54,7 +54,7 @@ const CardCarousel = () => {
         {scriptCards.map((card,index) => {		
 			return <div data-interval={card.speed} className='card-display' key={index} style={{                 
                 background: `rgba(${card.backgroundColor.r}, ${card.backgroundColor.g}, ${card.backgroundColor.b}, ${card.backgroundColor.a})`,
-                backgroundImage: `url(${card.url})`,
+                backgroundImage: `url(${card.imageURL})`,
 				color: `rgba(${card.textColor.r}, ${card.textColor.g}, ${card.textColor.b}, ${card.textColor.a})`,
                 width: '100%', 
                 height: '100%',
