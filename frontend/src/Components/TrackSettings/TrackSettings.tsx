@@ -264,13 +264,14 @@ const TrackSettings = () => {
     return (
         <div className='container' id='main-container'>
             {/* Displays on Basic Settings */}
-            <h1 className='heading'>Music Settings</h1>
+            <h1 className='heading'>CREATE TRACK</h1>
             <div id='track-settings-container'>
                 <div id="settings1" style={{display: advSettingsOpen? "none" : "block"}}>
                     <form className='justify-content-center' id='settings-container1'>
                         <h2 className='settings-text'>Basic Settings</h2>
-                        <div id='select-device-div'>
-                            <h6 id='settings-text'>Please select your input device:</h6>                    
+                       
+                        <div id='select-device-div'> 
+                            <h6 className='centered-text' id='centered-text'>Please select your input device:</h6>                
                             <select className="dropdowns" id='board-dropdown' name="board-options" onChange={(e) => setDevice(e.target.value)}>
                                 <option value="cyton">Cyton Board</option>
                                 <option value="ganglion">Ganglion Board</option>
@@ -302,22 +303,22 @@ const TrackSettings = () => {
 
                         <div className='form-group row justify-content-center'>
                             <div className="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Next</button>
+                                <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Create</button>
                             </div>
                         </div>
                     </form>
 
                     <br />
-                    <h2 id='OR'>OR</h2>
+                   
                     <br />
 
                     <form className='justify-content-center' id='settings-container2'>
                         <h2 className='settings-text'>Advanced Settings</h2>
-                        <p className='settings-text'>Press the button below to go to advanced music generation settings:</p>
+                        <p className='centered-text'>Press the button below to go to advanced music generation settings:</p>
 
                         <div className='form-group row justify-content-center'>
                             <div className="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" className="btn btn-primary" id='adv-btn' onClick={toggle}>Advanced Settings</button>
+                                <button type="button" className="btn btn-primary" id='adv-btn' onClick={toggle}>Create</button>
                             </div>
                         </div>
 

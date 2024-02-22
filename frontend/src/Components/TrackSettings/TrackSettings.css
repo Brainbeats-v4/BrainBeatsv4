@@ -34,7 +34,7 @@
     justify-content: center;
     min-width: fit-content;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 
 #main-container {
@@ -43,6 +43,7 @@
     /* height: 100vh; */
     display: block;
     justify-content: center;
+    
 }
 
 #next-btn, #back-btn {
@@ -50,18 +51,24 @@
     float: inline-end;
 }
 
-.settings-text {
+.centered-text {
     color:rgb(57, 57, 57);
     /* margin-left: 2%;     */
-    text-align: left;
-    align-self: flex-start;
-    /* background-color: red; */
+    text-align: center;
+
+    
+}
+
+.settings-text {
+    color:white;
+    padding:.5%;
+    text-align: center;
+    background-color: rgb(76, 84, 90); 
 }
 .settings-text2 {
     color:rgb(42, 42, 42);
     /* margin-left: 2%;     */
-    text-align: left;
-    align-self: flex-start;
+    text-align: center;
     /* background-color: red; */
 }
 
@@ -79,7 +86,7 @@
     align-items: center;
     width: fit-content;
     padding: 1%;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 
 #OR {
@@ -89,7 +96,7 @@
 }
 
 #back-btn, #next-btn, #adv-btn {
-    border-radius: 0px;
+    border-radius: 4px;
     padding: 7px 20px 7px 20px;
     width: 200px;
 }
@@ -108,27 +115,38 @@
 #next-btn {
     background-color: #F8607C;
     border-color: #F8607C;
+    filter: drop-shadow(0px 4px 4px #91697d);
 }
 #next-btn:hover{
     background-color:#e33051;
     border-color: #e33051;
     text-decoration: underline;
+    filter: drop-shadow(0px 4px 4px #91697d);
+    text-decoration:none;
 }
 
 #adv-btn{
     background-color: #259FB1;
     border-color: #259FB1;
+    filter: drop-shadow(0px 4px 4px #476770);
 }
 #adv-btn:hover{
     background-color: #0c7b8b;
     border-color: #0c7b8b;
     text-decoration: underline;
+    filter: drop-shadow(0px 4px 4px #476770);
+    text-decoration:none;
 }
 
 /* CSS for settings1 and settings2 containers */
 .heading{
     color: white;
-    margin-bottom: 2%;
+    margin: 2%;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    justify-content: center;
+    
+    
 }
 
 #track-settings-container{
@@ -136,11 +154,13 @@
     display: flex;
     justify-content: center;
     padding-bottom: 4.5%;
+   
+    
 }
 #settings-container1, #settings-container2 {
     min-width: 100%;
     width: fit-content;
-    padding: 10px 10px 20px 10px;
+    padding: 0px 0px 20px 0px;
     margin: auto;
     height: fit-content;
     position: relative;
@@ -148,12 +168,14 @@
     filter: drop-shadow(0px 4px 4px #181818);
     display: block;
     border-color:rgb(0, 0, 0);
-    border-radius: 10px;
+    border-radius: 4px;
+   
 }
 
 #settings1{
     display:block;
     min-width: 70%;
+    
 }
 
 #settings2{
@@ -166,6 +188,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+ 
 }
 
 /* CSS for Advanced Settings ('settings2') Container */
@@ -181,10 +205,11 @@
     filter: drop-shadow(0px 4px 4px #181818);
     display: block;
     border-color:rgb(95, 95, 95);
-    border-radius: 10px;
+    border-radius: 4px;
     /* width: fit-content !important; */
     overflow-y: auto;
     overflow-x: hidden;
+    
 }
 
 .instruments-div, .instruments-other-div{
@@ -218,17 +243,18 @@
 }
 
 .dropdowns{
-    border-color: #E4E4E4;
+    border-color:black;
+    border-radius:4px;
 }
 
 .dropdowns2{
-    border-color: #929292;
+    border-color: black;
+    border-radius:4px;
 }
 
 #back-btn-adv {
-    margin: 3%;
     float: inline-end;
-    border-radius: 0px;
+    border-radius: 4px;
     padding: 7px 20px 7px 20px;
     width: 200px;
     background-color: #D9D9D9;
@@ -244,9 +270,8 @@
 }
 
 #random-btn-adv {
-    margin: 3%;
     float: inline-end;
-    border-radius: 0px;
+    border-radius: 4px;
     padding: 7px 20px 7px 20px;
     width: 200px;
     background-color: #6f6f6f;
