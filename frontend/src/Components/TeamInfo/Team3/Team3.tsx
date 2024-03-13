@@ -10,7 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Importing Team Member Images
 import quanminhNguen from '../../../images/Version3Photos/QuanminhNguyen.jpg';
 import noahLang from '../../../images/Version3Photos/NoahLang.jpg';
-import shyamParikh from '../../../images/Version3Photos/ShyamParikh.png';
+import shyamParikh from '../../../images/Version3Photos/ShyamParikh.jpg';
+import SamiEskirjeh from '../../../images/Version3Photos/SamiEskirjeh.jpg';
 
 const Team3 = () => {
 
@@ -79,7 +80,7 @@ const Team3 = () => {
         contributions: "• Researched music generation and algorithms" + "\n• Assisted in creating music generation model" + 
         "\n• Helped in data transmission between browser and EEG device" + "\n• Assisted with frontend functionality"},
 
-        {name: "Sami Eskirjeh", position: "EEG Connection • Backend Developer", image: defaultImage, bio: "",
+        {name: "Sami Eskirjeh", position: "EEG Connection • Backend Developer", image: SamiEskirjeh, bio: "",
         contributions: "• Researched backend technologies" + "\n• Developed API functionality with OpenBCI headset" + 
         "\n• Worked in data transmission between browser and EEG device" + "\n• Assisted with frontend functionality"},
 

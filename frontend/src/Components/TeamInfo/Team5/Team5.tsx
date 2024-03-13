@@ -80,40 +80,31 @@ const Team5 = () => {
     var teamMembers : TeamMember[] = [
 
         {name: "Robert Perez", position: "Frontend Developer", image: RobertPerez, bio: "", 
-        contributions: "• Developed a rework of the original frontend system" + "\n• Converted JavaScript to TypeScript" +
-       "\n• Developed and implemented UI and UX designs" + "\n• Created functional components for frontend development"}, 
+        contributions: ""}, 
 
        {name: "McGreggor Kennison", position: "AI/ML Music Generation", image: McGreggorKennison, bio: "", 
-        contributions: "• Developed a rework of the original frontend system" + "\n• Converted JavaScript to TypeScript" +
-       "\n• Developed and implemented UI and UX designs" + "\n• Created functional components for frontend development"},
+        contributions: ""},
 
        {name: "Serina Chugani", position: "EEG Data Collection", image: SerinaChugani, bio: "", 
-       contributions: "• Developed a rework of the original frontend system" + "\n• Converted JavaScript to TypeScript" +
-      "\n• Developed and implemented UI and UX designs" + "\n• Created functional components for frontend development"}, 
+       contributions: ""}, 
 
       {name: "Isabella Faile", position: "Frontend Devleoper", image: IsabellaFaile, bio: "", 
-        contributions: "• Developed a rework of the original backend system" + "\n• Extended the backend as needed to ensure compatibility" +
-        "\n• Assisted in creating functional components" + "\n• Assisted with modularizing/refactoring the codebase"},
+        contributions: ""},
 
         {name: "Aidan Ahern", position: "AI/ML Music Generation", image: AidanAhern, bio: "", 
-        contributions:"• Planned meetings and accessed time management" + "\n• Ensured target goals were reached" +
-        "\n• Developed a machine learning model" + "\n • Provided assistance to frontend and backend development"},
+        contributions:""},
 
         {name: "Grafton LeGare", position: "Procedural Music Generation", image: GraftonLeGare, bio: "",
-        contributions: "• Researched neurology, music generation, and EEG" + "\n• Restructured the API" + 
-        "\n• Restructured previous implementation of music generation" + "\n• Assisted with frontend functions and logic"},
+        contributions: ""},
 
         {name: "Vicente Vivanco", position: "EEG to Emotion Framework", image: VicenteVivanco, bio: "", 
-     contributions: "• Developed a rework of the original frontend system" + "\n• Converted JavaScript to TypeScript" +
-    "\n• Developed and implemented UI and UX designs" + "\n• Created functional components for frontend development"}, 
+     contributions: ""}, 
 
         {name: "kmi Florez", position: "Vicente's Manager", image: kmiFlorez, bio: "", 
-        contributions: "• Developed a rework of the original frontend system" + "\n• Converted JavaScript to TypeScript" +
-       "\n• Developed and implemented UI and UX designs" + "\n• Created functional components for frontend development"}, 
+        contributions: ""}, 
 
      {name: "Tsehai Boucaud", position: "Project Manager", image: TsehaiBoucaud, bio: "", 
-     contributions: "• Developed a rework of the original frontend system" + "\n• Converted JavaScript to TypeScript" +
-    "\n• Developed and implemented UI and UX designs" + "\n• Created functional components for frontend development"}, 
+     contributions: ""}, 
 
      
 

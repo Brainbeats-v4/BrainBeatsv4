@@ -9,6 +9,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Importing Team Member Images
 import joshuaNeumann from '../../../images/Version2Photos/JoshuaNeumann.jpg';
+import melanieBrady from '../../../images/Version2Photos/MelanieBrady.jpg';
+import harrysauers from '../../../images/Version2Photos/HarrySauers.jpg';
+import jordypantoja from '../../../images/Version2Photos/JordyPantoja.jpg';
+
 
 const Team2 = () => {
 
@@ -62,7 +66,7 @@ const Team2 = () => {
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "Melanie Brady", position: "Project Manager • Music Generation", image: defaultImage, bio: "",
+        {name: "Melanie Brady", position: "Project Manager • Music Generation", image: melanieBrady, bio: "",
         contributions:"• Handled sprint planning and weekly scrums" + "\n• Oversaw team organization and communications" + 
         "\n• Researched machine learning & music generation models" + "\n• Developed framework for music generation model"},
 
@@ -71,11 +75,11 @@ const Team2 = () => {
         contributions:"• Researched music generation & machine learning models" + "\n• Implemented model for music generation" + 
         "\n• Integrated frontend and backend services" + "\n• Researched proper authentication and encryption for system"},
 
-        {name: "Jordy Pantoja", position: "Frontend Developer • Music Generation", image: defaultImage, bio: "",
+        {name: "Jordy Pantoja", position: "Frontend Developer • Music Generation", image: jordypantoja, bio: "",
         contributions:"• Developed front-end web and desktop appliction" + "\n• Researched & implemented testing frameworks for frontend" + 
         "\n• Researched EEG and MIDI homebrew implementations" + "\n• Curated ideas for different music generation models"},
 
-        {name: "Harry Sauers", position: "Database Engineer • Backend Developer", image: defaultImage, bio: "",
+        {name: "Harry Sauers", position: "Database Engineer • Backend Developer", image: harrysauers, bio: "",
         contributions:"• Researched and managed database system" + "\n• Researched & developed backend infrastructure" + 
         "\n• Managed deployment, servers, CI/CD pipeline & testing" + "\n• Integrated frontend and backend services"},
     ];

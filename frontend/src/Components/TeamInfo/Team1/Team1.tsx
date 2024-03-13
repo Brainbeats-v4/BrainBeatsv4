@@ -6,6 +6,13 @@ import profileImage from '../../../images/blankProfile.png'
 import { Modal } from 'react-bootstrap';
 import TeamMemberModal from '../../Modals/TeamMemberModal/TeamMemberModal';
 
+// Importing Team Member Images
+import AnthonyH from '../../../images/Version1Photos/AnthonyH.jpg';
+import GabrielLara from '../../../images/Version1Photos/GabrielLara.jpg';
+import HungNguyen from '../../../images/Version1Photos/HungNguyen.jpg';
+import JustinBang from '../../../images/Version1Photos/JustinBang.jpg';
+import LloydD from '../../../images/Version1Photos/LloydD.jpg';
+
 const Team1 = () => {
 
     // =============================  Enter values for TEAM info here ============================== 
@@ -56,23 +63,23 @@ const Team1 = () => {
 
     const defaultImage = profileImage;
     var teamMembers : TeamMember[] = [
-        {name: "Anthony Hevia", position: "Project Manager • Music Generation", image: defaultImage, bio: "",
+        {name: "Anthony Hevia", position: "Project Manager • Music Generation", image: AnthonyH, bio: "",
         contributions:"• Handled sprint planning and team meetings" + "\n• Researched EEG and machine learning technology" + 
         "\n• Assisted in backend development" + "\n• Assisted in implementation of music generation"},
 
-        {name: "Justin Bang", position: "Database Engineer • Backend Developer", image: defaultImage, bio: "",
+        {name: "Justin Bang", position: "Database Engineer • Backend Developer", image: JustinBang, bio: "",
         contributions:"• Researched and developed backend infrastructure" + "\n• Researched and developed database system" + 
         "\n• Researched and developed music recommendation system" + "\n• Developed music classification system"},
 
-        {name: "Lloyd Dapaah", position: "User-Experience(UX) Developer • Unit Testing Developer", image: defaultImage, bio: "",
+        {name: "Lloyd Dapaah", position: "User-Experience(UX) Developer • Unit Testing Developer", image: LloydD, bio: "",
         contributions:"• Designed approximate user flow of application" + "\n• Created and managed desktop application" + 
         "\n• Researched and installed test frameworks" + "\n• Installed plugins for unit testing"},
 
-        {name: "Gabriel Lara", position: "Music Generation • Machine Learning Developer", image: defaultImage, bio: "",
+        {name: "Gabriel Lara", position: "Music Generation • Machine Learning Developer", image: GabrielLara, bio: "",
         contributions:"• Researched machine learning models and frameworks" + "\n• Tested, configured, and ran machine learning environments" + 
         "\n• Researched testing frameworks for machine learning models" + "\n• Researched testing frameworks for backend"},
 
-        {name: "Hung Nguyen", position: "Frontend Developer • Unit Testing Developer", image: defaultImage, bio: "",
+        {name: "Hung Nguyen", position: "Frontend Developer • Unit Testing Developer", image: HungNguyen, bio: "",
         contributions:"• Developed responsive front-end application" + "\n• Managed web application integration with backend services" + 
         "\n• Researched testing frameworks for frontend & backend" + "\n• Assisted in API development"},
     ];
