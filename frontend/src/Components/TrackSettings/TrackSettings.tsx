@@ -264,11 +264,11 @@ const TrackSettings = () => {
     return (
         <div className='container' id='main-container'>
             {/* Displays on Basic Settings */}
-            <h1 className='heading'>CREATE TRACK</h1>
+            <h1 className='heading'></h1>
             <div id='track-settings-container'>
                 <div id="settings1" style={{display: advSettingsOpen? "none" : "block"}}>
                     <form className='justify-content-center' id='settings-container1'>
-                        <h2 className='settings-text'>Basic Settings</h2>
+                        <h2 className='settings-text'>Basic Track</h2>
                        
                         <div id='select-device-div'> 
                             <h6 className='centered-text' id='centered-text'>Please select your input device:</h6>                
@@ -303,7 +303,7 @@ const TrackSettings = () => {
 
                         <div className='form-group row justify-content-center'>
                             <div className="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Create</button>
+                                <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Create Track</button>
                             </div>
                         </div>
                     </form>
@@ -313,12 +313,12 @@ const TrackSettings = () => {
                     <br />
 
                     <form className='justify-content-center' id='settings-container2'>
-                        <h2 className='settings-text'>Advanced Settings</h2>
+                        <h2 className='settings-text'>Advanced Track</h2>
                         <p className='centered-text'>Press the button below to go to advanced music generation settings:</p>
 
                         <div className='form-group row justify-content-center'>
                             <div className="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" className="btn btn-primary" id='adv-btn' onClick={toggle}>Create</button>
+                                <button type="button" className="btn btn-primary" id='adv-btn' onClick={toggle}>Create Track</button>
                             </div>
                         </div>
 

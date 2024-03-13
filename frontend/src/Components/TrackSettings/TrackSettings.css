@@ -63,8 +63,9 @@
     color:white;
     padding:.5%;
     text-align: center;
-    background-color: rgb(76, 84, 90); 
+    background-color: #727272; 
 }
+
 .settings-text2 {
     color:rgb(42, 42, 42);
     /* margin-left: 2%;     */

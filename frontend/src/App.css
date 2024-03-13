@@ -9,7 +9,9 @@
 
 #root {
   /*background-color: #1e1e1e;*/
-  background-color: #1b1b1b;
+  /*background-color: #1b1b1b;*/
+  /*background-image: linear-gradient(to right, #252e4d,#124c55,#124c55,#252e4d);*/
+  background-image: linear-gradient(to right,#1c1c1f,#414141,#1c1c1f);
 }
 
 .bg {

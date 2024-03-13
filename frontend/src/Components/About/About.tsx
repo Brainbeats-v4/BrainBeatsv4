@@ -4,10 +4,12 @@ import React, { useState } from 'react'
 // Importing CSS
 import './About.css'
 import bbmascot1 from '../../images/bbmascot1.png'
+import BrainBeatsBrain2 from '../../images/BrainBeatsBrain2.png'
 import cytonBoard from '../../images/Cyton.jpg';
 
 
 // Importing Team Segments
+import Team5 from '../TeamInfo/Team5/Team5'
 import Team4 from '../TeamInfo/Team4/Team4'
 import Team3 from '../TeamInfo/Team3/Team3'
 import Team2 from '../TeamInfo/Team2/Team2'
@@ -15,7 +17,7 @@ import Team1 from '../TeamInfo/Team1/Team1'
 
 const About = () => {
 
-  const [displayTeam, setDisplayTeam] = useState(4); // displays team 4 by default
+  const [displayTeam, setDisplayTeam] = useState(5); // displays team 4 by default
   return (
     // <div className='aboutMainBody'>
     //     <h2>About Us</h2>
@@ -47,7 +49,7 @@ const About = () => {
           <h1 className='about-body-titles'>What is BrainBeats?</h1>
           <div id='about-brainbeats'>
             <div id='about-bb-image'>
-             <img id='mascot' src={bbmascot1} />
+             <img id='mascot' src={BrainBeatsBrain2} />
             </div>
             <div id='about-bb-text'>
               <h1 className='about-bb-subtitle'>Our Mission</h1>
@@ -63,6 +65,10 @@ const About = () => {
           <div id='about-teams'>
             <div id='about-teams-header'>
               {/* <h2>Header</h2> */}
+              <button type="button" className="btn btn-secondary about-team-btn" style={{backgroundColor: displayTeam == 5?  "#005B69" : "#259FB1"}} onClick={(e) => setDisplayTeam(5)}>
+                Team 5
+                <h6 className='about-team-btn-subtitle'>(2023-2024)</h6>
+              </button>
               <button type="button" className="btn btn-secondary about-team-btn" style={{backgroundColor: displayTeam == 4?  "#005B69" : "#259FB1"}} onClick={(e) => setDisplayTeam(4)}>
                 Team 4
                 <h6 className='about-team-btn-subtitle'>(2022-2023)</h6>
@@ -80,6 +86,7 @@ const About = () => {
                 <h6 className='about-team-btn-subtitle'>(2020)</h6>
               </button>
             </div>
+            {displayTeam == 5? <Team5></Team5> : null}
             {displayTeam == 4? <Team4></Team4> : null}
             {displayTeam == 3? <Team3></Team3> : null}
             {displayTeam == 2? <Team2></Team2> : null}
