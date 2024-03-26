@@ -201,14 +201,16 @@ function searchFuntion() {
     <>
       <div className="searchMainBody">
         <div className="searchbar-header-div">
-          <h2 id="searchTitle">Searching for a track?</h2>
-          <div className="searchbar-div">
-            <FontAwesomeIcon icon={["fas", "search"]} />
+          <h2 id="searchTitle">Searching for a Track?</h2>
+
+
+          <div className="search">
+           <FontAwesomeIcon color="black" icon={["fas", "search"]} />
             <input
               type="search"
               id="searchbar"
               placeholder="Search"
-              className="me-2"
+              className="search-input"
               aria-label="Search"
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -216,6 +218,9 @@ function searchFuntion() {
               Search
             </Button> */}
           </div>
+
+
+
         </div>
         <hr />
         <h6 className="searchResultsText">Track Results</h6>
