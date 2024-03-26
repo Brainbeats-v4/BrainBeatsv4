@@ -7,6 +7,9 @@ import './Navbar.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 
+// images
+import logo from '../../images/bbLogo.png';
+
 // This component stores both the Navbar and Sidebar.
 const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {  
 
@@ -91,7 +94,8 @@ const Navbar: React.FunctionComponent<RouteProps> = ({children, ...props}) => {
     <header className="header">
       {/* Navbar Component */}
       <div className="header-toggle top_section" id='navbar-ID'>
-        <h1 style={{display: isOpen? "block" : "none", color: "white"}} className="logo">BrainBeats</h1>
+        <h1 style={{display: isOpen? "block" : "none", color: "white"}} className="logo">BrainBeats</h1> 
+        <img style={{display: isOpen? "block" : "none", color: "white"}} src={logo} className="icon-logo"/>
         <div style={{marginLeft: isOpen? "35px" : "0px"}} className="bars">
           <FontAwesomeIcon style={{color: "white"}} icon={["fas", "bars"]} onClick={toggle} />
         </div>

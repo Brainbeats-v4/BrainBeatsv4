@@ -18,7 +18,9 @@ main{
 
 /* CSS for Navbar */
 .header {
-    background-color: rgb(11, 11, 11);
+    background-color: rgb(0, 0, 0);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+
   }
   
 .top_section{
@@ -30,6 +32,12 @@ main{
 .logo {
   font-size: 25px;
   width: auto;
+}
+
+.icon-logo{
+  width: 2%; /* Set the width to 300 pixels */
+  height: auto; /* Maintain the aspect ratio */
+  margin-left:10px;
 }
 
 .bars{
@@ -64,8 +72,7 @@ main{
 }
 
 #signUpBtn, #signOutBtn {
-    background-color: #5B5B5B;
-    border-color: #5B5B5B;
+    
     color: white;
 }
 
@@ -76,8 +83,6 @@ main{
 }
 
 #loginBtn, #profileBtn {
-    background-color: #F8607C;
-    border-color: #F8607C;
     color: white;
 }
 
@@ -106,8 +111,9 @@ main{
   background: #000000;
   color:white;
   width: 300px;
-  transition: all 0.5s;
+  transition: all 0.2s;
   z-index: 2;
+  opacity:80%;
   /* height: 100vh; */
 }
 
@@ -120,15 +126,16 @@ main{
   text-decoration: none;
 }
 .link:hover{
-  background: #B9B9B7;
+  background: #b1c3ff;
   color:black;
   transition: all 0.5s;
   text-decoration: underline;
   cursor: pointer;
+  opacity:50%;
 }
 
 .active{
-  background-color: #F8607C;
+  background-color: #282a7e;
   color: black;
 }
 
