@@ -114,15 +114,15 @@
 }
 
 #next-btn {
-    background-color: #F8607C;
-    border-color: #F8607C;
-    filter: drop-shadow(0px 4px 4px #91697d);
+    background-color:#259FB1;
+    border-color: #259FB1;
+    filter: drop-shadow(0px 4px 4px #0d3d44);
 }
 #next-btn:hover{
-    background-color:#e33051;
-    border-color: #e33051;
+    background-color:#259FB1;
+    border-color: #259FB1;
     text-decoration: underline;
-    filter: drop-shadow(0px 4px 4px #91697d);
+    filter: drop-shadow(0px 4px 4px #0d3d44);
     text-decoration:none;
 }
 

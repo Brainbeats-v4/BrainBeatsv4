@@ -244,8 +244,9 @@ function Cards() {
                                 value={speed}
                             />
                         </div>
+                        <button type="button" className="btn btn-secondary" id='add-card-btn' onClick={addCard}>Add Card</button>
                     </div>
-                    <button type="button" className="btn btn-secondary" id='add-card-btn' onClick={addCard}>Add Card</button>
+                    
                 </div>
                 <div id='display-card-div'>
                     Card Display:
