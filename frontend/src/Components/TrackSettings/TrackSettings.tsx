@@ -472,7 +472,7 @@ const TrackSettings = () => {
                     <br></br>
                     <div className='form-group row justify-content-center'>
                         <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className="btn btn-secondary" id='back-btn-adv' onClick={toggle}>Back</button>
+                            <button type="button" className="btn btn-secondary" id='next-btn' onClick={toggle}>Back</button>
                             <br />
                             <button type="button" className="btn btn-primary" id='next-btn' onClick={() => applySettingsEvent()}>Next</button>
                         </div>
