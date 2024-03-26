@@ -96,7 +96,8 @@
 }
 
 #profile-top-name-div {
-    background: linear-gradient(180deg, #40BBCE 0%, #008BA0 100%);
+    background: url('../../images/bgSearch.png')/*linear-gradient(270deg, #40BBCE 0%, #008BA0 100%);*/;
+    
     display: flex;
     flex-direction: column;
     border-radius: 10px 10px 0px 0px;
@@ -208,8 +209,8 @@
 
 #tracks-btn-line{
     display: block;
-    background-color: #F8607C;
-    border-color: #F8607C;
+    background-color: #00798B;
+    border-color: #00798B;
     width: 100%;
     height: 50%;
     border-radius: 0px 0px 10px 10px;
@@ -233,8 +234,8 @@
 #tracks-btn:hover{
     color: white !important;
     font-weight: 600 !important;
-    background-color: #F8607C !important;
-    border-color: #F8607C !important;
+    background-color: #00798B !important;
+    border-color: #00798B !important;
     text-decoration: underline;
 }
 
@@ -252,7 +253,7 @@
 
 #playlists-btn-line{
     display: none;
-    background-color: #F8607C;
+    background-color: #00798B;
     border-color: #F8607C;
     width: 100%;
     height: 50%;
@@ -277,8 +278,8 @@
 #playlists-btn:hover{
     color: white !important;
     font-weight: 600 !important;
-    background-color: #F8607C !important;
-    border-color: #F8607C !important;
+    background-color: #00798B !important;
+    border-color: #00798B !important;
     text-decoration: underline;
 }
 
